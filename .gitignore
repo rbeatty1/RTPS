@@ -2,6 +2,9 @@
 dist
 node_modules
 
+# node file
+package-lock.json
+browserslist-stats.json
 
 # Windows thumbnail cache files
 Thumbs.db
@@ -42,6 +45,4 @@ config.js
 *.log
 # Mapbox GL Vector tiles
 *.pbf
-
-*.json
 
