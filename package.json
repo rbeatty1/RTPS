@@ -1,0 +1,43 @@
+{
+  "name": "rtps",
+  "version": "0.0.1",
+  "description": "Tool to identify different types of transit gaps to assist in making data-driven decisions to evaluate and prioritize transit improvements throughout the Philadelphia region.",
+  "main": "index.js",
+  "browserslist": [
+    "extends @dvrpc/browserslist-config"
+  ],
+  "scripts": {
+    "start": "live-server",
+    "build": "grunt",
+    "test": "npm test",
+    "licenses": "license-checker --json --relativeLicensePath --out dependency_licenses.json",
+    "preversion": "npm run licenses",
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "dev/**/*.{js,jsx,json}": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "author": "Robert Beatty <rbeatty@dvrpc.org>",
+  "license": "CC0-1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rbeatty1/RTPS.git"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.0",
+    "@dvrpc/browserslist-config": "^1.0.0",
+    "lint-staged": "^7.0.0",
+    "prettier": "^1.10.2"
+  },
+  "optionalDependencies": {
+    "license-checker": "^8.0.4"
+  },
+  "dependencies": {
+    "eslint": "^4.18.1",
+    "flexbox": "0.0.3",
+    "mapbox-gl": "^0.45.0"
+  }
+}
