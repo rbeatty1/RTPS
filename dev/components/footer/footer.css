@@ -1,0 +1,37 @@
+.footer__container{
+    width: 100%;
+    height: 5%;
+    background-color: #08506d;
+    border-top: 3px solid #8bb23f;
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+    justify-content: space-around;
+    color: white;
+    font-family: 'Arial Narrow', sans-serif;
+    white-space: nowrap;
+    font-size: 12px;
+}
+
+.footer__dvrpc{
+    display: flex;
+    flex-flow: row nowrap;
+    align-content: center;
+    text-decoration: none;
+}
+.footer__logo{
+    height: 60%;
+    margin-left: 25px;
+}
+.footer__dvrpc-info{
+    margin-left: 10px;
+}
+.footer__app-info{
+    text-align: center;
+    font-size: 14px;
+    width: 50%;
+}
+
+.footer__contact-info{
+    width: 25%;
+}
