@@ -3,10 +3,6 @@ dist
 node_modules
 
 
-## app config files
-MainElements.js
-HeaderElements.js
-
 # Windows thumbnail cache files
 Thumbs.db
 ehthumbs.db
