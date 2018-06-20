@@ -1,5 +1,12 @@
 (function(){
     const currentDoc = document.currentScript.ownerDocument;
+    
+    let queryInputs = {
+        geography : undefined,
+        demand : undefined,
+        supply : undefined
+    }
+
     function _createMenuLinks(self, option){
         // iterate through options and create a link for each one
         option.forEach(i=> {
@@ -16,13 +23,16 @@
             return self;
         })
         self.addEventListener('change', e=>{
-            console.log(self.value);
+            delete queryInputs[self.id];
+            queryInputs[self.id] = self.value;
+            console.log(`${self.id} input: `, queryInputs[self.id]);
+            return queryInputs;
         })
         return self;
     }
 
     // create a menu for all query input variables
-    function _createMenu(self, item){
+    function _createMenu(self, item, query){
         let dropdownMenu = currentDoc.createElement('select');
         dropdownMenu.innerHTML = `<option value="" disabled selected>${item.name}</option>`;
         dropdownMenu.id = `${item.elem_id}`;
@@ -35,7 +45,7 @@
     class QueryInput extends HTMLElement{
         // run when element is created
         constructor(){
-            super();            
+            super();
         }
 
         // run when HTML is inserted into DOM
@@ -67,16 +77,24 @@
                 // grab each individual list of content
                 let input = this.list[k];
                 if (input.name != 'Run Query'){
-                    let li = _createMenu(this, input);
+                    let li = _createMenu(this, input, queryInputs);
                     listElement.appendChild(li);
                 }
                 else{
                     let dropdownMenu = currentDoc.createElement('button');
                     dropdownMenu.innerHTML = `<span class="input__query-name">${input.name}`;
                     dropdownMenu.className = 'input__query-execute';
-                    dropdownMenu.addEventListener('click', e=>{alert('Execute Order 66.')});
-                    listElement.appendChild(dropdownMenu);                    
-                }
+                    dropdownMenu.addEventListener('click', e=>{
+                        if (!queryInputs.geography || !queryInputs.demand || !queryInputs.supply){
+                            alert('You haven\'t finished building your query! Please select options from each dropdown to continue.')
+                        }
+                        else{
+                            let query = `SELECT * FROM RTPS\nWHERE (\n   zone = '${queryInputs.geography}' AND \n   demand = '${queryInputs.demand}' AND \n   supply = '${queryInputs.supply}'\n);`;
+                            alert(`Query: \n${query}\n\n\nExecute Order 66.`);
+                        }
+                    });
+                    listElement.appendChild(dropdownMenu);
+                }                  
             }
         }
     }
