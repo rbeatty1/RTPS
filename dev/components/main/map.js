@@ -4,10 +4,13 @@
         mapboxgl.accessToken = mbToken;
         let map = new mapboxgl.Map({
             container: container.querySelector('#map__container'),
-            style: '/components/main/map_styles/highway.json',
+            style: '/components/main/map_styles/rtps.json',
             center: [-75.148, 40.018],
-            zoom: 12,
+            zoom: 8.5,
             hash : true
+          });
+          map.on('load', _=>{
+              map.resize();
           });
     }
     class PageMap extends HTMLElement{
@@ -20,7 +23,7 @@
             const instance = temp.content.cloneNode(true);
             const mbToken = MainElements[0].content;
             shadow.appendChild(instance);
-            // _loadMap(mbToken, shadow);
+            _loadMap(mbToken, shadow);
         }
     }
     customElements.define('page-map', PageMap);

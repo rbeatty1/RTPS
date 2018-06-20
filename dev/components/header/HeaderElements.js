@@ -54,7 +54,7 @@ const HeaderElements = [
                 pageId : 4,
                 name : 'Gap Analysis',
                 href : '#'
-            },
+            }
         }
     }
 ]

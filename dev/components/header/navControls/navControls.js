@@ -5,7 +5,9 @@
         let navElement = currentDoc.createElement('a');
         navElement.innerHTML = item;
         navElement.setAttribute('href', '#');
+        // On load, land on gap analysis page
         item != 'Gap Analysis' ? navElement.className = 'nav__link-inactive' : navElement.className = 'nav__link-active';
+        // change link styling when navigating to
         navElement.addEventListener('click', e=>{
             let siblings = e.target.parentNode.childNodes;
             siblings.forEach(element => {

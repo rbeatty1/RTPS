@@ -32,6 +32,8 @@
     border-radius: .25em;
     border-style: unset;
     list-style: none;
+    color: #fff;
+    font-weight: 700;
 }
 
 .input__query-execute:hover{
