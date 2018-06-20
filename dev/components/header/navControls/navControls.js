@@ -6,6 +6,12 @@
         navElement.innerHTML = item;
         navElement.setAttribute('href', '#');
         item != 'Gap Analysis' ? navElement.className = 'nav__link-inactive' : navElement.className = 'nav__link-active';
+        navElement.addEventListener('click', e=>{
+            let siblings = e.target.parentNode.childNodes;
+            siblings.forEach(element => {
+                element != e.target ? element.className = 'nav__link-inactive' : element.className = 'nav__link-active';
+            });
+        })
         return navElement;
     }
 

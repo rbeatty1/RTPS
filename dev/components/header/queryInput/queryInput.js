@@ -66,10 +66,12 @@
             for (var k in this.list){
                 // grab each individual list of content
                 let input = this.list[k];
+                // create dropdown menus
                 if (input.name != 'Run Query'){
                     let li = _createMenu(this, input);
                     listElement.appendChild(li);
                 }
+                // create button to execute query
                 else{
                     let dropdownMenu = currentDoc.createElement('button');
                     dropdownMenu.innerHTML = `<span class="input__query-name">${input.name}`;
