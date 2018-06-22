@@ -7,13 +7,18 @@ A DVRPC web tool to identify different types of transit gaps to assist in making
 ## **Getting Started**
 
 1. Step One:
-    > cd \<project-directory\>
+    
+    ``` cd <project-directory>```
 1. Step Two:
-    > npm install
+
+    ```npm install```
 
 2. Step Three:
-    > npm start
-3. Step Four:
-    > ???
+ 
+    ```npm start```
+4. Step Four:
+
+    ```???```
 1. Step Five:
-    > \$\$\$ Profit \$\$\$
+
+    ```$$$ Profit $$$```
