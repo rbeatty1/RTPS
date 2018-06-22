@@ -24,7 +24,6 @@
 
             // middle element
             let appContainer = shadow.querySelector('.footer__app-info');
-            console.log(FooterElements[1].content);
             appContainer.innerHTML = FooterElements[1].content.name+'   |   Version: '+FooterElements[1].content.version;
         }
     }
