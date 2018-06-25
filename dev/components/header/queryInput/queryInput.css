@@ -1,8 +1,8 @@
 .input__container{
-    display: inline-block;
-    /* flex-flow: row nowrap;
+    /* display: inline-block; */
+    flex-flow: row nowrap;
     justify-content: space-around;
-    align-items: center; */
+    align-items: center;
     margin: auto;
     position: relative;
 }
@@ -40,9 +40,29 @@
     background-color: #ccdca7;
 }
 
+.input__query-clear{
+    padding: 1em;
+    background-color: red;
+    text-align: center;
+    font-family: 'Arial Narrow', sans-serif;
+    border-radius: .25em;
+    border-style: unset;
+    list-style: none;
+    color: #fff;
+    font-weight: 700;
+}
+
+.input__query-clear:hover{
+    background-color: #f9aa8f;
+}
+
 .input__input-option{
     font-weight: 700;
     font-size: 14px;
     text-align: center;
+}
+
+#muni{
+    display: none;
 }
 

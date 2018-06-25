@@ -7,6 +7,16 @@
         supply : undefined
     }
 
+    function _GeographyChecker(geoInput){
+        if (geoInput.value == 'Zone'){
+            geoInput.nextSibling.style.display = 'none';
+            alert('Select query zones by clicking on the map!');
+        }
+        else{
+            let muniList = geoInput.nextSibling.style.display = 'inline-block';
+        }
+    }
+
     function _createMenuLinks(self, option){
         // iterate through options and create a link for each one
         option.forEach(i=> {
@@ -25,7 +35,6 @@
         self.addEventListener('change', e=>{
             delete queryInputs[self.id];
             queryInputs[self.id] = self.value;
-            console.log(`${self.id} input: `, queryInputs[self.id]);
             return queryInputs;
         })
         return self;
@@ -38,6 +47,12 @@
         dropdownMenu.id = `${item.elem_id}`;
         dropdownMenu.className = 'input__query-input';
         _createMenuLinks(dropdownMenu, item.options);
+        if (dropdownMenu.id == 'geography'){
+            dropdownMenu.addEventListener('change', _=>{
+                _GeographyChecker(dropdownMenu);
+            })
+
+        }
         return dropdownMenu;
     }
 
@@ -77,27 +92,39 @@
                 // grab each individual list of content
                 let input = this.list[k];
                 // create dropdown menus
-                if (input.name != 'Run Query'){
+                if (input.id < 5){
                     let li = _createMenu(this, input, queryInputs);
                     listElement.appendChild(li);
                 }
-                // create button to execute query
+                // create button to execute/clear query
                 else{
                     let dropdownMenu = currentDoc.createElement('button');
                     dropdownMenu.innerHTML = `<span class="input__query-name">${input.name}`;
                     dropdownMenu.className = 'input__query-execute';
-                    dropdownMenu.addEventListener('click', e=>{
-                        if (!queryInputs.geography || !queryInputs.demand || !queryInputs.supply){
-                            alert('You haven\'t finished building your query! Please select options from each dropdown to continue.')
-                        }
-                        else{
-                            let query = `SELECT * FROM RTPS\nWHERE (\n   zone = '${queryInputs.geography}' AND \n   demand = '${queryInputs.demand}' AND \n   supply = '${queryInputs.supply}'\n);`;
-                            alert(`Query: \n${query}\n\n\nExecute Order 66.`);
-                        }
-                    });
+                    switch (input.id){
+                        case 5: 
+                            dropdownMenu.className = 'input__query-execute';
+                            dropdownMenu.addEventListener('click', e=>{
+                                if (!queryInputs.geography || !queryInputs.demand || !queryInputs.supply){
+                                    alert('You haven\'t finished building your query! Please select options from each dropdown to continue.')
+                                }
+                                else{
+                                    let query = `SELECT * FROM RTPS\nWHERE (\n   zone = '${queryInputs.geography}' AND \n   demand = '${queryInputs.demand}' AND \n   supply = '${queryInputs.supply}'\n);`;
+                                    alert(`Query: \n${query}\n\n\nExecute Order 66.`);
+                                }
+                            });
+                            break;
+                        case 6:
+                            dropdownMenu.className = 'input__query-clear';
+                            dropdownMenu.addEventListener('click', _=>{
+                                this.render();
+                            })
+                            break;
+                    }
                     listElement.appendChild(dropdownMenu);
                 }                  
             }
+
         }
     }
     customElements.define('query-input', QueryInput);

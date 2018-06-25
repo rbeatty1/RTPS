@@ -33,6 +33,7 @@
 
         map.on('click', "zone-hover", (e)=>{
             let zone = e.features[0].properties['no'];
+            console.log(zone)
             map.setFilter('zone-click-fill', ['==', 'no', zone])
         })
     }
@@ -46,7 +47,6 @@
             const instance = temp.content.cloneNode(true);
             const mbToken = MainElements[0].content;
             let zoneSelections = MainElements[1].content;
-            console.log(zoneSelections)
             shadow.appendChild(instance);
             _loadMap(mbToken, zoneSelections, shadow);
         }
