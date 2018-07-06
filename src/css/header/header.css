@@ -1,0 +1,30 @@
+.header__container{
+    display: flex;
+    flex-flow: row;
+    background: whitesmoke;
+    width: 100%;
+    height: 10vh;
+    align-items: center;
+    justify-content: space-around;
+    border-bottom: 3px solid #8bb23f;
+}
+
+.header__container > * {
+    height: 80%;
+}
+
+.header__project-logo{
+    margin-left: 10px;
+}
+
+.header__input-container{
+    display: flex;
+    width: 75%;
+}
+
+.header__nav-controls{
+    width: 20%;
+    margin-right: 10px;
+    display: flex;
+    justify-content: space-evenly,
+}
