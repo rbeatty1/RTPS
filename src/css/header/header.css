@@ -5,7 +5,7 @@
     width: 100%;
     height: 10vh;
     align-items: center;
-    justify-content: space-around;
+    justify-content: start;
     border-bottom: 3px solid #8bb23f;
 }
 
@@ -14,17 +14,30 @@
 }
 
 .header__project-logo{
+    order: 0;
     margin-left: 10px;
+    max-width: 20%;
 }
 
 .header__input-container{
+    order: 1;
     display: flex;
-    width: 75%;
+    width: 50%;
+    margin-left: 10px;
+    flex-flow: row nowrap;
+    align-items: center;
+    margin: auto;
+    flex-flow: row;
+    background: whitesmoke;
+    justify-content: space-evenly;
 }
 
-.header__nav-controls{
+.header__nav-links{
+    order: 2;
     width: 20%;
     margin-right: 10px;
     display: flex;
-    justify-content: space-evenly,
+    flex-flow: row nowrap;
+    justify-content: space-evenly;
+    align-items: center;
 }

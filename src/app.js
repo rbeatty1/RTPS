@@ -1,10 +1,10 @@
 import {headerRender} from './modules/header/header';
 import {HeaderElements} from "./modules/header/HeaderElements";
-import {mapRender} from './modules/map/map'
-import {footerRender} from './modules/footer/footer';
+import {Map, options} from './modules/map/map'
+import {Footer} from './modules/footer/footer';
 import './css/app.css'
 
 
 headerRender(HeaderElements);
-mapRender();
-footerRender();
+let map = new Map();
+let footer = new Footer();
