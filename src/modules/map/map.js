@@ -6,6 +6,7 @@ function zoneSelection(target, output){
     let zone = target.features[0].properties['no'],
         selection = output.zones,
         index = selection.indexOf(zone);
+    // if value is already in array, remove it, otherwise add it
     index != -1 ? selection.splice(index, 1) : selection.push(zone);
     return selection;
 }
@@ -29,7 +30,6 @@ class Map{
             hash : true
         })
         
-        // __GeographyChecker(options)
 
         // add navigation control 
         const nav = new mapboxgl.NavigationControl();
@@ -42,8 +42,7 @@ class Map{
 
         // // filter functions
         map.on('mousemove', "zone-hover", (e)=>{
-            let zone = e.features[0].properties['no'];
-            map.setFilter("zone-hover-fill", ["==", "no", zone]);
+            map.setFilter("zone-hover-fill", ["==", "no", e.features[0].properties['no']]);
         })
 
         map.on('mouseleave', "zone-hover", (e)=>{

@@ -95,6 +95,7 @@ class QueryContainer{
                         dropdownMenu.addEventListener('click', _=>{
                             listElement.remove();
                             this.render();
+                            queryInputs.zones = []
                             document.querySelector('.map__container').remove();
                             new Map();
                         })
