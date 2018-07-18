@@ -11,6 +11,7 @@
     font-family: 'Arial Narrow', sans-serif;
     white-space: nowrap;
     font-size: 12px;
+    order: 2;
 }
 .footer__container > *{
     justify-content: center;
@@ -37,7 +38,4 @@
 .footer__app{
     text-align: center;
     font-size: 14px;
-}
-
-.footer__contact{
 }

@@ -1,5 +1,5 @@
 import "../../../css/header/queryInputs/queryInputs.css"
-
+import {Map} from "../../map/map"
 
 let queryInputs = {
     geography: undefined,
@@ -95,6 +95,8 @@ class QueryContainer{
                         dropdownMenu.addEventListener('click', _=>{
                             listElement.remove();
                             this.render();
+                            document.querySelector('.map__container').remove();
+                            new Map();
                         })
                         break;
                 }

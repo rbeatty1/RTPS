@@ -7,6 +7,7 @@
     align-items: center;
     justify-content: start;
     border-bottom: 3px solid #8bb23f;
+    order: 0;
 }
 
 .header__container > * {
