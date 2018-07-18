@@ -6,33 +6,38 @@
     display: flex;
     flex-flow: row;
     align-items: center;
-    justify-content: start;
+    justify-content: space-evenly;
     color: white;
     font-family: 'Arial Narrow', sans-serif;
     white-space: nowrap;
     font-size: 12px;
 }
-
-.footer__dvrpc{
+.footer__container > *{
+    justify-content: center;
+}
+.footer__dvrpc, .footer__contact{
     display: flex;
     flex-flow: row nowrap;
     align-content: center;
     text-decoration: none;
 }
+
+.footer__dvrpc-info > a {
+    color: #8bb23f;
+    text-decoration: underline;
+}
 .footer__logo{
-    height: 60%;
     margin-left: 25px;
-    height: 10vh
+    max-width: 5vw;
+    max-height: 3vh;
 }
 .footer__dvrpc-info{
     margin-left: 10px;
 }
-.footer__app-info{
+.footer__app{
     text-align: center;
     font-size: 14px;
-    width: 50%;
 }
 
-.footer__contact-info{
-    width: 25%;
+.footer__contact{
 }
