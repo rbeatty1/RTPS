@@ -2,6 +2,10 @@
 node_modules
 dist
 
+# django junk files
+*.pyc
+rtps/zonequery/lib
+
 # node file
 package-lock.json
 browserslist-stats.json
