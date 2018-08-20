@@ -1,13 +1,17 @@
 import "../../../css/header/queryInputs/queryInputs.css"
 import {Map} from "../../map/map"
+import {map} from "../../../app"
 
+
+// holder for query inputs
 let queryInputs = {
     geography: undefined,
     zones: [],
-    demand: undefined,
-    supply: undefined
+    direction: undefined
 }
 
+let zoneData;
+// checks whether MCD list should be visible or not
 function _GeographyChecker(geoInput){
     if (geoInput.value == 'Zone'){
         geoInput.nextSibling.style.display = 'none';
@@ -19,7 +23,7 @@ function _GeographyChecker(geoInput){
 }
 
 function _createMenuLinks(self, option){
-    // iterate through options and create a link for each one
+    // iterate through options and create a link for each one -- <option value='{i}' class='input__input-option>i</option>
     option.forEach(i=> {
         let optionLink = document.createElement('option');
         optionLink.innerHTML = i;
@@ -28,6 +32,7 @@ function _createMenuLinks(self, option){
         self.appendChild(optionLink);
         return self;
     })
+    // indicator for queryInputs object -- update object property with corresponding selection
     self.addEventListener('change', e=>{
         delete queryInputs[self.id];
         queryInputs[self.id] = self.value;
@@ -81,12 +86,12 @@ class QueryContainer{
                     case 5: 
                         dropdownMenu.className = 'input__query-execute';
                         dropdownMenu.addEventListener('click', e=>{
-                            if (!queryInputs.geography || !queryInputs.demand || !queryInputs.supply){
+                            if (!queryInputs.geography || !queryInputs.zones || !queryInputs.direction){
+                                // alert 
                                 alert('You haven\'t finished building your query! Please select options from each dropdown to continue.')
                             }
                             else{
-                                let query = `SELECT * FROM RTPS\nWHERE (\n   zone = '${queryInputs.geography}' AND \n   demand = '${queryInputs.demand}' AND \n   supply = '${queryInputs.supply}'\n);`;
-                                alert(`Query: \n${query}\n\n\nExecute Order 66.`);
+                                // run query
                             }
                         });
                         break;
@@ -108,4 +113,4 @@ class QueryContainer{
     }
 }
 
-export {queryInputs, QueryContainer};
+export {queryInputs, QueryContainer, zoneData};
