@@ -99,8 +99,12 @@
   "bearing": 0,
   "pitch": 0,
   "sources": {
+    "pff": {
+      "url": "https://dvrpc-freight.michaelruane.com/pff_tiles.json",
+      "type": "vector"
+    },
     "tim_network": {
-      "url": "https://tiles.dvrpc.org/data/dvrpc-tim-highways.json",
+      "url": "https://a.michaelruane.com/data/dvrpc-tim-highways.json",
       "type": "vector"
     },
     "mapbox://mapbox.mapbox-streets-v6": {
@@ -2511,6 +2515,498 @@
         "text-opacity": 1
       },
       "nextDropPoint": false
+    },
+    {
+      "id": "highways-labels",
+      "type": "symbol",
+      "metadata": {
+        "mapbox:group": "1454505898173.9072"
+      },
+      "source": "pff",
+      "source-layer": "highways",
+      "minzoom": 10,
+      "layout": {
+        "text-size": {
+          "base": 1,
+          "stops": [
+            [
+              8,
+              8
+            ],
+            [
+              20,
+              17
+            ]
+          ]
+        },
+        "symbol-avoid-edges": false,
+        "text-ignore-placement": false,
+        "text-font": [
+          "Open Sans Semibold",
+          "Arial Unicode MS Regular"
+        ],
+        "symbol-placement": "line",
+        "visibility": "none",
+        "text-rotation-alignment": "map",
+        "text-anchor": "center",
+        "text-keep-upright": true,
+        "text-field": "{NAME}"
+      },
+      "paint": {
+        "text-halo-color": "#312b6a",
+        "text-halo-width": 2,
+        "text-color": "rgba(255,255,255,1)",
+        "text-opacity": {
+          "base": 1,
+          "stops": [
+            [
+              0,
+              0
+            ],
+            [
+              10,
+              1
+            ],
+            [
+              22,
+              1
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "id": "nj-shields copy",
+      "type": "symbol",
+      "metadata": {
+        "mapbox:group": "1454505898173.9072"
+      },
+      "source": "pff",
+      "source-layer": "highways",
+      "minzoom": 10,
+      "filter": [
+        "==",
+        "SHLD_ID",
+        "njtpk"
+      ],
+      "layout": {
+        "text-optional": false,
+        "text-size": 10,
+        "text-allow-overlap": false,
+        "icon-image": "pff-njtp-shield-dkpurple",
+        "icon-rotation-alignment": "viewport",
+        "symbol-avoid-edges": true,
+        "text-ignore-placement": false,
+        "icon-keep-upright": true,
+        "symbol-spacing": {
+          "base": 1,
+          "stops": [
+            [
+              10,
+              200
+            ],
+            [
+              15,
+              600
+            ]
+          ]
+        },
+        "text-font": [
+          "Open Sans Bold",
+          "Arial Unicode MS Regular"
+        ],
+        "icon-allow-overlap": false,
+        "symbol-placement": "line",
+        "text-padding": {
+          "base": 1,
+          "stops": [
+            [
+              0,
+              20
+            ],
+            [
+              22,
+              50
+            ]
+          ]
+        },
+        "visibility": "visible",
+        "icon-optional": false,
+        "text-rotation-alignment": "viewport",
+        "icon-size": 0.65,
+        "text-anchor": "center",
+        "text-keep-upright": true,
+        "icon-padding": 20,
+        "icon-ignore-placement": false
+      },
+      "paint": {
+        "text-halo-color": "rgba(255,255,255,1)",
+        "icon-opacity": 1,
+        "text-color": "#312B6A",
+        "text-opacity": {
+          "base": 1,
+          "stops": [
+            [
+              0,
+              0
+            ],
+            [
+              10,
+              1
+            ],
+            [
+              22,
+              1
+            ]
+          ]
+        },
+        "text-halo-width": 0
+      }
+    },
+    {
+      "id": "nj-shields",
+      "type": "symbol",
+      "metadata": {
+        "mapbox:group": "1454505898173.9072"
+      },
+      "source": "pff",
+      "source-layer": "highways",
+      "minzoom": 10,
+      "filter": [
+        "all",
+        [
+          "==",
+          "SHIELD",
+          "S"
+        ],
+        [
+          "==",
+          "STATE",
+          "NJ"
+        ]
+      ],
+      "layout": {
+        "text-optional": false,
+        "text-size": 10,
+        "text-allow-overlap": false,
+        "icon-image": "pff-pa-shield-dkpurple",
+        "icon-rotation-alignment": "viewport",
+        "symbol-avoid-edges": true,
+        "text-ignore-placement": false,
+        "icon-keep-upright": true,
+        "symbol-spacing": {
+          "base": 1,
+          "stops": [
+            [
+              10,
+              200
+            ],
+            [
+              15,
+              600
+            ]
+          ]
+        },
+        "text-font": [
+          "Open Sans Bold",
+          "Arial Unicode MS Regular"
+        ],
+        "icon-allow-overlap": false,
+        "symbol-placement": "line",
+        "text-padding": {
+          "base": 1,
+          "stops": [
+            [
+              0,
+              20
+            ],
+            [
+              22,
+              50
+            ]
+          ]
+        },
+        "visibility": "visible",
+        "icon-optional": false,
+        "text-rotation-alignment": "viewport",
+        "icon-size": 0.65,
+        "text-anchor": "center",
+        "text-keep-upright": true,
+        "text-field": "{SHLD_ID}",
+        "icon-padding": 20,
+        "icon-ignore-placement": false
+      },
+      "paint": {
+        "text-halo-color": "rgba(255,255,255,1)",
+        "icon-opacity": 1,
+        "text-color": "#312B6A",
+        "text-opacity": {
+          "base": 1,
+          "stops": [
+            [
+              0,
+              0
+            ],
+            [
+              10,
+              1
+            ],
+            [
+              22,
+              1
+            ]
+          ]
+        },
+        "text-halo-width": 0
+      }
+    },
+    {
+      "id": "pa-shields",
+      "type": "symbol",
+      "metadata": {
+        "mapbox:group": "1454505898173.9072"
+      },
+      "source": "pff",
+      "source-layer": "highways",
+      "minzoom": 10,
+      "filter": [
+        "all",
+        [
+          "==",
+          "SHIELD",
+          "S"
+        ],
+        [
+          "==",
+          "STATE",
+          "PA"
+        ]
+      ],
+      "layout": {
+        "text-optional": false,
+        "text-size": 10,
+        "text-allow-overlap": false,
+        "icon-image": "pff-pa-shield-dkpurple",
+        "icon-rotation-alignment": "viewport",
+        "symbol-avoid-edges": true,
+        "text-ignore-placement": false,
+        "icon-keep-upright": true,
+        "symbol-spacing": {
+          "base": 1,
+          "stops": [
+            [
+              10,
+              200
+            ],
+            [
+              15,
+              600
+            ]
+          ]
+        },
+        "text-font": [
+          "Open Sans Bold",
+          "Arial Unicode MS Regular"
+        ],
+        "icon-allow-overlap": false,
+        "symbol-placement": "line",
+        "text-padding": {
+          "base": 1,
+          "stops": [
+            [
+              0,
+              20
+            ],
+            [
+              22,
+              50
+            ]
+          ]
+        },
+        "visibility": "visible",
+        "icon-optional": false,
+        "text-rotation-alignment": "viewport",
+        "icon-size": 0.65,
+        "text-anchor": "center",
+        "text-keep-upright": true,
+        "text-field": "{SHLD_ID}",
+        "icon-padding": 20,
+        "icon-ignore-placement": false
+      },
+      "paint": {
+        "text-halo-color": "rgba(255,255,255,1)",
+        "icon-opacity": 1,
+        "text-color": "#312B6A",
+        "text-opacity": {
+          "base": 1,
+          "stops": [
+            [
+              0,
+              0
+            ],
+            [
+              10,
+              1
+            ],
+            [
+              22,
+              1
+            ]
+          ]
+        },
+        "text-halo-width": 0
+      }
+    },
+    {
+      "id": "us-shields",
+      "type": "symbol",
+      "metadata": {
+        "mapbox:group": "1454505898173.9072"
+      },
+      "source": "pff",
+      "source-layer": "highways",
+      "minzoom": 10,
+      "filter": [
+        "==",
+        "SHIELD",
+        "U"
+      ],
+      "layout": {
+        "text-optional": false,
+        "text-size": 10,
+        "text-allow-overlap": false,
+        "icon-image": "pff-us-shield-dkpurple",
+        "icon-rotation-alignment": "viewport",
+        "symbol-avoid-edges": true,
+        "text-ignore-placement": false,
+        "icon-keep-upright": true,
+        "symbol-spacing": {
+          "base": 1,
+          "stops": [
+            [
+              10,
+              200
+            ],
+            [
+              15,
+              600
+            ]
+          ]
+        },
+        "text-font": [
+          "Open Sans Bold",
+          "Arial Unicode MS Regular"
+        ],
+        "icon-allow-overlap": false,
+        "symbol-placement": "line",
+        "text-padding": {
+          "base": 1,
+          "stops": [
+            [
+              0,
+              20
+            ],
+            [
+              22,
+              50
+            ]
+          ]
+        },
+        "visibility": "visible",
+        "icon-optional": false,
+        "text-rotation-alignment": "viewport",
+        "icon-size": 0.65,
+        "text-anchor": "center",
+        "text-keep-upright": true,
+        "text-field": "{SHLD_ID}",
+        "icon-padding": 20,
+        "icon-ignore-placement": false
+      },
+      "paint": {
+        "text-halo-color": "rgba(255,255,255,1)",
+        "icon-opacity": 1,
+        "text-color": "#312B6A",
+        "text-opacity": {
+          "base": 1,
+          "stops": [
+            [
+              0,
+              0
+            ],
+            [
+              10,
+              1
+            ],
+            [
+              22,
+              1
+            ]
+          ]
+        },
+        "text-halo-width": 0
+      }
+    },
+    {
+      "id": "interstate-shields",
+      "type": "symbol",
+      "metadata": {
+        "mapbox:group": "1454505898173.9072"
+      },
+      "source": "pff",
+      "source-layer": "highways",
+      "minzoom": 10,
+      "filter": [
+        "==",
+        "SHIELD",
+        "I"
+      ],
+      "layout": {
+        "text-optional": false,
+        "text-size": 10,
+        "text-allow-overlap": false,
+        "icon-image": "pff-i-shield-dkpurple",
+        "icon-rotation-alignment": "viewport",
+        "symbol-avoid-edges": true,
+        "text-ignore-placement": false,
+        "icon-keep-upright": true,
+        "text-font": [
+          "Open Sans Bold",
+          "Arial Unicode MS Regular"
+        ],
+        "icon-allow-overlap": false,
+        "symbol-placement": "line",
+        "visibility": "visible",
+        "icon-optional": false,
+        "text-rotation-alignment": "viewport",
+        "icon-size": 0.65,
+        "text-anchor": "center",
+        "text-keep-upright": true,
+        "text-field": "{SHLD_ID}",
+        "icon-ignore-placement": false
+      },
+      "paint": {
+        "text-halo-color": "#fff",
+        "icon-opacity": 1,
+        "text-color": "#312B6A",
+        "text-opacity": {
+          "base": 1,
+          "stops": [
+            [
+              0,
+              0
+            ],
+            [
+              10,
+              1
+            ],
+            [
+              22,
+              1
+            ]
+          ]
+        },
+        "text-halo-width": 0
+      }
     },
     {
       "id": "marine_label_point_other",

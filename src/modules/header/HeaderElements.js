@@ -123,15 +123,9 @@ const HeaderElements = [
             },
             inputTwo : {
                 id : 3,
-                name : 'Transit Demand',
-                elem_id: 'demand',
-                options : ['Above Average', 'Below Average']
-            },
-            inputThree : {
-                id : 4,
-                name : 'Transit Supply',
-                elem_id: 'supply',
-                options : ['Above Average', 'Below Average']
+                name : 'Direction',
+                elem_id: 'direction',
+                options : ['To Zone', 'From Zone']
             },
             runQuery : {
                 id : 5,
