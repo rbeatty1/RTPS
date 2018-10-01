@@ -98,11 +98,8 @@ class QueryContainer{
                     case 6:
                         dropdownMenu.className = 'input__query-clear';
                         dropdownMenu.addEventListener('click', _=>{
-                            listElement.remove();
-                            this.render();
-                            queryInputs.zones = []
-                            document.querySelector('.map__container').remove();
-                            new Map();
+                            map.getLayer('zones-clickFill') ? map.setFilter('zones-clickFill', ['==', 'no', '']) : null
+                            map.getLayer('zones-analysis') ? map.removeLayer('zones-analysis') : null
                         })
                         break;
                 }
