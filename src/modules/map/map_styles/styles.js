@@ -13,21 +13,28 @@ const layers = {
           "fill-color": "rgb(255,255,255)",
           "fill-opacity": 0
         },
-        visibility: "none"
+        visibility: "none",
+        placement: null,
+        filter: [
+          "!=",
+          "no",
+          ""
+        ]
       },
       hoverFill:  {
         type: 'fill',
         layer: 'tim-zones',
         paint: {
           "fill-translate-anchor": "map",
-          "fill-color": "rgba(139,178,63, 0.5)",
-          "fill-opacity": 0.66
+          "fill-color": "rgb(139,178,63)",
+          "fill-opacity": 1
         },
         filter: [
           "==",
           "no",
           ""
-        ]
+        ],
+        placement: "waterway-label"
       },
       clickFill:  {
         type: 'fill',
@@ -35,13 +42,14 @@ const layers = {
         paint: {
           "fill-translate-anchor": "map",
           "fill-color": "#d8c72e",
-          "fill-opacity": 0.66
+          "fill-outline-color": "#f00"
         },
         filter: [
           "==",
           "no",
           ""
-        ]
+        ],
+        placement: "waterway-label"
       },
       base:{
         type: 'line',
@@ -49,11 +57,17 @@ const layers = {
         paint: {
           'line-width': [
             'interpolate', ['linear'], ['zoom'],
-            7, .1,
+            7, 0.1,
             12, 1
           ],
-          'line-color': '#08506d'
+          'line-color': '#08506d',
+          'line-opacity': [
+            'interpolate', ['linear'], ['zoom'],
+            7, 0.1,
+            12, 1
+          ]
         },
+        placement: "admin-2-boundaries"
       }
     }
   }
