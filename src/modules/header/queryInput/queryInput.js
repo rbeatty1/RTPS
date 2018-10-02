@@ -85,25 +85,9 @@ class QueryContainer{
                 switch (input.id){
                     case 5: 
                         dropdownMenu.className = 'input__query-execute';
-                        dropdownMenu.addEventListener('click', e=>{
-                            if (!queryInputs.geography || !queryInputs.zones || !queryInputs.direction){
-                                // alert 
-                                alert('You haven\'t finished building your query! Please select options from each dropdown to continue.')
-                            }
-                            else{
-                                // run query
-                            }
-                        });
                         break;
                     case 6:
                         dropdownMenu.className = 'input__query-clear';
-                        dropdownMenu.addEventListener('click', _=>{
-                            listElement.remove();
-                            this.render();
-                            queryInputs.zones = []
-                            document.querySelector('.map__container').remove();
-                            new Map();
-                        })
                         break;
                 }
                 listElement.appendChild(dropdownMenu);

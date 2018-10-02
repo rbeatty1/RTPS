@@ -1,15 +1,73 @@
 import '../../css/map/map.css'
 import {queryInputs, zoneData} from '../header/queryInput/queryInput'
+import {layers} from './map_styles/styles.js'
+
+/* BuildMap() -- rbeatty
+    @desc: Build the map that the page lands on
+    @params:
+        NONE
+    @returns: returns a map reference object that can be used throughout component
+*/
+const BuildMap = ()=>{
+    // grab/create relevant HTML elements
+    const appBody = document.querySelector('#app'),
+        mapBody = document.createElement('div')
+    mapBody.className = "map__container"
+    appBody.appendChild(mapBody);
+    mapboxgl.accessToken = 'pk.eyJ1IjoiYmVhdHR5cmUxIiwiYSI6ImNqOGFpY3o0cTAzcXoycXE4ZTg3d3g5ZGUifQ.VHOvVoTgZ5cRko0NanhtwA';
+    // initiate map
+    let map = new mapboxgl.Map({
+        container: mapBody,
+        style: 'mapbox://styles/beattyre1/cjdbtddl12scq2st5zybjm8r6',
+        center: [-75.148, 40.018],
+        zoom: 8.5,
+        hash : true
+    })
+    return map
+}
+
+/* LoadLayers(map, layers) -- rbeatty
+    @desc: Loop through layer reference object and add each source, as well as each variant of the source as defined by set layer definitions 
+    @params:
+        *!~ map: Map reference object returned by BuildMap():L158
+        *!~ layers: Reference object imported from styles.js that contains nested objects that can be used to add sources and layers in a iterative fashion
+*/
+const LoadLayers = (map, layers)=>{
+    // loop through layer object
+    for (let l in layers){
+        // create mapbox source definition object with vector tile source
+        let sourceDef = {
+            type: layers[l].type,
+            url: layers[l].source
+        }
+
+        map.addSource(l, sourceDef)
+        
+        // iterate through each source's style and create mapbox layer definition object
+        for (let s in layers[l].style){
+            let style = layers[l].style[s]
+            let layerDef = {
+                "id": `${l}-${s}`,
+                "type": style.type,
+                "source": l,
+                "source-layer": style.layer,
+                "paint": style.paint,
+                "visibility": style.visibility ? "none" : "visibile",
+                "interactive": true
+            }
+            !style.filter ? null : layerDef["filter"] = style.filter
+            map.addLayer(layerDef, style.placement)
+        }    
+    }
+}
 
 /* zoneSelection(target, output) -- rbeatty
     @desc: Grab the zones based on user interaction (click) that should be passed to API query
     @params:
-        @target: object return by click event, used to grab the zone number based on user interaction
-        @output: object returned by this function that will be based to the API query 
-    @usage:
-        - L89
+        *!~ target: object return by click event, used to grab the zone number based on user interaction
+        *!~ output: object returned by this function that will be based to the API query 
 */
-function zoneSelection(target, output){
+const zoneSelection = (target, output) =>{
     let zone = target.features[0].properties['no'],
         selection = output.zones,
         index = selection.indexOf(zone);
@@ -18,170 +76,153 @@ function zoneSelection(target, output){
     return selection;
 }
 
-
-/* zoneStyling(id, stat) -- rbeatty
-    @desc: Accept API response and symbolize according to standardized classification bins
-    @params:
-        @id -- tile id to assign in stylesheet (~/src/map/map_styles/rtps.json)
-        @status -- whether this data set should be symbolized as transit served or not
-            // API Response ->- w_avg_con >= 5.5 (metric of transit gap)
-    @usage: 
-        - L124
+/* ProcessData(data, helper) -- rbeatty
+    @desc: Iterate through API query return and create mapbox gl layer definition object that will be used to add and style the analysis layer for display 
+    @params: 
+        *!~ data: raw API json that needs to be cleaned for use
+        *!~ helper: Object to be used as a helper reference to build the paint property for the layer definition 
+    @returns:
+        *!~ layerDef: Layer definition object that contains information specified in mapbox gl documentation that will be passed to map.addLayer() to symbolize analysis
 */
-function zoneStyling(id, status){
-    if (status == 'served'){
-        return {
-            'id' : `${id}-${status}`,
-            'type': 'fill',
-            'source' : id,
-            'filter' : ['match', ['get', 'SERVED'], 1, true, false],
-            'paint': {
-                'fill-color': {
-                    property: 'GAPSCORE',
-                    type: 'interval',
-                    stops: [
-                        [10, '#e2e2e2'],
-                        [20, '#cbe5c2'],
-                        [30, '#7dc57c'],
-                        [40, '#2a9249'],
-                        [60, '#0d4420']
-                    ]
-                }
-            },
-            'fill-opacity': 0.6
+const ProcessData = (data, helper) =>{
+    // iterate through json returned by API call
+    data.forEach(item=>{
+        if (!helper.check[item.no]){
+            // create fill expression item for zones that don't already have one
+            helper.fillExpression.push(item.no, helper.colorScheme[item.rank])
+            helper.check[item.no] = item.no
+        }
+    })
+    helper.fillExpression.push("rgba(0,0,0,0)") // default color (nothing)
+    let layerDef = {
+        "id": `zones-analysis`,
+        "type": "fill",
+        "source": "zones",
+        "source-layer": "tim-zones",
+        "paint":{
+            "fill-color": helper.fillExpression, // big long match expression
+            "fill-opacity": 0.5
         }
     }
-    else{
-        return {
-            'id' : `${id}-${status}`,
-            'type': 'fill',
-            'source' : id,
-            'filter' : ['match', ['get', 'SERVED'], 0, true, false],
-            'paint': {
-                'fill-color': {
-                    property: 'GAPSCORE',
-                    type: 'interval',
-                    stops: [
-                        [10, '#d8d5eb'],
-                        [20, '#9296ca'],
-                        [30, '#586bb2'],
-                        [40, '#2d51a3'],
-                        [60, '#22418d']
-                    ]
-                },
-                'fill-opacity': 0.6
-            }
-        }
+    return layerDef
+}
+
+/* PerformQuery(selection) -- rbeatty
+    @desc: Make API call and parse it into a json that will be processed to create the symbology for the analysis layer
+    @params:
+        *!~ selection: array containing zone no. to be used in the API call
+    @returns:
+        *!~ helpers: object that contains layer definition
+*/
+const PerformQuery = async selection =>{
+
+    // move helper to ProcessData() function?
+    let helpers = {
+        colorScheme: {
+            0: "rgba(255,255,255,0)",
+            1: "#7f2704",
+            2: "#a63603",
+            3: "#d94801",
+            4: "#f16913",
+            5: "#fd8d3c",
+            6: "#fdae6b",
+            7: "#fdd0a2"
+        },
+        fillExpression: ["match", ["get", "no"]],
+        check: {},
+        analysisLayers: {}
+    }
+    let fetchData = await fetch(`http://localhost:8000/zonequery?zones=[${selection}]`) // get data
+    if (fetchData.ok){
+        let rawData = await fetchData.json()
+        let processed = ProcessData(rawData, helpers) // process data
+       helpers.analysisLayers = processed // return
+    }
+    return helpers.analysisLayers
+}
+
+/* ClearQuery(map) -- rbeatty
+    @desc: Return map to base state and remove any zone selections
+    @params:
+        *!~ map: Map reference object returned by BuildMap():L158
+    @returns: NONE
+*/
+const ClearQuery = map=>{
+
+    // reset zone selection
+    map.setFilter('zones-clickFill', ["==", "no", ""])
+    map.setPaintProperty('zones-clickFill', "fill-color", "#d8c72e")
+    map.setPaintProperty('zones-clickFill', "fill-outline-color", "#f00")
+
+    // remove analysis layer
+    if (map.getLayer('zones-analysis')){
+        map.removeLayer('zones-analysis')
     }
 }
+
+/* AddListeners(map) -- rbeatty
+    @desc: Add collection of listeners for the map for interactivity
+    @params:
+        *!~ map: Map reference object returned by BuildMap():L158
+    @returns: NONE
+*/
+const AddListeners = map => {
+    // hover => green fill
+    map.on('mousemove', "zones-reference", (e)=>{
+        map.setFilter("zones-hoverFill", ["==", "no", e.features[0].properties.no])
+    })
+    // leave hover => no fill
+    map.on('mouseleave', "zones-reference", (e)=>{
+        map.setFilter("zones-hoverFill", ["==", "no", ""]);
+    })
+
+    // click => yellow fill
+    map.on('click', "zones-reference", (e)=>{
+        var filtered = zoneSelection(e, queryInputs)
+        filtered.length != 0 ? map.setFilter('zones-clickFill', ['match', ['get', 'no'], filtered, true, false]) : map.setFilter('zones-clickFill', ['==', 'no', '']);
+    })
+
+    // perform query
+    document.querySelector('.input__query-execute').addEventListener('click',()=>{
+        // if exists, remove
+        if (map.getLayer('zones-analysis')){
+            map.removeLayer('zones-analysis')
+        }
+        PerformQuery(queryInputs.zones).then(x=>{
+            map.addLayer(x, "zones-base")
+
+            // resymbolize other layers for aesthetics
+            map.setPaintProperty("zones-clickFill", "fill-color", "#06bf9c")
+            map.setPaintProperty('zones-clickFill', 'fill-outline-color', "#d8c72e")
+        })
+    })
+
+    // clear query
+    document.querySelector('.input__query-clear').addEventListener('click', ()=>{
+        queryInputs.zones = []
+        ClearQuery(map)
+    })
+}
+
 class Map{
     constructor(){
-        this.render()        
+        this.render()
     }
-
     
     render(){
-        const appBody = document.querySelector('#app'),
-            mapBody = document.createElement('div'),
-            execute = document.querySelector('.input__query-execute');
-        mapBody.className = "map__container"
-        appBody.appendChild(mapBody);
-        mapboxgl.accessToken = 'pk.eyJ1IjoiYmVhdHR5cmUxIiwiYSI6ImNqOGFpY3o0cTAzcXoycXE4ZTg3d3g5ZGUifQ.VHOvVoTgZ5cRko0NanhtwA';
-        // initiate map
-        let map = new mapboxgl.Map({
-            container: mapBody,
-            style: './modules/map/map_styles/rtps.json',
-            center: [-75.148, 40.018],
-            zoom: 8.5,
-            hash : true
-        })
-        
-        // add navigation control 
-        const nav = new mapboxgl.NavigationControl();
-        map.addControl(nav, 'top-left');
+        let map = BuildMap()
 
         // trick canvas into filling the entire container because it won't initially for whatever stupid reasion
         map.on('load', _=>{
             map.resize();
+
+            // add navigation control 
+            const nav = new mapboxgl.NavigationControl();
+            map.addControl(nav, 'top-left');
+
+            LoadLayers(map, layers)
+            AddListeners(map)
         });
-
-        // filter functions
-            // hover => green fill
-        map.on('mousemove', "zone-hover", (e)=>{
-            map.setFilter("zone-hover-fill", ["==", "no", e.features[0].properties['no']]);
-        })
-            // leave hover => no fill
-        map.on('mouseleave', "zone-hover", (e)=>{
-            map.setFilter("zone-hover-fill", ["==", "no", ""]);
-        })
-
-            // click => yellow fill
-            // click => create object passed to query
-        map.on('click', "zone-hover", (e)=>{
-            var filtered = zoneSelection(e, queryInputs)
-            filtered.length != 0 ? map.setFilter('zone-click-fill', ['match', ['get', 'no'], filtered, true, false]) : map.setFilter('zone-click-fill', ['==', 'no', '']);
-        })
-
-        execute.addEventListener('click', function(){
-            // if exists, remove
-            if (map.getSource('zone-fill')){
-                map.removeLayer('zone-analysis-fill')
-                map.removeSource('zone-fill')
-            }
-            // call Django API
-                // inputs: TAZ numbers
-            fetch(`http://localhost:8000/zonequery?zones=[${queryInputs.zones}]`)
-                .then(response=> response.status != 200 ? console.error("Server Error") : response.json())
-                .then(api=>{
-                    fetch(`https://services1.arcgis.com/LWtWv6q6BJyKidj8/arcgis/rest/services/TAZ/FeatureServer/0/query?where=1%3D1&outFields=TAZN&outSR=4326&geometryPrecision=4&f=pgeojson`)
-                    .then(response=>{
-                        if(response.ok){
-                            response.json()
-                            .then(esri=>{
-                                // array to contain zone numbers of django output 
-                                let apiReturn = []
-                                api.forEach(apiFeat => {
-                                    if (queryInputs.zones.indexOf(apiFeat.FromZone) === -1){
-                                        apiReturn.push(apiFeat.FromZone)
-                                    }
-                                })
-                                // remove ESRI returns that don't match django output
-                                esri.features = esri.features.filter(item=>{
-                                    if(apiReturn.indexOf(item.properties.TAZN) != -1){
-                                        return true
-                                    }
-                                })
-                                // add gap score to ESRI return
-                                api.forEach(apiFeat=>{
-                                    for (let x in esri.features){
-                                        if (esri.features[x].properties.TAZN === apiFeat.FromZone){
-                                            apiFeat.w_avg_con >= 5.5 ? esri.features[x].properties.SERVED = 0 : esri.features[x].properties.SERVED = 1
-                                            esri.features[x].properties.GAPSCORE = apiFeat.w_avg_gap
-                                        }
-                                    }
-                                })
-                                map.addSource('zone-fill', {
-                                    type: 'geojson',
-                                    data: esri
-                                })
-                                map.addLayer(zoneStyling('zone-fill', 'served'), 'zone-bound')
-                                map.addLayer(zoneStyling('zone-fill', 'notServed'), 'zone-bound')
-                                map.setPaintProperty('zone-bound', 'line-opacity', .2)
-                            })
-                        }
-                    })
-                    /* @TODO: get geographical bounds and zoom map to area
-                    .finally({
-                        // SEE: &returnExtentOnly option for arcgis api call
-
-                        // assign bounds to object
-
-                        // pass extent to mapbox object
-                    })
-                    */
-
-                })
-        })
     }
 }
 
