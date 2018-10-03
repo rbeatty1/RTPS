@@ -79,7 +79,6 @@ def munQuery(query):
     else:
         return HttpResponse("this")
 
-
 def queryCheck(request):
     check = request.get_full_path().split('?')[1]
     mo = re.match(r'^(\w+)=.*$', check)

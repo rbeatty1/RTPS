@@ -44,7 +44,6 @@ const _createMenu = (self) =>{
                     geography.selection = e.target.value
                 }
             }
-            console.log({geography})
         }
         else{
             geography.direction = e.target.value

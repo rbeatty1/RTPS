@@ -70,6 +70,27 @@ const layers = {
         placement: "admin-2-boundaries"
       }
     }
+  },
+  muni: {
+    source: 'https://tiles.dvrpc.org/data/dvrpc-municipal.json',
+    type: 'vector',
+    style: {
+      base: {
+        type: 'fill',
+        layer: 'municipalities',
+        paint: {
+          "fill-translate-anchor": "map",
+          "fill-color": "#d8c72e",
+          "fill-outline-color": "#f00"
+        },
+        filter: [
+          "==",
+          "name",
+          ""
+        ],
+        placement: null
+      }
+    }
   }
   // transit: {
   //   source: 'https://tiles.dvrpc.org/data/dvrpc-tim-transit.json',

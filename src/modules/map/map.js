@@ -153,7 +153,6 @@ const ClearQuery = map => {
     // reset zone selection
     map.setFilter('zones-clickFill', ["==", "no", ""])
     map.setPaintProperty('zones-clickFill', "fill-color", "#d8c72e")
-    map.setPaintProperty('zones-clickFill', "fill-outline-color", "#f00")
 
     // remove analysis layer
     if (map.getLayer('zones-analysis')) {
@@ -196,15 +195,24 @@ const AddListeners = map => {
             map.addLayer(x, "zones-base")
 
             // resymbolize other layers for aesthetics
-            map.setPaintProperty("zones-clickFill", "fill-color", "#06bf9c")
-            map.setPaintProperty('zones-clickFill', 'fill-outline-color', "#d8c72e")
+            geography.type == 'zone' ? map.setPaintProperty("zones-clickFill", "fill-color", "#06bf9c") : map.setPaintProperty("muni-base", "fill-color", "#06bf9c")
         })
     })
 
     // clear query
     document.querySelector('.input__query-clear').addEventListener('click', () => {
         geography.type == 'zone' ? geography.selection = new Array() : undefined
+        if (geography.type == 'mcd'){
+            map.setFilter('muni-base', ['==', 'name', ''])
+            map.setPaintProperty('muni-base', 'fill-color', '#d8c72e')
+            geography.selection = undefined
+        }
         ClearQuery(map)
+    })
+
+    document.querySelector('#muni').addEventListener('change', e=>{
+        let muni = e.target.value
+        map.getLayer('muni-base') ? map.setFilter('muni-base', ['==', 'name', muni]) : map.setFilter('muni-base', ['==', 'name', ''])
     })
 }
 
