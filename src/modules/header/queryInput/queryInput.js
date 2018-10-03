@@ -8,7 +8,7 @@ let geography = {
     direction: undefined
 }
 
-function _createMenuLinks(self, option){
+const _createMenuLinks = (self, option) =>{
     // iterate through options and create a link for each one -- <option value='{i}' class='input__input-option>i</option>
     option.forEach(i=> {
         let optionLink = document.createElement('option');
@@ -18,17 +18,11 @@ function _createMenuLinks(self, option){
         self.appendChild(optionLink);
         return self;
     })
-    // indicator for geography object -- update object property with corresponding selection
-    // self.addEventListener('change', e=>{
-    //     delete geography[self.id];
-    //     geography[self.id] = self.value;
-    //     return geography;
-    // })
     return self;
 }
 
 // create a menu for all query input variables
-function _createMenu(self){
+const _createMenu = (self) =>{
     let dropdownMenu = document.createElement('select');
     dropdownMenu.innerHTML = `<option value="" disabled selected>${self.name}</option>`;
     dropdownMenu.id = `${self.elem_id}`;
