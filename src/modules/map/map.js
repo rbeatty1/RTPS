@@ -1,6 +1,6 @@
 import '../../css/map/map.css'
-import {queryInputs, zoneData} from '../header/queryInput/queryInput'
-import {layers} from './map_styles/styles.js'
+import { geography } from '../header/queryInput/queryInput'
+import { layers } from './map_styles/styles.js'
 
 /* BuildMap() -- rbeatty
     @desc: Build the map that the page lands on
@@ -8,7 +8,7 @@ import {layers} from './map_styles/styles.js'
         NONE
     @returns: returns a map reference object that can be used throughout component
 */
-const BuildMap = ()=>{
+const BuildMap = () => {
     // grab/create relevant HTML elements
     const appBody = document.querySelector('#app'),
         mapBody = document.createElement('div')
@@ -21,7 +21,7 @@ const BuildMap = ()=>{
         style: 'mapbox://styles/beattyre1/cjdbtddl12scq2st5zybjm8r6',
         center: [-75.148, 40.018],
         zoom: 8.5,
-        hash : true
+        hash: true
     })
     return map
 }
@@ -32,9 +32,9 @@ const BuildMap = ()=>{
         *!~ map: Map reference object returned by BuildMap():L158
         *!~ layers: Reference object imported from styles.js that contains nested objects that can be used to add sources and layers in a iterative fashion
 */
-const LoadLayers = (map, layers)=>{
+const LoadLayers = (map, layers) => {
     // loop through layer object
-    for (let l in layers){
+    for (let l in layers) {
         // create mapbox source definition object with vector tile source
         let sourceDef = {
             type: layers[l].type,
@@ -42,9 +42,9 @@ const LoadLayers = (map, layers)=>{
         }
 
         map.addSource(l, sourceDef)
-        
+
         // iterate through each source's style and create mapbox layer definition object
-        for (let s in layers[l].style){
+        for (let s in layers[l].style) {
             let style = layers[l].style[s]
             let layerDef = {
                 "id": `${l}-${s}`,
@@ -57,7 +57,7 @@ const LoadLayers = (map, layers)=>{
             }
             !style.filter ? null : layerDef["filter"] = style.filter
             map.addLayer(layerDef, style.placement)
-        }    
+        }
     }
 }
 
@@ -67,9 +67,9 @@ const LoadLayers = (map, layers)=>{
         *!~ target: object return by click event, used to grab the zone number based on user interaction
         *!~ output: object returned by this function that will be based to the API query 
 */
-const zoneSelection = (target, output) =>{
+const zoneSelection = (target, output) => {
     let zone = target.features[0].properties['no'],
-        selection = output.zones,
+        selection = output.selection,
         index = selection.indexOf(zone);
     // if value is already in array, remove it, otherwise add it
     index != -1 ? selection.splice(index, 1) : selection.push(zone);
@@ -84,10 +84,10 @@ const zoneSelection = (target, output) =>{
     @returns:
         *!~ layerDef: Layer definition object that contains information specified in mapbox gl documentation that will be passed to map.addLayer() to symbolize analysis
 */
-const ProcessData = (data, helper) =>{
+const ProcessData = (data, helper) => {
     // iterate through json returned by API call
-    data.forEach(item=>{
-        if (!helper.check[item.no]){
+    data.forEach(item => {
+        if (!helper.check[item.no]) {
             // create fill expression item for zones that don't already have one
             helper.fillExpression.push(item.no, helper.colorScheme[item.rank])
             helper.check[item.no] = item.no
@@ -99,7 +99,7 @@ const ProcessData = (data, helper) =>{
         "type": "fill",
         "source": "zones",
         "source-layer": "tim-zones",
-        "paint":{
+        "paint": {
             "fill-color": helper.fillExpression, // big long match expression
             "fill-opacity": 0.5
         }
@@ -114,8 +114,7 @@ const ProcessData = (data, helper) =>{
     @returns:
         *!~ helpers: object that contains layer definition
 */
-const PerformQuery = async selection =>{
-
+const PerformQuery = async input => {
     // move helper to ProcessData() function?
     let helpers = {
         colorScheme: {
@@ -132,11 +131,13 @@ const PerformQuery = async selection =>{
         check: {},
         analysisLayers: {}
     }
-    let fetchData = await fetch(`http://localhost:8000/zonequery?zones=[${selection}]`) // get data
-    if (fetchData.ok){
+    let fetchData = input.type === 'zone' && input.direction ? 
+        await fetch(`http://localhost:8000/zonequery?zones=[${input.selection}]&direction=${input.direction}`) : 
+        await fetch(`http://localhost:8000/zonequery?muni=${input.selection}&direction=${input.direction}`)
+    if (fetchData.ok) {
         let rawData = await fetchData.json()
         let processed = ProcessData(rawData, helpers) // process data
-       helpers.analysisLayers = processed // return
+        helpers.analysisLayers = processed // return
     }
     return helpers.analysisLayers
 }
@@ -147,15 +148,14 @@ const PerformQuery = async selection =>{
         *!~ map: Map reference object returned by BuildMap():L158
     @returns: NONE
 */
-const ClearQuery = map=>{
+const ClearQuery = map => {
 
     // reset zone selection
     map.setFilter('zones-clickFill', ["==", "no", ""])
     map.setPaintProperty('zones-clickFill', "fill-color", "#d8c72e")
-    map.setPaintProperty('zones-clickFill', "fill-outline-color", "#f00")
 
     // remove analysis layer
-    if (map.getLayer('zones-analysis')){
+    if (map.getLayer('zones-analysis')) {
         map.removeLayer('zones-analysis')
     }
 }
@@ -168,52 +168,63 @@ const ClearQuery = map=>{
 */
 const AddListeners = map => {
     // hover => green fill
-    map.on('mousemove', "zones-reference", (e)=>{
+    map.on('mousemove', "zones-reference", (e) => {
         map.setFilter("zones-hoverFill", ["==", "no", e.features[0].properties.no])
     })
     // leave hover => no fill
-    map.on('mouseleave', "zones-reference", (e)=>{
+    map.on('mouseleave', "zones-reference", (e) => {
         map.setFilter("zones-hoverFill", ["==", "no", ""]);
     })
 
     // click => yellow fill
-    map.on('click', "zones-reference", (e)=>{
-        var filtered = zoneSelection(e, queryInputs)
-        filtered.length != 0 ? map.setFilter('zones-clickFill', ['match', ['get', 'no'], filtered, true, false]) : map.setFilter('zones-clickFill', ['==', 'no', '']);
+    map.on('click', "zones-reference", (e) => {
+        if (geography && geography.type == 'zone') {
+            var filtered = zoneSelection(e, geography)
+            filtered.length != 0 ? map.setFilter('zones-clickFill', ['match', ['get', 'no'], filtered, true, false]) : map.setFilter('zones-clickFill', ['==', 'no', '']);
+        }
+        else { alert('Select a geography before continuing!') }
     })
 
     // perform query
-    document.querySelector('.input__query-execute').addEventListener('click',()=>{
+    document.querySelector('.input__query-execute').addEventListener('click', () => {
         // if exists, remove
-        if (map.getLayer('zones-analysis')){
+        if (map.getLayer('zones-analysis')) {
             map.removeLayer('zones-analysis')
         }
-        PerformQuery(queryInputs.zones).then(x=>{
+        PerformQuery(geography).then(x => {
             map.addLayer(x, "zones-base")
 
             // resymbolize other layers for aesthetics
-            map.setPaintProperty("zones-clickFill", "fill-color", "#06bf9c")
-            map.setPaintProperty('zones-clickFill', 'fill-outline-color', "#d8c72e")
+            geography.type == 'zone' ? map.setPaintProperty("zones-clickFill", "fill-color", "#06bf9c") : map.setPaintProperty("muni-base", "fill-color", "#06bf9c")
         })
     })
 
     // clear query
-    document.querySelector('.input__query-clear').addEventListener('click', ()=>{
-        queryInputs.zones = []
+    document.querySelector('.input__query-clear').addEventListener('click', () => {
+        geography.type == 'zone' ? geography.selection = new Array() : undefined
+        if (geography.type == 'mcd'){
+            map.setFilter('muni-base', ['==', 'name', ''])
+            map.setPaintProperty('muni-base', 'fill-color', '#d8c72e')
+            geography.selection = undefined
+        }
         ClearQuery(map)
+    })
+
+    document.querySelector('#muni').addEventListener('change', e=>{
+        let muni = e.target.value
+        map.getLayer('muni-base') ? map.setFilter('muni-base', ['==', 'name', muni]) : map.setFilter('muni-base', ['==', 'name', ''])
     })
 }
 
-class Map{
-    constructor(){
+class Map {
+    constructor() {
         this.render()
     }
-    
-    render(){
+
+    render() {
         let map = BuildMap()
 
-        // trick canvas into filling the entire container because it won't initially for whatever stupid reasion
-        map.on('load', _=>{
+        map.on('load', _ => {
             map.resize();
 
             // add navigation control 
@@ -227,4 +238,4 @@ class Map{
 }
 
 
-export {Map};
+export { Map };
