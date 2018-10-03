@@ -1,25 +1,11 @@
 import "../../../css/header/queryInputs/queryInputs.css"
-import {Map} from "../../map/map"
-import {map} from "../../../app"
 
 
 // holder for query inputs
-let queryInputs = {
-    geography: undefined,
-    zones: [],
+let geography = {
+    type: undefined,
+    selection: undefined,
     direction: undefined
-}
-
-let zoneData;
-// checks whether MCD list should be visible or not
-function _GeographyChecker(geoInput){
-    if (geoInput.value == 'Zone'){
-        geoInput.nextSibling.style.display = 'none';
-        alert('Select query zones by clicking on the map!');
-    }
-    else{
-        let muniList = geoInput.nextSibling.style.display = 'inline-block';
-    }
 }
 
 function _createMenuLinks(self, option){
@@ -32,31 +18,46 @@ function _createMenuLinks(self, option){
         self.appendChild(optionLink);
         return self;
     })
-    // indicator for queryInputs object -- update object property with corresponding selection
-    self.addEventListener('change', e=>{
-        delete queryInputs[self.id];
-        queryInputs[self.id] = self.value;
-        return queryInputs;
-    })
+    // indicator for geography object -- update object property with corresponding selection
+    // self.addEventListener('change', e=>{
+    //     delete geography[self.id];
+    //     geography[self.id] = self.value;
+    //     return geography;
+    // })
     return self;
 }
 
 // create a menu for all query input variables
-function _createMenu(self, item, query){
+function _createMenu(self){
     let dropdownMenu = document.createElement('select');
     dropdownMenu.innerHTML = `<option value="" disabled selected>${self.name}</option>`;
     dropdownMenu.id = `${self.elem_id}`;
     dropdownMenu.className = 'input__query-input';
     _createMenuLinks(dropdownMenu, self.options);
-    if (dropdownMenu.id == 'geography'){
-        dropdownMenu.addEventListener('change', _=>{
-            _GeographyChecker(dropdownMenu);
-        })
-
-    }
+    dropdownMenu.addEventListener('change', e=>{
+        if (dropdownMenu.id == 'geography' || dropdownMenu.id == 'muni'){
+            if (e.target.id != 'muni'){ geography.type = e.target.value.toLowerCase() } 
+            if (geography.type){
+                if (e.target.value == 'MCD'){
+                    document.querySelector('#muni').style.display != 'inline-block' ? document.querySelector('#muni').style.display = 'inline-block' : null
+                    geography.selection = undefined
+                }
+                else if(e.target.value=='Zone'){
+                    document.querySelector("#muni").style.display == 'inline-block' ? document.querySelector("#muni").style.display = 'none': null
+                    geography.selection = new Array()
+                }
+                else{
+                    geography.selection = e.target.value
+                }
+            }
+            console.log({geography})
+        }
+        else{
+            geography.direction = e.target.value
+        }
+    })
     return dropdownMenu;
 }
-
 class QueryContainer{
     constructor(){
     }
@@ -97,4 +98,4 @@ class QueryContainer{
     }
 }
 
-export {queryInputs, QueryContainer, zoneData};
+export {geography, QueryContainer};

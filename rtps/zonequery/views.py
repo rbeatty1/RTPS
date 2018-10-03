@@ -28,7 +28,7 @@ def zoneQuery(request):
                 oppo = "ToZone"
     con = psql.connect("dbname={} user=postgres password={} host={} port=5432".format(c.DB_NAME, c.DB_PW, c.DB_HOST))
     cur = con.cursor()
-    query = sql.SQL(c.qry.format(direction, oppo, zones))
+    query = sql.SQL(c.zq.format(direction, oppo, zones))
     cur.execute(query)
     rows = cur.fetchall()
     payload = []
@@ -44,3 +44,7 @@ def zoneQuery(request):
         return JsonResponse(payload, safe=False)
     else:
         return HttpResponse("this")
+
+def munQuery(request):
+    print("municipality query")
+    return HttpResponse('this')

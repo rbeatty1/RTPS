@@ -1,5 +1,5 @@
 import '../../css/map/map.css'
-import {queryInputs, zoneData} from '../header/queryInput/queryInput'
+import { geography } from '../header/queryInput/queryInput'
 import {layers} from './map_styles/styles.js'
 
 /* BuildMap() -- rbeatty
@@ -69,7 +69,7 @@ const LoadLayers = (map, layers)=>{
 */
 const zoneSelection = (target, output) =>{
     let zone = target.features[0].properties['no'],
-        selection = output.zones,
+        selection = output.selection,
         index = selection.indexOf(zone);
     // if value is already in array, remove it, otherwise add it
     index != -1 ? selection.splice(index, 1) : selection.push(zone);
@@ -115,7 +115,6 @@ const ProcessData = (data, helper) =>{
         *!~ helpers: object that contains layer definition
 */
 const PerformQuery = async input =>{
-
     // move helper to ProcessData() function?
     let helpers = {
         colorScheme: {
@@ -132,7 +131,7 @@ const PerformQuery = async input =>{
         check: {},
         analysisLayers: {}
     }
-    let fetchData = await fetch(`http://localhost:8000/zonequery?zones=[${input.zones}]&direction=${input.direction}`) // get data
+    let fetchData = input.type === 'zone' && input.direction? await fetch(`http://localhost:8000/zonequery?zones=[${input.selection}]&direction=${input.direction}`) : console.log('naw')
     if (fetchData.ok){
         let rawData = await fetchData.json()
         let processed = ProcessData(rawData, helpers) // process data
@@ -178,8 +177,11 @@ const AddListeners = map => {
 
     // click => yellow fill
     map.on('click', "zones-reference", (e)=>{
-        var filtered = zoneSelection(e, queryInputs)
-        filtered.length != 0 ? map.setFilter('zones-clickFill', ['match', ['get', 'no'], filtered, true, false]) : map.setFilter('zones-clickFill', ['==', 'no', '']);
+        if (geography && geography.type == 'zone'){
+            var filtered = zoneSelection(e, geography)
+            filtered.length != 0 ? map.setFilter('zones-clickFill', ['match', ['get', 'no'], filtered, true, false]) : map.setFilter('zones-clickFill', ['==', 'no', '']);
+        }
+        else{ alert('Select a geography before continuing!') }
     })
 
     // perform query
@@ -188,7 +190,7 @@ const AddListeners = map => {
         if (map.getLayer('zones-analysis')){
             map.removeLayer('zones-analysis')
         }
-        PerformQuery(queryInputs).then(x=>{
+        PerformQuery(geography).then(x=>{
             map.addLayer(x, "zones-base")
 
             // resymbolize other layers for aesthetics
@@ -199,7 +201,7 @@ const AddListeners = map => {
 
     // clear query
     document.querySelector('.input__query-clear').addEventListener('click', ()=>{
-        queryInputs.zones = []
+        geography.type == 'zone' ? geography.selection = new Array() : undefined
         ClearQuery(map)
     })
 }
