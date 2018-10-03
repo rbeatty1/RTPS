@@ -114,7 +114,7 @@ const ProcessData = (data, helper) =>{
     @returns:
         *!~ helpers: object that contains layer definition
 */
-const PerformQuery = async selection =>{
+const PerformQuery = async input =>{
 
     // move helper to ProcessData() function?
     let helpers = {
@@ -132,7 +132,7 @@ const PerformQuery = async selection =>{
         check: {},
         analysisLayers: {}
     }
-    let fetchData = await fetch(`http://localhost:8000/zonequery?zones=[${selection}]`) // get data
+    let fetchData = await fetch(`http://localhost:8000/zonequery?zones=[${input.zones}]&direction=${input.direction}`) // get data
     if (fetchData.ok){
         let rawData = await fetchData.json()
         let processed = ProcessData(rawData, helpers) // process data
@@ -188,7 +188,7 @@ const AddListeners = map => {
         if (map.getLayer('zones-analysis')){
             map.removeLayer('zones-analysis')
         }
-        PerformQuery(queryInputs.zones).then(x=>{
+        PerformQuery(queryInputs).then(x=>{
             map.addLayer(x, "zones-base")
 
             // resymbolize other layers for aesthetics
