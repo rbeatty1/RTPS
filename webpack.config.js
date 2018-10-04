@@ -18,6 +18,23 @@ module.exports = {
                 }
             },
             {
+                test:/\.svg$/,
+                use: [{
+                    loader: "svg-inline-loader"
+                }]
+            },
+            {
+                test: /\.png$/,
+                use:[{
+                    loader: "file-loader",
+                    options: {
+                        name: "img/[name].[ext]",
+                        limit: 1000
+                    }
+                }]
+                
+            },
+            {
                 test: /\.css/,
                 loader: ['style-loader','css-loader']
             }

@@ -132,8 +132,8 @@ const PerformQuery = async input => {
         analysisLayers: {}
     }
     let fetchData = input.type === 'zone' && input.direction ? 
-        await fetch(`http://localhost:8000/zonequery?zones=[${input.selection}]&direction=${input.direction}`) : 
-        await fetch(`http://localhost:8000/zonequery?muni=${input.selection}&direction=${input.direction}`)
+        await fetch(`https://a.michaelruane.com/api/rtps/gap?zones=[${input.selection}]&direction=${input.direction}`) : 
+        await fetch(`https://a.michaelruane.com/api/rtps/gap?muni=${input.selection}&direction=${input.direction}`)
     if (fetchData.ok) {
         let rawData = await fetchData.json()
         let processed = ProcessData(rawData, helpers) // process data

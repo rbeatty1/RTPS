@@ -1,6 +1,7 @@
 ## build folders
 node_modules
 dist
+env
 
 # django junk files
 *.pyc
