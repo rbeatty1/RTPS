@@ -26,7 +26,7 @@ def zoneQuery(query):
                 oppo = "FromZone"
             else:
                 oppo = "ToZone"
-    con = psql.connect("dbname={} user=postgres password={} host={} port=5432".format(c.DB_NAME, c.DB_PW, c.DB_HOST))
+    con = psql.connect("dbname='{}' user='{}' host='{}' password='{}'".format(c.DB_NAME, c.DB_USER, c.DB_HOST, c.DB_PASS))
     cur = con.cursor()
     query = sql.SQL(c.zq.format(direction, oppo, zones))
     cur.execute(query)
@@ -60,7 +60,7 @@ def munQuery(query):
                 oppo = "FromZone"
             else:
                 oppo = "ToZone"
-    con = psql.connect("dbname={} user=postgres password={} host={} port=5432".format(c.DB_NAME, c.DB_PW, c.DB_HOST))
+    con = psql.connect("dbname='{}' user='{}' host='{}' password='{}'".format(c.DB_NAME, c.DB_USER, c.DB_HOST, c.DB_PASS))
     cur = con.cursor()
     query = sql.SQL(c.mq.format(direction, oppo, mcd))
     cur.execute(query)

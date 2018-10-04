@@ -1,5 +1,6 @@
 import "../../css/footer/footer.css";
 import { FooterElements } from "./FooterElements";
+import logo from "../../img/DVRPC-logo.png"
 
 const dvrpcElements = FooterElements[0].content;
 const appElements = FooterElements[1].content;
@@ -18,7 +19,7 @@ class Footer{
             foot.className = `footer__${FooterElements[k].elemName}`;
             switch (FooterElements[k].elemName){
                 case 'dvrpc':
-                    foot.innerHTML = `<a href="https://www.dvrpc.org" rel="noopener" target="_blank"><img src=${dvrpcElements.logo} alt='DVRPC Logo' class="footer__logo"></a>
+                    foot.innerHTML = `<a href="https://www.dvrpc.org" rel="noopener" target="_blank"><img src=${logo} alt='DVRPC Logo' class="footer__logo"></a>
                                        <div class="footer__dvrpc-info">${dvrpcElements.address}</br>${dvrpcElements.city}, ${dvrpcElements.state} ${dvrpcElements.zipcode}</div>
                                        <div class="footer__dvrpc-info"><strong>Phone:</strong> ${dvrpcElements.phone}</br><strong>Email: </strong><a href="mailto:${dvrpcElements.email}" target="_blank" rel="noopener">${dvrpcElements.email}</a>`
                     break;
