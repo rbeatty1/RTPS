@@ -2,11 +2,15 @@ const path = require('path'),
     HtmlWebpackPlugin = require('html-webpack-plugin'),
     ExtractTextPlugin = require('extract-text-webpack-plugin')
 
+let extractPlugin = new ExtractTextPlugin({
+    filename: './bundle.styles.css'
+})
 module.exports = {
-    entry: `./src/app.js`,
+    context: path.resolve(__dirname, 'src'),
+    entry: `./app.js`,
     output: {
-        path: `${__dirname}/dist`,
-        filename: '[name].bundle.js'
+        path: path.resolve(__dirname, 'dist'),
+        filename: 'js/[name].bundle.js'
     },
     module: {
         rules: [
@@ -36,7 +40,10 @@ module.exports = {
             },
             {
                 test: /\.css/,
-                loader: ['style-loader','css-loader']
+                use: extractPlugin.extract({
+                    fallback: 'style-loader',
+                    use: ['css-loader']
+                })
             }
         ]
     },
@@ -48,11 +55,9 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             title: 'Custom Template',
-            template: './src/index.html',
+            template: 'index.html',
             hash: true
         }),
-        new ExtractTextPlugin({
-            filename: './bundle.styles.css'
-        })
+        extractPlugin
     ]
 };

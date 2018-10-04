@@ -2,7 +2,6 @@ const FooterElements = [
     {
         elemName : 'dvrpc',
         content : {
-            logo : '/img/DVRPC-logo.png',
             address : '190 N. Independence Mall W, 8th Floor',
             city : 'Philadelphia',
             state : 'PA',

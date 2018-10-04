@@ -3,9 +3,6 @@
   "version": "0.0.1",
   "description": "Tool to identify different types of transit gaps to assist in making data-driven decisions to evaluate and prioritize transit improvements throughout the Philadelphia region.",
   "main": "app.js",
-  "browserslist": [
-    "extends @dvrpc/browserslist-config"
-  ],
   "scripts": {
     "start": "webpack-dev-server --config webpack.config.js",
     "webpack": "webpack -p --watch",
@@ -27,7 +24,6 @@
     "url": "https://github.com/rbeatty1/RTPS.git"
   },
   "devDependencies": {
-    "@dvrpc/browserslist-config": "^1.0.0",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.5",
     "babel-preset-es2015": "^6.24.1",

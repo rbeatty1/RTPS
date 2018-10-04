@@ -1,9 +1,6 @@
 const HeaderElements = [
     {
-        elemName : 'logo',
-        content : {
-            path : '/img/RTPS-logo.png'
-        }
+        elemName : 'logo'
     },
     {
         elemName: 'queryInputs',
