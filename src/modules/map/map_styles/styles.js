@@ -5,22 +5,6 @@ const layers = {
     source: 'https://tiles.dvrpc.org/data/dvrpc-tim-zones.json',
     type: 'vector',
     style: {
-      reference: {
-        type: 'fill',
-        layer: 'tim-zones',
-        paint: {
-          "fill-translate-anchor": "map",
-          "fill-color": "rgb(255,255,255)",
-          "fill-opacity": 0
-        },
-        visibility: "none",
-        placement: null,
-        filter: [
-          "!=",
-          "no",
-          ""
-        ]
-      },
       hoverFill:  {
         type: 'fill',
         layer: 'tim-zones',
@@ -69,6 +53,28 @@ const layers = {
         },
         placement: "admin-2-boundaries"
       }
+    }
+  },
+  reference: {
+    source: 'https://tiles.dvrpc.org/data/dvrpc-tim-zones.json',
+    type: 'vector',
+    style: {
+      base: {
+        type: 'fill',
+        layer: 'tim-zones',
+        paint: {
+          "fill-translate-anchor": "map",
+          "fill-color": "rgb(255,255,255)",
+          "fill-opacity": 0
+        },
+        visibility: "none",
+        placement: null,
+        filter: [
+          "!=",
+          "no",
+          ""
+        ]
+      },
     }
   },
   muni: {

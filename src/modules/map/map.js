@@ -168,16 +168,16 @@ const ClearQuery = map => {
 */
 const AddListeners = map => {
     // hover => green fill
-    map.on('mousemove', "zones-reference", (e) => {
+    map.on('mousemove', "reference-base", (e) => {
         map.setFilter("zones-hoverFill", ["==", "no", e.features[0].properties.no])
     })
     // leave hover => no fill
-    map.on('mouseleave', "zones-reference", (e) => {
+    map.on('mouseleave', "reference-base", (e) => {
         map.setFilter("zones-hoverFill", ["==", "no", ""]);
     })
 
     // click => yellow fill
-    map.on('click', "zones-reference", (e) => {
+    map.on('click', "reference-base", (e) => {
         if (geography && geography.type == 'zone') {
             var filtered = zoneSelection(e, geography)
             filtered.length != 0 ? map.setFilter('zones-clickFill', ['match', ['get', 'no'], filtered, true, false]) : map.setFilter('zones-clickFill', ['==', 'no', '']);
