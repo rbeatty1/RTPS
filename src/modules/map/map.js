@@ -1,6 +1,8 @@
 import '../../css/map/map.css'
 import { geography } from '../header/queryInput/queryInput'
 import { layers } from './map_styles/styles.js'
+import { QueryContainer } from '../header/queryInput/queryInput.js'
+import { HeaderElements } from '../header/HeaderElements.js'
 
 /* BuildMap() -- rbeatty
     @desc: Build the map that the page lands on
@@ -10,7 +12,7 @@ import { layers } from './map_styles/styles.js'
 */
 const BuildMap = () => {
     // grab/create relevant HTML elements
-    const appBody = document.querySelector('#app'),
+    const appBody = document.querySelector('#main'),
         mapBody = document.createElement('div')
     mapBody.className = "map__container"
     appBody.appendChild(mapBody);
@@ -232,8 +234,17 @@ class Map {
     }
 
     render() {
+        document.querySelector('#main').innerHTML = '';
         let map = BuildMap()
         AddLoadingSpinner(map)
+
+        // query inputs
+        let queryContainer = new QueryContainer();
+        queryContainer.list = HeaderElements[1].content;
+        let queryList = [];
+        for (var k in queryContainer.list){
+            queryList.push(queryContainer.list[k]);
+            }
 
         map.on('load', _ => {
             map.resize();

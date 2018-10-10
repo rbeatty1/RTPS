@@ -3,7 +3,7 @@ a {
     font-family: 'Arial Narrow', Arial, sans-serif;
     color: #08506d;
 }
-.nav__link-active{
+.header__nav-link.active{
     font-weight: 700;
     color: #8bb23f;
 }

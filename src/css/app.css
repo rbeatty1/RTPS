@@ -4,3 +4,8 @@ body, #app{
     display: flex;
     flex-flow: column;
 }
+
+#main{
+    height: 85vh;
+    width: 100vw;
+}
