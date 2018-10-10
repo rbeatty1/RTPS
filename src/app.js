@@ -4,7 +4,6 @@ import {Map} from './modules/map/map'
 import {Footer} from './modules/footer/footer';
 import './css/app.css'
 
-console.log({HeaderElements})
 let map = new Map();
 new Footer();
 headerRender(HeaderElements);

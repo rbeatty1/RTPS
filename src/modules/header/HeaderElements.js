@@ -60,18 +60,4 @@ const HeaderElements = [
     }
 ]
 
-
-// let jawn = fetch(`https://services1.arcgis.com/LWtWv6q6BJyKidj8/arcgis/rest/services/DVRPC_Boundaries/FeatureServer/0/query?where=1%3D1&outFields=MUN_NAME&returnGeometry=false&returnDistinctValues=true&returnExceededLimitFeatures=true&f=pjson`)
-// .then(response=>{
-//     if (response.ok){ return response.json() }
-// })
-// .then(jawn=>{
-//     let mcds = new Array();
-//     jawn.features.forEach(item=>{
-//         mcds.push(item.attributes.MUN_NAME)
-//     })
-// })
-// HeaderElements[1].content.muniList.options = jawn
-
-
 export {HeaderElements};

@@ -187,12 +187,16 @@ const AddListeners = map => {
 
     // perform query
     document.querySelector('.input__query-execute').addEventListener('click', () => {
+
         // if exists, remove
         if (map.getLayer('zones-analysis')) {
             map.removeLayer('zones-analysis')
         }
+        let spinner = document.querySelector(".map__spinner")
+        spinner.style.display = 'block';
         PerformQuery(geography).then(x => {
             map.addLayer(x, "zones-base")
+            spinner.style.display = 'none'
 
             // resymbolize other layers for aesthetics
             geography.type == 'zone' ? map.setPaintProperty("zones-clickFill", "fill-color", "#06bf9c") : map.setPaintProperty("muni-base", "fill-color", "#06bf9c")
@@ -216,6 +220,12 @@ const AddListeners = map => {
     })
 }
 
+const AddLoadingSpinner = (target) =>{
+    let container = document.createElement('div')
+    container.classList = 'map__spinner'
+    target._container.appendChild(container)
+}
+
 class Map {
     constructor() {
         this.render()
@@ -223,10 +233,10 @@ class Map {
 
     render() {
         let map = BuildMap()
+        AddLoadingSpinner(map)
 
         map.on('load', _ => {
             map.resize();
-
             // add navigation control 
             const nav = new mapboxgl.NavigationControl();
             map.addControl(nav, 'top-left');
