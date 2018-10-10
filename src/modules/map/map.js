@@ -131,8 +131,8 @@ const PerformQuery = async input => {
         check: {},
         analysisLayers: {}
     }
-    let fetchData = input.type === 'zone' && input.direction ? 
-        await fetch(`https://a.michaelruane.com/api/rtps/gap?zones=[${input.selection}]&direction=${input.direction}`) : 
+    let fetchData = input.type === 'zone' && input.direction ?
+        await fetch(`https://a.michaelruane.com/api/rtps/gap?zones=[${input.selection}]&direction=${input.direction}`) :
         await fetch(`https://a.michaelruane.com/api/rtps/gap?muni=${input.selection}&direction=${input.direction}`)
     if (fetchData.ok) {
         let rawData = await fetchData.json()
@@ -202,7 +202,7 @@ const AddListeners = map => {
     // clear query
     document.querySelector('.input__query-clear').addEventListener('click', () => {
         geography.type == 'zone' ? geography.selection = new Array() : undefined
-        if (geography.type == 'mcd'){
+        if (geography.type == 'municipality') {
             map.setFilter('muni-base', ['==', 'name', ''])
             map.setPaintProperty('muni-base', 'fill-color', '#d8c72e')
             geography.selection = undefined
@@ -210,7 +210,7 @@ const AddListeners = map => {
         ClearQuery(map)
     })
 
-    document.querySelector('#muni').addEventListener('change', e=>{
+    document.querySelector('#muni').addEventListener('change', e => {
         let muni = e.target.value
         map.getLayer('muni-base') ? map.setFilter('muni-base', ['==', 'name', muni]) : map.setFilter('muni-base', ['==', 'name', ''])
     })

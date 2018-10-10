@@ -21,14 +21,14 @@ class Footer{
                 case 'dvrpc':
                     foot.innerHTML = `<a href="https://www.dvrpc.org" rel="noopener" target="_blank"><img src=${logo} alt='DVRPC Logo' class="footer__logo"></a>
                                        <div class="footer__dvrpc-info">${dvrpcElements.address}</br>${dvrpcElements.city}, ${dvrpcElements.state} ${dvrpcElements.zipcode}</div>
-                                       <div class="footer__dvrpc-info"><strong>Phone:</strong> ${dvrpcElements.phone}</br><strong>Email: </strong><a href="mailto:${dvrpcElements.email}" target="_blank" rel="noopener">${dvrpcElements.email}</a>`
+                                       <div class="footer__dvrpc-info"><strong>Phone:</strong> ${dvrpcElements.phone}</br><strong>Email: </strong><a class="footer__link" href="mailto:${dvrpcElements.email}" target="_blank" rel="noopener">${dvrpcElements.email}</a>`
                     break;
                 case 'app':
                     foot.innerHTML = `<p>${appElements.name}&nbsp;&nbsp;&nbsp;&nbsp;<strong style='font-size: 1.25em;'>|</strong>&nbsp;&nbsp;&nbsp;&nbsp;Version: ${appElements.version}`
                     break;
                 case 'contact':
                     foot.innerHTML = `<div class="footer__dvrpc-info">${contactElements.staff}</br>${contactElements.title}</div>
-                                      <div class="footer__dvrpc-info"><strong>Phone: </strong>${contactElements.phone}</br><strong>Email: </strong><a href="mailto:${contactElements.email}" target="_blank" rel="noopener" style="color:#8bb23f">${contactElements.email}</a>`
+                                      <div class="footer__dvrpc-info"><strong>Phone: </strong>${contactElements.phone}</br><strong>Email: </strong><a class="footer__link"  href="mailto:${contactElements.email}" target="_blank" rel="noopener">${contactElements.email}</a>`
                     break;
                 default:
                     break;

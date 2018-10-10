@@ -32,7 +32,7 @@ const _createMenu = (self) =>{
         if (dropdownMenu.id == 'geography' || dropdownMenu.id == 'muni'){
             if (e.target.id != 'muni'){ geography.type = e.target.value.toLowerCase() } 
             if (geography.type){
-                if (e.target.value == 'MCD'){
+                if (e.target.value == 'Municipality'){
                     document.querySelector('#muni').style.display != 'inline-block' ? document.querySelector('#muni').style.display = 'inline-block' : null
                     geography.selection = undefined
                 }
