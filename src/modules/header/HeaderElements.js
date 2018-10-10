@@ -43,7 +43,7 @@ const HeaderElements = [
             },
             availibility : {
                 pageId : 2,
-                name : 'Availibility',
+                name : 'Accessibility',
                 href : '#'
             },
             frequency : {

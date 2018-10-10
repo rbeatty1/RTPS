@@ -1,4 +1,4 @@
-import { Map } from '../modules/map/map.js'
+import { Map } from '../modules/pages/map/map.js'
 
 const LoadMain = target =>{
   let main = document.querySelector('#main')
