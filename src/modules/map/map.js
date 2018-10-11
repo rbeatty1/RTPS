@@ -197,7 +197,7 @@ const AddListeners = map => {
         PerformQuery(geography).then(x => {
             map.addLayer(x, "zones-base")
             spinner.style.display = 'none'
-
+            
             // resymbolize other layers for aesthetics
             geography.type == 'zone' ? map.setPaintProperty("zones-clickFill", "fill-color", "#06bf9c") : map.setPaintProperty("muni-base", "fill-color", "#06bf9c")
         })

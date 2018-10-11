@@ -1,6 +1,7 @@
 import "../../css/footer/footer.css";
 import { FooterElements } from "./FooterElements";
 import logo from "../../img/DVRPC-logo.png"
+import { version } from "../../../package.json"
 
 const dvrpcElements = FooterElements[0].content;
 const appElements = FooterElements[1].content;
@@ -24,10 +25,10 @@ class Footer{
                                        <div class="footer__dvrpc-info"><strong>Phone:</strong> ${dvrpcElements.phone}</br><strong>Email: </strong><a class="footer__link" href="mailto:${dvrpcElements.email}" target="_blank" rel="noopener">${dvrpcElements.email}</a>`
                     break;
                 case 'app':
-                    foot.innerHTML = `<p>${appElements.name}&nbsp;&nbsp;&nbsp;&nbsp;<strong style='font-size: 1.25em;'>|</strong>&nbsp;&nbsp;&nbsp;&nbsp;Version: ${appElements.version}`
+                    foot.innerHTML = `<p>${appElements.name}&nbsp;&nbsp;&nbsp;&nbsp;<strong style='font-size: 1.25em;'>|</strong>&nbsp;&nbsp;&nbsp;&nbsp;Version ${version}`
                     break;
                 case 'contact':
-                    foot.innerHTML = `<div class="footer__dvrpc-info">${contactElements.staff}</br>${contactElements.title}</div>
+                    foot.innerHTML = `<div class="footer__dvrpc-info">${contactElements.staff}</br><em>${contactElements.title}</em></div>
                                       <div class="footer__dvrpc-info"><strong>Phone: </strong>${contactElements.phone}</br><strong>Email: </strong><a class="footer__link"  href="mailto:${contactElements.email}" target="_blank" rel="noopener">${contactElements.email}</a>`
                     break;
                 default:
