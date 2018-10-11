@@ -20,6 +20,14 @@
   background: white;
   margin: 0 10px
 }
+.accessibility-text> h3{
+  text-align: center;
+  margin: 1em auto;
+  color: #08506d;
+  font-family: 'Arial', sans-serif;
+  width: 66%;
+  word-wrap: normal;
+}
 
 .accessibility-map{
   width: 45%;
