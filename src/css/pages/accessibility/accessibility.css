@@ -1,0 +1,27 @@
+.accessibility-page{
+  height:100%;
+  width: 100%;
+  overflow-y: scroll;
+}
+
+.accessibility-section{
+  height: 80%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-flow: row;
+  margin: 1em 1.5em;
+  background-color: whitesmoke;
+}
+
+.accessibility-text{
+  width: 50%;
+  height: 95%;
+  background: white;
+  margin: 0 10px
+}
+
+.accessibility-map{
+  width: 45%;
+  height: 95%;
+}
