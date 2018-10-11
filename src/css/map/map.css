@@ -23,3 +23,13 @@
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+#sidebar{
+    position: relative;
+    background-color: white;
+    opacity: .9;
+    height: 100%;
+    width: 20%;
+    z-index: 1;
+    float: right;
+}
