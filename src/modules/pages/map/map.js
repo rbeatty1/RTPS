@@ -3,6 +3,7 @@ import { geography } from '../../header/queryInput/queryInput'
 import { layers } from './map_styles/styles.js'
 import { QueryContainer } from '../../header/queryInput/queryInput.js'
 import { HeaderElements } from '../../header/HeaderElements.js'
+import { Sidebar } from "./sidebar/sidebar.js"
 
 /* BuildMap() -- rbeatty
     @desc: Build the map that the page lands on
@@ -251,8 +252,8 @@ class Map {
         map.on('load', _ => {
             map.resize();
             // add navigation control 
-            const nav = new mapboxgl.NavigationControl();
-            map.addControl(nav, 'top-left');
+            new Sidebar();
+            map.addControl(new mapboxgl.NavigationControl(), 'top-left');
 
             LoadLayers(map, layers)
             AddListeners(map)
