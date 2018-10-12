@@ -31,7 +31,7 @@ const MenuContent = (menu, content) =>{
         return content
         break;
       case 'parameters':
-        return 'this will be the parameters'
+        return 'Celebes rainbowfish carpetshark freshwater herring mail-cheeked fish fusilier fish sea chub javelin mudskipper jewel tetra basking shark. Chum salmon, bonytongue sargassum fish dojo loach tenuis.'
         break;
       default:
         return 'this might be content'
