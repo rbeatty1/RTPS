@@ -88,7 +88,7 @@ const styles = {
       },
     }
   },
-  transitLines: {
+  transit: {
     sourceDef: {
       type: 'geojson',
       data: 'https://opendata.arcgis.com/datasets/5af7a3e9c0f34a7f93ac8935cb6cae3b_0.geojson'
@@ -121,6 +121,43 @@ const styles = {
           //   8, .25,
           //   12, .9
           // ]
+        },
+        placement: 'base-labels'
+      },
+      railLabels: {
+        type: 'symbol',
+        source: 'transitLines',
+        layout: {
+          "text-field": "{LINE_NAME}",
+          "text-font": [
+            "Montserrat SemiBold",
+              "Open Sans Semibold"
+            ],
+            "text-size": [
+              'interpolate', ['linear'], ['zoom'],
+              8, 5,
+              12, 12
+            ],
+            "symbol-placement":  "line"
+        },
+        paint: {
+          "text-color": [
+            'match',
+            ['get', 'TYPE'],
+            'AMTRAK', '#004d6e',
+            'NJ Transit', "#f18541",
+            'NJ Transit Light Rail', '#ffc424',
+            'PATCO', '#ed164b',
+            'Rapid Transit', '#9e3e97',
+            'Regional Rail', '#487997',
+            'Subway', '#f58221',
+            'Subway - Elevated', '#067dc1',
+            'Surface Trolley',  '#529442',
+            '#323232'
+          ],
+            "text-halo-color": '#ececec',
+            "text-halo-width": 4,
+            "text-halo-blur": 3
         },
         placement: 'base-labels'
       }
@@ -167,7 +204,8 @@ const styles = {
   //           8, .5,
   //           12, 2
   //         ]
-  //       }
+  //       },
+  //       placement: 'transit-railLines'
   //     }
   //   }
   // }

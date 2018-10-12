@@ -1,5 +1,48 @@
 import '../../../css/pages/accessibility/accessibility.css'
 import { styles } from '../map/map_styles/accessibility.js'
+
+const zoneRef = {
+  AccAll: [
+    'interpolate', ['linear'], ['get', 'AccAll'],
+    0, '#e2e2e2',
+    7, '#a6bddb',
+    8, '#3690c0',
+    9, '#045a8d',
+    10, '#023858'
+  ],
+  AccCur: [
+    'interpolate', ['linear'], ['get', 'AccCur'],
+    0, '#e2e2e2',
+    7, '#a6bddb',
+    8, '#3690c0',
+    9, '#045a8d',
+    10, '#023858'
+  ],
+  AccFut: [
+    'interpolate', ['linear'], ['get', 'AccFut'],
+    0, '#e2e2e2',
+    7, '#a6bddb',
+    8, '#3690c0',
+    9, '#045a8d',
+    10, '#023858'
+  ],
+  DisCur: [
+    'interpolate', ['linear'], ['get', 'DisCur'],
+    0, '#e2e2e2',
+    7, '#fed98e',
+    8, '#fe9929',
+    9, '#d95f0e',
+    10, '#993404'
+  ],
+  DisFut: [
+    'interpolate', ['linear'], ['get', 'DisFut'],
+    0, '#e2e2e2',
+    7, '#fed98e',
+    8, '#fe9929',
+    9, '#d95f0e',
+    10, '#993404'
+  ],
+}
 const LoadTAZ = map =>{
   fetch('https://services1.arcgis.com/LWtWv6q6BJyKidj8/arcgis/rest/services/TAZ/FeatureServer/0/query?where=1%3D1&outFields=TAZN&geometryPrecision=4&outSR=4326&returnExceededLimitFeatures=true&f=pgeojson&token=Z76xHp8Mxopz3qqagK3yrINFseFH0zNHs3ka-WddCJhC2ZQuMeiZUPcwJW_GMgKuQVMZ61z7RCHHC7NcYNFufRt8LR8uXxqg_EqqWwKtt3x1KiV9TH9h0WVMHpXZ0uNmrTACOzx0pAPfpBgCSp6l3NuOW8sADy2cfl0JKC3xWXU1hpgj8TpvxNiXreO156y8MwCkvp57jUb22NSjJZm66nT2q9sCbKQtq6qrW6ASgtkyEj901vkgL47O5UcrkFeAxaZQkez5A7J5JaJJS6c0mA..')
 .then(response=>{
@@ -8,39 +51,24 @@ const LoadTAZ = map =>{
     }
   })
   .then(jawn=>{
-    let clone = jawn
-    let layers = ['AccAll', 'AccCur', 'AccFut', 'DisCur', 'DisFut']
-    clone.features.forEach(feature=>{
+    jawn.features.forEach(feature=>{
       feature.properties.AccAll = Math.floor((Math.random()*10))
       feature.properties.AccCur = Math.floor((Math.random()*10))
       feature.properties.AccFut = Math.floor((Math.random()*10))
       feature.properties.DisCur = Math.floor((Math.random()*10))
       feature.properties.DisFut = Math.floor((Math.random()*10))
     })
-    map.addSource('zones', {type: 'geojson', data: clone })
-    layers.forEach(layer=>{
-      console.log(layer)
-      let layerDef = {
-        "id": 'zones-'+layer,
-        "type": 'fill',
-        "source": 'zones',
-        "layout": {
-          "visibility": 'none'
-        },
-        "paint" : {
-          "fill-color": [
-            'interpolate', ['linear'], ['get', layer],
-            0, "#e2e2e2",
-            7, "#a6bddb",
-            8, "#3690c0",
-            9, "#045a8d",
-            10, "#023858"
-          ],
-          "fill-opacity": .6
-        },
-      }
-      map.addLayer(layerDef, 'base-muniOutline')
-    })
+    map.addSource('zones', {type: 'geojson', data: jawn })
+    let layerDef = {
+      "id": 'zones-analysis',
+      "type": 'fill',
+      "source": 'zones',
+      "paint" : {
+        "fill-color": "rgba(255,255,255,0)",
+        "fill-opacity": .6
+      },
+    }
+    map.addLayer(layerDef, 'base-muniOutline')
     })
 }
 const LoadLayers = (map, styles) =>{
@@ -109,7 +137,9 @@ const BuildPage = props =>{
     header.addEventListener('click', e=>{
       let content = e.target.nextElementSibling
       !content.classList.contains('active') ? content.classList.add('active') : content.classList.remove('active')
-      thisMap.getLayoutProperty(`zones-${e.target.id}`, 'visibility') == 'none' ? thisMap.setLayoutProperty(`zones-${e.target.id}`, 'visibility', 'visible') : null
+      let scheme = zoneRef[e.target.id]
+      console.log({scheme})
+      thisMap.setPaintProperty('zones-analysis', "fill-color", scheme)
     })
     container.appendChild(header)
     container.appendChild(content)
@@ -119,7 +149,6 @@ const BuildPage = props =>{
 
 class Accessibility{
   constructor(){
-    let layers = ['AccAll', 'AccCur', 'AccFut', 'DisCur', 'DisFut']
     this.props = {
       container: document.querySelector('#main'),
       sections: {
@@ -150,6 +179,15 @@ class Accessibility{
         }
       }
     }
+
+    this.state = {
+      activeLayer: undefined,
+      activeScheme: {
+        access: [],
+        disparity: []
+      }
+    }
+
     this.render()
   }
 
