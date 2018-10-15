@@ -84,6 +84,7 @@ const LoadLayers = (map, styles) =>{
       }
       !thisLayer.filter ? null : layerDef['filter'] = thisLayer.filter
       !thisLayer.layout ? null : layerDef['layout'] = thisLayer.layout
+      !thisLayer.minzoom ? null : layerDef['minzoom'] = thisLayer.minzoom;
       styles[source].sourceDef.type != 'vector' ? null : layerDef['source-layer'] = thisLayer.source
       map.addLayer(layerDef, thisLayer.placement)
     }
@@ -110,40 +111,37 @@ const BuildMap = (container, props) =>{
 }
 
 const BuildPage = props =>{
-  props.container.innerHTML = ''
-  let page = document.createElement('div')
-  page.classList.add('accessibility-page')
-  let map = document.createElement('div')
-  let text = document.createElement('div')
-  map.classList.add('accessibility-map')
-  text.classList.add('accessibility-text')
-  page.appendChild(text)
-  page.appendChild(map)
-  let thisMap = BuildMap(map, props)
+  props.container.innerHTML = `
+    <div class="accessibility-page">
+      <div class="accessibility-text"></div>
+      <div class="accessibility-map"></div>
+    </div>
+  `
+  let thisMap = BuildMap(document.querySelector(".accessibility-map"), props)
   
-  props.container.appendChild(page)
   for (let section in props.sections){
     let thisSection = props.sections[section]
     let container = document.createElement('div')
-    let header = document.createElement('div')
-    let content = document.createElement('div')
     container.classList.add('accessibility-section')
-    header.classList.add('accessibility-section-header')
-    content.classList.add('accessibility-section-content')
-    header.innerText = thisSection.title
-    content.innerHTML = thisSection.description
-    header.id = thisSection.id
+    container.innerHTML = `
+      <div class="accessibility-section-header" id="${thisSection.id}">${thisSection.title}</div>
+      <div class="accessibility-section-content inactive">${thisSection.description}</div>
+    `
 
-    header.addEventListener('click', e=>{
-      let content = e.target.nextElementSibling
-      !content.classList.contains('active') ? content.classList.add('active') : content.classList.remove('active')
-      let scheme = zoneRef[e.target.id]
-      console.log({scheme})
-      thisMap.setPaintProperty('zones-analysis', "fill-color", scheme)
+    document.querySelector(".accessibility-text").appendChild(container)
+    document.querySelector(`#${thisSection.id}`).addEventListener('click', e=>{
+      let sections = document.querySelectorAll('.accessibility-section-header')
+      for (let section of sections){
+        if (section.id == e.target.id){
+          let content = section.nextElementSibling
+          content.classList.toggle('active')
+          thisMap.setPaintProperty('zones-analysis', "fill-color", zoneRef[e.target.id])
+        }
+        else if (section.nextElementSibling.classList.contains('active')){
+          section.nextElementSibling.classList.remove('active')
+        }
+      }
     })
-    container.appendChild(header)
-    container.appendChild(content)
-    text.appendChild(container)
   }
 }
 

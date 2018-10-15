@@ -5,7 +5,7 @@ const styles = {
       url: 'https://tiles.dvrpc.org/data/dvrpc-freight-story.json'
     },
     layers: {
-      labels : {
+      countyLabels : {
         source: 'dvrpc-places',
         type: 'symbol',
         layout: {
@@ -27,6 +27,35 @@ const styles = {
               "text-halo-blur": 3
         }
       },
+      muniLabels : {
+        source: 'municipalities',
+        type: 'symbol',
+        layout: {
+          "text-field": "{MUN_LABEL}",
+          "text-font": [
+            "Montserrat SemiBold",
+              "Open Sans Semibold"
+            ],
+            "text-size": [
+              'interpolate', ['linear'], ['zoom'],
+              9.25, 4,
+              12, 12
+            ],
+            "text-anchor": "bottom-left"
+        },
+        minzoom: 9,
+        paint: {
+            "text-color": "#a6a6a6",
+              "text-halo-color": '#ececec',
+              "text-halo-width": 4,
+              "text-halo-blur": 3,
+              "text-opacity": [
+                'interpolate', ['linear'], ['zoom'],
+                9.25, .33,
+                12, 1
+              ]
+        }
+      },
       interstates: {
         type: 'line',
         paint: {
@@ -38,7 +67,7 @@ const styles = {
           'line-color': '#fff',
         },
         source: 'interstates',
-        placement: 'base-labels'
+        placement: 'base-countyLabels'
       },
       countyOutline: {
         source: 'county',
@@ -59,11 +88,11 @@ const styles = {
         source: 'municipalities',
         type: 'line',
         paint: {
-          "line-color" : '#ccc',
+          "line-color" : '#c9c9c9',
           "line-width": [
             'interpolate', ['linear'], ['zoom'],
-            8, .5,
-            12, 1.5
+            8, .25,
+            12, .75
           ],
           "line-opacity": [
             'interpolate', ['linear'], ['zoom'],
@@ -122,7 +151,7 @@ const styles = {
           //   12, .9
           // ]
         },
-        placement: 'base-labels'
+        placement: 'base-countyLabels'
       },
       railLabels: {
         type: 'symbol',
@@ -159,7 +188,7 @@ const styles = {
             "text-halo-width": 4,
             "text-halo-blur": 3
         },
-        placement: 'base-labels'
+        placement: 'base-countyLabels'
       }
 
     }
