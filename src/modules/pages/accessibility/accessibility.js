@@ -1,5 +1,6 @@
 import '../../../css/pages/accessibility/accessibility.css'
 import { styles } from '../map/map_styles/accessibility.js'
+import { Legend } from './legend';
 
 const zoneRef = {
   AccAll: [
@@ -43,6 +44,8 @@ const zoneRef = {
     10, '#993404'
   ],
 }
+
+
 const LoadTAZ = map =>{
   fetch('https://services1.arcgis.com/LWtWv6q6BJyKidj8/arcgis/rest/services/TAZ/FeatureServer/0/query?where=1%3D1&outFields=TAZN&geometryPrecision=4&outSR=4326&returnExceededLimitFeatures=true&f=pgeojson&token=Z76xHp8Mxopz3qqagK3yrINFseFH0zNHs3ka-WddCJhC2ZQuMeiZUPcwJW_GMgKuQVMZ61z7RCHHC7NcYNFufRt8LR8uXxqg_EqqWwKtt3x1KiV9TH9h0WVMHpXZ0uNmrTACOzx0pAPfpBgCSp6l3NuOW8sADy2cfl0JKC3xWXU1hpgj8TpvxNiXreO156y8MwCkvp57jUb22NSjJZm66nT2q9sCbKQtq6qrW6ASgtkyEj901vkgL47O5UcrkFeAxaZQkez5A7J5JaJJS6c0mA..')
 .then(response=>{
@@ -106,6 +109,7 @@ const BuildMap = (container, props) =>{
       LoadTAZ(map)
       map.addControl(new mapboxgl.NavigationControl(), 'top-right')
   })
+  props.map = map
   return map
 
 }
@@ -177,20 +181,12 @@ class Accessibility{
         }
       }
     }
-
-    this.state = {
-      activeLayer: undefined,
-      activeScheme: {
-        access: [],
-        disparity: []
-      }
-    }
-
     this.render()
   }
 
   render(){
-    let page = BuildPage(this.props)
+    BuildPage(this.props)
+    new Legend(this.props);
     
 
   }

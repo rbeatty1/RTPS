@@ -145,11 +145,6 @@ const styles = {
             8, 1,
             12, 3
           ]
-          // 'line-opacity': [
-          //   'interpolate', ['linear'], ['zoom'],
-          //   8, .25,
-          //   12, .9
-          // ]
         },
         placement: 'base-countyLabels'
       },
