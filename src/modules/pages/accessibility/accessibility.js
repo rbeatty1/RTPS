@@ -1,6 +1,7 @@
 import '../../../css/pages/accessibility/accessibility.css'
 import { styles } from '../map/map_styles/accessibility.js'
 import { Legend } from './legend';
+import { PageHeader } from '../header/pageHeader.js'
 
 const zoneRef = {
   AccAll: [
@@ -44,7 +45,6 @@ const zoneRef = {
     10, '#993404'
   ],
 }
-
 
 const LoadTAZ = map =>{
   fetch('https://services1.arcgis.com/LWtWv6q6BJyKidj8/arcgis/rest/services/TAZ/FeatureServer/0/query?where=1%3D1&outFields=TAZN&geometryPrecision=4&outSR=4326&returnExceededLimitFeatures=true&f=pgeojson&token=Z76xHp8Mxopz3qqagK3yrINFseFH0zNHs3ka-WddCJhC2ZQuMeiZUPcwJW_GMgKuQVMZ61z7RCHHC7NcYNFufRt8LR8uXxqg_EqqWwKtt3x1KiV9TH9h0WVMHpXZ0uNmrTACOzx0pAPfpBgCSp6l3NuOW8sADy2cfl0JKC3xWXU1hpgj8TpvxNiXreO156y8MwCkvp57jUb22NSjJZm66nT2q9sCbKQtq6qrW6ASgtkyEj901vkgL47O5UcrkFeAxaZQkez5A7J5JaJJS6c0mA..')
@@ -107,6 +107,50 @@ const BuildMap = (container, props) =>{
       map.resize();
       LoadLayers(map, styles)
       LoadTAZ(map)
+      /* load TAZ Data from DB
+        two tables
+          1. TAZ --> row for each zone, fields for each map. Any other data needed?
+          2. Station --> row for each zone, accessibility designation, name, operator
+          data = {
+            taz: {
+              <TAZN_1>: {
+                accAll: num,
+                accCur: num,
+                accFut: num,
+                disCur: num,
+                disFut: num,
+                {any other data i.e pop-ups?}
+              },
+              <TAZN_2>: {
+                accAll: num,
+                accCur: num,
+                accFut: num,
+                disCur: num,
+                disFut: num,
+                {any other data i.e pop-ups?}
+              },
+              etc...
+            },
+            stations: {
+              <STATION_1>: {
+                accessibility: <yes|no|programmed>,
+                name: text,
+                operator: text,
+                {any other data}
+              },
+              <STATION_2>: {
+                accessibility: <yes|no|programmed>,
+                name: text,
+                operator: text,
+                {any other data}
+              },
+              etc
+
+              }
+
+            }
+          }
+      */
       map.addControl(new mapboxgl.NavigationControl(), 'top-right')
   })
   props.map = map
@@ -115,14 +159,10 @@ const BuildMap = (container, props) =>{
 }
 
 const BuildPage = props =>{
-  props.container.innerHTML = `
-    <div class="accessibility-page">
-      <div class="accessibility-text"></div>
-      <div class="accessibility-map"></div>
-    </div>
-  `
   let thisMap = BuildMap(document.querySelector(".accessibility-map"), props)
-  
+  let sectionBody = document.createElement('div')
+  sectionBody.classList.add('accessibility__text-body')
+  document.querySelector('.accessibility-text').appendChild(sectionBody)
   for (let section in props.sections){
     let thisSection = props.sections[section]
     let container = document.createElement('div')
@@ -132,9 +172,30 @@ const BuildPage = props =>{
       <div class="accessibility-section-content inactive">${thisSection.description}</div>
     `
 
-    document.querySelector(".accessibility-text").appendChild(container)
+    sectionBody.appendChild(container)
     document.querySelector(`#${thisSection.id}`).addEventListener('click', e=>{
       let sections = document.querySelectorAll('.accessibility-section-header')
+      let legend = document.querySelector('#zones')
+      legend.style.display != 'block' ? legend.style.display = 'block' : null
+      let legends = legend.querySelectorAll('.accessibility__legend-zoneBox')
+      let colors = []
+      zoneRef[e.target.id].forEach(item=>{
+        item[0] != '#' ? null : colors.push(item)
+      })
+      for (let i = 0; i < legends.length; i++){
+        legends[i].style.backgroundColor = colors[i]
+      }
+      let boxes = document.querySelectorAll('.legend__row-label')
+      if (e.target.id[0] == 'A'){
+        document.querySelector(".legend-descriptor").innerText = 'Number of Reachable Destinations'
+        boxes[0].innerText = 'Few'
+        boxes[1].innerText = 'Many'
+      }
+      else{
+        document.querySelector(".legend-descriptor").innerText = 'Destination Disparity for Wheelchair Users'
+        boxes[0].innerText = 'Less'
+        boxes[1].innerText = 'More'
+      }
       for (let section of sections){
         if (section.id == e.target.id){
           let content = section.nextElementSibling
@@ -185,6 +246,13 @@ class Accessibility{
   }
 
   render(){
+    this.props.container.innerHTML = `
+    <div class="accessibility-page">
+      <div class="accessibility-text"></div>
+      <div class="accessibility-map"></div>
+      </div>
+  `
+    new PageHeader('Accessibility')
     BuildPage(this.props)
     new Legend(this.props);
     

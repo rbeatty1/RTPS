@@ -1,7 +1,10 @@
 import '../../../css/pages/accessibility/legend.css'
 
-const BuildRailLines = (container, map) =>{
-  container.innerHTML = `
+const BuildLegend = () =>{
+  let legend = document.createElement('div')
+  legend.classList.add('accessibility-legend')
+  legend.innerHTML = `
+  <h2>Legend</h2>
   <div class="accessibility__legend-content" id="transit-stations">
     <table class="accessibility__legend-section">
       <tr class="accessibility__legend-row">
@@ -44,24 +47,32 @@ const BuildRailLines = (container, map) =>{
         <hr style="background-color: #529442"><div class="legend-label">Surface Trolley</div>
       </div>
   </div>
-
+  <div class="accessibility__legend-content" id="zones">
+    <span class="legend-descriptor">Number of Reachable Destinations</span>
+    <table class="accessibility__legend-section">
+      <tr class="accessibility__legend-row">
+        <td class="legend__row-label">Few</td>
+        <td class="accessibility__legend-zoneBox"></td>
+        <td class="accessibility__legend-zoneBox"></td>
+        <td class="accessibility__legend-zoneBox"></td>
+        <td class="accessibility__legend-zoneBox"></td>
+        <td class="legend__row-label">Many</td>
+      </tr>
+    </table>
+  </div>
   `
+  document.querySelector('.accessibility-text').appendChild(legend)
 
   
 }
 
 class Legend{
   constructor(props){
-    this.data = props
-    console.log(props)
     this.render()
   }
 
   render(){
-    let container = document.createElement('div')
-    container.id = 'accessibility-legend'
-    BuildRailLines(container, this.data.map)
-    document.querySelector('.accessibility-map').appendChild(container)
+    BuildLegend()
   }
 
 }
