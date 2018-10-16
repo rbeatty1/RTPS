@@ -41,11 +41,12 @@
 
 .accessibility-text{
   width: 40%;
-  height: 100%;
-  margin: 1rem 10px;
+  height: 80%;
+  margin: auto 1rem;
   display: flex;
   flex-flow: column;
   align-items: flex-end;
+  justify-content: space-between;
 }
 .accessibility-text> h3{
   text-align: center;

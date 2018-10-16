@@ -268,7 +268,7 @@ class Accessibility{
       <div class="accessibility-map"></div>
       </div>
   `
-    new PageHeader('Accessibility')
+    // new PageHeader('Accessibility')
     BuildPage(this.props)
     new Legend(this.props);
     
