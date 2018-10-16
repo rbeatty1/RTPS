@@ -94,12 +94,16 @@ const LoadLayers = (map, styles) =>{
   }
 }
 const BuildMap = (container, props) =>{
+  const extent = {
+    center: [-75.247, 40.066],
+    zoom: 8.4
+  }
   mapboxgl.accessToken = 'pk.eyJ1IjoiYmVhdHR5cmUxIiwiYSI6ImNqOGFpY3o0cTAzcXoycXE4ZTg3d3g5ZGUifQ.VHOvVoTgZ5cRko0NanhtwA';
   let map = new mapboxgl.Map({
     container: container,
     style: 'mapbox://styles/beattyre1/cjky7crbr17og2rldo6g7w5al',
-    center: [-75.224, 40.066],
-    zoom: 8.4,
+    center: extent.center,
+    zoom: extent.zoom,
     minZoom: 8,
     hash: true
   })
@@ -107,6 +111,10 @@ const BuildMap = (container, props) =>{
       map.resize();
       LoadLayers(map, styles)
       LoadTAZ(map)
+      map.zoomTo({
+        center: extent.center,
+        zoom: extent.zoom
+      })
       /* load TAZ Data from DB
         two tables
           1. TAZ --> row for each zone, fields for each map. Any other data needed?
@@ -163,6 +171,7 @@ const BuildPage = props =>{
   let sectionBody = document.createElement('div')
   sectionBody.classList.add('accessibility__text-body')
   document.querySelector('.accessibility-text').appendChild(sectionBody)
+  // build section for each
   for (let section in props.sections){
     let thisSection = props.sections[section]
     let container = document.createElement('div')
@@ -173,11 +182,18 @@ const BuildPage = props =>{
     `
 
     sectionBody.appendChild(container)
+
+    // click functions
     document.querySelector(`#${thisSection.id}`).addEventListener('click', e=>{
       let sections = document.querySelectorAll('.accessibility-section-header')
+
+      // display zone legend
       let legend = document.querySelector('#zones')
       legend.style.display != 'block' ? legend.style.display = 'block' : null
       let legends = legend.querySelectorAll('.accessibility__legend-zoneBox')
+
+      // switch zone legend content depending on opened map
+        // having HTML snippets in a reference object?
       let colors = []
       zoneRef[e.target.id].forEach(item=>{
         item[0] != '#' ? null : colors.push(item)
