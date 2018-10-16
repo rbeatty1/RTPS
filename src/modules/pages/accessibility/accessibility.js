@@ -111,7 +111,7 @@ const BuildMap = (container, props) =>{
       map.resize();
       LoadLayers(map, styles)
       LoadTAZ(map)
-      map.zoomTo({
+      map.flyTo({
         center: extent.center,
         zoom: extent.zoom
       })
