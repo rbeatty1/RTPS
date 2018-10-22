@@ -164,6 +164,29 @@ const LoadLayers = (map, styles) =>{
     }
   }
 }
+const StationPopUp = (marker, map) =>{
+  let popup = new mapboxgl.Popup({
+    closeButton: false,
+    closeOnClick: false,
+    anchor: 'left',
+    offset: {
+      'top': [0, 0],
+      'top-left': [0,0],
+      'top-right': [0,0],
+      'bottom': [0, 0],
+      'bottom-left': [0, 0],
+      'bottom-right': [0, 0],
+      'left': [0, 0],
+      'right': [0, 0]
+    },
+  })
+  let coords = new mapboxgl.LngLat(marker.long, marker.lat)
+  popup
+    .setLngLat(coords)
+    .setHTML(`${marker.props.STATION} Station`)
+    .addTo(map)
+  return popup
+}
 const BuildMap = (container, props) =>{
   const extent = {
     center: [-75.247, 40.066],
@@ -178,6 +201,7 @@ const BuildMap = (container, props) =>{
     minZoom: 8,
     hash: true
   })
+  let popup;
   map.on('load', _ => {
       map.resize();
       LoadLayers(map, styles)
@@ -188,6 +212,31 @@ const BuildMap = (container, props) =>{
         zoom: extent.zoom
       })
       map.addControl(new mapboxgl.NavigationControl(), 'top-right')
+  })
+  map.on('mouseenter', 'station-access', e=>{
+    map.getCanvas().style.cursor = "pointer"
+    const marker = { props: e.features[0].properties, long: e.features[0].geometry.coordinates[0], lat: e.features[0].geometry.coordinates[1]}
+    let color;
+    switch(marker.props.accessibility){
+      case 0:
+        color = 'rgba(232,146,52,.85)'
+        break;
+      case 1: 
+        color = 'rgba(139,178,63,.85)'  
+        break;
+      case 2:
+        color = 'rgba(8,80,109,.85)'  
+        break;
+      default:
+      color = '#aaa'
+      break;
+    };
+    popup = StationPopUp(marker, map)
+    document.querySelector('.mapboxgl-popup-content').style.backgroundColor = color
+  })
+  map.on('mouseleave', 'station-access', e=>{
+    map.getCanvas().style.cursor = ""
+    popup.remove()    
   })
   props.map = map
   return map

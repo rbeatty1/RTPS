@@ -66,3 +66,11 @@
   width: 65%;
   height: 95%;
 }
+
+.mapboxgl-popup-content{
+  padding: 5px;
+  font-size: 1.2em;
+  color: white;
+  font-weight: 700;
+  margin: 0;
+}
