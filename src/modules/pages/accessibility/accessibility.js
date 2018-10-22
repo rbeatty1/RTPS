@@ -45,33 +45,89 @@ const zoneRef = {
     10, '#993404'
   ],
 }
-
+const LoadStations = map =>{
+  fetch('https://opendata.arcgis.com/datasets/68b970bf65bc411c8a7f8f7b0bb7908d_0.geojson')
+  .then(ago=>{
+    if (ago.status == 200){ return ago.json() }
+  })
+  .then(agoStations=>{
+    fetch('http://localhost:8000/api/rtps/access?stations')
+    .then(dbReturn=>{
+      if (dbReturn.status == 200) { return dbReturn.json() }
+    })
+    .then(dbStations=>{
+      let keep = ['DVRPC_ID', 'STATION', 'accessibility']
+      agoStations.features.forEach(feature=>{
+        if (dbStations[feature.properties.DVRPC_ID]){
+          feature.properties.accessibility = dbStations[feature.properties.DVRPC_ID].accessible
+        }
+        for (let prop in feature.properties){
+          keep.indexOf(prop) == -1 ? delete feature.properties[`${prop}`] : null
+        }
+      })
+      map.addSource('stations', { type: 'geojson', data: agoStations })
+      let layerDef = {
+        "id": 'station-access',
+        "type": 'circle',
+        'source': 'stations',
+        'paint': {
+            'circle-radius': [
+              'interpolate', ['linear'], ['zoom'],
+              7, .1,
+              12, 6
+            ],
+          'circle-color':[
+            'interpolate', ['linear'], ['get', 'accessibility'],
+            0, '#e89234',
+            1, '#8bb23f',
+            2, '#08506d'
+          ],
+          'circle-stroke-color': '#fff',
+          'circle-stroke-width': [
+            'interpolate', ['linear'], ['zoom'],
+            7, .1,
+            12, 1.5
+          ]
+        }
+      }
+      map.addLayer(layerDef, 'transit-railLabels')
+    })
+  })
+}
 const LoadTAZ = map =>{
   fetch('https://services1.arcgis.com/LWtWv6q6BJyKidj8/arcgis/rest/services/TAZ/FeatureServer/0/query?where=1%3D1&outFields=TAZN&geometryPrecision=4&outSR=4326&returnExceededLimitFeatures=true&f=pgeojson&token=Z76xHp8Mxopz3qqagK3yrINFseFH0zNHs3ka-WddCJhC2ZQuMeiZUPcwJW_GMgKuQVMZ61z7RCHHC7NcYNFufRt8LR8uXxqg_EqqWwKtt3x1KiV9TH9h0WVMHpXZ0uNmrTACOzx0pAPfpBgCSp6l3NuOW8sADy2cfl0JKC3xWXU1hpgj8TpvxNiXreO156y8MwCkvp57jUb22NSjJZm66nT2q9sCbKQtq6qrW6ASgtkyEj901vkgL47O5UcrkFeAxaZQkez5A7J5JaJJS6c0mA..')
-.then(response=>{
-    if (response.status ==200){
-      return response.json()
-    }
-  })
-  .then(jawn=>{
-    jawn.features.forEach(feature=>{
-      feature.properties.AccAll = Math.floor((Math.random()*10))
-      feature.properties.AccCur = Math.floor((Math.random()*10))
-      feature.properties.AccFut = Math.floor((Math.random()*10))
-      feature.properties.DisCur = Math.floor((Math.random()*10))
-      feature.properties.DisFut = Math.floor((Math.random()*10))
+  .then(ago=>{
+      if (ago.status ==200){
+        return ago.json()
+      }
     })
-    map.addSource('zones', {type: 'geojson', data: jawn })
-    let layerDef = {
-      "id": 'zones-analysis',
-      "type": 'fill',
-      "source": 'zones',
-      "paint" : {
-        "fill-color": "rgba(255,255,255,0)",
-        "fill-opacity": .6
-      },
-    }
-    map.addLayer(layerDef, 'base-muniOutline')
+  .then(agoZones=>{
+    fetch('http://localhost:8000/api/rtps/access?zones')
+    .then(dbReturn=>{
+      if (dbReturn.status == 200) { return dbReturn.json() }
+    })
+    .then(dbZones=>{
+      agoZones.features.forEach(feature=>{
+        if (dbZones[feature.properties.TAZN]){
+          feature.properties.AccAll = dbZones[feature.properties.TAZN].all_rail
+          feature.properties.AccCur = dbZones[feature.properties.TAZN].current
+          feature.properties.AccFut = dbZones[feature.properties.TAZN].future
+          feature.properties.DisCur = dbZones[feature.properties.TAZN].cur_dif
+          feature.properties.DisFut = dbZones[feature.properties.TAZN].fut_dif
+        }
+      })
+      map.addSource('zones', {type: 'geojson', data: agoZones })
+      let layerDef = {
+        "id": 'zones-analysis',
+        "type": 'fill',
+        "source": 'zones',
+        "paint" : {
+          "fill-color": "rgba(255,255,255,0)",
+          "fill-opacity": .9
+        },
+      }
+      map.addLayer(layerDef, 'base-muniOutline')
+    })
     })
 }
 const LoadLayers = (map, styles) =>{
@@ -111,6 +167,7 @@ const BuildMap = (container, props) =>{
       map.resize();
       LoadLayers(map, styles)
       LoadTAZ(map)
+      LoadStations(map)
       map.flyTo({
         center: extent.center,
         zoom: extent.zoom
