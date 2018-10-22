@@ -49,11 +49,6 @@ const styles = {
               "text-halo-color": '#ececec',
               "text-halo-width": 4,
               "text-halo-blur": 3,
-              "text-opacity": [
-                'interpolate', ['linear'], ['zoom'],
-                9.25, .33,
-                12, 1
-              ]
         }
       },
       interstates: {
@@ -180,59 +175,15 @@ const styles = {
             '#323232'
           ],
             "text-halo-color": '#ececec',
-            "text-halo-width": 4,
-            "text-halo-blur": 3
+            "text-halo-width": 2,
+            "text-halo-blur": 1
         },
         placement: 'base-countyLabels'
       }
 
     }
   },
-  // taz:{
-  //   sourceDef: {
-  //     type: 'geojson',
-  //     data: 'https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/PUMA_TAD_TAZ_UGA_ZCTA/MapServer/11/query?where=1%3D1&text=&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=*&returnGeometry=false&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&resultOffset=&resultRecordCount=&queryByDistance=&returnExtentsOnly=false&datumTransformation=&parameterValues=&rangeValues=&f=pgeojson',
-  //   },
-  //   layers:{
-  //       base: {
-  //         type: "fill",
-  //         paint: {
-  //           "fill-color": "#f00",
-  //           "fill-outline-color": "#fff",
-  //         },
-  //         placement: 'base-muniOutline'
-  //       }
-  //     }
-  //   }
-  // },
-  // transitStations:{
-  //   sourceDef: {
-  //     type: 'geojson',
-  //     data: 'https://opendata.arcgis.com/datasets/68b970bf65bc411c8a7f8f7b0bb7908d_0.geojson'
-  //   },
-  //   layers: {
-  //     railStations: {
-  //       type: 'circle',
-  //       paint: {
-  //         'circle-color': '#fff',
-  //         'circle-radius': [
-  //           'interpolate', ['linear'], ['zoom'],
-  //           9, .2,
-  //           10, 2.5,
-  //           11, 4,
-  //           12, 6
-  //         ],
-  //         'circle-stroke-color': '#f00',
-  //         'circle-stroke-width':[
-  //           'interpolate', ['linear'], ['zoom'],
-  //           8, .5,
-  //           12, 2
-  //         ]
-  //       },
-  //       placement: 'transit-railLines'
-  //     }
-  //   }
-  // }
+
 }
 
 export { styles }

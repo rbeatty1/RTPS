@@ -38,7 +38,7 @@ const BuildLegend = () =>{
 }
 
 class Legend{
-  constructor(props){
+  constructor(){
     this.render()
   }
 

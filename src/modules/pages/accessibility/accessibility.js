@@ -1,49 +1,64 @@
 import '../../../css/pages/accessibility/accessibility.css'
 import { styles } from '../map/map_styles/accessibility.js'
 import { Legend } from './legend';
-import { PageHeader } from '../header/pageHeader.js'
+// import { PageHeader } from '../header/pageHeader.js'
 
 const zoneRef = {
-  AccAll: [
-    'interpolate', ['linear'], ['get', 'AccAll'],
-    0, '#e2e2e2',
-    7, '#a6bddb',
-    8, '#3690c0',
-    9, '#045a8d',
-    10, '#023858'
-  ],
-  AccCur: [
-    'interpolate', ['linear'], ['get', 'AccCur'],
-    0, '#e2e2e2',
-    7, '#a6bddb',
-    8, '#3690c0',
-    9, '#045a8d',
-    10, '#023858'
-  ],
-  AccFut: [
-    'interpolate', ['linear'], ['get', 'AccFut'],
-    0, '#e2e2e2',
-    7, '#a6bddb',
-    8, '#3690c0',
-    9, '#045a8d',
-    10, '#023858'
-  ],
-  DisCur: [
-    'interpolate', ['linear'], ['get', 'DisCur'],
-    0, '#e2e2e2',
-    7, '#fed98e',
-    8, '#fe9929',
-    9, '#d95f0e',
-    10, '#993404'
-  ],
-  DisFut: [
-    'interpolate', ['linear'], ['get', 'DisFut'],
-    0, '#e2e2e2',
-    7, '#fed98e',
-    8, '#fe9929',
-    9, '#d95f0e',
-    10, '#993404'
-  ],
+  AccAll: {
+    paint: [
+      'interpolate', ['linear'], ['get', 'AccAll'],
+      1, 'rgba(0,0,0,0)',
+      2, '#a6bddb',
+      5, '#3690c0',
+      7, '#045a8d',
+      10, '#023858'
+    ],
+    filter: undefined,
+  },
+  AccCur: {
+    paint: [
+      'interpolate', ['linear'], ['get', 'AccCur'],
+      1, 'rgba(0,0,0,0)',
+      2, '#a6bddb',
+      5, '#3690c0',
+      7, '#045a8d',
+      10, '#023858'
+    ],
+    filter: ['==', ['get', 'accessibility'], 1],
+  },
+  AccFut: {
+    paint: [
+      'interpolate', ['linear'], ['get', 'AccFut'],
+      1, 'rgba(0,0,0,0)',
+      2, '#a6bddb',
+      5, '#3690c0',
+      7, '#045a8d',
+      10, '#023858'
+    ],
+    filter: ['any', ['==', ['get', 'accessibility'], 1], ['==', ['get', 'accessibility'], 2]],
+  },
+  DisCur: {
+    paint: [
+      'interpolate', ['linear'], ['get', 'DisCur'],
+      1, 'rgba(0,0,0,0)',
+      2, '#fed98e',
+      5, '#fe9929',
+      8, '#d95f0e',
+      12, '#993404',
+    ],
+    filter: ['==', ['get', 'accessibility'], 1]
+  },
+  DisFut: {
+    paint: [
+      'interpolate', ['linear'], ['get', 'DisFut'],
+      1, 'rgba(0,0,0,0)',
+      2, '#fed98e',
+      5, '#fe9929',
+      8, '#d95f0e',
+      12, '#993404',
+    ],
+    filter: ['any', ['==', ['get', 'accessibility'], 1], ['==', ['get', 'accessibility'], 2]],
+  }
 }
 const LoadStations = map =>{
   fetch('https://opendata.arcgis.com/datasets/68b970bf65bc411c8a7f8f7b0bb7908d_0.geojson')
@@ -73,7 +88,7 @@ const LoadStations = map =>{
         'paint': {
             'circle-radius': [
               'interpolate', ['linear'], ['zoom'],
-              7, .1,
+              7, 1,
               12, 6
             ],
           'circle-color':[
@@ -107,13 +122,13 @@ const LoadTAZ = map =>{
       if (dbReturn.status == 200) { return dbReturn.json() }
     })
     .then(dbZones=>{
-      agoZones.features.forEach(feature=>{
+      agoZones.features.map((feature, index)=>{
         if (dbZones[feature.properties.TAZN]){
           feature.properties.AccAll = dbZones[feature.properties.TAZN].all_rail
           feature.properties.AccCur = dbZones[feature.properties.TAZN].current
           feature.properties.AccFut = dbZones[feature.properties.TAZN].future
-          feature.properties.DisCur = dbZones[feature.properties.TAZN].cur_dif
-          feature.properties.DisFut = dbZones[feature.properties.TAZN].fut_dif
+          feature.properties.DisCur = dbZones[feature.properties.TAZN].discur
+          feature.properties.DisFut = dbZones[feature.properties.TAZN].disfut
         }
       })
       map.addSource('zones', {type: 'geojson', data: agoZones })
@@ -172,50 +187,6 @@ const BuildMap = (container, props) =>{
         center: extent.center,
         zoom: extent.zoom
       })
-      /* load TAZ Data from DB
-        two tables
-          1. TAZ --> row for each zone, fields for each map. Any other data needed?
-          2. Station --> row for each zone, accessibility designation, name, operator
-          data = {
-            taz: {
-              <TAZN_1>: {
-                accAll: num,
-                accCur: num,
-                accFut: num,
-                disCur: num,
-                disFut: num,
-                {any other data i.e pop-ups?}
-              },
-              <TAZN_2>: {
-                accAll: num,
-                accCur: num,
-                accFut: num,
-                disCur: num,
-                disFut: num,
-                {any other data i.e pop-ups?}
-              },
-              etc...
-            },
-            stations: {
-              <STATION_1>: {
-                accessibility: <yes|no|programmed>,
-                name: text,
-                operator: text,
-                {any other data}
-              },
-              <STATION_2>: {
-                accessibility: <yes|no|programmed>,
-                name: text,
-                operator: text,
-                {any other data}
-              },
-              etc
-
-              }
-
-            }
-          }
-      */
       map.addControl(new mapboxgl.NavigationControl(), 'top-right')
   })
   props.map = map
@@ -252,7 +223,7 @@ const BuildPage = props =>{
       // switch zone legend content depending on opened map
         // having HTML snippets in a reference object?
       let colors = []
-      zoneRef[e.target.id].forEach(item=>{
+      zoneRef[e.target.id].paint.forEach(item=>{
         item[0] != '#' ? null : colors.push(item)
       })
       for (let i = 0; i < legends.length; i++){
@@ -273,7 +244,8 @@ const BuildPage = props =>{
         if (section.id == e.target.id){
           let content = section.nextElementSibling
           content.classList.toggle('active')
-          thisMap.setPaintProperty('zones-analysis', "fill-color", zoneRef[e.target.id])
+          thisMap.setPaintProperty('zones-analysis', "fill-color", zoneRef[e.target.id].paint)
+          thisMap.setFilter('station-access', zoneRef[e.target.id].filter)
         }
         else if (section.nextElementSibling.classList.contains('active')){
           section.nextElementSibling.classList.remove('active')
@@ -325,7 +297,6 @@ class Accessibility{
       <div class="accessibility-map"></div>
       </div>
   `
-    // new PageHeader('Accessibility')
     BuildPage(this.props)
     new Legend(this.props);
     
