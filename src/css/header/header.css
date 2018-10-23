@@ -5,7 +5,7 @@
     width: 100%;
     height: 10vh;
     align-items: center;
-    justify-content: start;
+    justify-content: space-between;
     border-bottom: 3px solid #8bb23f;
     order: 0;
 }
@@ -20,18 +20,7 @@
     max-width: 20%;
 }
 
-.header__input-container{
-    order: 1;
-    display: flex;
-    width: 50%;
-    margin-left: 10px;
-    flex-flow: row nowrap;
-    align-items: center;
-    margin: auto;
-    flex-flow: row;
-    background: whitesmoke;
-    justify-content: space-evenly;
-}
+
 
 .header__nav-links{
     order: 2;

@@ -1,7 +1,12 @@
-import '../../css/map/map.css'
-import { geography } from '../header/queryInput/queryInput'
+import '../../../css/pages/map/map.css'
+import { geography } from './sidebar/queryInput/queryInput.js'
 import { layers } from './map_styles/styles.js'
+import { Sidebar } from "./sidebar/sidebar.js"
 
+const extent = {
+  center: [-75.234, 40.061],
+  zoom: 8.4
+}
 /* BuildMap() -- rbeatty
     @desc: Build the map that the page lands on
     @params:
@@ -10,7 +15,7 @@ import { layers } from './map_styles/styles.js'
 */
 const BuildMap = () => {
     // grab/create relevant HTML elements
-    const appBody = document.querySelector('#app'),
+    const appBody = document.querySelector('.gap'),
         mapBody = document.createElement('div')
     mapBody.className = "map__container"
     appBody.appendChild(mapBody);
@@ -19,8 +24,8 @@ const BuildMap = () => {
     let map = new mapboxgl.Map({
         container: mapBody,
         style: 'mapbox://styles/beattyre1/cjdbtddl12scq2st5zybjm8r6',
-        center: [-75.148, 40.018],
-        zoom: 8.5,
+        center: extent.center,
+        zoom: extent.zoom,
         hash: true
     })
     return map
@@ -232,18 +237,27 @@ class Map {
     }
 
     render() {
+        let appPage = document.querySelector('#main')
+        appPage.innerHTML = '';
+        let gap = document.createElement('div')
+        gap.classList = 'gap'
+        appPage.appendChild(gap)
         let map = BuildMap()
         AddLoadingSpinner(map)
-
         map.on('load', _ => {
             map.resize();
+            map.flyTo({
+                center: extent.center,
+                zoom: extent.zoom
+            })
             // add navigation control 
-            const nav = new mapboxgl.NavigationControl();
-            map.addControl(nav, 'top-left');
+            new Sidebar();
+            map.addControl(new mapboxgl.NavigationControl(), 'top-left');
 
             LoadLayers(map, layers)
             AddListeners(map)
         });
+
     }
 }
 

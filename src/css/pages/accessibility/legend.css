@@ -1,0 +1,97 @@
+.accessibility-legend{
+  font-family: 'Arial Narrow', sans-serif;
+  display: flex;
+  background-color: white;
+  border-radius: 4px;
+  margin: 10px auto;
+  padding: 5px;
+  box-shadow: 0px 0px 0px 2px rgba(0,0,0,0.1);
+  z-index: 5;
+  flex-flow: column;
+  font-size: 12px;
+  width: 75%;
+}
+
+.accessibility__legend-content{
+  margin: 5px 0;
+}
+
+#transit-line{
+  display: flex;
+  flex-flow: row wrap;
+}
+tbody{
+  display: flex;
+}
+.accessibility__legend-section{
+  width: 100%;
+}
+.accessibility__legend-row{
+  display: flex;
+  margin: .25rem;
+  height: 1rem;
+  align-items: center;
+  width: 100%;
+  justify-content: center;
+}
+
+.station-icon{
+  border-radius: 50%;
+  padding: 5px;
+  margin: 5px;
+  border: 2.5px solid white;
+}
+
+#station-yes{
+  background-color: #8bb23f;
+}
+#station-no{
+  background-color: #e89234;
+}
+#station-future{
+  background-color: #08506d;
+}
+
+.legend__lines-row{
+  display: flex;
+  align-items: center;
+  width: 50%;
+}
+.legend__lines-row>hr{
+  width: 20%;
+  height: 3px;
+  border: none;
+  margin: 0;
+}
+
+.legend-label{
+  margin-left: .5rem;
+}
+
+
+#zones{
+  text-align: center;
+  display: none;
+  margin-top: .5rem;
+}
+h2{
+  text-align: center;
+  margin: 0;
+}
+.accessibility__legend-zoneBox{
+  height: 20px;
+  width: 20px;
+}
+h4{
+  margin: 3px 0;
+}
+
+.legend__row-label{
+  margin: 0 .5em;
+}
+
+.legend-descriptor{
+  font-weight: 700;
+  color: #08506d
+}
+

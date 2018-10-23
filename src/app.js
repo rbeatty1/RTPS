@@ -1,12 +1,12 @@
 import {headerRender} from './modules/header/header';
 import {HeaderElements} from "./modules/header/HeaderElements";
-import {Map} from './modules/map/map'
 import {Footer} from './modules/footer/footer';
 import './css/app.css'
+import {LoadMain} from './utils/loadMain';
 
-let map = new Map();
-new Footer();
 headerRender(HeaderElements);
-
-
-export {map};
+let app = document.createElement('div')
+app.id = 'main'
+document.querySelector('#app').appendChild(app)
+LoadMain()
+new Footer();

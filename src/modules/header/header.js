@@ -1,5 +1,4 @@
 import '../../css/header/header.css'
-import {createInput, QueryContainer} from './queryInput/queryInput'
 import {NavControl} from './navControls/navControls';
 import logo from "../../img/RTPS-logo.png"
 
@@ -14,19 +13,10 @@ function headerRender(elements){
     logoContainer.className = 'header__project-logo';
     logoContainer.setAttribute('src', logo);
     header.appendChild(logoContainer);
-
-    // query inputs
-        let queryContainer = new QueryContainer();
-        queryContainer.list = elements[1].content;
-        let queryList = [];
-        for (var k in queryContainer.list){
-            queryList.push(queryContainer.list[k]);
-        }
     
-    
-        // nav controls
-        let navContainer = new NavControl();
-        navContainer.list = elements[2].content;
+    // nav controls
+    let navContainer = new NavControl();
+    navContainer.list = elements[2].content;
 }
 
 export {headerRender};

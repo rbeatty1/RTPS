@@ -1,0 +1,76 @@
+.accessibility-page{
+  height:95%;
+  width: 95%;
+  display: flex;
+  flex-flow: row;
+  justify-content: space-around;
+  margin: 20px auto;
+  font-family: 'Arial Narrow', sans-serif;
+  background-color: whitesmoke
+}
+
+.accessibility-section{
+  display: flex;
+  flex-flow: column;
+  margin: 5px 1.5em;
+}
+.accessibility-section-header{
+  padding: 5px;
+  color: #08506b;
+  text-align: right;
+  border-bottom: 2px dotted #8bb23f;
+  cursor: pointer;
+  font-size: 20px;
+  font-family: 'Arial', sans-serif;
+}
+.accessibility-section-content{
+  display: none;
+  font-size: 14px;
+  color: #6a6a6a;
+  padding: 10px;
+  margin: 5px;
+}
+
+.accessibility-section-content.active{
+  width: 100%;
+  display: block;
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: 1px 1px 1px 1px rgba(0,0,0,0.1);
+}
+
+.accessibility-text{
+  width: 40%;
+  height: 80%;
+  margin: auto 1rem;
+  display: flex;
+  flex-flow: column;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+.accessibility-text> h3{
+  text-align: center;
+  margin: 1em auto;
+  color: #08506d;
+  font-family: 'Arial Narrow', sans-serif;
+  width: 66%;
+  word-wrap: normal;
+}
+.accessibility-text>p{
+  width: 75%;
+  margin: 1em auto;
+  color: #aaa
+}
+
+.accessibility-map{
+  width: 65%;
+  height: 95%;
+}
+
+.mapboxgl-popup-content{
+  padding: 5px;
+  font-size: 1.2em;
+  color: white;
+  font-weight: 700;
+  margin: 0;
+}
