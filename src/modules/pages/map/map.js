@@ -1,10 +1,12 @@
 import '../../../css/map/map.css'
-import { geography } from '../../header/queryInput/queryInput'
+import { geography } from './sidebar/queryInput/queryInput.js'
 import { layers } from './map_styles/styles.js'
-import { QueryContainer } from '../../header/queryInput/queryInput.js'
-import { HeaderElements } from '../../header/HeaderElements.js'
 import { Sidebar } from "./sidebar/sidebar.js"
 
+const extent = {
+  center: [-75.234, 40.061],
+  zoom: 8.4
+}
 /* BuildMap() -- rbeatty
     @desc: Build the map that the page lands on
     @params:
@@ -13,7 +15,7 @@ import { Sidebar } from "./sidebar/sidebar.js"
 */
 const BuildMap = () => {
     // grab/create relevant HTML elements
-    const appBody = document.querySelector('#main'),
+    const appBody = document.querySelector('.gap'),
         mapBody = document.createElement('div')
     mapBody.className = "map__container"
     appBody.appendChild(mapBody);
@@ -22,8 +24,8 @@ const BuildMap = () => {
     let map = new mapboxgl.Map({
         container: mapBody,
         style: 'mapbox://styles/beattyre1/cjdbtddl12scq2st5zybjm8r6',
-        center: [-75.148, 40.018],
-        zoom: 8.5,
+        center: extent.center,
+        zoom: extent.zoom,
         hash: true
     })
     return map
@@ -235,22 +237,19 @@ class Map {
     }
 
     render() {
-        document.querySelector('#main').innerHTML = '';
+        let appPage = document.querySelector('#main')
+        appPage.innerHTML = '';
+        let gap = document.createElement('div')
+        gap.classList = 'gap'
+        appPage.appendChild(gap)
         let map = BuildMap()
         AddLoadingSpinner(map)
-
-        // query inputs
-        if (!document.querySelector('.header__input-container')){
-            let queryContainer = new QueryContainer();
-            queryContainer.list = HeaderElements[1].content;
-            let queryList = [];
-            for (var k in queryContainer.list){
-                queryList.push(queryContainer.list[k]);
-                }
-        }
-
         map.on('load', _ => {
             map.resize();
+            map.flyTo({
+                center: extent.center,
+                zoom: extent.zoom
+            })
             // add navigation control 
             new Sidebar();
             map.addControl(new mapboxgl.NavigationControl(), 'top-left');
@@ -258,6 +257,7 @@ class Map {
             LoadLayers(map, layers)
             AddListeners(map)
         });
+
     }
 }
 

@@ -1,5 +1,4 @@
 import '../../css/header/header.css'
-import {createInput, QueryContainer} from './queryInput/queryInput'
 import {NavControl} from './navControls/navControls';
 import logo from "../../img/RTPS-logo.png"
 

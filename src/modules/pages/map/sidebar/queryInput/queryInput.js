@@ -1,4 +1,4 @@
-import "../../../css/header/queryInputs/queryInputs.css"
+import "../../../../../css/map/queryInputs/queryInputs.css"
 
 
 // holder for query inputs
@@ -62,32 +62,35 @@ class QueryContainer{
         this.render();
     }
     render(){
-        let header = document.querySelector('.header__container')
-        let listElement = document.createElement('div');
-        listElement.className = 'header__input-container';
-        listElement.innerHTML = '';
-        for (var k in this.list){
-            let input = this.list[k];
-            if (input.id < 5){
-                let li = _createMenu(input, this, this.list)
-                listElement.appendChild(li);
-            }
-            else{
-                let dropdownMenu = document.createElement('button');
-                dropdownMenu.innerHTML = `<span class="input__query-name">${input.name}`;
-                dropdownMenu.className = 'input__query-execute';
-                switch (input.id){
-                    case 5: 
-                        dropdownMenu.className = 'input__query-execute';
-                        break;
-                    case 6:
-                        dropdownMenu.className = 'input__query-clear';
-                        break;
+        let container = document.querySelector('#analysis_dropdownContent')
+        if (container){
+            let listElement = document.createElement('div');
+            listElement.className = 'sidebar__input-container';
+            listElement.innerHTML = '';
+            for (var k in this.list){
+                let input = this.list[k];
+                if (input.id < 5){
+                    let li = _createMenu(input, this, this.list)
+                    listElement.appendChild(li);
                 }
-                listElement.appendChild(dropdownMenu);
+                else{
+                    let dropdownMenu = document.createElement('button');
+                    dropdownMenu.innerHTML = `<span class="input__query-name">${input.name}`;
+                    dropdownMenu.className = 'input__query-execute';
+                    switch (input.id){
+                        case 5: 
+                            dropdownMenu.className = 'input__query-execute';
+                            break;
+                        case 6:
+                            dropdownMenu.className = 'input__query-clear';
+                            break;
+                    }
+                    listElement.appendChild(dropdownMenu);
+                }
             }
+            container.appendChild(listElement);
+            container.classList.add('active')
         }
-        header.appendChild(listElement);
     }
 }
 

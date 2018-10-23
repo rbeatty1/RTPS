@@ -1,7 +1,21 @@
+.gap{
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+
 .map__container{
-    width:100%;
-    height: 85vh;
-    order: 1;
+    width:70%;
+    height: 100%;
+}
+
+.map__sidebar{
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    width: 30%;
+    background-color: whitesmoke;
+    border-left: 1px solid #8bb23f;
 }
 
 .map__spinner{
