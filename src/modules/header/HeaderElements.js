@@ -36,26 +36,26 @@ const HeaderElements = [
     {
         elemName : 'navigation',
         content : {
-            reliability : {
-                pageId : 1,
-                name : 'Reliability',
-                href : '#'
+            home: {
+                pageId: 1,
+                name: 'Home',
             },
             availibility : {
                 pageId : 2,
                 name : 'Accessibility',
-                href : '#'
             },
             frequency : {
                 pageId : 3,
                 name : 'Frequency',
-                href : '#'
             },
             gap : {
                 pageId : 4,
-                name : 'Gap Analysis',
-                href : '#'
-            }
+                name : 'Gap',
+            },
+            reliability : {
+                pageId : 5,
+                name : 'Reliability',
+            },
         }
     }
 ]

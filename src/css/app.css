@@ -8,4 +8,5 @@ body, #app{
 #main{
     height: 85vh;
     width: 100vw;
+    position: relative;
 }

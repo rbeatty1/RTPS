@@ -1,4 +1,4 @@
-import '../../../css/map/map.css'
+import '../../../css/pages/map/map.css'
 import { geography } from './sidebar/queryInput/queryInput.js'
 import { layers } from './map_styles/styles.js'
 import { Sidebar } from "./sidebar/sidebar.js"

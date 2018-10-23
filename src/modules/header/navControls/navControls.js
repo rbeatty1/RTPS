@@ -7,7 +7,7 @@ function _createNavLink(self, item){
     navElement.innerHTML = item;
     navElement.setAttribute('href', '#');
     // On load, land on gap analysis page
-    item != 'Gap Analysis' ? navElement.classList = 'header__nav-link inactive' : navElement.classList = 'header__nav-link active';
+    item != 'Home' ? navElement.classList = 'header__nav-link inactive' : navElement.classList = 'header__nav-link active';
     // change link styling when navigating to
     navElement.addEventListener('click', e=>{
         let siblings = e.target.parentNode.childNodes;

@@ -1,0 +1,39 @@
+.gap{
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+
+.map__container{
+    width:70%;
+    height: 100%;
+}
+
+.map__sidebar{
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    width: 30%;
+    background-color: whitesmoke;
+    border-left: 1px solid #8bb23f;
+}
+
+.map__spinner{
+    border: 10px solid rgba(0,0,0,0);
+    border-top: 10px solid #ebb23f;
+    border-radius: 50%;
+    z-index: 1;
+    width: 60px;
+    height: 60px;
+    animation: spin 2s linear infinite;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin: -75px 0 0 -75px;
+    display: none;
+}
+
+@keyframes spin{
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
