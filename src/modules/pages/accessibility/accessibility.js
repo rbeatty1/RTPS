@@ -66,7 +66,7 @@ const LoadStations = map =>{
     if (ago.status == 200){ return ago.json() }
   })
   .then(agoStations=>{
-    fetch('http://localhost:8000/api/rtps/access?stations')
+    fetch('https://a.michaelruane.com/api/rtps/access?stations')
     .then(dbReturn=>{
       if (dbReturn.status == 200) { return dbReturn.json() }
     })
@@ -117,7 +117,7 @@ const LoadTAZ = map =>{
       }
     })
   .then(agoZones=>{
-    fetch('http://localhost:8000/api/rtps/access?zones')
+    fetch('https://a.michaelruane.com/api/rtps/access?zones')
     .then(dbReturn=>{
       if (dbReturn.status == 200) { return dbReturn.json() }
     })

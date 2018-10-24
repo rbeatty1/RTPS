@@ -10,6 +10,7 @@ rtps/zonequery/lib
 # node file
 package-lock.json
 browserslist-stats.json
+dependency_licenses.json
 
 # Windows thumbnail cache files
 Thumbs.db
