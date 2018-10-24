@@ -57,9 +57,9 @@ const LoadLayers = (map, layers) => {
                 "source": l,
                 "source-layer": style.layer,
                 "paint": style.paint,
-                "visibility": style.visibility ? "none" : "visibile",
                 "interactive": true
             }
+            !style.visibility ? null : layerDef["layout"] = {visibility: style.visibility}
             !style.filter ? null : layerDef["filter"] = style.filter
             map.addLayer(layerDef, style.placement)
         }
@@ -173,21 +173,30 @@ const ClearQuery = map => {
 */
 const AddListeners = map => {
     // hover => green fill
-    map.on('mousemove', "reference-base", (e) => {
+    map.on('mousemove', "zoneReference-base", (e) => {
         map.setFilter("zones-hoverFill", ["==", "no", e.features[0].properties.no])
     })
     // leave hover => no fill
-    map.on('mouseleave', "reference-base", (e) => {
+    map.on('mouseleave', "zoneReference-base", (e) => {
         map.setFilter("zones-hoverFill", ["==", "no", ""]);
     })
 
     // click => yellow fill
-    map.on('click', "reference-base", (e) => {
+    map.on('click', "zoneReference-base", (e) => {
         if (geography && geography.type == 'zone') {
             var filtered = zoneSelection(e, geography)
             filtered.length != 0 ? map.setFilter('zones-clickFill', ['match', ['get', 'no'], filtered, true, false]) : map.setFilter('zones-clickFill', ['==', 'no', '']);
         }
         else { alert('Select a geography before continuing!') }
+    })
+    // hover => green fill
+    map.on('mousemove', "muniReference-base", (e) => {
+        console.log(e)
+        map.setFilter("boundaries-hover", ["==", "name", e.features[0].properties.name])
+    })
+    // leave hover => no fill
+    map.on('mouseleave', "zoneReference-base", (e) => {
+        map.setFilter("boundaries-hover", ["==", "name", ""]);
     })
 
     // perform query
@@ -204,7 +213,7 @@ const AddListeners = map => {
             spinner.style.display = 'none'
             
             // resymbolize other layers for aesthetics
-            geography.type == 'zone' ? map.setPaintProperty("zones-clickFill", "fill-color", "#06bf9c") : map.setPaintProperty("muni-base", "fill-color", "#06bf9c")
+            geography.type == 'zone' ? map.setPaintProperty("zones-clickFill", "fill-color", "#06bf9c") : map.setPaintProperty("boundaries-muni", "fill-color", "#06bf9c")
         })
     })
 
@@ -212,8 +221,8 @@ const AddListeners = map => {
     document.querySelector('.input__query-clear').addEventListener('click', () => {
         geography.type == 'zone' ? geography.selection = new Array() : undefined
         if (geography.type == 'municipality') {
-            map.setFilter('muni-base', ['==', 'name', ''])
-            map.setPaintProperty('muni-base', 'fill-color', '#d8c72e')
+            map.setFilter('boundaries-muni', undefined)
+            // map.setPaintProperty('boundaries-muni', 'fill-color', '#d8c72e')
             geography.selection = undefined
         }
         ClearQuery(map)
@@ -221,7 +230,31 @@ const AddListeners = map => {
 
     document.querySelector('#muni').addEventListener('change', e => {
         let muni = e.target.value
-        map.getLayer('muni-base') ? map.setFilter('muni-base', ['==', 'name', muni]) : map.setFilter('muni-base', ['==', 'name', ''])
+        map.getLayer('boundaries-muni') ? map.setFilter('boundaries-muni', ['==', 'name', muni]) : map.setFilter('boundaries-muni', undefined)
+    })
+
+    document.querySelector('#geography').addEventListener('change', e=>{
+        let geom = e.target.value
+        let layers = {
+            zone: ['zoneReference-base','zones-base', 'zones-hoverFill', 'zones-clickFill'],
+            muni: ['muniReference-base', 'boundaries-muni', 'boundaries-hover', 'boundaries-click']
+        }
+        if (geom == 'Zone'){
+            layers.zone.map(item=>{
+                map.setLayoutProperty(item, 'visibility', 'visible')
+            })
+            layers.muni.map(item=>{
+                map.getLayoutProperty(item, 'visibility') != 'none' ?  map.setLayoutProperty(item, 'visibility', 'none') : null
+            })
+        }
+        else{
+            layers.muni.map(item=>{
+                map.setLayoutProperty(item, 'visibility', 'visible')
+            })
+            layers.zone.forEach(item=>{
+                map.getLayoutProperty(item, 'visibility') != 'none' ?  map.setLayoutProperty(item, 'visibility', 'none') : null
+            })
+        }
     })
 }
 

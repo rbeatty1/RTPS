@@ -11,8 +11,9 @@ const layers = {
         paint: {
           "fill-translate-anchor": "map",
           "fill-color": "rgb(139,178,63)",
-          "fill-opacity": 1
+          "fill-opacity": 1,
         },
+        visibility: "none",
         filter: [
           "==",
           "no",
@@ -26,8 +27,9 @@ const layers = {
         paint: {
           "fill-translate-anchor": "map",
           "fill-color": "#d8c72e",
-          "fill-outline-color": "#f00"
+          "fill-outline-color": "#f00",
         },
+        visibility: "none",
         filter: [
           "==",
           "no",
@@ -49,13 +51,14 @@ const layers = {
             'interpolate', ['linear'], ['zoom'],
             7, 0.1,
             12, 1
-          ]
+          ],
         },
+        visibility: "none",
         placement: "admin-2-boundaries"
       }
     }
   },
-  reference: {
+  zoneReference: {
     source: 'https://tiles.dvrpc.org/data/dvrpc-tim-zones.json',
     type: 'vector',
     style: {
@@ -65,7 +68,7 @@ const layers = {
         paint: {
           "fill-translate-anchor": "map",
           "fill-color": "rgb(255,255,255)",
-          "fill-opacity": 0
+          "fill-opacity": 0,
         },
         visibility: "none",
         placement: null,
@@ -77,48 +80,99 @@ const layers = {
       },
     }
   },
-  muni: {
+  muniReference:{
+    source: 'https://tiles.dvrpc.org/data/dvrpc-municipal.json',
+    type: 'vector',
+    style:{
+     base:{
+      type: 'fill',
+      layer: 'municipalities',
+      paint: {
+        "fill-translate-anchor": "map",
+        "fill-color": "rgb(255,255,255)",
+        "fill-opacity": 0,
+      },
+      visibility: "none",
+      placement: null,
+      filter: [
+        "!=",
+        "no",
+        ""
+      ]
+    }
+    }
+  },
+  boundaries: {
     source: 'https://tiles.dvrpc.org/data/dvrpc-municipal.json',
     type: 'vector',
     style: {
-      base: {
+      muni: {
+        type: 'line',
+        layer: 'municipalities',
+        paint: {
+          'line-width': [
+            'interpolate', ['linear'], ['zoom'],
+            7, 0.1,
+            12, 1
+          ],
+          'line-color': '#08506d',
+          'line-opacity': [
+            'interpolate', ['linear'], ['zoom'],
+            7, 0.1,
+            12, 1
+          ],
+        },
+        visibility: "none",
+        placement: null
+      },
+      hover:  {
         type: 'fill',
         layer: 'municipalities',
         paint: {
           "fill-translate-anchor": "map",
-          "fill-color": "#d8c72e",
-          "fill-outline-color": "#f00"
+          "fill-color": "rgb(139,178,63)",
+          "fill-opacity": 1,
         },
+        visibility: "none",
         filter: [
           "==",
           "name",
           ""
         ],
-        placement: null
-      }
+        placement: "waterway-label"
+      },
+      click:  {
+        type: 'fill',
+        layer: 'municipalities',
+        paint: {
+          "fill-translate-anchor": "map",
+          "fill-color": "#d8c72e",
+          "fill-outline-color": "#f00",
+        },
+        visibility: "none",
+        filter: [
+          "==",
+          "name",
+          ""
+        ],
+        placement: "waterway-label"
+      },
+      county: {
+        type: 'line',
+        layer: 'county',
+        paint: {
+          "line-color": "#aaa",
+          "line-width": 1
+        },
+        filter: [
+          "==",
+          "dvrpc",
+          "Yes"
+        ],
+        placement: "admin-2-boundaries"
+      },
     }
   }
-  // transit: {
-  //   source: 'https://tiles.dvrpc.org/data/dvrpc-tim-transit.json',
-  //   type: 'vector',
-  //   style: {
-  //     base: {
-  //       type: 'line',
-  //       layer: 'transit_lines',
-  //       paint: {
-  //         'line-width': .05,
-  //         'line-color': '#06bf9c'
-  //       },
-  //       filter: [
-  //         "match",
-  //         ['get', 'typeno'],
-  //         0,
-  //         true,
-  //         false
-  //       ]
-  //     }
-  //   }
-  // }
 }
 
 export {layers}
