@@ -1,4 +1,4 @@
-import '../../../../css/map/sidebar.css'
+import '../../../../css/pages/map/sidebar.css'
 import { QueryContainer } from './queryInput/queryInput.js'
 import { HeaderElements } from '../../../header/HeaderElements.js'
 

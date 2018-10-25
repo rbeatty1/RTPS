@@ -84,22 +84,22 @@ const layers = {
     source: 'https://tiles.dvrpc.org/data/dvrpc-municipal.json',
     type: 'vector',
     style:{
-     base:{
-      type: 'fill',
-      layer: 'municipalities',
-      paint: {
-        "fill-translate-anchor": "map",
-        "fill-color": "rgb(255,255,255)",
-        "fill-opacity": 0,
-      },
-      visibility: "none",
-      placement: null,
-      filter: [
-        "!=",
-        "no",
-        ""
-      ]
-    }
+      base:{
+        type: 'fill',
+        layer: 'municipalities',
+        paint: {
+          "fill-translate-anchor": "map",
+          "fill-color": "rgb(255,255,255)",
+          "fill-opacity": 0,
+        },
+        visibility: "none",
+        placement: null,
+        filter: [
+          "!=",
+          "no",
+          ""
+        ]
+      }
     }
   },
   boundaries: {

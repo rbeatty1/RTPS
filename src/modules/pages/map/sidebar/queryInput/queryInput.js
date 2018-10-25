@@ -1,4 +1,4 @@
-import "../../../../../css/map/queryInputs/queryInputs.css"
+import "../../../../../css/pages/map/queryInputs/queryInputs.css"
 
 
 // holder for query inputs
@@ -29,24 +29,14 @@ const _createMenu = (self) =>{
     dropdownMenu.className = 'input__query-input';
     _createMenuLinks(dropdownMenu, self.options);
     dropdownMenu.addEventListener('change', e=>{
-        if (dropdownMenu.id == 'geography' || dropdownMenu.id == 'muni'){
-            if (e.target.id != 'muni'){ geography.type = e.target.value.toLowerCase() } 
-            if (geography.type){
-                if (e.target.value == 'Municipality'){
-                    document.querySelector('#muni').style.display != 'inline-block' ? document.querySelector('#muni').style.display = 'inline-block' : null
-                    geography.selection = undefined
-                }
-                else if(e.target.value=='Zone'){
-                    document.querySelector("#muni").style.display == 'inline-block' ? document.querySelector("#muni").style.display = 'none': null
-                    geography.selection = new Array()
-                }
-                else{
-                    geography.selection = e.target.value
-                }
-            }
+        if (dropdownMenu.id == 'geography'){
+            document.querySelector('.sidebar__input-dropdowns').setAttribute('data-type', e.target.value.toLowerCase())
+        }
+        else if (dropdownMenu.id == 'muni'){
+            document.querySelector('.sidebar__input-dropdowns').setAttribute('data-selection', e.target.value)
         }
         else{
-            geography.direction = e.target.value
+            document.querySelector('.sidebar__input-dropdowns').setAttribute('data-direction', e.target.value)
         }
     })
     return dropdownMenu;
@@ -66,30 +56,87 @@ class QueryContainer{
         if (container){
             let listElement = document.createElement('div');
             listElement.className = 'sidebar__input-container';
-            listElement.innerHTML = '';
+            listElement.innerHTML = '<div class="sidebar__input-dropdowns"></div><div class="sidebar__input-buttons"></div>';
+            container.appendChild(listElement);
+            container.classList.add('active')
             for (var k in this.list){
                 let input = this.list[k];
                 if (input.id < 5){
                     let li = _createMenu(input, this, this.list)
-                    listElement.appendChild(li);
+                    document.querySelector('.sidebar__input-dropdowns').appendChild(li);
                 }
                 else{
                     let dropdownMenu = document.createElement('button');
                     dropdownMenu.innerHTML = `<span class="input__query-name">${input.name}`;
-                    dropdownMenu.className = 'input__query-execute';
+                    dropdownMenu.classList.add('input__query-button');
                     switch (input.id){
                         case 5: 
-                            dropdownMenu.className = 'input__query-execute';
+                            dropdownMenu.id = 'execute';
                             break;
                         case 6:
-                            dropdownMenu.className = 'input__query-clear';
+                            dropdownMenu.id = 'clear';
                             break;
                     }
-                    listElement.appendChild(dropdownMenu);
+                    document.querySelector('.sidebar__input-buttons').appendChild(dropdownMenu);
                 }
             }
-            container.appendChild(listElement);
-            container.classList.add('active')
+            let targetNode = document.querySelector('.sidebar__input-dropdowns')
+            for (let key in geography){
+                targetNode.setAttribute(`data-${key}`, geography[key])
+            }
+            let config = { attributes: true, childList: false, subtree: false }
+            let observer = new MutationObserver((target, config)=>{
+                for (let node of target){
+                    if (node.type == 'attributes' && node.attributeName == 'data-type' && node.target.getAttribute('data-direction') != undefined){
+                        geography.type = node.target.getAttribute('data-type')
+                       if(geography.type == 'zone'){
+                           geography.selection = new Array();
+                           document.querySelector('#direction').style.display = 'inline-block'
+                           document.querySelector('#muni').style.display == 'inline-block' ? document.querySelector('#muni').style.display = '' : null
+                        }
+                        else if (geography.type == 'municipality'){
+                            document.querySelector('#muni').style.display = 'inline-block'
+                            document.querySelector('#direction').style.display == 'inline-block' ? document.querySelector('#direction').style.display = '' : null
+                            geography.selection = undefined
+                        }
+                        else{
+                            document.querySelector('#muni').style.display = ''
+                            document.querySelector('#direction').style.display = ''
+                        }
+                    }
+                    else if(node.type == 'attributes' && node.attributeName == 'data-selection' && node.target.getAttribute('data-direction') != undefined){
+                        geography.selection = node.target.getAttribute('data-selection')
+                        if (geography.type == 'municipality'){
+                           document.querySelector('#direction').style.display = 'inline-block'
+                        }
+                    }
+                    else if (node.type == 'attributes' && node.attributeName == 'data-direction' && node.target.getAttribute('data-direction') != undefined){
+                        geography.direction = node.target.getAttribute('data-direction')
+                    }
+                    let sum = 0
+                    for (let key in geography){
+                        geography[key] ? sum += 1 : null
+                    }
+                    if (sum == 3){
+                        if (geography.type == 'zone'){
+                            if (geography.selection.length >0){
+                                let buttons = document.querySelectorAll('.input__query-button')
+                                for (let btn of buttons){
+                                    btn.classList.contains('active') ? null : btn.classList.add('active')
+                                }
+                            }
+                        }
+                        else{
+                            let buttons = document.querySelectorAll('.input__query-button')
+                            for (let btn of buttons){
+                                btn.classList.contains('active') ? null : btn.classList.add('active')
+                            }
+                        }
+                    }
+                }
+
+            })
+            observer.observe(targetNode, config)
         }
     }
 }

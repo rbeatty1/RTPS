@@ -158,11 +158,36 @@ const ClearQuery = map => {
     // reset zone selection
     map.setFilter('zones-clickFill', ["==", "no", ""])
     map.setPaintProperty('zones-clickFill', "fill-color", "#d8c72e")
+    map.setFilter('zones-base', undefined)
 
     // remove analysis layer
     if (map.getLayer('zones-analysis')) {
         map.removeLayer('zones-analysis')
     }
+
+    let queryContainer = document.querySelector('.sidebar__input-dropdowns')
+    // reset query inputs
+    for (let key in geography){
+        queryContainer.setAttribute(`data-${key}`, '')
+        geography[key] = undefined
+    }
+    // mute colors of buttons
+    let buttons = document.querySelectorAll('.input__query-button')
+    for (let btn of buttons){
+        if (btn.classList.contains('active')){ 
+            btn.classList.remove('active')
+        } 
+    }
+
+    // reset dropdowns to default option
+    let inputs = document.querySelectorAll('.input__query-input')
+    for (let option of inputs){
+        option.selectedIndex = 0
+    }
+
+    ['boundaries-muni', 'zones-base'].forEach(layer=>{
+        map.setLayoutProperty(layer, 'visibility', 'none')
+    })
 }
 
 /* AddListeners(map) -- rbeatty
@@ -172,6 +197,8 @@ const ClearQuery = map => {
     @returns: NONE
 */
 const AddListeners = map => {
+
+// ZONE LISTENERS
     // hover => green fill
     map.on('mousemove', "zoneReference-base", (e) => {
         map.setFilter("zones-hoverFill", ["==", "no", e.features[0].properties.no])
@@ -186,21 +213,40 @@ const AddListeners = map => {
         if (geography && geography.type == 'zone') {
             var filtered = zoneSelection(e, geography)
             filtered.length != 0 ? map.setFilter('zones-clickFill', ['match', ['get', 'no'], filtered, true, false]) : map.setFilter('zones-clickFill', ['==', 'no', '']);
+            let buttons = document.querySelectorAll('.input__query-button')
+            for (let btn of buttons){
+                btn.classList.contains('active') ? null : btn.classList.add('active')
+            }
         }
         else { alert('Select a geography before continuing!') }
     })
+
+// MUNI LISTENERS
     // hover => green fill
     map.on('mousemove', "muniReference-base", (e) => {
-        console.log(e)
         map.setFilter("boundaries-hover", ["==", "name", e.features[0].properties.name])
     })
     // leave hover => no fill
-    map.on('mouseleave', "zoneReference-base", (e) => {
+    map.on('mouseleave', "muniReference-base", (e) => {
         map.setFilter("boundaries-hover", ["==", "name", ""]);
     })
+    // click => yellow fill
+    map.on('click', "muniReference-base", (e) => {
+        let muni = e.features[0].properties.name
+        document.querySelector('#muni').value = muni
+        geography.selection = muni
+        muni ? map.setFilter('boundaries-click', ['==', 'name', muni]) : null
+        let buttons = document.querySelectorAll('.input__query-button')
+        for (let btn of buttons){
+            btn.classList.contains('active') ? null : btn.classList.add('active')
+        }
+        document.querySelector('.sidebar__input-dropdowns').setAttribute('data-selection', muni)
+    })
+
+
 
     // perform query
-    document.querySelector('.input__query-execute').addEventListener('click', () => {
+    document.querySelector('#execute').addEventListener('click', () => {
 
         // if exists, remove
         if (map.getLayer('zones-analysis')) {
@@ -213,16 +259,25 @@ const AddListeners = map => {
             spinner.style.display = 'none'
             
             // resymbolize other layers for aesthetics
-            geography.type == 'zone' ? map.setPaintProperty("zones-clickFill", "fill-color", "#06bf9c") : map.setPaintProperty("boundaries-muni", "fill-color", "#06bf9c")
+            if (geography.type == 'zone'){
+                map.setPaintProperty("zones-clickFill", "fill-color", "#06bf9c")
+                map.setFilter("zones-base", ['==', 'no', ''])
+            }
+            else{
+                map.setPaintProperty("boundaries-click", "fill-color", "#06bf9c")
+                map.setFilter('boundaries-muni', ['==', 'name', geography.selection])
+            }
+            
         })
     })
 
     // clear query
-    document.querySelector('.input__query-clear').addEventListener('click', () => {
+    document.querySelector('#clear').addEventListener('click', () => {
         geography.type == 'zone' ? geography.selection = new Array() : undefined
         if (geography.type == 'municipality') {
             map.setFilter('boundaries-muni', undefined)
-            // map.setPaintProperty('boundaries-muni', 'fill-color', '#d8c72e')
+            map.setFilter('boundaries-click', ['==', 'name', ''])
+            map.setPaintProperty('boundaries-click', 'fill-color', '#d8c72e')
             geography.selection = undefined
         }
         ClearQuery(map)
@@ -230,7 +285,7 @@ const AddListeners = map => {
 
     document.querySelector('#muni').addEventListener('change', e => {
         let muni = e.target.value
-        map.getLayer('boundaries-muni') ? map.setFilter('boundaries-muni', ['==', 'name', muni]) : map.setFilter('boundaries-muni', undefined)
+        map.getLayer('boundaries-click') ? map.setFilter('boundaries-click', ['==', 'name', muni]) : null
     })
 
     document.querySelector('#geography').addEventListener('change', e=>{
