@@ -5,7 +5,7 @@
 }
 
 .map__container{
-    width:70%;
+    width:80%;
     height: 100%;
 }
 
@@ -13,7 +13,7 @@
     display: flex;
     flex-flow: column;
     align-items: center;
-    width: 30%;
+    width: 20%;
     background-color: whitesmoke;
     border-left: 1px solid #8bb23f;
 }

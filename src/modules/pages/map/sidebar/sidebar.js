@@ -10,33 +10,11 @@ const MenuContent = (menu, content) =>{
   // function to return proper HTML strings
   const createContent = menu =>{
     switch(menu.innerText.toLowerCase()){
-      case 'legend':
-        let table = document.createElement('table')
-        let row = document.createElement('tr')
-        let cnt = 0
-        content.classes.forEach(function(bin){
-          let cell = document.createElement('TD')
-          cell.className = 'map__sidebar-legendCell'
-          cell.style.backgroundColor = bin
-          
-          cnt ++
-          row.appendChild(cell)
-        })
-        table.appendChild(row)
-        let template = `
-        <h4 class='map__sidebar-legendLabel'>${content.label}</h4>
-        ${table.outerHTML}
-        `
-        return template
-        break;
       case 'summary':
         return content
         break;
-      case 'analysis':
-        return ''
-        break;
       default:
-        return 'this might be content'
+        return ''
         break;
     }
   }
@@ -76,11 +54,7 @@ class Sidebar{
           selection: '',
           direction: ''
         },
-        legend: {
-          classes: ["#fdd0a2","#fdae6b","#fd8d3c","#f16913","#d94801","#a63603", "#7f2704"],
-          label: 'Transit Improvement Priority',
-        },
-        summary: `This map shows the average network gap score for connections DIRECTION the selected area. Only zones with demand DIRECTION the selected area are displayed. The darker colors indicate higher priority connections in relation to the selected area.`,
+        summary: `Please perform an analysis query to populate this area with results.`,
       },
       open: undefined
     }

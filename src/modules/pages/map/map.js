@@ -2,6 +2,7 @@ import '../../../css/pages/map/map.css'
 import { geography } from './sidebar/queryInput/queryInput.js'
 import { layers } from './map_styles/styles.js'
 import { Sidebar } from "./sidebar/sidebar.js"
+import { ResultsSummary } from './sidebar/resultsSummary';
 
 const extent = {
   center: [-75.234, 40.061],
@@ -143,6 +144,7 @@ const PerformQuery = async input => {
         let rawData = await fetchData.json()
         let processed = ProcessData(rawData, helpers) // process data
         helpers.analysisLayers = processed // return
+        new ResultsSummary(input, rawData)
     }
     return helpers.analysisLayers
 }
@@ -185,9 +187,12 @@ const ClearQuery = map => {
         option.selectedIndex = 0
     }
 
-    ['boundaries-muni', 'zones-base'].forEach(layer=>{
+    ['boundaries-muni', 'muniReference-base', 'zoneReference-base', 'zones-base'].forEach(layer=>{
         map.setLayoutProperty(layer, 'visibility', 'none')
     })
+
+    // clear results summary
+    document.querySelector('#summary_dropdownContent').innerHTML = 'Please perform an analysis query to populate this area with results.'
 }
 
 /* AddListeners(map) -- rbeatty
@@ -260,14 +265,15 @@ const AddListeners = map => {
             
             // resymbolize other layers for aesthetics
             if (geography.type == 'zone'){
+                map.setLayoutProperty('zones-hoverFill', 'visibility', 'none')
                 map.setPaintProperty("zones-clickFill", "fill-color", "#06bf9c")
                 map.setFilter("zones-base", ['==', 'no', ''])
             }
             else{
+                map.setLayoutProperty('boundaries-hover', 'visibility', 'none')
                 map.setPaintProperty("boundaries-click", "fill-color", "#06bf9c")
                 map.setFilter('boundaries-muni', ['==', 'name', geography.selection])
             }
-            
         })
     })
 
