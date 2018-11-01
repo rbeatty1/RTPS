@@ -28,7 +28,7 @@ const CreateSummary = data =>{
 }
 
 const CreateViz = data =>{
-  return '<p>zip boom bow pretty stuff</p>'
+  return '<p>Some distribution visualizations?</br>Total demand summary?</br>The world is our oyster</p>'
 }
 
 const BuildSummary = (props) => {

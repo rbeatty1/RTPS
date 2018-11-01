@@ -9,7 +9,7 @@ const HeaderElements = [
                 id : 1,
                 name : 'Select a Study Area',
                 elem_id: 'geography',
-                options : ['Zone', 'Municipality']
+                options : ['Municipality', 'Zone']
             },
             muniList : {
                 id : 2,
