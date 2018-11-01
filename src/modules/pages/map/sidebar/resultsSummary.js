@@ -21,8 +21,10 @@ const CreateLegend = data =>{
 }
 
 const CreateSummary = data =>{
-  return `The results being displayed show the average network gap score for Traffic Analysis Zone (TAZ) connections <span class="map__sidebar-legendEmphasis">${data.direction}</span> the selected area — <span class="map__sidebar-legendEmphasis">${data.location}</span>. Only TAZs with demand <span class="map__sidebar-legendEmphasis">${data.direction} the selected area</span> are being displayed, a total of <span class="map__sidebar-legendEmphasis">${data.count}</span>, with darker colors indicating a higher priority for transit connections in relation to ${data.location}.`
-
+  console.log(data)
+  let insert;
+  data.type == 'municipality' ? insert = `the selected area — <span class="map__sidebar-legendEmphasis">${data.location}</span>` : insert = 'the selected area'
+  return `The results being displayed show the average network gap score for Traffic Analysis Zone (TAZ) connections <span class="map__sidebar-legendEmphasis">${data.direction}</span> ${insert}. Only TAZs with demand <span class="map__sidebar-legendEmphasis">${data.direction} the selected area</span> are being displayed, a total of <span class="map__sidebar-legendEmphasis">${data.count}</span>, with darker colors indicating a higher priority for transit connections in relation to ${insert}.`
 }
 
 const CreateViz = data =>{
@@ -30,7 +32,6 @@ const CreateViz = data =>{
 }
 
 const BuildSummary = (props) => {
-
   let content= {
     legend: {
       create: document.createElement('div'),
@@ -40,7 +41,8 @@ const BuildSummary = (props) => {
       create: document.createElement('div'),
       direction: props.queryData.direction.split(' ')[0].toLowerCase(),
       location: props.queryData.selection,
-      count: props.data.length
+      count: props.data.length,
+      type: props.queryData.type
     },
     results: {
       create: document.createElement('div'),
