@@ -10,14 +10,25 @@ let geography = {
 
 const _createMenuLinks = (self, option) =>{
     // iterate through options and create a link for each one -- <option value='{i}' class='input__input-option>i</option>
-    option.forEach(i=> {
-        let optionLink = document.createElement('option');
-        optionLink.innerHTML = i;
-        optionLink.setAttribute('value', i);
-        optionLink.className = 'input__input-option';
-        self.appendChild(optionLink);
-        return self;
-    })
+    if (self.id == 'muni'){
+        Object.keys(option).forEach(muni=>{
+            let optionLink = document.createElement('option');
+            optionLink.innerHTML = muni;
+            optionLink.setAttribute('value', muni);
+            optionLink.setAttribute('data-id', option[muni])
+            optionLink.className = 'input__input-option';
+            self.appendChild(optionLink);
+        })
+    }
+    else{
+        option.forEach(i=> {
+            let optionLink = document.createElement('option');
+            optionLink.innerHTML = i;
+            optionLink.setAttribute('value', i);
+            optionLink.className = 'input__input-option';
+            self.appendChild(optionLink);
+        })
+    }
     return self;
 }
 

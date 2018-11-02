@@ -81,12 +81,11 @@ const layers = {
     }
   },
   muniReference:{
-    source: 'https://tiles.dvrpc.org/data/dvrpc-municipal.json',
-    type: 'vector',
+    type: 'geojson',
+    data: 'https://opendata.arcgis.com/datasets/e1e3beb6aa144f2b8dd07693567077cc_0.geojson',
     style:{
       base:{
         type: 'fill',
-        layer: 'municipalities',
         paint: {
           "fill-translate-anchor": "map",
           "fill-color": "rgb(255,255,255)",
@@ -102,13 +101,32 @@ const layers = {
       }
     }
   },
-  boundaries: {
+  county: {
     source: 'https://tiles.dvrpc.org/data/dvrpc-municipal.json',
     type: 'vector',
-    style: {
+    style:{
+      county: {
+        type: 'line',
+        layer: 'county',
+        paint: {
+          "line-color": "#aaa",
+          "line-width": 1
+        },
+        filter: [
+          "==",
+          "dvrpc",
+          "Yes"
+        ],
+        placement: "admin-2-boundaries"
+      }
+    }
+  },
+  boundaries:{
+    type: 'geojson',
+    data: 'https://opendata.arcgis.com/datasets/e1e3beb6aa144f2b8dd07693567077cc_0.geojson',
+    style:{
       muni: {
         type: 'line',
-        layer: 'municipalities',
         paint: {
           'line-width': [
             'interpolate', ['linear'], ['zoom'],
@@ -127,7 +145,6 @@ const layers = {
       },
       hover:  {
         type: 'fill',
-        layer: 'municipalities',
         paint: {
           "fill-translate-anchor": "map",
           "fill-color": "rgb(139,178,63)",
@@ -143,7 +160,6 @@ const layers = {
       },
       click:  {
         type: 'fill',
-        layer: 'municipalities',
         paint: {
           "fill-translate-anchor": "map",
           "fill-color": "#d8c72e",
@@ -156,21 +172,7 @@ const layers = {
           ""
         ],
         placement: "waterway-label"
-      },
-      county: {
-        type: 'line',
-        layer: 'county',
-        paint: {
-          "line-color": "#aaa",
-          "line-width": 1
-        },
-        filter: [
-          "==",
-          "dvrpc",
-          "Yes"
-        ],
-        placement: "admin-2-boundaries"
-      },
+      }
     }
   }
 }
