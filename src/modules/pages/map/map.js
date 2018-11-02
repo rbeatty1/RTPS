@@ -3,6 +3,7 @@ import { geography } from './sidebar/queryInput/queryInput.js'
 import { layers } from './map_styles/styles.js'
 import { Sidebar } from "./sidebar/sidebar.js"
 import { ResultsSummary } from './sidebar/resultsSummary';
+import { HeaderElements } from '../../header/HeaderElements.js'
 
 const extent = {
   center: [-75.234, 40.061],
@@ -42,27 +43,49 @@ const LoadLayers = (map, layers) => {
     // loop through layer object
     for (let l in layers) {
         // create mapbox source definition object with vector tile source
-        let sourceDef = {
-            type: layers[l].type,
-            url: layers[l].source
-        }
-
-        map.addSource(l, sourceDef)
-
-        // iterate through each source's style and create mapbox layer definition object
-        for (let s in layers[l].style) {
-            let style = layers[l].style[s]
-            let layerDef = {
-                "id": `${l}-${s}`,
-                "type": style.type,
-                "source": l,
-                "source-layer": style.layer,
-                "paint": style.paint,
-                "interactive": true
+        if (l != 'boundaries' && l != 'muniReference'){
+            console.log(l)
+            let sourceDef = {
+                type: layers[l].type,
+                url: layers[l].source
             }
-            !style.visibility ? null : layerDef["layout"] = {visibility: style.visibility}
-            !style.filter ? null : layerDef["filter"] = style.filter
-            map.addLayer(layerDef, style.placement)
+
+            map.addSource(l, sourceDef)
+
+            // iterate through each source's style and create mapbox layer definition object
+            for (let s in layers[l].style) {
+                let style = layers[l].style[s]
+                let layerDef = {
+                    "id": `${l}-${s}`,
+                    "type": style.type,
+                    "source": l,
+                    "source-layer": style.layer,
+                    "paint": style.paint,
+                    "interactive": true
+                }
+                !style.visibility ? null : layerDef["layout"] = {visibility: style.visibility}
+                !style.filter ? null : layerDef["filter"] = style.filter
+                map.addLayer(layerDef, style.placement)
+            }
+        }
+        else{
+            let sourceDef = {
+                type: layers[l].type,
+                data: layers[l].data
+            }
+            map.addSource(l, sourceDef)
+            for (let s in layers[l].style){
+                let style = layers[l].style[s]
+                let layerDef = {
+                    'id': `${l}-${s}`,
+                    "type": style.type,
+                    "source": l,
+                    "paint": style.paint
+                }
+                !style.visibility ? null : layerDef["layout"] = {visibility: style.visibility}
+                !style.filter ? null : layerDef["filter"] = style.filter
+                map.addLayer(layerDef, style.placement)
+            }
         }
     }
 }
@@ -229,7 +252,7 @@ const AddListeners = map => {
 // MUNI LISTENERS
     // hover => green fill
     map.on('mousemove', "muniReference-base", (e) => {
-        map.setFilter("boundaries-hover", ["==", "name", e.features[0].properties.name])
+        map.setFilter("boundaries-hover", ["==", "GEOID", e.features[0].properties.GEOID])
     })
     // leave hover => no fill
     map.on('mouseleave', "muniReference-base", (e) => {
@@ -237,10 +260,11 @@ const AddListeners = map => {
     })
     // click => yellow fill
     map.on('click', "muniReference-base", (e) => {
-        let muni = e.features[0].properties.name
+        let muni = e.features[0].properties.MUN_NAME
         document.querySelector('#muni').value = muni
         geography.selection = muni
-        muni ? map.setFilter('boundaries-click', ['==', 'name', muni]) : null
+        console.log(HeaderElements[1].content.muniList.options[geography.selection])
+        muni ? map.setFilter('boundaries-click', ['==', 'GEOID', HeaderElements[1].content.muniList.options[geography.selection]]) : null
         let buttons = document.querySelectorAll('.input__query-button')
         for (let btn of buttons){
             btn.classList.contains('active') ? null : btn.classList.add('active')
@@ -272,7 +296,7 @@ const AddListeners = map => {
             else{
                 map.setLayoutProperty('boundaries-hover', 'visibility', 'none')
                 map.setPaintProperty("boundaries-click", "fill-color", "#06bf9c")
-                map.setFilter('boundaries-muni', ['==', 'name', geography.selection])
+                map.setFilter('boundaries-muni', ['==', 'GEOID', HeaderElements[1].content.muniList.options[geography.selection]])
             }
         })
     })
@@ -291,7 +315,7 @@ const AddListeners = map => {
 
     document.querySelector('#muni').addEventListener('change', e => {
         let muni = e.target.value
-        map.getLayer('boundaries-click') ? map.setFilter('boundaries-click', ['==', 'name', muni]) : null
+        map.getLayer('boundaries-click') ? map.setFilter('boundaries-click', ['==', 'GEOID', HeaderElements[1].content.muniList.options[muni]]) : null
     })
 
     document.querySelector('#geography').addEventListener('change', e=>{
