@@ -44,7 +44,6 @@ const LoadLayers = (map, layers) => {
     for (let l in layers) {
         // create mapbox source definition object with vector tile source
         if (l != 'boundaries' && l != 'muniReference'){
-            console.log(l)
             let sourceDef = {
                 type: layers[l].type,
                 url: layers[l].source
@@ -115,11 +114,11 @@ const zoneSelection = (target, output) => {
 */
 const ProcessData = (data, helper) => {
     // iterate through json returned by API call
-    data.forEach(item => {
-        if (!helper.check[item.no]) {
+    Object.keys(data).forEach(item => {
+        if (!helper.check[item]) {
             // create fill expression item for zones that don't already have one
-            helper.fillExpression.push(item.no, helper.colorScheme[item.rank])
-            helper.check[item.no] = item.no
+            helper.fillExpression.push(parseInt(item), helper.colorScheme[data[item]])
+            helper.check[item] = item
         }
     })
     helper.fillExpression.push("rgba(0,0,0,0)") // default color (nothing)
@@ -165,9 +164,14 @@ const PerformQuery = async input => {
         await fetch(`https://a.michaelruane.com/api/rtps/gap?muni=${input.selection}&direction=${input.direction}`)
     if (fetchData.ok) {
         let rawData = await fetchData.json()
-        let processed = ProcessData(rawData, helpers) // process data
-        helpers.analysisLayers = processed // return
-        new ResultsSummary(input, rawData)
+        if (rawData.status == 'success'){
+            let processed = ProcessData(rawData.cargo, helpers) // process data
+            helpers.analysisLayers = processed // return
+            new ResultsSummary(input, rawData.cargo)
+        }
+        else{
+            alert(`Error! ${rawData.message}`)
+        }
     }
     return helpers.analysisLayers
 }
@@ -263,7 +267,6 @@ const AddListeners = map => {
         let muni = e.features[0].properties.MUN_NAME
         document.querySelector('#muni').value = muni
         geography.selection = muni
-        console.log(HeaderElements[1].content.muniList.options[geography.selection])
         muni ? map.setFilter('boundaries-click', ['==', 'GEOID', HeaderElements[1].content.muniList.options[geography.selection]]) : null
         let buttons = document.querySelectorAll('.input__query-button')
         for (let btn of buttons){
