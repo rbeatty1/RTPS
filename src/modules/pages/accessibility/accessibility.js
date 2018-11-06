@@ -6,7 +6,7 @@ const zoneRef = {
   AccAll: {
     paint: [
       'interpolate', ['linear'], ['get', 'AccAll'],
-      1, 'rgba(0,0,0,0)',
+      1, 'rgba(0,0,0,0.01)',
       2, '#a6bddb',
       5, '#3690c0',
       7, '#045a8d',
@@ -17,7 +17,7 @@ const zoneRef = {
   AccCur: {
     paint: [
       'interpolate', ['linear'], ['get', 'AccCur'],
-      1, 'rgba(0,0,0,0)',
+      1, 'rgba(0,0,0,0.01)',
       2, '#a6bddb',
       5, '#3690c0',
       7, '#045a8d',
@@ -28,7 +28,7 @@ const zoneRef = {
   AccFut: {
     paint: [
       'interpolate', ['linear'], ['get', 'AccFut'],
-      1, 'rgba(0,0,0,0)',
+      1, 'rgba(0,0,0,0.01)',
       2, '#a6bddb',
       5, '#3690c0',
       7, '#045a8d',
@@ -39,7 +39,7 @@ const zoneRef = {
   DisCur: {
     paint: [
       'interpolate', ['linear'], ['get', 'DisCur'],
-      1, 'rgba(0,0,0,0)',
+      1, 'rgba(0,0,0,0.01)',
       2, '#fed98e',
       5, '#fe9929',
       8, '#d95f0e',
@@ -50,7 +50,7 @@ const zoneRef = {
   DisFut: {
     paint: [
       'interpolate', ['linear'], ['get', 'DisFut'],
-      1, 'rgba(0,0,0,0)',
+      1, 'rgba(0,0,0,0.01)',
       2, '#fed98e',
       5, '#fe9929',
       8, '#d95f0e',
@@ -108,6 +108,7 @@ const LoadStations = map =>{
     })
   })
 }
+
 const LoadTAZ = map =>{
   fetch('https://services1.arcgis.com/LWtWv6q6BJyKidj8/arcgis/rest/services/TAZ/FeatureServer/0/query?where=1%3D1&outFields=TAZN&geometryPrecision=4&outSR=4326&returnExceededLimitFeatures=true&f=pgeojson')
   .then(ago=>{
@@ -121,14 +122,20 @@ const LoadTAZ = map =>{
       if (dbReturn.status == 200) { return dbReturn.json() }
     })
     .then(dbZones=>{
-
-      agoZones.features.map((feature, index)=>{
+      agoZones.features.map(feature=>{
         if (dbZones[feature.properties.TAZN]){
           feature.properties.AccAll = dbZones[feature.properties.TAZN].all_rail
           feature.properties.AccCur = dbZones[feature.properties.TAZN].current
           feature.properties.AccFut = dbZones[feature.properties.TAZN].future
           feature.properties.DisCur = dbZones[feature.properties.TAZN].discur
           feature.properties.DisFut = dbZones[feature.properties.TAZN].disfut
+        }
+        else{
+          feature.properties.AccAll = 0
+          feature.properties.AccCur = 0
+          feature.properties.AccFut = 0
+          feature.properties.DisCur = 0
+          feature.properties.DisFut = 0
         }
       })
       map.addSource('zones', {type: 'geojson', data: agoZones })
@@ -242,7 +249,6 @@ const BuildMap = (container, props) =>{
   return map
 
 }
-
 const BuildPage = props =>{
   let thisMap = BuildMap(document.querySelector(".accessibility-map"), props)
   let sectionBody = document.createElement('div')

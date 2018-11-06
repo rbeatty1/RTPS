@@ -5,11 +5,12 @@ env
 
 # django junk files
 *.pyc
-rtps/zonequery/lib
+lib
 
 # node file
 package-lock.json
 browserslist-stats.json
+
 
 # Windows thumbnail cache files
 Thumbs.db
