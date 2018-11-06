@@ -3,7 +3,6 @@ import { geography } from './sidebar/queryInput/queryInput.js'
 import { layers } from './map_styles/styles.js'
 import { Sidebar } from "./sidebar/sidebar.js"
 import { ResultsSummary } from './sidebar/resultsSummary';
-import { HeaderElements } from '../../header/HeaderElements.js'
 
 const extent = {
   center: [-75.234, 40.061],
@@ -264,15 +263,15 @@ const AddListeners = map => {
     })
     // click => yellow fill
     map.on('click', "muniReference-base", (e) => {
-        let muni = e.features[0].properties.MUN_NAME
-        document.querySelector('#muni').value = muni
-        geography.selection = muni
-        muni ? map.setFilter('boundaries-click', ['==', 'GEOID', HeaderElements[1].content.muniList.options[geography.selection]]) : null
+        let geoid = e.features[0].properties.GEOID
+        document.querySelector('#muni').value = e.features[0].properties.MUN_NAME
+        geography.selection = geoid
+        muni ? map.setFilter('boundaries-click', ['==', 'GEOID', geoid]) : null
         let buttons = document.querySelectorAll('.input__query-button')
         for (let btn of buttons){
             btn.classList.contains('active') ? null : btn.classList.add('active')
         }
-        document.querySelector('.sidebar__input-dropdowns').setAttribute('data-selection', muni)
+        document.querySelector('.sidebar__input-dropdowns').setAttribute('data-selection', geoid)
     })
 
 
@@ -299,7 +298,7 @@ const AddListeners = map => {
             else{
                 map.setLayoutProperty('boundaries-hover', 'visibility', 'none')
                 map.setPaintProperty("boundaries-click", "fill-color", "#06bf9c")
-                map.setFilter('boundaries-muni', ['==', 'GEOID', HeaderElements[1].content.muniList.options[geography.selection]])
+                map.setFilter('boundaries-muni', ['==', 'GEOID', geography.selection])
             }
         })
     })
@@ -317,8 +316,8 @@ const AddListeners = map => {
     })
 
     document.querySelector('#muni').addEventListener('change', e => {
-        let muni = e.target.value
-        map.getLayer('boundaries-click') ? map.setFilter('boundaries-click', ['==', 'GEOID', HeaderElements[1].content.muniList.options[muni]]) : null
+        let geoid = e.target.value
+        map.getLayer('boundaries-click') ? map.setFilter('boundaries-click', ['==', 'GEOID', geoid]) : null
     })
 
     document.querySelector('#geography').addEventListener('change', e=>{
