@@ -1,19 +1,13 @@
 const GetGeomNames= x =>{
-    let mcds = {}
+    let mcds = []
     fetch('https://a.michaelruane.com/api/rtps/gap?list')
     .then(response=>{
         if (response.status ==200) return response.json()
     })
     .then(jawn=>{
-        fetch('https://arcgis.dvrpc.org/arcgis/rest/services/Demographics/PopEmpForecastMCD/FeatureServer/0/query?where=1%3D1&outFields=GEOID%2C+MUN_NAME&returnGeometry=false&orderByFields=MUN_NAME&f=json')
-        .then(response=>{ 
-            if (response.status==200) return response.json() 
-        })
-        .then(agoJawn=>{
-            agoJawn.features.map(feature=>{
-                mcds[feature.attributes.MUN_NAME] = feature.attributes.GEOID
-            })
-        })
+        for (let i in jawn){
+            mcds.push(jawn[i])
+        }
     })
     return mcds
 }

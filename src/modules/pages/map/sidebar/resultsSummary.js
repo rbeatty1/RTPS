@@ -22,7 +22,7 @@ const CreateLegend = data =>{
 
 const CreateSummary = data =>{
   let insert;
-  data.type == 'municipality' ? insert = `the selected area — <span class="map__sidebar-legendEmphasis">${data.location}</span>` : insert = 'the selected area'
+  data.type == 'municipality' ? insert = `the selected area — <span class="map__sidebar-legendEmphasis">${document.querySelector(`option[value='${data.location}']`).innerText}</span>` : insert = 'the selected area'
   return `The results being displayed show the average network gap score for Traffic Analysis Zone (TAZ) connections <span class="map__sidebar-legendEmphasis">${data.direction}</span> ${insert}. Only TAZs with demand <span class="map__sidebar-legendEmphasis">${data.direction} the selected area</span> are being displayed, a total of <span class="map__sidebar-legendEmphasis">${data.count}</span>, with darker colors indicating a higher priority for transit connections in relation to ${insert}.`
 }
 
