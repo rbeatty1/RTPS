@@ -1,0 +1,72 @@
+#frequency-page{
+  height: 100%;
+  width: 100%;
+}
+
+.frequency__nav-container{
+  height: 10%;
+  width: 99%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: black;
+  margin: .5% .5% 0;
+}
+
+.frequency__nav-link{
+  padding: 0.75rem;
+  border-radius: 5px;
+  background: palegreen;
+  margin: 0 20px;
+  width: 200px;
+  text-align: center;
+}
+.frequency__nav-link.active{
+  background: red;
+  font-size: 1.25em;
+  color: white;
+}
+
+
+.frequency__content-container{
+  width: 100%;
+  height: 89%;
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
+  align-items: center;
+}
+.frequency__content-container>*{
+  height: 95%;
+  margin: 2.5%;
+}
+
+.frequency__content-story{
+  width: 32%;
+  overflow-y: scroll;
+}
+.frequency__content-map{
+  width: 63%;
+}
+
+.frequency__story-section{
+  display: flex;
+  flex-flow: column;
+  padding: 2%;
+  opacity: .1;
+}
+.frequency__story-section.active{
+  opacity: 1;
+}
+
+.frequency__storySection-title{
+  text-align: center;
+  width: 100%;
+  height: 25%
+}
+.frequency__storySection-content{
+  text-align: center;
+  width: 100%;
+  height: 75%
+
+}

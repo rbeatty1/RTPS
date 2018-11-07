@@ -2,6 +2,7 @@ import { Map } from '../modules/pages/map/map.js'
 import { Accessibility } from '../modules/pages/accessibility/accessibility.js';
 import { Home } from '../modules/pages/home/home.js';
 import { ComingSoon } from '../modules/pages/soon/soon.js';
+import { Frequency } from '../modules/pages/frequency/frequency.js';
 
 
 const LoadMain = target =>{
@@ -15,8 +16,7 @@ const LoadMain = target =>{
       new Accessibility();
       break;
     case 'Frequency':
-      console.log('frequency page');
-      new ComingSoon();
+      new Frequency();
       break;
     case 'Reliability':
       console.log('reliability page')
