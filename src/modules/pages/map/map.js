@@ -264,7 +264,7 @@ const AddListeners = map => {
     // click => yellow fill
     map.on('click', "muniReference-base", (e) => {
         let geoid = e.features[0].properties.GEOID
-        document.querySelector('#muni').value = e.features[0].properties.MUN_NAME
+        document.querySelector('#muni').value = geoid
         geography.selection = geoid
         muni ? map.setFilter('boundaries-click', ['==', 'GEOID', geoid]) : null
         let buttons = document.querySelectorAll('.input__query-button')
