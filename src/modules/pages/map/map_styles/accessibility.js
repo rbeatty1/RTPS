@@ -51,6 +51,30 @@ const styles = {
               "text-halo-blur": 3,
         }
       },
+      hwyLabels:{
+        type: 'symbol',
+        source: 'interstates',
+        layout: {
+          "text-field": "{route}",
+          "text-font": [
+            "Montserrat SemiBold",
+              "Open Sans Semibold"
+            ],
+            "text-size": [
+              'interpolate', ['linear'], ['zoom'],
+              9.25, 8,
+              12, 18
+            ],
+            "text-anchor": "center",
+            "symbol-placement" : 'line'
+        },
+        paint: {
+            "text-color": "#a6a6a6",
+              "text-halo-color": '#ececec',
+              "text-halo-width": 4,
+              "text-halo-blur": 3,
+        }
+      },
       interstates: {
         type: 'line',
         paint: {
