@@ -3,6 +3,7 @@ import { geography } from './sidebar/queryInput/queryInput.js'
 import { layers } from './map_styles/styles.js'
 import { Sidebar } from "./sidebar/sidebar.js"
 import { ResultsSummary } from './sidebar/resultsSummary';
+import { LoadLayers } from '../../../utils/loadMapLayers.js'
 
 const extent = {
   center: [-75.234, 40.061],
@@ -30,62 +31,6 @@ const BuildMap = () => {
         hash: true
     })
     return map
-}
-
-/* LoadLayers(map, layers) -- rbeatty
-    @desc: Loop through layer reference object and add each source, as well as each variant of the source as defined by set layer definitions 
-    @params:
-        *!~ map: Map reference object returned by BuildMap():L158
-        *!~ layers: Reference object imported from styles.js that contains nested objects that can be used to add sources and layers in a iterative fashion
-*/
-const LoadLayers = (map, layers) => {
-    // loop through layer object
-    for (let l in layers) {
-        // create mapbox source definition object with vector tile source
-        if (l != 'boundaries' && l != 'muniReference'){
-            let sourceDef = {
-                type: layers[l].type,
-                url: layers[l].source
-            }
-
-            map.addSource(l, sourceDef)
-
-            // iterate through each source's style and create mapbox layer definition object
-            for (let s in layers[l].style) {
-                let style = layers[l].style[s]
-                let layerDef = {
-                    "id": `${l}-${s}`,
-                    "type": style.type,
-                    "source": l,
-                    "source-layer": style.layer,
-                    "paint": style.paint,
-                    "interactive": true
-                }
-                !style.visibility ? null : layerDef["layout"] = {visibility: style.visibility}
-                !style.filter ? null : layerDef["filter"] = style.filter
-                map.addLayer(layerDef, style.placement)
-            }
-        }
-        else{
-            let sourceDef = {
-                type: layers[l].type,
-                data: layers[l].data
-            }
-            map.addSource(l, sourceDef)
-            for (let s in layers[l].style){
-                let style = layers[l].style[s]
-                let layerDef = {
-                    'id': `${l}-${s}`,
-                    "type": style.type,
-                    "source": l,
-                    "paint": style.paint
-                }
-                !style.visibility ? null : layerDef["layout"] = {visibility: style.visibility}
-                !style.filter ? null : layerDef["filter"] = style.filter
-                map.addLayer(layerDef, style.placement)
-            }
-        }
-    }
 }
 
 /* zoneSelection(target, output) -- rbeatty

@@ -40,9 +40,9 @@ const contentRef = {
             NJ: ['Burlington', 'Camden', 'Gloucester', 'Mercer'],
             PA: ['Bucks', 'Chester', 'Delaware','Montgomery','Philadelphia']
           },
-          columns: ['Base Scenario', '2x Transit Frequency', 'Difference', 'Percent Difference']
+          columns: ['Geography','Base Scenario', '2x Transit Frequency', 'Difference', 'Percent Difference']
         },
-        data : {
+        datasets : {
           NJ: { 
             Burlington: [2571, 3932, 1361, 52.94],
             Camden: [20642, 25346, 4704, 22.79],
@@ -54,7 +54,7 @@ const contentRef = {
             Chester: [4402, 6998, 2596, 58.98],
             Delaware: [34871, 42335, 7465, 21.41],
             Montgomery: [29478, 39023, 9545, 32.38],
-            Philadelphia: [561976, 596, 792, 34816, 6.20]
+            Philadelphia: [561976, 596792, 34816, 6.20]
           }
         }
       },
@@ -76,9 +76,9 @@ const contentRef = {
             NJ: ['Burlington', 'Camden', 'Gloucester', 'Mercer'],
             PA: ['Bucks', 'Chester', 'Delaware','Montgomery','Philadelphia']
           },
-          columns: ['Base Scenario', '2x Transit Frequency', 'Difference', 'Percent Difference']
+          columns: ['Geography','Base Scenario', '2x Transit Frequency', 'Difference', 'Percent Difference']
         },
-        data : {
+        datasets : {
           NJ: { 
             Burlington: [1087429, 1086168, 1261, 0.12],
             Camden: [1530889, 1527518, 3371, 0.22],
@@ -99,6 +99,65 @@ const contentRef = {
   }
 }
 
+const CreateTable = data =>{
+  const FormatNumber = num =>{
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+  }
+  let labels = data.labels,
+    datasets = data.datasets
+
+  let table = document.createElement('table'),
+    header = document.createElement('thead')
+  labels.columns.map(col=>{
+    let label = document.createElement('td')
+    label.innerText = col
+    header.appendChild(label)
+  })
+  table.appendChild(header)
+  for (let set in labels.rows){
+    let state = set,
+        counties = labels.rows[set]
+    counties.map(county=>{
+      let dataRow = document.createElement('tr')
+      dataRow.id = county
+      let cell = document.createElement('td')
+      cell.innerText = county
+      dataRow.appendChild(cell)
+      datasets[state][county].map(d=>{
+        cell = document.createElement('td')
+        cell.innerText = FormatNumber(d)
+        dataRow.appendChild(cell)
+      })
+      table.appendChild(dataRow)
+    })
+  }
+  return table
+}
+const ScrolledIntoView = element =>{
+  let rect = element.getBoundingClientRect(),
+    top = rect.top,
+    height = rect.height,
+    el = element.parentNode
+
+  // console.log(top)
+
+  do{
+    rect = el.getBoundingClientRect()
+    if (!(top <= rect.bottom)) return false
+    if ((top+height <= rect.top)) return false
+    el = el.parentNode
+  }
+  while(el != document.body)
+  return top <= document.documentElement.clientHeight
+}
+const AttachEvent = (element, callback) =>{
+  if (element.addEventListener) { 
+    console.log('addEventListener')
+    element.addEventListener("scroll", callback, false) }
+  else if(element.AttachEvent) { 
+    console.log('AttachEvent')
+    element.AttachEvent('onscroll',  callback) }
+}
 
 const BuildContent = (content, key) =>{
   let masterContainer = document.querySelector('.frequency__content-story')
@@ -111,19 +170,13 @@ const BuildContent = (content, key) =>{
   `
   section.id = key
   section.style.minHeight = `${masterContainer.clientHeight/2}px`
+  if (content.table) { section.querySelector('.frequency__storySection-content').appendChild(CreateTable(content.table)) }
   masterContainer.appendChild(section)
   section.style.height = section.clientHeight+'px'
+  // AttachEvent(section, "scroll",  ScrolledIntoView(section))
 }
 
-/*
-BuildNav(sections){
-  create header element
-  create content container
-  iterate through sections
-    create link
-    BuildContent(content)
-}
-*/
+
 const BuildNav = sections =>{
   const nav = document.querySelector('.frequency__nav-container')
   for (let i in sections){

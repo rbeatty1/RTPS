@@ -2,12 +2,14 @@
 
 const layers = {
   zones: {
-    source: 'https://tiles.dvrpc.org/data/dvrpc-tim-zones.json',
-    type: 'vector',
-    style: {
+    sourceDef: {
+      url: 'https://tiles.dvrpc.org/data/dvrpc-tim-zones.json',
+      type: 'vector',
+    },
+    layers: {
       hoverFill:  {
         type: 'fill',
-        layer: 'tim-zones',
+        source: 'tim-zones',
         paint: {
           "fill-translate-anchor": "map",
           "fill-color": "rgb(139,178,63)",
@@ -23,7 +25,7 @@ const layers = {
       },
       clickFill:  {
         type: 'fill',
-        layer: 'tim-zones',
+        source: 'tim-zones',
         paint: {
           "fill-translate-anchor": "map",
           "fill-color": "#d8c72e",
@@ -39,7 +41,7 @@ const layers = {
       },
       base:{
         type: 'line',
-        layer: 'tim-zones',
+        source: 'tim-zones',
         paint: {
           'line-width': [
             'interpolate', ['linear'], ['zoom'],
@@ -59,12 +61,14 @@ const layers = {
     }
   },
   zoneReference: {
-    source: 'https://tiles.dvrpc.org/data/dvrpc-tim-zones.json',
-    type: 'vector',
-    style: {
+    sourceDef: {
+      url: 'https://tiles.dvrpc.org/data/dvrpc-tim-zones.json',
+      type: 'vector',
+    },
+    layers: {
       base: {
         type: 'fill',
-        layer: 'tim-zones',
+        source: 'tim-zones',
         paint: {
           "fill-translate-anchor": "map",
           "fill-color": "rgb(255,255,255)",
@@ -81,9 +85,11 @@ const layers = {
     }
   },
   muniReference:{
-    type: 'geojson',
-    data: 'https://opendata.arcgis.com/datasets/e1e3beb6aa144f2b8dd07693567077cc_0.geojson',
-    style:{
+    sourceDef: {
+      data: 'https://opendata.arcgis.com/datasets/e1e3beb6aa144f2b8dd07693567077cc_0.geojson',
+      type: 'geojson',
+    },
+    layers:{
       base:{
         type: 'fill',
         paint: {
@@ -102,12 +108,14 @@ const layers = {
     }
   },
   county: {
-    source: 'https://tiles.dvrpc.org/data/dvrpc-municipal.json',
-    type: 'vector',
-    style:{
+    sourceDef: {
+      url: 'https://tiles.dvrpc.org/data/dvrpc-municipal.json',
+      type: 'vector',
+    },
+    layers:{
       county: {
         type: 'line',
-        layer: 'county',
+        source: 'county',
         paint: {
           "line-color": "#aaa",
           "line-width": 1
@@ -122,9 +130,11 @@ const layers = {
     }
   },
   boundaries:{
-    type: 'geojson',
-    data: 'https://opendata.arcgis.com/datasets/e1e3beb6aa144f2b8dd07693567077cc_0.geojson',
-    style:{
+    sourceDef: {
+      type: 'geojson',
+      data: 'https://opendata.arcgis.com/datasets/e1e3beb6aa144f2b8dd07693567077cc_0.geojson',
+    },
+    layers:{
       muni: {
         type: 'line',
         paint: {
