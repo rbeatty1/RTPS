@@ -32,7 +32,7 @@ const contentRef = {
     title: 'Doubled Frequencies Scenario: Changes in Transit Activity',
     content: {
       map: {
-        layers: ['zones'],
+        layers: ['taz-base'],
         filter: 'greater than 1',
         scheme: ['#D9F0A3', '#ADDD8E', '#78C679', '#31A354', '#006837']
       },
@@ -49,14 +49,14 @@ const contentRef = {
             Burlington: [2571, 3932, 1361, 52.94],
             Camden: [20642, 25346, 4704, 22.79],
             Gloucester:[2091, 3476, 1385, 66.25],
-            Mercer: [22289, 27509, 5220, 23.42], 
+            Mercer: [22289, 27509, 5220, 23.42]
           },
           PA: {
             Bucks: [5307, 8287, 2980, 56.15],
             Chester: [4402, 6998, 2596, 58.98],
             Delaware: [34871, 42335, 7465, 21.41],
             Montgomery: [29478, 39023, 9545, 32.38],
-            Philadelphia: [561976, 596792, 34816, 6.20],
+            Philadelphia: [561976, 596792, 34816, 6.20]
           }
         }
       },
@@ -101,6 +101,14 @@ const contentRef = {
   }
 }
 
+const ResymbolizeFeatureLayer = (map,section) =>{
+  if (section.map && map.getLayer(section.map.layers[0])){
+    map.setLayoutProperty(section.map.layers[0], "visibility", "visible")
+  }
+  else{
+    map.setLayoutProperty('taz-base', 'visibility', 'none')
+  }
+}
 const CreateTable = data =>{
   const FormatNumber = num =>{
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
@@ -199,13 +207,14 @@ const BuildContent = (content, key) =>{
 }
 
 
-const BuildNav = sections =>{
+const BuildNav = (component, sections) =>{
   const nav = document.querySelector('.frequency__nav-container')
   for (let i in sections){
     let sectionLink = document.createElement('div')
     let title = sections[i].title
     title.indexOf(':') != -1 ? title = title.split(': ')[1] : null
     sectionLink.innerText = title
+    sectionLink.id = i+'-link'
     sectionLink.classList.add('frequency__nav-link')
     sectionLink.addEventListener('click', e=>{
       for (let node of document.querySelectorAll('.frequency__story-section')){ 
@@ -215,12 +224,44 @@ const BuildNav = sections =>{
       let nodes = document.querySelectorAll(`.${sectionLink.classList[0]}`)
       for (let node of nodes){ node.classList.contains('active') ? node.classList.remove('active') : null }
       sectionLink.classList.toggle('active')
+      ResymbolizeFeatureLayer(component.map, contentRef[i].content)
     })
     BuildContent(sections[i].content, i)
     nav.appendChild(sectionLink)
   }
 }
-
+const LoadTaz = map =>{
+  fetch('https://services1.arcgis.com/LWtWv6q6BJyKidj8/arcgis/rest/services/TAZ/FeatureServer/0/query?where=1%3D1&outFields=TAZN&geometryPrecision=4&outSR=4326&returnExceededLimitFeatures=true&f=pgeojson')
+  .then(response=>  response.ok ? response.json(): console.error('nah dawg'))
+  .then(taz=>{
+    let sourceDef = {
+      data: taz,
+      type: 'geojson'
+    }
+    map.addSource('taz', sourceDef)
+    let layerDef = {
+      id: 'taz-base',
+      source: 'taz',
+      type: 'fill',
+      paint: {
+        'fill-color': [
+          'step',
+          ['get', 'TAZN'],
+          '#8bb23f',
+          Math.floor(taz.features.length*.4), '#08506d',
+          Math.floor(taz.features.length*.6), '#e89234',
+          Math.floor(taz.features.length*.8), '#06bf9c',
+          Math.floor(taz.features.length), '#d8c72e',
+        ],
+        'fill-opacity': .75
+      },
+      layout: {
+        visibility: 'none'
+      }
+    }
+    map.addLayer(layerDef, 'base-interstates')
+  })
+}
 
 const BuildMap = container =>{
   const extent = {
@@ -235,6 +276,15 @@ const BuildMap = container =>{
     zoom: extent.zoom,
     minZoom: 8,
     hash: true
+  })
+  map.on('load', ()=>{
+    map.resize()
+    LoadLayers(map, styles)
+    LoadTaz(map)
+    map.flyTo({
+      center: extent.center,
+      zoom: extent.zoom
+    })
   })
   return map
 }
@@ -254,12 +304,8 @@ export class Frequency{
       </div>
     </div>
     `
-    BuildNav(contentRef)
-    let map = BuildMap(document.querySelector('.frequency__content-map'))
-    map.on('load', ()=>{
-      map.resize()
-      LoadLayers(map, styles)
-    })
+    BuildNav(this, contentRef)
+    this.map = BuildMap(document.querySelector('.frequency__content-map'))
     // ScrollStory()
   }
 }
