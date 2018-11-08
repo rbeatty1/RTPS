@@ -80,6 +80,7 @@ thead{
   font-size: .9rem;
 }
 
-.summary,#Philadelphia{
+.summary{
   background: rgba(0,0,255,.2);
+  font-weight: 700;
 }

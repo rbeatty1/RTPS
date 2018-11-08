@@ -1,4 +1,6 @@
 import "../../../css/pages/frequency/frequency.css"
+import { LoadLayers } from "../../../utils/loadMapLayers";
+import { styles } from "../map/map_styles/frequency";
 
 
 
@@ -47,14 +49,14 @@ const contentRef = {
             Burlington: [2571, 3932, 1361, 52.94],
             Camden: [20642, 25346, 4704, 22.79],
             Gloucester:[2091, 3476, 1385, 66.25],
-            Mercer: [22289, 27509, 5220, 23.42]
+            Mercer: [22289, 27509, 5220, 23.42], 
           },
           PA: {
             Bucks: [5307, 8287, 2980, 56.15],
             Chester: [4402, 6998, 2596, 58.98],
             Delaware: [34871, 42335, 7465, 21.41],
             Montgomery: [29478, 39023, 9545, 32.38],
-            Philadelphia: [561976, 596792, 34816, 6.20]
+            Philadelphia: [561976, 596792, 34816, 6.20],
           }
         }
       },
@@ -80,17 +82,17 @@ const contentRef = {
         },
         datasets : {
           NJ: { 
-            Burlington: [1087429, 1086168, 1261, 0.12],
-            Camden: [1530889, 1527518, 3371, 0.22],
-            Gloucester:[802337, 801037, 1300, 0.16],
-            Mercer: [1320146, 1316283, 3863, 0.29]
+            Burlington: [1087429, 1086168, -1261, -0.12],
+            Camden: [1530889, 1527518, -3371, -0.22],
+            Gloucester:[802337, 801037, -1300, -0.16],
+            Mercer: [1320146, 1316283, -3863, -0.29]
           },
           PA: {
-            Bucks: [1503945,1501437, 2508, 0.17],
-            Chester: [1284892, 1282801, 2091, 0.16],
-            Delaware: [1179321, 1170955, 5367, 0.46],
-            Montgomery: [2057847, 2050725, 7122, 0.35],
-            Philadelphia: [2859025, 2835172, 23854, 0.83]
+            Bucks: [1503945,1501437, -2508, -0.17],
+            Chester: [1284892, 1282801, -2091, -0.16],
+            Delaware: [1179321, 1170955, -5367, -0.46],
+            Montgomery: [2057847, 2050725, -7122, -0.35],
+            Philadelphia: [2859025, 2835172, -23854, -0.83]
           }
         }
       },
@@ -116,20 +118,40 @@ const CreateTable = data =>{
   table.appendChild(header)
   for (let set in labels.rows){
     let state = set,
-        counties = labels.rows[set]
+        counties = labels.rows[set],
+        summaryTemp = [[],[],[]],
+        summaryFinal = []
+
     counties.map(county=>{
       let dataRow = document.createElement('tr')
       dataRow.id = county
       let cell = document.createElement('td')
       cell.innerText = county
       dataRow.appendChild(cell)
-      datasets[state][county].map(d=>{
+      datasets[state][county].map((d,i)=>{
+        summaryTemp[i] ? summaryTemp[i].push(d) : null
         cell = document.createElement('td')
         cell.innerText = FormatNumber(d)
         dataRow.appendChild(cell)
       })
       table.appendChild(dataRow)
     })
+    summaryTemp.map((col, i)=>{
+      summaryFinal.push(col.reduce((num, value)=> num + value, 0))
+    })
+    summaryFinal.push((((summaryFinal[2]/summaryFinal[0])*100)).toFixed(2))
+    let dataRow = document.createElement('tr')
+    dataRow.classList.add('summary')
+    dataRow.id = state
+    let cell = document.createElement('td')
+    cell.innerText = state
+    dataRow.appendChild(cell)
+    summaryFinal.map((col,i)=>{
+      cell = document.createElement('td')
+      cell.innerText = FormatNumber(col)
+      dataRow.appendChild(cell)
+    })
+    table.appendChild(dataRow)
   }
   return table
 }
@@ -200,6 +222,22 @@ const BuildNav = sections =>{
 }
 
 
+const BuildMap = container =>{
+  const extent = {
+    center: [-75.247, 40.066],
+    zoom: 8.4
+  }
+  mapboxgl.accessToken = 'pk.eyJ1IjoiYmVhdHR5cmUxIiwiYSI6ImNqOGFpY3o0cTAzcXoycXE4ZTg3d3g5ZGUifQ.VHOvVoTgZ5cRko0NanhtwA';
+  let map = new mapboxgl.Map({
+    container: container,
+    style: 'mapbox://styles/beattyre1/cjky7crbr17og2rldo6g7w5al',
+    center: extent.center,
+    zoom: extent.zoom,
+    minZoom: 8,
+    hash: true
+  })
+  return map
+}
 
 export class Frequency{
   constructor(){
@@ -217,7 +255,11 @@ export class Frequency{
     </div>
     `
     BuildNav(contentRef)
-    // BuildMap(layers)
+    let map = BuildMap(document.querySelector('.frequency__content-map'))
+    map.on('load', ()=>{
+      map.resize()
+      LoadLayers(map, styles)
+    })
     // ScrollStory()
   }
 }
