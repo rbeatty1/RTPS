@@ -1,4 +1,6 @@
 import "../../../css/pages/frequency/frequency.css"
+import { LoadLayers } from "../../../utils/loadMapLayers";
+import { styles } from "../map/map_styles/frequency";
 
 
 
@@ -30,7 +32,7 @@ const contentRef = {
     title: 'Doubled Frequencies Scenario: Changes in Transit Activity',
     content: {
       map: {
-        layers: ['zones'],
+        layers: ['taz-base'],
         filter: 'greater than 1',
         scheme: ['#D9F0A3', '#ADDD8E', '#78C679', '#31A354', '#006837']
       },
@@ -80,17 +82,17 @@ const contentRef = {
         },
         datasets : {
           NJ: { 
-            Burlington: [1087429, 1086168, 1261, 0.12],
-            Camden: [1530889, 1527518, 3371, 0.22],
-            Gloucester:[802337, 801037, 1300, 0.16],
-            Mercer: [1320146, 1316283, 3863, 0.29]
+            Burlington: [1087429, 1086168, -1261, -0.12],
+            Camden: [1530889, 1527518, -3371, -0.22],
+            Gloucester:[802337, 801037, -1300, -0.16],
+            Mercer: [1320146, 1316283, -3863, -0.29]
           },
           PA: {
-            Bucks: [1503945,1501437, 2508, 0.17],
-            Chester: [1284892, 1282801, 2091, 0.16],
-            Delaware: [1179321, 1170955, 5367, 0.46],
-            Montgomery: [2057847, 2050725, 7122, 0.35],
-            Philadelphia: [2859025, 2835172, 23854, 0.83]
+            Bucks: [1503945,1501437, -2508, -0.17],
+            Chester: [1284892, 1282801, -2091, -0.16],
+            Delaware: [1179321, 1170955, -5367, -0.46],
+            Montgomery: [2057847, 2050725, -7122, -0.35],
+            Philadelphia: [2859025, 2835172, -23854, -0.83]
           }
         }
       },
@@ -99,6 +101,14 @@ const contentRef = {
   }
 }
 
+const ResymbolizeFeatureLayer = (map,section) =>{
+  if (section.map && map.getLayer(section.map.layers[0])){
+    map.setLayoutProperty(section.map.layers[0], "visibility", "visible")
+  }
+  else{
+    map.setLayoutProperty('taz-base', 'visibility', 'none')
+  }
+}
 const CreateTable = data =>{
   const FormatNumber = num =>{
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
@@ -116,20 +126,40 @@ const CreateTable = data =>{
   table.appendChild(header)
   for (let set in labels.rows){
     let state = set,
-        counties = labels.rows[set]
+        counties = labels.rows[set],
+        summaryTemp = [[],[],[]],
+        summaryFinal = []
+
     counties.map(county=>{
       let dataRow = document.createElement('tr')
       dataRow.id = county
       let cell = document.createElement('td')
       cell.innerText = county
       dataRow.appendChild(cell)
-      datasets[state][county].map(d=>{
+      datasets[state][county].map((d,i)=>{
+        summaryTemp[i] ? summaryTemp[i].push(d) : null
         cell = document.createElement('td')
         cell.innerText = FormatNumber(d)
         dataRow.appendChild(cell)
       })
       table.appendChild(dataRow)
     })
+    summaryTemp.map((col, i)=>{
+      summaryFinal.push(col.reduce((num, value)=> num + value, 0))
+    })
+    summaryFinal.push((((summaryFinal[2]/summaryFinal[0])*100)).toFixed(2))
+    let dataRow = document.createElement('tr')
+    dataRow.classList.add('summary')
+    dataRow.id = state
+    let cell = document.createElement('td')
+    cell.innerText = state
+    dataRow.appendChild(cell)
+    summaryFinal.map((col,i)=>{
+      cell = document.createElement('td')
+      cell.innerText = FormatNumber(col)
+      dataRow.appendChild(cell)
+    })
+    table.appendChild(dataRow)
   }
   return table
 }
@@ -177,13 +207,14 @@ const BuildContent = (content, key) =>{
 }
 
 
-const BuildNav = sections =>{
+const BuildNav = (component, sections) =>{
   const nav = document.querySelector('.frequency__nav-container')
   for (let i in sections){
     let sectionLink = document.createElement('div')
     let title = sections[i].title
     title.indexOf(':') != -1 ? title = title.split(': ')[1] : null
     sectionLink.innerText = title
+    sectionLink.id = i+'-link'
     sectionLink.classList.add('frequency__nav-link')
     sectionLink.addEventListener('click', e=>{
       for (let node of document.querySelectorAll('.frequency__story-section')){ 
@@ -193,13 +224,70 @@ const BuildNav = sections =>{
       let nodes = document.querySelectorAll(`.${sectionLink.classList[0]}`)
       for (let node of nodes){ node.classList.contains('active') ? node.classList.remove('active') : null }
       sectionLink.classList.toggle('active')
+      ResymbolizeFeatureLayer(component.map, contentRef[i].content)
     })
     BuildContent(sections[i].content, i)
     nav.appendChild(sectionLink)
   }
 }
+const LoadTaz = map =>{
+  fetch('https://services1.arcgis.com/LWtWv6q6BJyKidj8/arcgis/rest/services/TAZ/FeatureServer/0/query?where=1%3D1&outFields=TAZN&geometryPrecision=4&outSR=4326&returnExceededLimitFeatures=true&f=pgeojson')
+  .then(response=>  response.ok ? response.json(): console.error('nah dawg'))
+  .then(taz=>{
+    let sourceDef = {
+      data: taz,
+      type: 'geojson'
+    }
+    map.addSource('taz', sourceDef)
+    let layerDef = {
+      id: 'taz-base',
+      source: 'taz',
+      type: 'fill',
+      paint: {
+        'fill-color': [
+          'step',
+          ['get', 'TAZN'],
+          '#8bb23f',
+          Math.floor(taz.features.length*.4), '#08506d',
+          Math.floor(taz.features.length*.6), '#e89234',
+          Math.floor(taz.features.length*.8), '#06bf9c',
+          Math.floor(taz.features.length), '#d8c72e',
+        ],
+        'fill-opacity': .75
+      },
+      layout: {
+        visibility: 'none'
+      }
+    }
+    map.addLayer(layerDef, 'base-interstates')
+  })
+}
 
-
+const BuildMap = container =>{
+  const extent = {
+    center: [-75.247, 40.066],
+    zoom: 8.4
+  }
+  mapboxgl.accessToken = 'pk.eyJ1IjoiYmVhdHR5cmUxIiwiYSI6ImNqOGFpY3o0cTAzcXoycXE4ZTg3d3g5ZGUifQ.VHOvVoTgZ5cRko0NanhtwA';
+  let map = new mapboxgl.Map({
+    container: container,
+    style: 'mapbox://styles/beattyre1/cjky7crbr17og2rldo6g7w5al',
+    center: extent.center,
+    zoom: extent.zoom,
+    minZoom: 8,
+    hash: true
+  })
+  map.on('load', ()=>{
+    map.resize()
+    LoadLayers(map, styles)
+    LoadTaz(map)
+    map.flyTo({
+      center: extent.center,
+      zoom: extent.zoom
+    })
+  })
+  return map
+}
 
 export class Frequency{
   constructor(){
@@ -216,8 +304,8 @@ export class Frequency{
       </div>
     </div>
     `
-    BuildNav(contentRef)
-    // BuildMap(layers)
+    BuildNav(this, contentRef)
+    this.map = BuildMap(document.querySelector('.frequency__content-map'))
     // ScrollStory()
   }
 }

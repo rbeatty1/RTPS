@@ -14,7 +14,6 @@ export const LoadLayers = (map, styles) =>{
       !thisLayer.minzoom ? null : layerDef['minzoom'] = thisLayer.minzoom;
       !thisLayer.visibility ? null : layerDef["layout"] = { visibility: thisLayer.visibility }
       styles[source].sourceDef.type != 'vector' ? null : layerDef['source-layer'] = thisLayer.source
-      console.log({layerDef})
       map.addLayer(layerDef, thisLayer.placement)
     }
   }

@@ -9,22 +9,23 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: black;
+  background: rgba(216,199,46,.8);
   margin: .5% .5% 0;
 }
 
 .frequency__nav-link{
   padding: 0.75rem;
   border-radius: 5px;
-  background: palegreen;
+  background: white;
   margin: 0 20px;
   width: 200px;
   text-align: center;
+  box-shadow: 0 0 7px 1px rgba(0,0,0,.1);
 }
 .frequency__nav-link.active{
-  background: red;
-  font-size: 1.25em;
+  background: #06bf9c;
   color: white;
+  font-weight: 700;
 }
 
 
@@ -35,6 +36,7 @@
   flex-flow: row;
   justify-content: center;
   align-items: center;
+  background: whitesmoke
 }
 .frequency__content-container>*{
   height: 95%;
@@ -74,12 +76,17 @@ table{
   width:75%;
   margin: 2% auto;
   font-size: .8rem;
+  background: white;
+  padding: 2%;
+  box-shadow: 0 0 1px 1px rgba(0,0,0,.1)
 }
 thead{
   font-weight: 700;
   font-size: .9rem;
 }
 
-.summary,#Philadelphia{
-  background: rgba(0,0,255,.2);
+.summary{
+  background: #06bf9c;
+  font-weight: 700;
+  color: white;
 }
