@@ -40,15 +40,9 @@ const contentRef = {
             NJ: ['Burlington', 'Camden', 'Gloucester', 'Mercer'],
             PA: ['Bucks', 'Chester', 'Delaware','Montgomery','Philadelphia']
           },
-<<<<<<< HEAD
           columns: ['Geography','Base Scenario', '2x Transit Frequency', 'Difference', 'Percent Difference']
         },
         datasets : {
-=======
-          columns: ['Base Scenario', '2x Transit Frequency', 'Difference', 'Percent Difference']
-        },
-        data : {
->>>>>>> 10c84af887378db1fc7dd2c868b8909a1d64b86b
           NJ: { 
             Burlington: [2571, 3932, 1361, 52.94],
             Camden: [20642, 25346, 4704, 22.79],
@@ -60,11 +54,7 @@ const contentRef = {
             Chester: [4402, 6998, 2596, 58.98],
             Delaware: [34871, 42335, 7465, 21.41],
             Montgomery: [29478, 39023, 9545, 32.38],
-<<<<<<< HEAD
             Philadelphia: [561976, 596792, 34816, 6.20]
-=======
-            Philadelphia: [561976, 596, 792, 34816, 6.20]
->>>>>>> 10c84af887378db1fc7dd2c868b8909a1d64b86b
           }
         }
       },
@@ -86,15 +76,9 @@ const contentRef = {
             NJ: ['Burlington', 'Camden', 'Gloucester', 'Mercer'],
             PA: ['Bucks', 'Chester', 'Delaware','Montgomery','Philadelphia']
           },
-<<<<<<< HEAD
           columns: ['Geography','Base Scenario', '2x Transit Frequency', 'Difference', 'Percent Difference']
         },
         datasets : {
-=======
-          columns: ['Base Scenario', '2x Transit Frequency', 'Difference', 'Percent Difference']
-        },
-        data : {
->>>>>>> 10c84af887378db1fc7dd2c868b8909a1d64b86b
           NJ: { 
             Burlington: [1087429, 1086168, 1261, 0.12],
             Camden: [1530889, 1527518, 3371, 0.22],
@@ -115,7 +99,6 @@ const contentRef = {
   }
 }
 
-<<<<<<< HEAD
 const CreateTable = data =>{
   const FormatNumber = num =>{
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
@@ -175,8 +158,6 @@ const AttachEvent = (element, callback) =>{
     console.log('AttachEvent')
     element.AttachEvent('onscroll',  callback) }
 }
-=======
->>>>>>> 10c84af887378db1fc7dd2c868b8909a1d64b86b
 
 const BuildContent = (content, key) =>{
   let masterContainer = document.querySelector('.frequency__content-story')
@@ -189,7 +170,6 @@ const BuildContent = (content, key) =>{
   `
   section.id = key
   section.style.minHeight = `${masterContainer.clientHeight/2}px`
-<<<<<<< HEAD
   if (content.table) { section.querySelector('.frequency__storySection-content').appendChild(CreateTable(content.table)) }
   masterContainer.appendChild(section)
   section.style.height = section.clientHeight+'px'
@@ -197,21 +177,6 @@ const BuildContent = (content, key) =>{
 }
 
 
-=======
-  masterContainer.appendChild(section)
-  section.style.height = section.clientHeight+'px'
-}
-
-/*
-BuildNav(sections){
-  create header element
-  create content container
-  iterate through sections
-    create link
-    BuildContent(content)
-}
-*/
->>>>>>> 10c84af887378db1fc7dd2c868b8909a1d64b86b
 const BuildNav = sections =>{
   const nav = document.querySelector('.frequency__nav-container')
   for (let i in sections){
