@@ -57,7 +57,10 @@
 }
 .frequency__story-section.active{
   opacity: 1;
+<<<<<<< HEAD
   margin: 1.5rem 0;
+=======
+>>>>>>> 10c84af887378db1fc7dd2c868b8909a1d64b86b
 }
 
 .frequency__storySection-title{
@@ -69,6 +72,7 @@
   text-align: center;
   width: 100%;
   height: 75%
+<<<<<<< HEAD
 }
 table{
   width:75%;
@@ -82,4 +86,7 @@ thead{
 
 .summary,#Philadelphia{
   background: rgba(0,0,255,.2);
+=======
+
+>>>>>>> 10c84af887378db1fc7dd2c868b8909a1d64b86b
 }
