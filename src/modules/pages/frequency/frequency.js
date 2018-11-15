@@ -8,6 +8,7 @@ const contentRef = {
   overview : {
     active: true,
     title: 'Overview',
+    scenario: undefined,
     content: {
       map: false,
       table: false,
@@ -16,7 +17,8 @@ const contentRef = {
   },
   existing : {
     active: false,
-    title: 'Existing Transit Scenario: AM Peak Frequency',
+    title: 'AM Peak Frequency',
+    scenario: 'Existing',
     content: {
       map: {
         layers: ['transitLines'],
@@ -24,12 +26,13 @@ const contentRef = {
         scheme: ['#A63603', '#E6550D', '#FD8D3C', '#FDAE6B', '#FDD0A2', '#FEEDDE']
       },
       table: false,
-      text: 'this map depicts the current AM peak transit frequency (base scenario). Darker colors represent transit routes with more frequenct service.</br></br>When clicking lines on the map, the pop-up will show the peak frequency as well as the mid-day frequency.'
+      text: 'This map depicts the current AM peak transit frequency (base scenario). Darker colors represent transit routes with more frequenct service. When clicking lines on the map, the pop-up will show the peak frequency as well as the mid-day frequency.'
     }
   },
   transitChange: {
     active: false,
-    title: 'Doubled Frequencies Scenario: Changes in Transit Activity',
+    title: 'Changes in Transit Activity',
+    scenario: "Doubled Frequency",
     content: {
       map: {
         layers: ['taz-base'],
@@ -42,7 +45,7 @@ const contentRef = {
             NJ: ['Burlington', 'Camden', 'Gloucester', 'Mercer'],
             PA: ['Bucks', 'Chester', 'Delaware','Montgomery','Philadelphia']
           },
-          columns: ['Geography','Base Scenario', '2x Transit Frequency', 'Difference', 'Percent Difference']
+          columns: ['Geography','Base', '2x Freq.', 'Difference', '% Diff']
         },
         datasets : {
           NJ: { 
@@ -58,6 +61,16 @@ const contentRef = {
             Montgomery: [29478, 39023, 9545, 32.38],
             Philadelphia: [561976, 596792, 34816, 6.20]
           }
+        },
+        summaries : {
+          NJ: {
+            temp: [[],[],[]],
+            final: []
+          },
+          PA: {
+            temp: [[],[],[]],
+            final: []
+          }
         }
       },
       text: 'This change in zonal transit activity map shows traffic analysis zones (TAZs) symbolized using the change in public transit activity in that zone under our doubled frequencies scenario. Transit acivity refers to the average number of passengers entering and leaving the zone via public transit within 24 hours. The darker the color, the greater the increase in transit activity when all frequencies are doubled.'
@@ -65,7 +78,8 @@ const contentRef = {
   },
   autoChange: {
     active: false,
-    title: 'Doubled Frequencies Scenario: Reductions in Car Trips',
+    title: 'Reductions in Car Trips',
+    scenario: "Doubled Frequency",
     content: {
       map: {
         layers: ['zones'],
@@ -78,7 +92,7 @@ const contentRef = {
             NJ: ['Burlington', 'Camden', 'Gloucester', 'Mercer'],
             PA: ['Bucks', 'Chester', 'Delaware','Montgomery','Philadelphia']
           },
-          columns: ['Geography','Base Scenario', '2x Transit Frequency', 'Difference', 'Percent Difference']
+          columns: ['Geography','Base', '2x Freq.', 'Difference', '% Diff']
         },
         datasets : {
           NJ: { 
@@ -94,9 +108,61 @@ const contentRef = {
             Montgomery: [2057847, 2050725, -7122, -0.35],
             Philadelphia: [2859025, 2835172, -23854, -0.83]
           }
+        },
+        summaries : {
+          NJ: {
+            temp: [[],[],[]],
+            final: []
+          },
+          PA: {
+            temp: [[],[],[]],
+            final: []
+          }
         }
       },
       text: 'This change in zonal vehicle activity shows TAZs symbolized using the change in passenger vehicle activity entering and leaving the zone in 24 hours. The darker the color, the greater the decrease in vehicular activity when public transit frequencies are doubled.'
+    }
+  },
+  railLineChange: {
+    active: false,
+    title: 'Changes in Rail Ridership',
+    scenario: "Doubled Frequency",
+    content: {
+      map: {
+        layers: ['railLines'],
+        filter: undefined,
+        scheme: ['#FDD0A2', '#FDAE6B', '#FD8D3C', '#E6550D', '#A63603']
+      },
+      table: false,
+      text: 'This map shows passenger rail lines symbolized by the estimated change in ridership if frequencies of all transit lines are doubled. Line color represents the absolute change in ridership, while the line weight represents the percent change. For example, a dark, thin line would imply a line where a large absolute increase in ridership is expected, but the change is relatively small due to high base ridership on the line. Nominal declines in forecasted ridership for a handful of lines reflect cases where passengers may be attracted to other (newly frequent) options, or simply variations in forecast results where percent changes are small.'
+    }
+  },
+  busLineAbsChange: {
+    active: false,
+    title: 'Absolute Change in Bus Ridership',
+    scenario: 'Doubled Frequency',
+    content: {
+      map: {
+        layers: ['busLines'],
+        filter: ['top 25'],
+        scheme: ['#FDD0A2', '#FDAE6B', '#FD8D3C', '#E6550D', '#A63603']
+      },
+      table: false,
+      text: 'This map shows the 25 bus routes with the greatest expected absolute increase in dailyu ridership between the existing and doubled frequency scenarios. Bus ridership refers to the number of passengers using that bus route on an average weekday. The darker the blue color, the greater the absolute increase in ridership.'
+    }
+  },
+  busLinePerChange: {
+    active: false,
+    title: 'Percent Change in Bus Ridership',
+    scenario: 'Doubled Frequency',
+    content: {
+      map: {
+        layers: ['busLines'],
+        filter: ['top 25'],
+        scheme: ['#FDD0A2', '#FDAE6B', '#FD8D3C', '#E6550D', '#A63603']
+      },
+      table: false,
+      text: 'This map shows the 25 bus routes with the largest percent increase in daily ridership between the existing and doubled frequency scenarios. It is important to keep in mind that percent change is sometimes deceiving when base ridership is very low, making a small incrase appear as a substantial change. Only those bus routes with an estimated base scenario ridership of at least 100 are included. Many of the routes in this map are in suburban areas where base frequencies tend to be lower. The darker the blue color, the greater the percent increase in forecast ridership fi frequency is doubled.'
     }
   }
 }
@@ -109,57 +175,76 @@ const ResymbolizeFeatureLayer = (map,section) =>{
     map.setLayoutProperty('taz-base', 'visibility', 'none')
   }
 }
+
+
 const CreateTable = data =>{
-  const FormatNumber = num =>{
-    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+  const FormatNumber = num =>  num.toString().indexOf('.') != -1 ? num+'%' : num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') 
+  const CreateHeaderRow = (table, labels) =>{
+    let header = document.createElement('thead')
+    header.classList.add('frequency__storySection-tableHeader')
+    labels.columns.map((col, index)=>{
+      let label = document.createElement('td')
+      label.innerText = col
+      header.appendChild(label)
+    })
+    return table.appendChild(header)
+
+
+
   }
-  let labels = data.labels,
-    datasets = data.datasets
-
-  let table = document.createElement('table'),
-    header = document.createElement('thead')
-  labels.columns.map(col=>{
-    let label = document.createElement('td')
-    label.innerText = col
-    header.appendChild(label)
-  })
-  table.appendChild(header)
-  for (let set in labels.rows){
-    let state = set,
-        counties = labels.rows[set],
-        summaryTemp = [[],[],[]],
-        summaryFinal = []
-
-    counties.map(county=>{
-      let dataRow = document.createElement('tr')
-      dataRow.id = county
-      let cell = document.createElement('td')
-      cell.innerText = county
-      dataRow.appendChild(cell)
-      datasets[state][county].map((d,i)=>{
-        summaryTemp[i] ? summaryTemp[i].push(d) : null
-        cell = document.createElement('td')
-        cell.innerText = FormatNumber(d)
-        dataRow.appendChild(cell)
-      })
-      table.appendChild(dataRow)
+  const CreateCountyContent = (state, county) =>{
+    let dataRow = document.createElement('tr'),
+      cell = document.createElement('td')
+    
+    cell.innerText = county
+    dataRow.appendChild(cell)    
+    datasets[state][county].map((data,index)=>{
+      let dataCell = document.createElement('td')
+      summaries[state].temp[index] ? summaries[state].temp[index].push(data) : null
+      dataCell.innerText = FormatNumber(data)
+      dataRow.appendChild(dataCell)
     })
-    summaryTemp.map((col, i)=>{
-      summaryFinal.push(col.reduce((num, value)=> num + value, 0))
-    })
-    summaryFinal.push((((summaryFinal[2]/summaryFinal[0])*100)).toFixed(2))
+    return dataRow
+  }
+  const CreateSummaryContent = (state, dataset) =>{
+
     let dataRow = document.createElement('tr')
     dataRow.classList.add('summary')
     dataRow.id = state
     let cell = document.createElement('td')
     cell.innerText = state
     dataRow.appendChild(cell)
-    summaryFinal.map((col,i)=>{
-      cell = document.createElement('td')
-      cell.innerText = FormatNumber(col)
-      dataRow.appendChild(cell)
+    dataset.map(data=> {
+      let dataCell = document.createElement('td')
+      dataCell.innerText = FormatNumber(data)
+      dataRow.appendChild(dataCell)
     })
-    table.appendChild(dataRow)
+    return dataRow
+  }
+
+  let labels = data.labels,
+    datasets = data.datasets,
+    summaries = data.summaries,
+    table = document.createElement('table')
+  
+  table.classList.add('frequency__storySection-table')
+  CreateHeaderRow(table, labels)
+
+  for (let set in labels.rows){
+    let state = set,
+        counties = labels.rows[set]
+
+    counties.map(county=>{
+      table.appendChild(CreateCountyContent(state, county))
+    })
+
+
+    summaries[state].temp.map(col=>{
+      summaries[state].final.push(col.reduce((num, value)=> num + value, 0))
+    })
+    summaries[state].final.push((((summaries[state].final[2]/summaries[state].final[0])*100)).toFixed(2))
+    
+    table.appendChild(CreateSummaryContent(state, summaries[state].final))
   }
   return table
 }
@@ -188,37 +273,57 @@ const AttachEvent = (element, callback) =>{
     console.log('AttachEvent')
     element.AttachEvent('onscroll',  callback) }
 }
-
 const BuildContent = (content, key) =>{
   let masterContainer = document.querySelector('.frequency__content-story')
   let section = document.createElement('div')
   section.classList.add('frequency__story-section')
   if (contentRef[key].active) section.classList.add('active')
-  section.innerHTML = `
-  <h2 class="frequency__storySection-title">${contentRef[key].title}</h2>
-  <div class="frequency__storySection-content">${content.text}</div>
-  `
+  switch(key){
+    case 'overview':
+      section.innerHTML =  `
+      <div class="frequency__storySection-title">
+        <p class="frequency__storySection-SectionTitle">${contentRef[key].title}</p>
+      </div>
+      <div class="frequency__storySection-content"><p class="frequency__storySection-text">${content.text}</p></div>
+      `
+      break;
+    default:
+      section.innerHTML = `
+      <div class="frequency__storySection-title">
+        <p class="frequency__storySection-SectionTitle">${contentRef[key].title}</p>
+        <div class="frequency__storySection-TitleDivider">
+          <hr class="frequency__storySection-divider"><p class="frequency__storySection-ScenarioTitle">${contentRef[key].scenario}</p><hr class="frequency__storySection-divider">
+        </div>
+      </div>
+      <div class="frequency__storySection-content"><p class="frequency__storySection-text">${content.text}</p></div>
+      `
+      break;
+  }
   section.id = key
-  section.style.minHeight = `${masterContainer.clientHeight/2}px`
   if (content.table) { section.querySelector('.frequency__storySection-content').appendChild(CreateTable(content.table)) }
+  
   masterContainer.appendChild(section)
-  section.style.height = section.clientHeight+'px'
   // AttachEvent(section, "scroll",  ScrolledIntoView(section))
 }
-
-
 const BuildNav = (component, sections) =>{
   const nav = document.querySelector('.frequency__nav-container')
   for (let i in sections){
     let sectionLink = document.createElement('div')
     let title = sections[i].title
-    title.indexOf(':') != -1 ? title = title.split(': ')[1] : null
     sectionLink.innerText = title
     sectionLink.id = i+'-link'
     sectionLink.classList.add('frequency__nav-link')
+    sections[i].active ? sectionLink.classList.add('active') : null
     sectionLink.addEventListener('click', e=>{
       for (let node of document.querySelectorAll('.frequency__story-section')){ 
-        node.id == i ? node.classList.add('active') : node.classList.remove('active')
+        if (node.id == i){
+          sections[i].active = true
+          node.classList.add('active')
+        }
+        else{
+          sections[node.id].active = false
+          node.classList.remove('active')
+        }
         document.querySelector(`#${i}`).scrollIntoView()
       }
       let nodes = document.querySelectorAll(`.${sectionLink.classList[0]}`)
@@ -294,7 +399,6 @@ export class Frequency{
     this.render()
   }
   render(){
-    console.log('render frequency page')
     document.querySelector('#main').innerHTML = `
     <div id="frequency-page">
       <div class="frequency__nav-container"></div>
