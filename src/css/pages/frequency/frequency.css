@@ -2,30 +2,32 @@
   height: 100%;
   width: 100%;
   overflow: hidden;
+  background: whitesmoke
 }
 
 .frequency__nav-container{
-  height: 10%;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: rgba(216,199,46,.8);
-  margin: .5% .5% 0;
+  margin: 1% .5% 0;
 }
 .frequency__nav-link{
   padding: .5rem;
   border-radius: 50%;
-  background: white;
+  background: #d8c72e;
   margin: 0 20px;
   width: 20px;
-  box-shadow: 0 0 7px 1px rgba(0,0,0,.1);
   height: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 20px;
   font-weight: 700;
-  color: #999;
+  color: #eee;
+}
+.frequency__nav-link:hover{
+  background: rgba(6,191,156, .2);
+  color: #06bf9c;
 }
 .frequency__nav-link.active{
   background: #06bf9c;
@@ -136,4 +138,10 @@
 }
 #busLinePerChange{
   margin-bottom: 5rem;
+}
+
+.trigger{
+  position: fixed;
+  background: none;
+  height: 1px;
 }

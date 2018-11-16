@@ -248,7 +248,20 @@ const CreateTable = data =>{
 }
 
 
-const BuildContent = (content, key) =>{
+const BuildContent = (content, key, scrollStory) =>{
+  const BuildScene = element=>{
+    let link = document.querySelector(`#${element.id}-link`)
+    new ScrollMagic.Scene({ triggerElement: element, duration: '60%' })
+      .on('enter', e => {
+        link.classList.add('active');
+        element.classList.add('active');
+      })
+      .on('leave', e => {
+        link.classList.remove('active');
+        element.classList.remove('active');
+      })
+      .addTo(scrollStory);
+  }
   let masterContainer = document.querySelector('.frequency__content-story')
   let section = document.createElement('div')
   section.classList.add('frequency__story-section')
@@ -276,32 +289,11 @@ const BuildContent = (content, key) =>{
   }
   section.id = key
   if (content.table) { section.querySelector('.frequency__storySection-content').appendChild(CreateTable(content.table)) }
+  section.style.height = masterContainer.getBoundingClientRect().height/2
   masterContainer.appendChild(section)
+  BuildScene(section)
 }
 const BuildNav = (component, sections) =>{
-
-  // TODO:  Trigger function when element leaves the viewport, not when one is in focus
-  const isVisible = element =>{
-    let coords = element.getBoundingClientRect(),
-      sectionHeight = document.querySelector(".frequency__content-story").clientHeight,
-      topVisible = coords.top > 0 && coords.top < sectionHeight,
-      bottomVisible = coords.bottom < sectionHeight && coords.bottom > 0
-    return topVisible && bottomVisible 
-  }
-  const ShowVisible = () =>{
-    for (let section of document.querySelectorAll('.frequency__story-section')){
-      if (isVisible(section)){
-        // contentRef[section.id].active = true
-        section.classList.add('active')
-        document.querySelector(`#${section.id}-link`).classList.add('active')
-      }
-      else{
-        // contentRef[section.id].active = false
-        section.classList.remove('active')
-        document.querySelector(`#${section.id}-link`).classList.remove('active')
-      }
-    }
-  }
 
   const nav = document.querySelector('.frequency__nav-container')
   let cnt = 1
@@ -322,21 +314,19 @@ const BuildNav = (component, sections) =>{
           sections[node.id].active = false
           node.classList.remove('active')
         }
-        document.querySelector(`#${i}`).scrollIntoView(false)
+        component.scroll.scrollTo(`#${i}`)
       }
       let nodes = document.querySelectorAll(`.${sectionLink.classList[0]}`)
       for (let node of nodes){ node.classList.contains('active') ? node.classList.remove('active') : null }
       sectionLink.classList.toggle('active')
       ResymbolizeFeatureLayer(component.map, contentRef[i].content)
     })
-    BuildContent(sections[i].content, i)
     nav.appendChild(sectionLink)
+    BuildContent(sections[i].content, i, component.scroll)
     cnt += 1
   }
   document.querySelector('.frequency__content-story').addEventListener('scroll', e=>{
-    ShowVisible();
   })
-  ShowVisible();
 }
 const LoadTaz = map =>{
   fetch('https://services1.arcgis.com/LWtWv6q6BJyKidj8/arcgis/rest/services/TAZ/FeatureServer/0/query?where=1%3D1&outFields=TAZN&geometryPrecision=4&outSR=4326&returnExceededLimitFeatures=true&f=pgeojson')
@@ -412,9 +402,14 @@ export class Frequency{
       </div>
     </div>
     `
+    this.scroll = new ScrollMagic.Controller({
+      container: document.querySelector('.frequency__content-story'),
+      loglevel: 4
+    });
     BuildNav(this, contentRef)
     this.map = BuildMap(document.querySelector('.frequency__content-map'))
-    // ScrollStory()
   }
 }
+
+
 
