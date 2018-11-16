@@ -246,12 +246,10 @@ const CreateTable = data =>{
   }
   return table
 }
-
-
 const BuildContent = (content, key, scrollStory) =>{
   const BuildScene = element=>{
     let link = document.querySelector(`#${element.id}-link`)
-    new ScrollMagic.Scene({ triggerElement: element, duration: '60%' })
+    new ScrollMagic.Scene({ triggerElement: element, duration: element.getBoundingClientRect().height+20 })
       .on('enter', e => {
         link.classList.add('active');
         element.classList.add('active');
@@ -270,7 +268,9 @@ const BuildContent = (content, key, scrollStory) =>{
     case 'overview':
       section.innerHTML =  `
       <div class="frequency__storySection-title">
-        <p class="frequency__storySection-SectionTitle">${contentRef[key].title}</p>
+        <div class="frequency__storySection-TitleDivider">
+          <hr class="frequency__storySection-divider"><p class="frequency__storySection-SectionTitle">${contentRef[key].title}</p><hr class="frequency__storySection-divider">
+        </div>
       </div>
       <div class="frequency__storySection-content"><p class="frequency__storySection-text">${content.text}</p></div>
       `
@@ -298,9 +298,12 @@ const BuildNav = (component, sections) =>{
   const nav = document.querySelector('.frequency__nav-container')
   let cnt = 1
   for (let i in sections){
-    let sectionLink = document.createElement('div')
-    sectionLink.innerText = cnt
-    // sectionLink.innerText = sections[i].title
+    let sectionLink = document.createElement('div'), 
+      tooltip = document.createElement('div')
+    tooltip.classList.add('tooltip')
+    sectionLink.innerHTML = `<p>${cnt}</p>`
+    tooltip.innerText = sections[i].title
+    sectionLink.appendChild(tooltip)
     sectionLink.id = i+'-link'
     sectionLink.classList.add('frequency__nav-link')
     sections[i].active ? sectionLink.classList.add('active') : null
@@ -320,6 +323,18 @@ const BuildNav = (component, sections) =>{
       for (let node of nodes){ node.classList.contains('active') ? node.classList.remove('active') : null }
       sectionLink.classList.toggle('active')
       ResymbolizeFeatureLayer(component.map, contentRef[i].content)
+    })
+    sectionLink.addEventListener('mouseenter', e=>{
+      let target = e.target
+      if (target.classList.contains('frequency__nav-link')){
+        target.children[1].classList.contains('active') ? null : target.children[1].classList.add('active')
+      }
+    })
+    sectionLink.addEventListener('mouseleave', e=>{
+      let target = e.target
+      if (target.classList.contains('frequency__nav-link')){
+        target.children[1].classList.contains('active') ? target.children[1].classList.remove('active') : null
+      }
     })
     nav.appendChild(sectionLink)
     BuildContent(sections[i].content, i, component.scroll)
