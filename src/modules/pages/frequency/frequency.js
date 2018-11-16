@@ -175,8 +175,6 @@ const ResymbolizeFeatureLayer = (map,section) =>{
     map.setLayoutProperty('taz-base', 'visibility', 'none')
   }
 }
-
-
 const CreateTable = data =>{
   const FormatNumber = num =>  num.toString().indexOf('.') != -1 ? num+'%' : num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') 
   const CreateHeaderRow = (table, labels) =>{
@@ -248,31 +246,8 @@ const CreateTable = data =>{
   }
   return table
 }
-const ScrolledIntoView = element =>{
-  let rect = element.getBoundingClientRect(),
-    top = rect.top,
-    height = rect.height,
-    el = element.parentNode
 
-  // console.log(top)
 
-  do{
-    rect = el.getBoundingClientRect()
-    if (!(top <= rect.bottom)) return false
-    if ((top+height <= rect.top)) return false
-    el = el.parentNode
-  }
-  while(el != document.body)
-  return top <= document.documentElement.clientHeight
-}
-const AttachEvent = (element, callback) =>{
-  if (element.addEventListener) { 
-    console.log('addEventListener')
-    element.addEventListener("scroll", callback, false) }
-  else if(element.AttachEvent) { 
-    console.log('AttachEvent')
-    element.AttachEvent('onscroll',  callback) }
-}
 const BuildContent = (content, key) =>{
   let masterContainer = document.querySelector('.frequency__content-story')
   let section = document.createElement('div')
@@ -301,16 +276,39 @@ const BuildContent = (content, key) =>{
   }
   section.id = key
   if (content.table) { section.querySelector('.frequency__storySection-content').appendChild(CreateTable(content.table)) }
-  
   masterContainer.appendChild(section)
-  // AttachEvent(section, "scroll",  ScrolledIntoView(section))
 }
 const BuildNav = (component, sections) =>{
+
+  // TODO:  Trigger function when element leaves the viewport, not when one is in focus
+  const isVisible = element =>{
+    let coords = element.getBoundingClientRect(),
+      sectionHeight = document.querySelector(".frequency__content-story").clientHeight,
+      topVisible = coords.top > 0 && coords.top < sectionHeight,
+      bottomVisible = coords.bottom < sectionHeight && coords.bottom > 0
+    return topVisible && bottomVisible 
+  }
+  const ShowVisible = () =>{
+    for (let section of document.querySelectorAll('.frequency__story-section')){
+      if (isVisible(section)){
+        // contentRef[section.id].active = true
+        section.classList.add('active')
+        document.querySelector(`#${section.id}-link`).classList.add('active')
+      }
+      else{
+        // contentRef[section.id].active = false
+        section.classList.remove('active')
+        document.querySelector(`#${section.id}-link`).classList.remove('active')
+      }
+    }
+  }
+
   const nav = document.querySelector('.frequency__nav-container')
+  let cnt = 1
   for (let i in sections){
     let sectionLink = document.createElement('div')
-    let title = sections[i].title
-    sectionLink.innerText = title
+    sectionLink.innerText = cnt
+    // sectionLink.innerText = sections[i].title
     sectionLink.id = i+'-link'
     sectionLink.classList.add('frequency__nav-link')
     sections[i].active ? sectionLink.classList.add('active') : null
@@ -324,7 +322,7 @@ const BuildNav = (component, sections) =>{
           sections[node.id].active = false
           node.classList.remove('active')
         }
-        document.querySelector(`#${i}`).scrollIntoView()
+        document.querySelector(`#${i}`).scrollIntoView(false)
       }
       let nodes = document.querySelectorAll(`.${sectionLink.classList[0]}`)
       for (let node of nodes){ node.classList.contains('active') ? node.classList.remove('active') : null }
@@ -333,7 +331,12 @@ const BuildNav = (component, sections) =>{
     })
     BuildContent(sections[i].content, i)
     nav.appendChild(sectionLink)
+    cnt += 1
   }
+  document.querySelector('.frequency__content-story').addEventListener('scroll', e=>{
+    ShowVisible();
+  })
+  ShowVisible();
 }
 const LoadTaz = map =>{
   fetch('https://services1.arcgis.com/LWtWv6q6BJyKidj8/arcgis/rest/services/TAZ/FeatureServer/0/query?where=1%3D1&outFields=TAZN&geometryPrecision=4&outSR=4326&returnExceededLimitFeatures=true&f=pgeojson')
@@ -367,7 +370,6 @@ const LoadTaz = map =>{
     map.addLayer(layerDef, 'base-interstates')
   })
 }
-
 const BuildMap = container =>{
   const extent = {
     center: [-75.247, 40.066],
@@ -390,6 +392,8 @@ const BuildMap = container =>{
       center: extent.center,
       zoom: extent.zoom
     })
+    map.scrollZoom.disable();
+    map.addControl(new mapboxgl.NavigationControl, "top-right")
   })
   return map
 }
