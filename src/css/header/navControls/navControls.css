@@ -6,4 +6,7 @@ a {
 .header__nav-link.active{
     font-weight: 700;
     color: #8bb23f;
+    font-size: 1.3rem;
+    border-bottom: 3px solid #e89234;
+    padding-bottom: 1%;
 }
