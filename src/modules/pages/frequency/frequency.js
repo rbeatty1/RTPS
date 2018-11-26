@@ -21,7 +21,8 @@ const contentRef = {
     scenario: 'Existing',
     content: {
       map: {
-        layers: ['transitLines'],
+        source: 'transit',
+        layer: 'existing',
         filter: undefined,
         scheme: ['#A63603', '#E6550D', '#FD8D3C', '#FDAE6B', '#FDD0A2', '#FEEDDE']
       },
@@ -35,8 +36,9 @@ const contentRef = {
     scenario: "Doubled Frequency",
     content: {
       map: {
-        layers: ['taz-base'],
-        filter: 'greater than 1',
+        source: 'taz',
+        layer: 'transit',
+        filter: ['>', 'tActual', 1],
         scheme: ['#D9F0A3', '#ADDD8E', '#78C679', '#31A354', '#006837']
       },
       table: {
@@ -82,8 +84,9 @@ const contentRef = {
     scenario: "Doubled Frequency",
     content: {
       map: {
-        layers: ['zones'],
-        filter: 'greater than 1',
+        source: 'taz',
+        layer: 'vehicles',
+        filter: ['<', 'vActual', -1],
         scheme: ['#FDD0A2', '#FDAE6B', '#FD8D3C', '#E6550D', '#A63603']
       },
       table: {
@@ -143,8 +146,8 @@ const contentRef = {
     scenario: 'Doubled Frequency',
     content: {
       map: {
-        layers: ['busLines'],
-        filter: ['top 25'],
+        source: 'transit',
+        layer: 'busLineAbsChange',
         scheme: ['#FDD0A2', '#FDAE6B', '#FD8D3C', '#E6550D', '#A63603']
       },
       table: false,
@@ -164,16 +167,26 @@ const contentRef = {
       table: false,
       text: 'This map shows the 25 bus routes with the largest percent increase in daily ridership between the existing and doubled frequency scenarios. It is important to keep in mind that percent change is sometimes deceiving when base ridership is very low, making a small incrase appear as a substantial change. Only those bus routes with an estimated base scenario ridership of at least 100 are included. Many of the routes in this map are in suburban areas where base frequencies tend to be lower. The darker the blue color, the greater the percent increase in forecast ridership fi frequency is doubled.'
     }
+  },
+  mapData: {
+    zones: undefined,
+    rail: undefined,
+    bus: undefined
   }
 }
 
 const ResymbolizeFeatureLayer = (map,section) =>{
-  if (section.map && map.getLayer(section.map.layers[0])){
-    map.setLayoutProperty(section.map.layers[0], "visibility", "visible")
+  let info = section.content.map
+  if (info && map.getLayer(`${info.source}-${info.layer}`)){
+    console.log(info)
+    map.setLayoutProperty(`${info.source}-${info.layer}`, "visibility", "visible")
+    info.filter ? map.setFilter(`${info.source}-${info.layer}`, info.filter) : null
   }
-  else{
-    map.setLayoutProperty('taz-base', 'visibility', 'none')
-  }
+}
+
+const HideFeatureLayer = (map, section) =>{
+  let info = section.content.map
+  map.getLayer(`${info.source}-${info.layer}`) ? map.setLayoutProperty(`${info.source}-${info.layer}`, 'visibility', 'none') : null
 }
 const CreateTable = data =>{
   const FormatNumber = num =>  num.toString().indexOf('.') != -1 ? num+'%' : num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') 
@@ -186,9 +199,6 @@ const CreateTable = data =>{
       header.appendChild(label)
     })
     return table.appendChild(header)
-
-
-
   }
   const CreateCountyContent = (state, county) =>{
     let dataRow = document.createElement('tr'),
@@ -231,7 +241,6 @@ const CreateTable = data =>{
   for (let set in labels.rows){
     let state = set,
         counties = labels.rows[set]
-
     counties.map(county=>{
       table.appendChild(CreateCountyContent(state, county))
     })
@@ -246,19 +255,21 @@ const CreateTable = data =>{
   }
   return table
 }
-const BuildContent = (content, key, scrollStory) =>{
+const BuildContent = (content, key, component) =>{
   const BuildScene = element=>{
     let link = document.querySelector(`#${element.id}-link`)
     new ScrollMagic.Scene({ triggerElement: element, duration: element.getBoundingClientRect().height+20 })
       .on('enter', e => {
+        if (contentRef[element.id].content.map) ResymbolizeFeatureLayer(component.map, contentRef[element.id])
         link.classList.add('active');
         element.classList.add('active');
       })
       .on('leave', e => {
+        if (contentRef[element.id].content.map) HideFeatureLayer(component.map, contentRef[element.id])
         link.classList.remove('active');
         element.classList.remove('active');
       })
-      .addTo(scrollStory);
+      .addTo(component.scroll);
   }
   let masterContainer = document.querySelector('.frequency__content-story')
   let section = document.createElement('div')
@@ -294,85 +305,158 @@ const BuildContent = (content, key, scrollStory) =>{
   BuildScene(section)
 }
 const BuildNav = (component, sections) =>{
-
   const nav = document.querySelector('.frequency__nav-container')
   let cnt = 1
   for (let i in sections){
-    let sectionLink = document.createElement('div'), 
-      tooltip = document.createElement('div')
-    tooltip.classList.add('tooltip')
-    sectionLink.innerHTML = `<p>${cnt}</p>`
-    tooltip.innerText = sections[i].title
-    sectionLink.appendChild(tooltip)
-    sectionLink.id = i+'-link'
-    sectionLink.classList.add('frequency__nav-link')
-    sections[i].active ? sectionLink.classList.add('active') : null
-    sectionLink.addEventListener('click', e=>{
-      for (let node of document.querySelectorAll('.frequency__story-section')){ 
-        if (node.id == i){
-          sections[i].active = true
-          node.classList.add('active')
+    if (i != 'mapData'){
+      let sectionLink = document.createElement('div'), 
+        tooltip = document.createElement('div')
+      tooltip.classList.add('tooltip')
+      sectionLink.innerHTML = `<p>${cnt}</p>`
+      sectionLink.classList.add('frequency__nav-link')
+        
+      tooltip.innerText = sections[i].title
+      sectionLink.appendChild(tooltip)
+      sectionLink.id = i+'-link'
+      sections[i].active ? sectionLink.classList.add('active') : null
+      sectionLink.addEventListener('click', e=>{
+        for (let node of document.querySelectorAll('.frequency__story-section')){ 
+          if (node.id == i){
+            sections[i].active = true
+            node.classList.add('active')
+          }
+          else{
+            sections[node.id].active = false
+            node.classList.remove('active')
+          }
+          component.scroll.scrollTo(`#${i}`)
         }
-        else{
-          sections[node.id].active = false
-          node.classList.remove('active')
+        let nodes = document.querySelectorAll(`.${sectionLink.classList[0]}`)
+        for (let node of nodes){ node.classList.contains('active') ? node.classList.remove('active') : null }
+        sectionLink.classList.toggle('active')
+      })
+      sectionLink.addEventListener('mouseenter', e=>{
+        let target = e.target
+        if (target.classList.contains('frequency__nav-link')){
+          target.children[1].classList.contains('active') ? null : target.children[1].classList.add('active')
         }
-        component.scroll.scrollTo(`#${i}`)
-      }
-      let nodes = document.querySelectorAll(`.${sectionLink.classList[0]}`)
-      for (let node of nodes){ node.classList.contains('active') ? node.classList.remove('active') : null }
-      sectionLink.classList.toggle('active')
-      ResymbolizeFeatureLayer(component.map, contentRef[i].content)
+      })
+      sectionLink.addEventListener('mouseleave', e=>{
+        let target = e.target
+        if (target.classList.contains('frequency__nav-link')){
+          target.children[1].classList.contains('active') ? target.children[1].classList.remove('active') : null
+        }
+      })
+      nav.appendChild(sectionLink)
+      BuildContent(sections[i].content, i, component)
+      cnt += 1
+    }
+    document.querySelector('.frequency__content-story').addEventListener('scroll', e=>{
     })
-    sectionLink.addEventListener('mouseenter', e=>{
-      let target = e.target
-      if (target.classList.contains('frequency__nav-link')){
-        target.children[1].classList.contains('active') ? null : target.children[1].classList.add('active')
-      }
-    })
-    sectionLink.addEventListener('mouseleave', e=>{
-      let target = e.target
-      if (target.classList.contains('frequency__nav-link')){
-        target.children[1].classList.contains('active') ? target.children[1].classList.remove('active') : null
-      }
-    })
-    nav.appendChild(sectionLink)
-    BuildContent(sections[i].content, i, component.scroll)
-    cnt += 1
   }
-  document.querySelector('.frequency__content-story').addEventListener('scroll', e=>{
-  })
 }
 const LoadTaz = map =>{
   fetch('https://services1.arcgis.com/LWtWv6q6BJyKidj8/arcgis/rest/services/TAZ/FeatureServer/0/query?where=1%3D1&outFields=TAZN&geometryPrecision=4&outSR=4326&returnExceededLimitFeatures=true&f=pgeojson')
   .then(response=>  response.ok ? response.json(): console.error('nah dawg'))
   .then(taz=>{
-    let sourceDef = {
-      data: taz,
-      type: 'geojson'
-    }
-    map.addSource('taz', sourceDef)
-    let layerDef = {
-      id: 'taz-base',
-      source: 'taz',
-      type: 'fill',
-      paint: {
-        'fill-color': [
-          'step',
-          ['get', 'TAZN'],
-          '#8bb23f',
-          Math.floor(taz.features.length*.4), '#08506d',
-          Math.floor(taz.features.length*.6), '#e89234',
-          Math.floor(taz.features.length*.8), '#06bf9c',
-          Math.floor(taz.features.length), '#d8c72e',
-        ],
-        'fill-opacity': .75
-      },
-      layout: {
-        visibility: 'none'
+    fetch('http://localhost:8000/api/rtps/frequency?zone')
+    .then(response=> response.ok ? response.json() : console.error('error will robinson'))
+    .then(apiJson=>{
+      taz.features.map(zone=>{
+        if (apiJson.cargo[zone.properties.TAZN.toString()]){
+          zone.properties['tActual'] = apiJson.cargo[zone.properties.TAZN.toString()].tActual 
+          zone.properties['vActual'] = apiJson.cargo[zone.properties.TAZN.toString()].vActual
+        }
+      })
+      let sourceDef = {
+        data: taz,
+        type: 'geojson'
       }
+      map.addSource('taz', sourceDef)
+  
+      let layerDefs = [
+        {
+          id: 'taz-transit',
+          source: 'taz',
+          type: 'fill',
+          paint: {
+            'fill-color': [
+              'step',
+              ['get', 'tActual'],
+              'rgba(255,255,255,0)',
+              37, '#D9F0A3',
+              71, '#ADDD8E',
+              123, '#78C679',
+              222, '#31A354',
+              419, '#006837'
+            ],
+            'fill-opacity': .75
+          },
+          layout: {
+            visibility: 'none'
+          }
+        },
+        {
+          id: 'taz-vehicles',
+          source: 'taz',
+          type: 'fill',
+          paint: {
+            'fill-color': [
+              'step',
+              ['get', 'vActual'],
+              '#A63603',
+              -197, '#E6550D',
+              -90, '#FD8D3C',
+              -45.1, '#FDAE6B',
+              -23.4, '#FDD0A2',
+              -1, 'rgba(255,255,255,0)'
+            ],
+            'fill-opacity': .75
+          },
+          layout: {
+            visibility: 'none'
+          }
+        }
+      ]
+      layerDefs.map(layer=>{
+        map.addLayer(layer, 'base-muniOutline')
+      })
+    })
+  })
+}
+
+const LoadBus = map =>{
+  fetch('http://localhost:8000/api/rtps/frequency?bus')
+  .then(response=> response.ok ? response.json() : console.error('error, will robinson'))
+  .then(bus=>{
+    contentRef.mapData.bus = bus.cargo
+    let busLayers = [
+      {
+        id: 'transit-busLineAbsChange',
+        source: "transit",
+        'source-layer' : 'transit_lines',
+        type: 'line',
+        paint: {
+          'line-width' : 1,
+          'line-color': [
+            'match',
+            ['get', 'linename']
+          ]
+        },
+        layout: { visibility: 'none'}
+      }
+    ]
+    for (let route in bus.cargo){
+      if (bus.cargo[route].AllBusAbsolute < 1400) busLayers[0].paint['line-color'].push(route, "#E6EECF")
+      else if (bus.cargo[route].AllBusAbsolute <= 1600 && bus.cargo[route].AllBusAbsolute > 1400) busLayers[0].paint['line-color'].push(route, "#9BC4C1")
+      else if (bus.cargo[route].AllBusAbsolute <= 1800 && bus.cargo[route].AllBusAbsolute > 1600) busLayers[0].paint['line-color'].push(route, "#69A8B7")
+      else if (bus.cargo[route].AllBusAbsolute <= 2200 && bus.cargo[route].AllBusAbsolute > 1800) busLayers[0].paint['line-color'].push(route, "#4B7E98")
+      else if (bus.cargo[route].AllBusAbsolute > 2200) busLayers[0].paint['line-color'].push(route, "#2E557A")
     }
-    map.addLayer(layerDef, 'base-interstates')
+    busLayers[0].paint['line-color'].push('rgba(255,255,255,0)')
+    busLayers.map(layer=>{
+      map.addLayer(layer)
+    })
   })
 }
 const BuildMap = container =>{
@@ -390,14 +474,19 @@ const BuildMap = container =>{
     hash: true
   })
   map.on('load', ()=>{
+    map.addSource('transit', {
+      type: 'vector',
+      url: 'https://tiles.dvrpc.org/data/dvrpc-tim-transit.json'
+    })
     map.resize()
     LoadLayers(map, styles)
     LoadTaz(map)
+    LoadBus(map)
     map.flyTo({
       center: extent.center,
       zoom: extent.zoom
     })
-    map.scrollZoom.disable();
+    // map.scrollZoom.disable();
     map.addControl(new mapboxgl.NavigationControl, "top-right")
   })
   return map

@@ -1,7 +1,6 @@
 import '../../../css/pages/accessibility/accessibility.css'
 import { styles } from '../map/map_styles/accessibility.js'
 import { Legend } from './legend';
-import { LoadLayers } from '../../../utils/loadMapLayers.js'
 
 const zoneRef = {
   AccAll: {
@@ -153,7 +152,25 @@ const LoadTAZ = map =>{
     })
     })
 }
-
+const LoadLayers = (map, styles) =>{
+  for (let source in styles){
+    map.addSource(source, styles[source].sourceDef)
+    for (let layer in styles[source].layers){
+      let thisLayer = styles[source].layers[layer]
+      let layerDef = {
+        "id": `${source}-${layer}`,
+        "type": thisLayer.type,
+        "source": source,
+        "paint": thisLayer.paint
+      }
+      !thisLayer.filter ? null : layerDef['filter'] = thisLayer.filter
+      !thisLayer.layout ? null : layerDef['layout'] = thisLayer.layout
+      !thisLayer.minzoom ? null : layerDef['minzoom'] = thisLayer.minzoom;
+      styles[source].sourceDef.type != 'vector' ? null : layerDef['source-layer'] = thisLayer.source
+      map.addLayer(layerDef, thisLayer.placement)
+    }
+  }
+}
 const StationPopUp = (marker, map) =>{
   let popup = new mapboxgl.Popup({
     closeButton: false,
