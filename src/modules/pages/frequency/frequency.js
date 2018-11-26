@@ -21,7 +21,8 @@ const contentRef = {
     scenario: 'Existing',
     content: {
       map: {
-        layers: ['transitLines'],
+        source: 'transit',
+        layer: 'existing',
         filter: undefined,
         scheme: ['#A63603', '#E6550D', '#FD8D3C', '#FDAE6B', '#FDD0A2', '#FEEDDE']
       },
@@ -145,8 +146,8 @@ const contentRef = {
     scenario: 'Doubled Frequency',
     content: {
       map: {
-        layers: ['busLines'],
-        filter: ['top 25'],
+        source: 'transit',
+        layer: 'busLineAbsChange',
         scheme: ['#FDD0A2', '#FDAE6B', '#FD8D3C', '#E6550D', '#A63603']
       },
       table: false,
@@ -177,6 +178,7 @@ const contentRef = {
 const ResymbolizeFeatureLayer = (map,section) =>{
   let info = section.content.map
   if (info && map.getLayer(`${info.source}-${info.layer}`)){
+    console.log(info)
     map.setLayoutProperty(`${info.source}-${info.layer}`, "visibility", "visible")
     info.filter ? map.setFilter(`${info.source}-${info.layer}`, info.filter) : null
   }
@@ -422,6 +424,41 @@ const LoadTaz = map =>{
     })
   })
 }
+
+const LoadBus = map =>{
+  fetch('http://localhost:8000/api/rtps/frequency?bus')
+  .then(response=> response.ok ? response.json() : console.error('error, will robinson'))
+  .then(bus=>{
+    contentRef.mapData.bus = bus.cargo
+    let busLayers = [
+      {
+        id: 'transit-busLineAbsChange',
+        source: "transit",
+        'source-layer' : 'transit_lines',
+        type: 'line',
+        paint: {
+          'line-width' : 1,
+          'line-color': [
+            'match',
+            ['get', 'linename']
+          ]
+        },
+        layout: { visibility: 'none'}
+      }
+    ]
+    for (let route in bus.cargo){
+      if (bus.cargo[route].AllBusAbsolute < 1400) busLayers[0].paint['line-color'].push(route, "#E6EECF")
+      else if (bus.cargo[route].AllBusAbsolute <= 1600 && bus.cargo[route].AllBusAbsolute > 1400) busLayers[0].paint['line-color'].push(route, "#9BC4C1")
+      else if (bus.cargo[route].AllBusAbsolute <= 1800 && bus.cargo[route].AllBusAbsolute > 1600) busLayers[0].paint['line-color'].push(route, "#69A8B7")
+      else if (bus.cargo[route].AllBusAbsolute <= 2200 && bus.cargo[route].AllBusAbsolute > 1800) busLayers[0].paint['line-color'].push(route, "#4B7E98")
+      else if (bus.cargo[route].AllBusAbsolute > 2200) busLayers[0].paint['line-color'].push(route, "#2E557A")
+    }
+    busLayers[0].paint['line-color'].push('rgba(255,255,255,0)')
+    busLayers.map(layer=>{
+      map.addLayer(layer)
+    })
+  })
+}
 const BuildMap = container =>{
   const extent = {
     center: [-75.247, 40.066],
@@ -437,9 +474,14 @@ const BuildMap = container =>{
     hash: true
   })
   map.on('load', ()=>{
+    map.addSource('transit', {
+      type: 'vector',
+      url: 'https://tiles.dvrpc.org/data/dvrpc-tim-transit.json'
+    })
     map.resize()
     LoadLayers(map, styles)
     LoadTaz(map)
+    LoadBus(map)
     map.flyTo({
       center: extent.center,
       zoom: extent.zoom
