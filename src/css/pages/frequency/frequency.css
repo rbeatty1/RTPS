@@ -49,10 +49,10 @@
   margin: 0 2.5%;
 }
 .frequency__content-story{
-  width: 100%;
+  width: 33%;
   z-index: 2;
   position: absolute;
-  /* left: 2.5%; */
+  left: 1%;
   overflow-y: scroll;
 }
 .frequency__content-map{
@@ -62,7 +62,7 @@
   width: 60%;
 }
 .frequency__story-section{
-  width: 25%;
+  width: 80%;
   display: flex;
   flex-flow: column;
   padding: 2% 0;
@@ -166,4 +166,32 @@
 .frequency__nav-link:hover:last-child{
   visibility: visible;
   opacity: 1;
+}
+.mapboxgl-popup-content{
+  width: 15rem;
+}
+.mapboxgl-popup-close-button{
+  color: #e89234;
+  font-weight: 700;
+  font-size: 1rem;
+}
+.popup-header{
+  font-size: 1rem;
+  color: white;
+  background: #06bf9c;
+  border-radius: 5px;
+  padding: 2%;
+  text-align: center;
+  width: 75%;
+  margin: 2% auto;
+}
+.popup-content{
+  color: #AAA;
+  margin: 2%;
+  font-weight: normal;
+}
+.popup-emphasis{
+  color: #d8c72e;
+  font-weight: 700;
+  font-size: .9rem;
 }
