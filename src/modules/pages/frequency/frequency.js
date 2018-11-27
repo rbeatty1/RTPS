@@ -132,8 +132,8 @@ const contentRef = {
     scenario: "Doubled Frequency",
     content: {
       map: {
-        layers: ['railLines'],
-        filter: undefined,
+        source: 'transit',
+        layer: 'railLineChange',
         scheme: ['#FDD0A2', '#FDAE6B', '#FD8D3C', '#E6550D', '#A63603']
       },
       table: false,
@@ -160,8 +160,8 @@ const contentRef = {
     scenario: 'Doubled Frequency',
     content: {
       map: {
-        layers: ['busLines'],
-        filter: ['top 25'],
+        source: 'transit',
+        layer: 'busLinePerChange',
         scheme: ['#FDD0A2', '#FDAE6B', '#FD8D3C', '#E6550D', '#A63603']
       },
       table: false,
@@ -178,12 +178,10 @@ const contentRef = {
 const ResymbolizeFeatureLayer = (map,section) =>{
   let info = section.content.map
   if (info && map.getLayer(`${info.source}-${info.layer}`)){
-    console.log(info)
     map.setLayoutProperty(`${info.source}-${info.layer}`, "visibility", "visible")
     info.filter ? map.setFilter(`${info.source}-${info.layer}`, info.filter) : null
   }
 }
-
 const HideFeatureLayer = (map, section) =>{
   let info = section.content.map
   map.getLayer(`${info.source}-${info.layer}`) ? map.setLayoutProperty(`${info.source}-${info.layer}`, 'visibility', 'none') : null
@@ -424,12 +422,10 @@ const LoadTaz = map =>{
     })
   })
 }
-
 const LoadBus = map =>{
   fetch('http://localhost:8000/api/rtps/frequency?bus')
   .then(response=> response.ok ? response.json() : console.error('error, will robinson'))
   .then(bus=>{
-    contentRef.mapData.bus = bus.cargo
     let busLayers = [
       {
         id: 'transit-busLineAbsChange',
@@ -444,19 +440,100 @@ const LoadBus = map =>{
           ]
         },
         layout: { visibility: 'none'}
+      },
+      {
+        id: 'transit-busLinePerChange',
+        source: "transit",
+        'source-layer' : 'transit_lines',
+        type: 'line',
+        paint: {
+          'line-width' : 1,
+          'line-color': [
+            'match',
+            ['get', 'linename']
+          ]
+        },
+        layout: { visibility: 'none'}
       }
     ]
-    for (let route in bus.cargo){
-      if (bus.cargo[route].AllBusAbsolute < 1400) busLayers[0].paint['line-color'].push(route, "#E6EECF")
-      else if (bus.cargo[route].AllBusAbsolute <= 1600 && bus.cargo[route].AllBusAbsolute > 1400) busLayers[0].paint['line-color'].push(route, "#9BC4C1")
-      else if (bus.cargo[route].AllBusAbsolute <= 1800 && bus.cargo[route].AllBusAbsolute > 1600) busLayers[0].paint['line-color'].push(route, "#69A8B7")
-      else if (bus.cargo[route].AllBusAbsolute <= 2200 && bus.cargo[route].AllBusAbsolute > 1800) busLayers[0].paint['line-color'].push(route, "#4B7E98")
-      else if (bus.cargo[route].AllBusAbsolute > 2200) busLayers[0].paint['line-color'].push(route, "#2E557A")
-    }
-    busLayers[0].paint['line-color'].push('rgba(255,255,255,0)')
-    busLayers.map(layer=>{
-      map.addLayer(layer)
+    contentRef.mapData.bus = { absolute: [], percent: [] }
+    bus.cargo.forEach(route=>{
+      contentRef.mapData.bus.absolute.push(route)
+      contentRef.mapData.bus.percent.push(route)
     })
+    contentRef.mapData.bus.absolute.sort((a,b)=> b.AllBusAbsolute - a.AllBusAbsolute )
+    contentRef.mapData.bus.percent.sort((a,b)=> b.AllBusPercent - a.AllBusPercent )
+    contentRef.mapData.bus.absolute.map((value, index)=>{
+      if(index<25){
+        if (value.AllBusAbsolute < 1400) busLayers[0].paint['line-color'].push(value.linename, "#E6EECF")
+        else if (value.AllBusAbsolute <= 1600 && value.AllBusAbsolute > 1400) busLayers[0].paint['line-color'].push(value.linename, "#9BC4C1")
+        else if (value.AllBusAbsolute <= 1800 && value.AllBusAbsolute > 1600) busLayers[0].paint['line-color'].push(value.linename, "#69A8B7")
+        else if (value.AllBusAbsolute <= 2200 && value.AllBusAbsolute > 1800) busLayers[0].paint['line-color'].push(value.linename, "#4B7E98")
+        else if (value.AllBusAbsolute > 2200) busLayers[0].paint['line-color'].push(value.linename, "#2E557A")
+      }
+    })
+    contentRef.mapData.bus.percent.map((value, index)=>{
+      if(index<25){
+        if (value.AllBusPercent <= 85) busLayers[1].paint['line-color'].push(value.linename, "#E6EECF")
+        else if (value.AllBusPercent <= 100 && value.AllBusPercent > 85) busLayers[1].paint['line-color'].push(value.linename, "#9BC4C1")
+        else if (value.AllBusPercent <= 130 && value.AllBusPercent > 100) busLayers[1].paint['line-color'].push(value.linename, "#69A8B7")
+        else if (value.AllBusPercent > 130) busLayers[1].paint['line-color'].push(value.linename, "#3D6A89")
+      }
+    })
+    for (let layer in busLayers){
+      busLayers[layer].paint['line-color'].push('rgba(255,255,255,0)')
+    }
+    busLayers.map(layer=>{
+      map.addLayer(layer, 'base-hwyLabels')
+    })
+  })
+}
+const LoadRail = map =>{
+  const LineWidth = (data, target, name) =>{
+    if (data < 0) target.push(name, 1)
+    else if (data >= 0 && data < 30) target.push(name, 1.5)
+    else if (data >= 30 && data < 50) target.push(name, 2.5)
+    else if (data >= 50 && data < 80) target.push(name, 4)
+    else if (data >= 80 && data < 100) target.push(name, 6)
+    else if (data >=100) target.push(name, 8)
+  }
+  const LineColor = (data, target, name) =>{
+    if (data < -100 ) target.push(name, '#de425b')
+    else if (data >= -100 && data < 0) target.push(name, '#f09fa2')
+    else if (data >= 0 && data < 1000) target.push(name, '#d8c72e')
+    else if (data >=1000 && data < 5000) target.push(name, '#8cbcac')
+    else if (data >= 5000) target.push(name, '#488f31')
+  }
+  fetch('http://localhost:8000/api/rtps/frequency?rail')
+  .then(response=> response.ok ? response.json() : console.error('error will robinson'))
+  .then(rail=>{
+    contentRef.mapData.rail = rail
+    let layerDef = {
+      id: 'transit-railLineChange',
+      source: 'transit',
+      'source-layer': 'transit_lines',
+      type: 'line',
+      layout: {visibility: 'none'},
+      paint: {
+        'line-width' : [
+          'match',
+          ['get', 'linename']
+        ],
+        'line-color':  [
+          'match',
+          ['get', 'linename']
+        ],
+        'line-opacity': .75
+      }
+    }
+    for (let line in rail.cargo){
+      let data = rail.cargo[line]
+      LineWidth(data.percent, layerDef.paint["line-width"], line)
+      LineColor(data.absolute, layerDef.paint['line-color'], line)
+    }
+    layerDef.paint['line-width'].push(0)
+    layerDef.paint['line-color'].push('rgba(255,255,255,0)')
+    map.addLayer(layerDef, 'base-hwyLabels')
   })
 }
 const BuildMap = container =>{
@@ -470,7 +547,7 @@ const BuildMap = container =>{
     style: 'mapbox://styles/beattyre1/cjky7crbr17og2rldo6g7w5al',
     center: extent.center,
     zoom: extent.zoom,
-    minZoom: 8,
+    minZoom: 7,
     hash: true
   })
   map.on('load', ()=>{
@@ -482,6 +559,7 @@ const BuildMap = container =>{
     LoadLayers(map, styles)
     LoadTaz(map)
     LoadBus(map)
+    LoadRail(map)
     map.flyTo({
       center: extent.center,
       zoom: extent.zoom
