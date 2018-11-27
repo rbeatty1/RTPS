@@ -10,7 +10,10 @@ const contentRef = {
     title: 'Overview',
     scenario: undefined,
     content: {
-      map: false,
+      map: {
+        source: 'transit',
+        layer: 'overview'
+      },
       table: false,
       text: 'What happens if we double transit service frequency for all lines?<br>How does the doubled service frequency scenario compare to the existing scenario?</br></br>The answers below help us understand where potential latent demand for higher frequency transit exists. Want to know how your neighborhood or favorite routes might respond? Go ahead and explore!'
     }
@@ -213,10 +216,8 @@ const CreateTable = data =>{
     return dataRow
   }
   const CreateSummaryContent = (state, dataset) =>{
-
     let dataRow = document.createElement('tr')
     dataRow.classList.add('summary')
-    dataRow.id = state
     let cell = document.createElement('td')
     cell.innerText = state
     dataRow.appendChild(cell)
@@ -239,16 +240,19 @@ const CreateTable = data =>{
   for (let set in labels.rows){
     let state = set,
         counties = labels.rows[set]
+    if (summaries[state].final.length != 0) {
+      summaries[state] = {
+        temp: [[],[],[]],
+        final: []
+      }
+    }
     counties.map(county=>{
       table.appendChild(CreateCountyContent(state, county))
     })
-
-
     summaries[state].temp.map(col=>{
       summaries[state].final.push(col.reduce((num, value)=> num + value, 0))
     })
     summaries[state].final.push((((summaries[state].final[2]/summaries[state].final[0])*100)).toFixed(2))
-    
     table.appendChild(CreateSummaryContent(state, summaries[state].final))
   }
   return table
@@ -352,6 +356,70 @@ const BuildNav = (component, sections) =>{
     document.querySelector('.frequency__content-story').addEventListener('scroll', e=>{
     })
   }
+}
+const LoadExisting = map =>{
+  const OverviewColor = (data, target, line) =>{
+    if (data < 15) target.push(line, '#E600A9')
+    else if (data >= 15 && data < 30) target.push(line, '#028985')
+    else if (data >= 30 && data < 60) target.push(line, '#999999')
+    else target.push(line, '#ccc')
+  }
+  const ExistingColor = (data, target, line) =>{
+    if (data < 21) target.push(line, '#EEE2CF')
+    else if (data >= 21 && data < 45) target.push(line, '#AABDB5')
+    else target.push(line, '#3B758C')
+  }
+  fetch('http://localhost:8000/api/rtps/frequency?transit')
+  .then(response=> response.ok ? response.json() : console.error('error will robinson'))
+  .then(existing=>{
+    let layerDef = [
+      {
+        id: 'transit-overview',
+        source: 'transit',
+        'source-layer': 'transit_lines',
+        type: 'line',
+        paint: {
+          'line-width': [
+            'interpolate', ['linear'], ['zoom'],
+            7, 1,
+            13, 3
+          ],
+          'line-color': [
+            'match',
+            ['get', 'linename']
+          ]
+        },
+        layout: {visibility : 'visible'}
+      },
+      {
+        id: 'transit-existing',
+        source : 'transit',
+        type: 'line',
+        'source-layer': 'transit_lines',
+        paint: {
+          'line-width': [
+            'interpolate', ['linear'], ['zoom'],
+            7, 1,
+            13, 3
+          ],
+          'line-color': [
+            'match',
+            ['get', 'linename']
+          ]
+        },
+        layout: {visibility : 'none'}
+      }
+    ]
+    for (let line in existing.cargo){
+      OverviewColor(existing.cargo[line].midday, layerDef[0].paint["line-color"], line)
+      ExistingColor(existing.cargo[line].midday, layerDef[1].paint["line-color"], line)
+    }
+    layerDef[0].paint["line-color"].push('rgba(255,255,255,0)')
+    layerDef[1].paint["line-color"].push('rgba(255,255,255,0)')
+    layerDef.map(layer=>{
+      map.addLayer(layer, 'base-hwyLabels')
+    })
+  })
 }
 const LoadTaz = map =>{
   fetch('https://services1.arcgis.com/LWtWv6q6BJyKidj8/arcgis/rest/services/TAZ/FeatureServer/0/query?where=1%3D1&outFields=TAZN&geometryPrecision=4&outSR=4326&returnExceededLimitFeatures=true&f=pgeojson')
@@ -557,6 +625,7 @@ const BuildMap = container =>{
     })
     map.resize()
     LoadLayers(map, styles)
+    LoadExisting(map)
     LoadTaz(map)
     LoadBus(map)
     LoadRail(map)
