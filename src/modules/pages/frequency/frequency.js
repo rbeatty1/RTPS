@@ -240,15 +240,18 @@ const CreateTable = data =>{
   for (let set in labels.rows){
     let state = set,
         counties = labels.rows[set]
+    // check if summary already exists, and clear it if so
     if (summaries[state].final.length != 0) {
       summaries[state] = {
         temp: [[],[],[]],
         final: []
       }
     }
+    // create rows for each county
     counties.map(county=>{
       table.appendChild(CreateCountyContent(state, county))
     })
+    // create state summaries
     summaries[state].temp.map(col=>{
       summaries[state].final.push(col.reduce((num, value)=> num + value, 0))
     })
@@ -369,6 +372,20 @@ const LoadExisting = map =>{
     else if (data >= 21 && data < 45) target.push(line, '#AABDB5')
     else target.push(line, '#3B758C')
   }
+  const PopUps = (layer, event, data)=>{
+    let feature = event.features[0].properties.linename,
+      operator
+    event.features[0].properties.name.indexOf('njt') != -1 ? operator = 'NJT' : operator = 'SEPTA'
+    if (data[feature]){
+      let popup = `
+          <div class='popup-container'>
+          <div class='popup-header'>${operator} Route ${feature}</div>
+          <div class='popup-content'><span class="popup-emphasis">${data[feature].am} Minute</span> AM Peak Frequency</div>
+            <div class='popup-content'><span class="popup-emphasis">${data[feature].midday} Minute</span> Mid-day Base Frequency</div>
+          </div>`
+      return popup
+      }
+  }
   fetch('http://localhost:8000/api/rtps/frequency?transit')
   .then(response=> response.ok ? response.json() : console.error('error will robinson'))
   .then(existing=>{
@@ -381,8 +398,10 @@ const LoadExisting = map =>{
         paint: {
           'line-width': [
             'interpolate', ['linear'], ['zoom'],
-            7, 1,
-            13, 3
+            7, .25,
+            8, .75,
+            9, 1,
+            12, 3
           ],
           'line-color': [
             'match',
@@ -399,8 +418,10 @@ const LoadExisting = map =>{
         paint: {
           'line-width': [
             'interpolate', ['linear'], ['zoom'],
-            7, 1,
-            13, 3
+            7, .25,
+            8, .75,
+            9, 1,
+            12, 3
           ],
           'line-color': [
             'match',
@@ -412,12 +433,20 @@ const LoadExisting = map =>{
     ]
     for (let line in existing.cargo){
       OverviewColor(existing.cargo[line].midday, layerDef[0].paint["line-color"], line)
-      ExistingColor(existing.cargo[line].midday, layerDef[1].paint["line-color"], line)
+      ExistingColor(existing.cargo[line].am, layerDef[1].paint["line-color"], line)
     }
     layerDef[0].paint["line-color"].push('rgba(255,255,255,0)')
     layerDef[1].paint["line-color"].push('rgba(255,255,255,0)')
     layerDef.map(layer=>{
       map.addLayer(layer, 'base-hwyLabels')
+      map.on('click', layer.id, e=>{
+        let offsets = {'top': [0,0], 'top-left': [0,0], 'top-right': [0,0], 'bottom': [0,0], 'bottom-left': [0,0], 'bottom-right': [0,0], 'left': [0,0], 'right': [0,0]}
+        let content = PopUps(layer.id.split('-')[1], e, existing.cargo)
+        let popup = new mapboxgl.Popup({offset: offsets, className: 'popup'})
+          .setLngLat(e.lngLat)
+          .setHTML(content)
+          .addTo(map)
+      })
     })
   })
 }
@@ -450,11 +479,11 @@ const LoadTaz = map =>{
               'step',
               ['get', 'tActual'],
               'rgba(255,255,255,0)',
-              37, '#D9F0A3',
-              71, '#ADDD8E',
-              123, '#78C679',
-              222, '#31A354',
-              419, '#006837'
+              1, '#D9F0A3',
+              37, '#ADDD8E',
+              71, '#78C679',
+              123, '#31A354',
+              222, '#006837',
             ],
             'fill-opacity': .75
           },
@@ -501,7 +530,13 @@ const LoadBus = map =>{
         'source-layer' : 'transit_lines',
         type: 'line',
         paint: {
-          'line-width' : 1,
+          'line-width' : [
+            'interpolate', ['linear'], ['zoom'],
+            7, .25,
+            8, .75,
+            9, 1,
+            12, 3
+          ],
           'line-color': [
             'match',
             ['get', 'linename']
@@ -515,7 +550,13 @@ const LoadBus = map =>{
         'source-layer' : 'transit_lines',
         type: 'line',
         paint: {
-          'line-width' : 1,
+          'line-width' : [
+            'interpolate', ['linear'], ['zoom'],
+            7, .25,
+            8, .75,
+            9, 1,
+            12, 3
+          ],
           'line-color': [
             'match',
             ['get', 'linename']
@@ -558,19 +599,19 @@ const LoadBus = map =>{
 }
 const LoadRail = map =>{
   const LineWidth = (data, target, name) =>{
-    if (data < 0) target.push(name, 1)
-    else if (data >= 0 && data < 30) target.push(name, 1.5)
-    else if (data >= 30 && data < 50) target.push(name, 2.5)
-    else if (data >= 50 && data < 80) target.push(name, 4)
-    else if (data >= 80 && data < 100) target.push(name, 6)
-    else if (data >=100) target.push(name, 8)
+    if (data < 0) target.push(name, .5)
+    else if (data >= 0 && data < 30) target.push(name, 1)
+    else if (data >= 30 && data < 50) target.push(name, 2)
+    else if (data >= 50 && data < 80) target.push(name, 3)
+    else if (data >= 80 && data < 100) target.push(name, 4)
+    else if (data >=100) target.push(name, 5)
   }
   const LineColor = (data, target, name) =>{
-    if (data < -100 ) target.push(name, '#de425b')
-    else if (data >= -100 && data < 0) target.push(name, '#f09fa2')
-    else if (data >= 0 && data < 1000) target.push(name, '#d8c72e')
-    else if (data >=1000 && data < 5000) target.push(name, '#8cbcac')
-    else if (data >= 5000) target.push(name, '#488f31')
+    if (data < -100 ) target.push(name, '#d8c72e')
+    else if (data >= -100 && data < 0) target.push(name, '#eadb96')
+    else if (data >= 0 && data < 1000) target.push(name, '#06bf9c')
+    else if (data >=1000 && data < 5000) target.push(name, '#859cad')
+    else if (data >= 5000) target.push(name, '#08506d')
   }
   fetch('http://localhost:8000/api/rtps/frequency?rail')
   .then(response=> response.ok ? response.json() : console.error('error will robinson'))
@@ -604,6 +645,10 @@ const LoadRail = map =>{
     map.addLayer(layerDef, 'base-hwyLabels')
   })
 }
+
+const LinePopUps = feature =>{
+  console.log({feature})
+}
 const BuildMap = container =>{
   const extent = {
     center: [-75.247, 40.066],
@@ -636,6 +681,7 @@ const BuildMap = container =>{
     // map.scrollZoom.disable();
     map.addControl(new mapboxgl.NavigationControl, "top-right")
   })
+
   return map
 }
 
