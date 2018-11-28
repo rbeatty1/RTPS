@@ -10,7 +10,13 @@ const contentRef = {
     content: {
       map: {
         source: "transit",
-        layer: "overview"
+        layer: "overview",
+        legend : {
+          name : 'Midday Base Frequency',
+          units: 'Minutes',
+          type : 'line',
+          scheme : [['0–15','#CCCCCC'], ['15–30', '#999999'], ['30–60','#028985'], ['> 60', '#E600A9']]
+        }
       },
       table: false,
       text:
@@ -25,15 +31,11 @@ const contentRef = {
       map: {
         source: "transit",
         layer: "existing",
-        filter: undefined,
-        scheme: [
-          "#A63603",
-          "#E6550D",
-          "#FD8D3C",
-          "#FDAE6B",
-          "#FDD0A2",
-          "#FEEDDE"
-        ]
+        legend : {
+          name : 'AM Peak Frequency Classification',
+          type : 'line',
+          scheme : [['Low', '#EEE2CF'], ['Medium', '#AABDB5'], ['High', '#3B758C']]
+        }
       },
       table: false,
       text:
@@ -48,8 +50,11 @@ const contentRef = {
       map: {
         source: "taz",
         layer: "transit",
-        filter: [">", "tActual", 1],
-        scheme: ["#D9F0A3", "#ADDD8E", "#78C679", "#31A354", "#006837"]
+        legend : {
+          name : 'Increase in Transit Activity',
+          type : 'rect',
+          scheme : [['Very Small', '#D9F0A3'], ['Small', '#ADDD8E'], ['Moderate', '#78C679'], ['Great', '#31A354'], ['Greatest', '#006837']]
+        }
       },
       table: {
         labels: {
@@ -97,8 +102,11 @@ const contentRef = {
       map: {
         source: "taz",
         layer: "vehicles",
-        filter: ["<", "vActual", -1],
-        scheme: ["#FDD0A2", "#FDAE6B", "#FD8D3C", "#E6550D", "#A63603"]
+        legend : {
+          name : 'Decrease in Automobile Activity',
+          type : 'rect',
+          scheme : [['Very Small', '#FDD0A2'], ['Small', '#FDAE6B'], ['Moderate', '#FD8D3C'], ['Great', '#E6550D'], ['Greatest', '#A63603']]
+        }
       },
       table: {
         labels: {
@@ -146,7 +154,12 @@ const contentRef = {
       map: {
         source: "transit",
         layer: "railLineChange",
-        scheme: ["#FDD0A2", "#FDAE6B", "#FD8D3C", "#E6550D", "#A63603"]
+        legend : {
+          units:  "Estimated Passengers per Day",
+          name : 'Absolute Ridership Change',
+          type : 'line',
+          scheme : [['Low', '#d8c72e'], ['','#eadb96'], ['','#06bf9c'], ['','#859cad'], ['High', '#08506d']]
+        }
       },
       table: false,
       text:
@@ -161,7 +174,12 @@ const contentRef = {
       map: {
         source: "transit",
         layer: "busLineAbsChange",
-        scheme: ["#FDD0A2", "#FDAE6B", "#FD8D3C", "#E6550D", "#A63603"]
+        legend : {
+          name : 'Absolute Ridership Change',
+          units:  "Estimated Passengers per Day",
+          type : 'line',
+          scheme : [['< 1,400', '#E6EECF'], ['1,400–1,600', '#9BC4C1'], ['1,601–1,800', '#69A8B7'], ['1,801–2,200', '#4B7E98'], ['> 2,200', '#2E557A']]
+        }
       },
       table: false,
       text:
@@ -176,7 +194,11 @@ const contentRef = {
       map: {
         source: "transit",
         layer: "busLinePerChange",
-        scheme: ["#FDD0A2", "#FDAE6B", "#FD8D3C", "#E6550D", "#A63603"]
+        legend : {
+          name : 'Percent Change in Ridership',
+          type : 'line',
+          scheme : [['< 85%', '#E6EECF'], ['85%–100%', '#9BC4C1'], ['101%–130%', '#69A8B7'], ['> 130%', '#4B7E98']]
+        }
       },
       table: false,
       text:
@@ -188,91 +210,90 @@ const contentRef = {
     rail: {
       api: undefined,
       lookup: {
-        'ACity Line' : {
-          operator: 'NJT',
-          name: 'Atlantic City Line'
+        "ACity Line": {
+          operator: "NJT",
+          name: "Atlantic City Line"
         },
-        AIR : {
-          operator: 'SEPTA',
-          name: 'Airport Line'
+        AIR: {
+          operator: "SEPTA",
+          name: "Airport Line"
         },
         BSS: {
-          operator: 'SEPTA',
-          name : 'Broad St Subway'
+          operator: "SEPTA",
+          name: "Broad St Subway"
         },
         CHE: {
-          operator: 'SEPTA',
-          name: 'Chestnut Hill East Line'
+          operator: "SEPTA",
+          name: "Chestnut Hill East Line"
         },
         CHW: {
-          operator: 'SEPTA',
-          name : 'Chestnut Hill West Line'
+          operator: "SEPTA",
+          name: "Chestnut Hill West Line"
         },
-        CYN : {
-          operator: 'SEPTA',
-          name : 'Cynwyd Line'
+        CYN: {
+          operator: "SEPTA",
+          name: "Cynwyd Line"
         },
-        DOY : {
-          operator: 'SEPTA',
-          name : 'Lansdale/Doylestown Line'
+        DOY: {
+          operator: "SEPTA",
+          name: "Lansdale/Doylestown Line"
         },
-        ELW : {
-          operator: 'SEPTA',
-          name : 'Media/Elwyn Line'
+        ELW: {
+          operator: "SEPTA",
+          name: "Media/Elwyn Line"
         },
-        FOX : {
-          operator : 'SEPTA',
-          name : 'Fox Chase Line'
+        FOX: {
+          operator: "SEPTA",
+          name: "Fox Chase Line"
         },
-        MFL : {
-          operator: 'SEPTA',
-          name : 'Market/Frankford Line'
+        MFL: {
+          operator: "SEPTA",
+          name: "Market/Frankford Line"
         },
-        'NE Corridor': {
-          operator: 'AMTRAK',
-          name : 'Northeast Corridor'
+        "NE Corridor": {
+          operator: "AMTRAK",
+          name: "Northeast Corridor"
         },
         NHSL: {
-          operator : 'SEPTA',
-          name : 'Norristown High Speed Line'
+          operator: "SEPTA",
+          name: "Norristown High Speed Line"
         },
         NOR: {
-          operator : 'SEPTA',
-          name : 'Manayunk/Norristown Line'
+          operator: "SEPTA",
+          name: "Manayunk/Norristown Line"
         },
         PAO: {
-          operator: 'SEPTA',
-          name : 'Paoli/Thorndale Line',
+          operator: "SEPTA",
+          name: "Paoli/Thorndale Line"
         },
-        PATCO : {
-          operator: 'Delaware River Port Authority',
-          name : 'PATCO High Speed Line'
+        PATCO: {
+          operator: "Delaware River Port Authority",
+          name: "PATCO High Speed Line"
         },
-        'PCT Shuttle': {
-          operator : 'NJT',
-          name : 'Princeton Junction'
+        "PCT Shuttle": {
+          operator: "NJT",
+          name: "Princeton Junction"
         },
-        'River Line' : {
-          operator : 'NJT',
-          name : 'River Line Light Rail'
+        "River Line": {
+          operator: "NJT",
+          name: "River Line Light Rail"
         },
-        TRE : {
-          operator : 'SEPTA',
-          name : 'Trenton Line'
+        TRE: {
+          operator: "SEPTA",
+          name: "Trenton Line"
         },
-        WAR : {
-          operator : 'SEPTA',
-          name : 'Warminster Line'
+        WAR: {
+          operator: "SEPTA",
+          name: "Warminster Line"
         },
-        WIL : {
-          operator : 'SEPTA/AMTRAK',
-          name : 'Wilmington/Newark Line'
+        WIL: {
+          operator: "SEPTA/AMTRAK",
+          name: "Wilmington/Newark Line"
         },
-        WTR : {
-          operator : 'SEPTA',
-          name : 'West Trenton Line'
+        WTR: {
+          operator: "SEPTA",
+          name: "West Trenton Line"
         }
-
       }
     },
     bus: undefined
@@ -381,6 +402,46 @@ const CreateTable = data => {
   }
   return table;
 };
+const BuildLegend = section =>{
+  if (contentRef[section.id].content.map){
+    let data = contentRef[section.id].content.map.legend,
+      legend = section.querySelector('.frequency__storySection-legend'),
+      title = document.createElement('p'),
+      breakContainer = document.createElement('div')
+    title.innerText = data.name
+    title.classList.add('frequency__legend-title')
+    title.style.color = data.scheme[data.scheme.length-1][1]
+    breakContainer.classList.add('frequency__legend-breakContainer')
+    legend.appendChild(title)
+    if (data.units){
+      let units = document.createElement('p')
+      units.classList.add('frequency__legend-units')
+      units.innerText = `(${data.units})`
+      legend.appendChild(units)
+    }
+    legend.appendChild(breakContainer)
+    let i = 0
+    for (let color of data.scheme){
+      let container = document.createElement('div'),
+        thisBreak, label;
+      container.classList.add('frequency__legend-break')
+      if (data.type == 'rect'){
+        breakContainer.style.justifyContent = '';
+        thisBreak = document.createElement('div')
+        thisBreak.classList.add('frequency__legend-rect')
+      }
+      else if (data.type == 'line'){
+        thisBreak = document.createElement('hr')
+        thisBreak.classList.add('frequency__legend-line')
+      }
+      thisBreak.style.background = color[1]
+      thisBreak.innerText = color[0]
+      if (i == 0) thisBreak.style.color = data.scheme[data.scheme.length-1][1]
+      breakContainer.appendChild(thisBreak)
+      i ++
+    }
+  }
+}
 const BuildContent = (content, key, component) => {
   const BuildScene = element => {
     let link = document.querySelector(`#${element.id}-link`);
@@ -416,6 +477,7 @@ const BuildContent = (content, key, component) => {
           }</p><hr class="frequency__storySection-divider">
         </div>
       </div>
+      <div class="frequency__storySection-legend"></div>
       <div class="frequency__storySection-content"><p class="frequency__storySection-text">${
         content.text
       }</p></div>
@@ -433,6 +495,7 @@ const BuildContent = (content, key, component) => {
           }</p><hr class="frequency__storySection-divider">
         </div>
       </div>
+      <div class="frequency__storySection-legend"></div>
       <div class="frequency__storySection-content"><p class="frequency__storySection-text">${
         content.text
       }</p></div>
@@ -448,6 +511,7 @@ const BuildContent = (content, key, component) => {
   section.style.height = masterContainer.getBoundingClientRect().height / 2;
   masterContainer.appendChild(section);
   BuildScene(section);
+  BuildLegend(section)
 };
 const BuildNav = (component, sections) => {
   const nav = document.querySelector(".frequency__nav-container");
@@ -519,9 +583,9 @@ const LoadExisting = map => {
     else target.push(line, "#ccc");
   };
   const ExistingColor = (data, target, line) => {
-    if (data < 21) target.push(line, "#EEE2CF");
+    if (data < 21) target.push(line, "#3B758C");
     else if (data >= 21 && data < 45) target.push(line, "#AABDB5");
-    else target.push(line, "#3B758C");
+    else target.push(line, "#EEE2CF");
   };
   const PopUps = (event, data) => {
     let feature = event.features[0].properties.linename,
@@ -633,8 +697,16 @@ const LoadExisting = map => {
             .setHTML(content)
             .addTo(map);
         });
-        map.on('mouseenter', layer.id, ()=> map.getCanvas().style.cursor = 'pointer')
-        map.on('mouseleave', layer.id, ()=> map.getCanvas().style.cursor = '')
+        map.on(
+          "mouseenter",
+          layer.id,
+          () => (map.getCanvas().style.cursor = "pointer")
+        );
+        map.on(
+          "mouseleave",
+          layer.id,
+          () => (map.getCanvas().style.cursor = "")
+        );
       });
     });
 };
@@ -797,31 +869,45 @@ const LoadTaz = map => {
                 .setHTML(content)
                 .addTo(map);
             });
-            map.on('mouseenter', layer.id, ()=> map.getCanvas().style.cursor = 'pointer')
-            map.on('mouseleave', layer.id, ()=> map.getCanvas().style.cursor = '')
+            map.on(
+              "mouseenter",
+              layer.id,
+              () => (map.getCanvas().style.cursor = "pointer")
+            );
+            map.on(
+              "mouseleave",
+              layer.id,
+              () => (map.getCanvas().style.cursor = "")
+            );
           });
         });
     });
 };
 const LoadBus = map => {
-  const PopUps = (data, event) =>{
+  const PopUps = (data, event) => {
     let target = event.features[0].properties.linename,
       operator,
       popup;
-    event.features[0].properties.name.indexOf('njt') != -1 ? operator = 'NJT' : operator = 'SEPTA'
-    data.map(route=>{
-      if (route.linename == target){
+    event.features[0].properties.name.indexOf("njt") != -1
+      ? (operator = "NJT")
+      : (operator = "SEPTA");
+    data.map(route => {
+      if (route.linename == target) {
         popup = `
           <div class="frequency__popup-container">
             <div class="frequency__popup-header">${operator} Route ${target}</div>
-            <div class="frequency__popup-content"><span class="frequency__popup-emphasis">Actual Change</span> ${FormatNumber(Math.floor(route.AllBusAbsolute))} <span class="frequency__popup-unit">Passengers / Day</span></div>
-            <div class="frequency__popup-content"><span class="frequency__popup-emphasis">Percent Change</span> ${route.AllBusPercent}<span class="frequency__popup-unit">%</span></div>
+            <div class="frequency__popup-content"><span class="frequency__popup-emphasis">Actual Change</span> ${FormatNumber(
+              Math.floor(route.AllBusAbsolute)
+            )} <span class="frequency__popup-unit">Passengers / Day</span></div>
+            <div class="frequency__popup-content"><span class="frequency__popup-emphasis">Percent Change</span> ${
+              route.AllBusPercent
+            }<span class="frequency__popup-unit">%</span></div>
           </div>  
-        `
+        `;
       }
-    })
-    return popup
-  }
+    });
+    return popup;
+  };
   fetch("http://localhost:8000/api/rtps/frequency?bus")
     .then(
       response =>
@@ -918,7 +1004,7 @@ const LoadBus = map => {
       }
       busLayers.map(layer => {
         map.addLayer(layer, "base-hwyLabels");
-        map.on('click', layer.id, e=>{
+        map.on("click", layer.id, e => {
           let offsets = {
             top: [0, 0],
             "top-left": [0, 0],
@@ -937,9 +1023,17 @@ const LoadBus = map => {
             .setLngLat(e.lngLat)
             .setHTML(content)
             .addTo(map);
-        })
-        map.on('mouseenter', layer.id, ()=> map.getCanvas().style.cursor = 'pointer')
-        map.on('mouseleave', layer.id, ()=> map.getCanvas().style.cursor = '')
+        });
+        map.on(
+          "mouseenter",
+          layer.id,
+          () => (map.getCanvas().style.cursor = "pointer")
+        );
+        map.on(
+          "mouseleave",
+          layer.id,
+          () => (map.getCanvas().style.cursor = "")
+        );
       });
     });
 };
@@ -959,25 +1053,32 @@ const LoadRail = map => {
     else if (data >= 1000 && data < 5000) target.push(name, "#859cad");
     else if (data >= 5000) target.push(name, "#08506d");
   };
-  const PopUps = (data, event) =>{
+  const PopUps = (data, event) => {
     let target = event.features[0].properties.linename,
-      popup
-    if (data[target]){
-      console.log(target)
-      let feat = data[target]
-      let lookup = contentRef.mapData.rail.lookup
-      let name
-      lookup[target] ? name = `${contentRef.mapData.rail.lookup[target].operator} ${contentRef.mapData.rail.lookup[target].name}` : name =`Trolley Route ${target}`
+      popup;
+    if (data[target]) {
+      let feat = data[target];
+      let lookup = contentRef.mapData.rail.lookup;
+      let name;
+      lookup[target]
+        ? (name = `${contentRef.mapData.rail.lookup[target].operator} ${
+            contentRef.mapData.rail.lookup[target].name
+          }`)
+        : (name = `Trolley Route ${target}`);
       popup = `
         <div class='frequency__popup-container'>
           <div class='frequency__popup-header'>${name}</div>
-          <div class='frequency__popup-content'><span class="frequency__popup-emphasis">Absolute Change</span> ${FormatNumber(Math.floor(feat.absolute))} <span class="frequency__popup-unit">Passengers / Day</span></div>
-          <div class='frequency__popup-content'><span class="frequency__popup-emphasis">Percent Change</span> ${feat.percent}<span class="frequency__popup-unit">%</span></div>
+          <div class='frequency__popup-content'><span class="frequency__popup-emphasis">Absolute Change</span> ${FormatNumber(
+            Math.floor(feat.absolute)
+          )} <span class="frequency__popup-unit">Passengers / Day</span></div>
+          <div class='frequency__popup-content'><span class="frequency__popup-emphasis">Percent Change</span> ${
+            feat.percent
+          }<span class="frequency__popup-unit">%</span></div>
         </div>
-      `
+      `;
     }
-    return popup
-  }
+    return popup;
+  };
   fetch("http://localhost:8000/api/rtps/frequency?rail")
     .then(
       response =>
@@ -1005,7 +1106,8 @@ const LoadRail = map => {
       layerDef.paint["line-width"].push(0);
       layerDef.paint["line-color"].push("rgba(255,255,255,0)");
       map.addLayer(layerDef, "base-hwyLabels");
-      map.on('click', layerDef.id, e=>{
+      console.log(map.getLayer(layerDef.id))
+      map.on("click", layerDef.id, e => {
         let offsets = {
           top: [0, 0],
           "top-left": [0, 0],
@@ -1024,9 +1126,17 @@ const LoadRail = map => {
           .setLngLat(e.lngLat)
           .setHTML(content)
           .addTo(map);
-      })
-      map.on('mouseenter', layerDef.id, ()=> map.getCanvas().style.cursor = 'pointer')
-      map.on('mouseleave', layerDef.id, ()=> map.getCanvas().style.cursor = '')
+      });
+      map.on(
+        "mouseenter",
+        layerDef.id,
+        () => (map.getCanvas().style.cursor = "pointer")
+      );
+      map.on(
+        "mouseleave",
+        layerDef.id,
+        () => (map.getCanvas().style.cursor = "")
+      );
     });
 };
 
