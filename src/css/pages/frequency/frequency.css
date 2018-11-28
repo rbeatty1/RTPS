@@ -139,16 +139,7 @@
   text-align: center;
   justify-content: center;
 }
-.frequency__legend-line{
-  width: 100%;
-  border: none;
-  font-size: .75rem;
-  color: #fff;
-  padding: 1%;
-  font-weight: 700;
-}
 .frequency__legend-rect{
-  height: 2.5rem;
   font-size: .75rem;
   color: #fff;
   padding: 1%;

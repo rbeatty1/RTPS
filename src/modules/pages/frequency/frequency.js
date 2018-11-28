@@ -14,7 +14,6 @@ const contentRef = {
         legend : {
           name : 'Midday Base Frequency',
           units: 'Minutes',
-          type : 'line',
           scheme : [['0–15','#CCCCCC'], ['15–30', '#999999'], ['30–60','#028985'], ['> 60', '#E600A9']]
         }
       },
@@ -33,7 +32,6 @@ const contentRef = {
         layer: "existing",
         legend : {
           name : 'AM Peak Frequency Classification',
-          type : 'line',
           scheme : [['Low', '#EEE2CF'], ['Medium', '#AABDB5'], ['High', '#3B758C']]
         }
       },
@@ -52,7 +50,6 @@ const contentRef = {
         layer: "transit",
         legend : {
           name : 'Increase in Transit Activity',
-          type : 'rect',
           scheme : [['Very Small', '#D9F0A3'], ['Small', '#ADDD8E'], ['Moderate', '#78C679'], ['Great', '#31A354'], ['Greatest', '#006837']]
         }
       },
@@ -104,7 +101,6 @@ const contentRef = {
         layer: "vehicles",
         legend : {
           name : 'Decrease in Automobile Activity',
-          type : 'rect',
           scheme : [['Very Small', '#FDD0A2'], ['Small', '#FDAE6B'], ['Moderate', '#FD8D3C'], ['Great', '#E6550D'], ['Greatest', '#A63603']]
         }
       },
@@ -157,7 +153,6 @@ const contentRef = {
         legend : {
           units:  "Estimated Passengers per Day",
           name : 'Absolute Ridership Change',
-          type : 'line',
           scheme : [['Low', '#d8c72e'], ['','#eadb96'], ['','#06bf9c'], ['','#859cad'], ['High', '#08506d']]
         }
       },
@@ -177,7 +172,6 @@ const contentRef = {
         legend : {
           name : 'Absolute Ridership Change',
           units:  "Estimated Passengers per Day",
-          type : 'line',
           scheme : [['< 1,400', '#E6EECF'], ['1,400–1,600', '#9BC4C1'], ['1,601–1,800', '#69A8B7'], ['1,801–2,200', '#4B7E98'], ['> 2,200', '#2E557A']]
         }
       },
@@ -196,7 +190,6 @@ const contentRef = {
         layer: "busLinePerChange",
         legend : {
           name : 'Percent Change in Ridership',
-          type : 'line',
           scheme : [['< 85%', '#E6EECF'], ['85%–100%', '#9BC4C1'], ['101%–130%', '#69A8B7'], ['> 130%', '#4B7E98']]
         }
       },
@@ -425,15 +418,9 @@ const BuildLegend = section =>{
       let container = document.createElement('div'),
         thisBreak, label;
       container.classList.add('frequency__legend-break')
-      if (data.type == 'rect'){
-        breakContainer.style.justifyContent = '';
-        thisBreak = document.createElement('div')
-        thisBreak.classList.add('frequency__legend-rect')
-      }
-      else if (data.type == 'line'){
-        thisBreak = document.createElement('hr')
-        thisBreak.classList.add('frequency__legend-line')
-      }
+      breakContainer.style.justifyContent = '';
+      thisBreak = document.createElement('div')
+      thisBreak.classList.add('frequency__legend-rect')
       thisBreak.style.background = color[1]
       thisBreak.innerText = color[0]
       if (i == 0) thisBreak.style.color = data.scheme[data.scheme.length-1][1]
@@ -574,7 +561,6 @@ const BuildNav = (component, sections) => {
       .addEventListener("scroll", e => {});
   }
 };
-
 const LoadExisting = map => {
   const OverviewColor = (data, target, line) => {
     if (data < 15) target.push(line, "#E600A9");
