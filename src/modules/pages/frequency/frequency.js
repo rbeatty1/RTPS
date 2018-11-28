@@ -593,7 +593,7 @@ const LoadExisting = map => {
       return popup;
     }
   };
-  fetch("http://localhost:8000/api/rtps/frequency?transit")
+  fetch("https://a.michaelruane.com/api/rtps/frequency?transit")
     .then(
       response =>
         response.ok ? response.json() : console.error("error will robinson")
@@ -759,7 +759,7 @@ const LoadTaz = map => {
         response.ok ? response.json() : console.error("error will robinson")
     )
     .then(taz => {
-      fetch("http://localhost:8000/api/rtps/frequency?zone")
+      fetch("https://a.michaelruane.com/api/rtps/frequency?zone")
         .then(
           response =>
             response.ok ? response.json() : console.error("error will robinson")
@@ -894,7 +894,7 @@ const LoadBus = map => {
     });
     return popup;
   };
-  fetch("http://localhost:8000/api/rtps/frequency?bus")
+  fetch("https://a.michaelruane.com/api/rtps/frequency?bus")
     .then(
       response =>
         response.ok ? response.json() : console.error("error, will robinson")
@@ -1065,7 +1065,7 @@ const LoadRail = map => {
     }
     return popup;
   };
-  fetch("http://localhost:8000/api/rtps/frequency?rail")
+  fetch("https://a.michaelruane.com/api/rtps/frequency?rail")
     .then(
       response =>
         response.ok ? response.json() : console.error("error will robinson")
@@ -1092,7 +1092,6 @@ const LoadRail = map => {
       layerDef.paint["line-width"].push(0);
       layerDef.paint["line-color"].push("rgba(255,255,255,0)");
       map.addLayer(layerDef, "base-hwyLabels");
-      console.log(map.getLayer(layerDef.id))
       map.on("click", layerDef.id, e => {
         let offsets = {
           top: [0, 0],
