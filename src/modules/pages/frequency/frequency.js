@@ -563,15 +563,17 @@ const BuildNav = (component, sections) => {
 };
 const LoadExisting = map => {
   const OverviewColor = (data, target, line) => {
-    if (data < 15) target.push(line, "#E600A9");
-    else if (data >= 15 && data < 30) target.push(line, "#028985");
-    else if (data >= 30 && data < 60) target.push(line, "#999999");
-    else target.push(line, "#ccc");
+    let colors = contentRef.overview.content.map.legend.scheme
+    if (data < 15) target.push(line, colors[3][1]);
+    else if (data >= 15 && data < 30) target.push(line, colors[2][1]);
+    else if (data >= 30 && data < 60) target.push(line, colors[1][1]);
+    else target.push(line, colors[0][1]);
   };
   const ExistingColor = (data, target, line) => {
-    if (data < 21) target.push(line, "#3B758C");
-    else if (data >= 21 && data < 45) target.push(line, "#AABDB5");
-    else target.push(line, "#EEE2CF");
+    let colors = contentRef.existing.content.map.legend.scheme
+    if (data < 21) target.push(line, colors[2][1]);
+    else if (data >= 21 && data < 45) target.push(line, colors[1][1]);
+    else target.push(line, colors[0][1]);
   };
   const PopUps = (event, data) => {
     let feature = event.features[0].properties.linename,
@@ -779,6 +781,8 @@ const LoadTaz = map => {
           };
           map.addSource("taz", sourceDef);
 
+          let transitColors = contentRef.transitChange.content.map.legend.scheme,
+            autoColors = contentRef.autoChange.content.map.legend.scheme
           let layerDefs = [
             {
               id: "taz-transit",
@@ -790,15 +794,15 @@ const LoadTaz = map => {
                   ["get", "tActual"],
                   "rgba(255,255,255,0)",
                   1,
-                  "#D9F0A3",
+                  transitColors[0][1],
                   37,
-                  "#ADDD8E",
+                  transitColors[1][1],
                   71,
-                  "#78C679",
+                  transitColors[2][1],
                   123,
-                  "#31A354",
+                  transitColors[3][1],
                   222,
-                  "#006837"
+                  transitColors[4][1]
                 ],
                 "fill-opacity": 0.75
               },
@@ -814,15 +818,15 @@ const LoadTaz = map => {
                 "fill-color": [
                   "step",
                   ["get", "vActual"],
-                  "#A63603",
+                  autoColors[4][1],
                   -197,
-                  "#E6550D",
+                  autoColors[3][1],
                   -90,
-                  "#FD8D3C",
+                  autoColors[2][1],
                   -45.1,
-                  "#FDAE6B",
+                  autoColors[1][1],
                   -23.4,
-                  "#FDD0A2",
+                  autoColors[0][1],
                   -1,
                   "rgba(255,255,255,0)"
                 ],
@@ -960,29 +964,31 @@ const LoadBus = map => {
         (a, b) => b.AllBusPercent - a.AllBusPercent
       );
       contentRef.mapData.bus.absolute.map((value, index) => {
+        let colors = contentRef.busLineAbsChange.content.map.legend.scheme
         if (index < 25) {
           if (value.AllBusAbsolute < 1400)
-            busLayers[0].paint["line-color"].push(value.linename, "#E6EECF");
+            busLayers[0].paint["line-color"].push(value.linename, colors[0][1]);
           else if (value.AllBusAbsolute <= 1600 && value.AllBusAbsolute > 1400)
-            busLayers[0].paint["line-color"].push(value.linename, "#9BC4C1");
+            busLayers[0].paint["line-color"].push(value.linename, colors[1][1]);
           else if (value.AllBusAbsolute <= 1800 && value.AllBusAbsolute > 1600)
-            busLayers[0].paint["line-color"].push(value.linename, "#69A8B7");
+            busLayers[0].paint["line-color"].push(value.linename, colors[2][1]);
           else if (value.AllBusAbsolute <= 2200 && value.AllBusAbsolute > 1800)
-            busLayers[0].paint["line-color"].push(value.linename, "#4B7E98");
+            busLayers[0].paint["line-color"].push(value.linename, colors[3][1]);
           else if (value.AllBusAbsolute > 2200)
-            busLayers[0].paint["line-color"].push(value.linename, "#2E557A");
+            busLayers[0].paint["line-color"].push(value.linename, colors[4][1]);
         }
       });
       contentRef.mapData.bus.percent.map((value, index) => {
+        let colors = contentRef.busLinePerChange.content.map.legend.scheme
         if (index < 25) {
           if (value.AllBusPercent <= 85)
-            busLayers[1].paint["line-color"].push(value.linename, "#E6EECF");
+            busLayers[1].paint["line-color"].push(value.linename, colors[0][1]);
           else if (value.AllBusPercent <= 100 && value.AllBusPercent > 85)
-            busLayers[1].paint["line-color"].push(value.linename, "#9BC4C1");
+            busLayers[1].paint["line-color"].push(value.linename, colors[1][1]);
           else if (value.AllBusPercent <= 130 && value.AllBusPercent > 100)
-            busLayers[1].paint["line-color"].push(value.linename, "#69A8B7");
+            busLayers[1].paint["line-color"].push(value.linename, colors[2][1]);
           else if (value.AllBusPercent > 130)
-            busLayers[1].paint["line-color"].push(value.linename, "#3D6A89");
+            busLayers[1].paint["line-color"].push(value.linename, colors[3][1]);
         }
       });
       for (let layer in busLayers) {
@@ -1047,8 +1053,8 @@ const LoadRail = map => {
       let lookup = contentRef.mapData.rail.lookup;
       let name;
       lookup[target]
-        ? (name = `${contentRef.mapData.rail.lookup[target].operator} ${
-            contentRef.mapData.rail.lookup[target].name
+        ? (name = `${lookup[target].operator} ${
+            lookup[target].name
           }`)
         : (name = `Trolley Route ${target}`);
       popup = `
