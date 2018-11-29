@@ -14,7 +14,7 @@ const contentRef = {
         legend : {
           name : 'Midday Base Frequency',
           units: 'Minutes',
-          scheme : [['0–15','#CCCCCC'], ['15–30', '#999999'], ['30–60','#028985'], ['> 60', '#E600A9']]
+          scheme : [['0–15','#ccc'], ['15–30', '#aed8ca'], ['30–60','#74ccb3'], ['> 60', '#06bf9c']]
         }
       },
       table: false,
@@ -32,7 +32,7 @@ const contentRef = {
         layer: "existing",
         legend : {
           name : 'AM Peak Frequency Classification',
-          scheme : [['Low', '#EEE2CF'], ['Medium', '#AABDB5'], ['High', '#3B758C']]
+          scheme : [['Low', '#ccc'], ['Medium', '#e9da94'], ['High', '#d8c72e']]
         }
       },
       table: false,
@@ -50,7 +50,7 @@ const contentRef = {
         layer: "transit",
         legend : {
           name : 'Increase in Transit Activity',
-          scheme : [['Very Small', '#D9F0A3'], ['Small', '#ADDD8E'], ['Moderate', '#78C679'], ['Great', '#31A354'], ['Greatest', '#006837']]
+          scheme : [['Very Small', '#faffe2'], ['Small', '#e0ebb8'], ['Moderate', '#c5d890'], ['Great', '#a9c568'], ['Greatest', '#8bb23f']]
         }
       },
       table: {
@@ -101,7 +101,7 @@ const contentRef = {
         layer: "vehicles",
         legend : {
           name : 'Decrease in Automobile Activity',
-          scheme : [['Very Small', '#FDD0A2'], ['Small', '#FDAE6B'], ['Moderate', '#FD8D3C'], ['Great', '#E6550D'], ['Greatest', '#A63603']]
+          scheme : [['Very Small', '#fffae1'], ['Small', '#f5e3b2'], ['Moderate', '#eeca86'], ['Great', '#ebaf5c'], ['Greatest', '#e89234']]
         }
       },
       table: {
@@ -153,7 +153,7 @@ const contentRef = {
         legend : {
           units:  "Estimated Passengers per Day",
           name : 'Absolute Ridership Change',
-          scheme : [['Low', '#d8c72e'], ['','#eadb96'], ['','#06bf9c'], ['','#859cad'], ['High', '#08506d']]
+          scheme : [['Low', '#dcfffa'], ['','#b2f0e5'], ['','#88e0ce'], ['','#59d0b6'], ['High', '#06bf9c']]
         }
       },
       table: false,
@@ -172,7 +172,7 @@ const contentRef = {
         legend : {
           name : 'Absolute Ridership Change',
           units:  "Estimated Passengers per Day",
-          scheme : [['< 1,400', '#E6EECF'], ['1,400–1,600', '#9BC4C1'], ['1,601–1,800', '#69A8B7'], ['1,801–2,200', '#4B7E98'], ['> 2,200', '#2E557A']]
+          scheme : [['< 1,400', '#d8c72e'], ['1,400–1,600', '#a1dab4'], ['1,601–1,800', '#41b6c4'], ['1,801–2,200', '#2c7fb8'], ['> 2,200', '#08506d']]
         }
       },
       table: false,
@@ -190,7 +190,7 @@ const contentRef = {
         layer: "busLinePerChange",
         legend : {
           name : 'Percent Change in Ridership',
-          scheme : [['< 85%', '#E6EECF'], ['85%–100%', '#9BC4C1'], ['101%–130%', '#69A8B7'], ['> 130%', '#4B7E98']]
+          scheme : [['< 85%', '#d8c72e'], ['85%–100%', '#a1dab4'], ['101%–130%', '#41b6c4'], ['> 130%', '#225ea8']]
         }
       },
       table: false,
