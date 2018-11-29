@@ -766,11 +766,7 @@ const LoadExisting = map => {
               ["linear"],
               ["zoom"],
               7,
-              0.25,
-              8,
-              0.75,
-              9,
-              1,
+              0.05,
               12,
               3
             ],
@@ -820,8 +816,9 @@ const LoadExisting = map => {
       layerDef[1].paint["line-color"].push("rgba(255,255,255,0)");
 
       layerDef.map(layer => {
-        map.addLayer(layer, "base-hwyLabels");
+        map.addLayer(layer, 'base-muniOutline');
         map.on("click", layer.id, e => {
+          map.setFilter('transitRef-all', ['==', 'linename', e.features[0].properties.linename])
           let offsets = {
             top: [0, 0],
             "top-left": [0, 0],
@@ -839,7 +836,10 @@ const LoadExisting = map => {
           })
             .setLngLat(e.lngLat)
             .setHTML(content)
-            .addTo(map);
+            .addTo(map)
+            .on('close', ()=>{
+              map.setFilter('transitRef-all', ['==', 'linename', ''])
+            });
         });
         map.on(
           "mouseenter",
@@ -944,6 +944,10 @@ const LoadTaz = map => {
               zone.properties["vActual"] =
                 apiJson.cargo[zone.properties.TAZN.toString()].vActual;
             }
+            else{ 
+              zone.properties['tActual'] = 0
+              zone.properties['vActual'] = 0
+            }
           });
           let sourceDef = {
             data: taz,
@@ -1008,8 +1012,9 @@ const LoadTaz = map => {
             }
           ];
           layerDefs.map(layer => {
-            map.addLayer(layer, "base-muniOutline");
+            map.addLayer(layer, "base-interstates");
             map.on("click", layer.id, e => {
+              map.setFilter('zone-reference', ['==', 'no', e.features[0].properties.TAZN])
               let offsets = {
                 top: [0, 0],
                 "top-left": [0, 0],
@@ -1027,7 +1032,8 @@ const LoadTaz = map => {
               })
                 .setLngLat(e.lngLat)
                 .setHTML(content)
-                .addTo(map);
+                .addTo(map)
+                .on('close', ()=> map.setFilter('zone-reference', ['==', 'no', '']));
             });
             map.on(
               "mouseenter",
@@ -1178,8 +1184,9 @@ const LoadBus = map => {
         busLayers[layer].paint["line-color"].push("rgba(255,255,255,0)");
       }
       busLayers.map(layer => {
-        map.addLayer(layer, "base-hwyLabels");
+        map.addLayer(layer, "base-muniOutline");
         map.on("click", layer.id, e => {
+          map.setFilter('transitRef-all', ['==', 'linename', e.features[0].properties.linename])
           let offsets = {
             top: [0, 0],
             "top-left": [0, 0],
@@ -1197,7 +1204,8 @@ const LoadBus = map => {
           })
             .setLngLat(e.lngLat)
             .setHTML(content)
-            .addTo(map);
+            .addTo(map)
+            .on('close', e=> map.setFilter('transitRef-all', ['==', 'linename', '']));
         });
         map.on(
           "mouseenter",
@@ -1310,8 +1318,9 @@ const LoadRail = map => {
       }
       layerDef.paint["line-width"].push(0);
       layerDef.paint["line-color"].push("rgba(255,255,255,0)");
-      map.addLayer(layerDef, "base-hwyLabels");
+      map.addLayer(layerDef, "base-muniOutline");
       map.on("click", layerDef.id, e => {
+        map.setFilter('transitRef-all', ['==', 'linename', e.features[0].properties.linename])        
         let offsets = {
           top: [0, 0],
           "top-left": [0, 0],
@@ -1329,7 +1338,8 @@ const LoadRail = map => {
         })
           .setLngLat(e.lngLat)
           .setHTML(content)
-          .addTo(map);
+          .addTo(map)
+          .on('close', e=> map.setFilter('transitRef-all', ['==', 'linename', '']));
       });
       map.on(
         "mouseenter",
@@ -1343,8 +1353,15 @@ const LoadRail = map => {
       );
     });
 };
-
+/*
+  BuildMap(container)
+    @desc: Create the map, yo
+    @param:
+      - container => container to append the map to
+    @return: mapbox gl map component
+*/
 const BuildMap = container => {
+  // base extent
   const extent = {
     center: [-75.247, 40.066],
     zoom: 8.4
