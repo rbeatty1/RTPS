@@ -222,6 +222,25 @@
 
 .frequency__popup-container{
   width: 15rem;
+  display: flex;
+  flex-flow: column;
+}
+.frequency__popup-navigation{
+  display: flex;
+  width: 50%;
+  justify-content: space-evenly;
+  align-items: center;
+  margin: auto;
+}
+.frequency__popup-navDot{
+  width: .75rem;
+  height: .75rem;
+  border-radius: 50%;
+  border: .5px solid #ccc
+}
+.frequency__popup-navDot.active{
+  background: #d8c72e;
+  border: none;
 }
 .frequency__popup-header{
   font-size: 1rem;
@@ -233,7 +252,7 @@
   width: 75%;
   margin: 2% auto;
 }
-.frequency__popup-content{
+.frequency__popup-meat{
   color: #AAA;
   margin: 2%;
   font-weight: normal;

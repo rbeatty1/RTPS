@@ -727,6 +727,23 @@ const LoadExisting = map => {
       How to change what is displayed on pop-up?
         pagination? dot nav? pre-rendered or rendered on the fly?
     */
+    let allRoutes = []
+    let popupContainer = document.createElement('div')
+    popupContainer.classList.add('frequency__popup-container')
+    popupContainer.innerHTML = '<div class="frequency__popup-navigation"></div><div class="frequency__popup-content"></div>'
+    let popupNav = popupContainer.querySelector('.frequency__popup-navigation')
+    event.features.map(feat=>{
+      if (data[feat.properties.linename] && allRoutes.indexOf(feat.properties.linename) == -1) {allRoutes.push(feat.properties.linename)} 
+    })
+    if (allRoutes.length > 1){
+      allRoutes.forEach((route, index)=>{
+        let navDot = document.createElement('div')
+        index == 0 ? navDot.classList.add('active') : null
+        navDot.classList.add('frequency__popup-navDot')
+        navDot.id = `route-${route}-popup`
+        popupNav.append(navDot)
+      })
+    }
     let feature = event.features[0].properties.linename,
       operator;
     // this isn't as simple as this. there are more operators than NJT and SEPTA but I'm lazy (BurLink, Princeton Junction, probably others)
@@ -735,18 +752,18 @@ const LoadExisting = map => {
       : (operator = "SEPTA");
     // does this feature even have data?
     if (data[feature]) {
-      let popup = `
-          <div class='frequency__popup-container'>
+      let popupContent = popupContainer.querySelector('.frequency__popup-content')
+      popupContent.innerHTML = `
             <div class='frequency__popup-header'>${operator} Route ${feature}</div>
-            <div class='frequency__popup-content'><span class="frequency__popup-emphasis">${
+            <div class='frequency__popup-meat'><span class="frequency__popup-emphasis">${
               data[feature].am
             } Minute</span> <span class="frequency__popup-unit">AM Peak Frequency</span></div>
-            <div class='frequency__popup-content'><span class="frequency__popup-emphasis">${
+            <div class='frequency__popup-meat'><span class="frequency__popup-emphasis">${
               data[feature].midday
             } Minute</span> <span class="frequency__popup-unit">Mid-day Base Frequency</span></div>
-          </div>`;
-      return popup;
+            `;
     }
+    return popupContainer.outerHTML;
   };
   fetch("https://a.michaelruane.com/api/rtps/frequency?transit")
     .then(
@@ -840,6 +857,26 @@ const LoadExisting = map => {
             .on('close', ()=>{
               map.setFilter('transitRef-all', ['==', 'linename', ''])
             });
+          let navDots = document.querySelectorAll('.frequency__popup-navDot')
+          for (let dot of navDots){
+            dot.addEventListener('click', e=>{
+              for (let anotherDot of navDots){
+                anotherDot == dot ? dot.classList.add('active') : anotherDot.classList.remove('active')
+              }
+              let target = e.target.id.split('-')[1]
+              let popupContent = document.querySelector('.frequency__popup-content')
+              map.setFilter('transitRef-all', ['==', 'linename', target])
+              popupContent.innerHTML = `
+              <div class='frequency__popup-header'>Route ${target}</div>
+              <div class='frequency__popup-meat'><span class="frequency__popup-emphasis">${
+                existing.cargo[target].am
+              } Minute</span> <span class="frequency__popup-unit">AM Peak Frequency</span></div>
+              <div class='frequency__popup-meat'><span class="frequency__popup-emphasis">${
+                existing.cargo[target].midday
+              } Minute</span> <span class="frequency__popup-unit">Mid-day Base Frequency</span></div>
+              `
+            })
+          }
         });
         map.on(
           "mouseenter",
@@ -879,16 +916,16 @@ const LoadTaz = map => {
           popup = `
               <div class='frequency__popup-container'>
                 <div class='frequency__popup-header'>TAZ ${target}</div>
-                <div class='frequency__popup-content'><span class="frequency__popup-emphasis">Base Scenario</span> ${FormatNumber(
+                <div class='frequency__popup-meat'><span class="frequency__popup-emphasis">Base Scenario</span> ${FormatNumber(
                   Math.floor(feat.tBase)
                 )} <span class="frequency__popup-unit">Passengers / Day</span></div>
-                <div class='frequency__popup-content'><span class="frequency__popup-emphasis">Doubled Frequency</span> ${FormatNumber(
+                <div class='frequency__popup-meat'><span class="frequency__popup-emphasis">Doubled Frequency</span> ${FormatNumber(
                   Math.floor(feat.tDouble)
                 )} <span class="frequency__popup-unit">Passengers / Day</span></div>
-                <div class='frequency__popup-content'><span class="frequency__popup-emphasis">Absolute Change</span> ${FormatNumber(
+                <div class='frequency__popup-meat'><span class="frequency__popup-emphasis">Absolute Change</span> ${FormatNumber(
                   Math.floor(feat.tActual)
                 )} <span class="frequency__popup-unit">Passengers / Day</span></div>
-                <div class='frequency__popup-content'><span class="frequency__popup-emphasis">Percent Change</span> ${
+                <div class='frequency__popup-meat'><span class="frequency__popup-emphasis">Percent Change</span> ${
                   feat.tPercent
                 }<span class="frequency__popup-unit">%</span></div>
               </div>
@@ -898,16 +935,16 @@ const LoadTaz = map => {
           popup = `
               <div class='frequency__popup-container'>
                 <div class='frequency__popup-header'>TAZ ${target}</div>
-                <div class='frequency__popup-content'><span class="frequency__popup-emphasis">Base Scenario</span> ${FormatNumber(
+                <div class='frequency__popup-meat'><span class="frequency__popup-emphasis">Base Scenario</span> ${FormatNumber(
                   Math.floor(feat.vBase)
                 )} <span class="frequency__popup-unit">Passengers / Day</span></div>
-                <div class='frequency__popup-content'><span class="frequency__popup-emphasis">Doubled Frequency</span> ${FormatNumber(
+                <div class='frequency__popup-meat'><span class="frequency__popup-emphasis">Doubled Frequency</span> ${FormatNumber(
                   Math.floor(feat.vDouble)
                 )} <span class="frequency__popup-unit">Passengers / Day</span></div>
-                <div class='frequency__popup-content'><span class="frequency__popup-emphasis">Absolute Change</span> ${FormatNumber(
+                <div class='frequency__popup-meat'><span class="frequency__popup-emphasis">Absolute Change</span> ${FormatNumber(
                   Math.floor(feat.vActual)
                 )} <span class="frequency__popup-unit">Passengers / Day</span></div>
-                <div class='frequency__popup-content'><span class="frequency__popup-emphasis">Percent Change</span> ${
+                <div class='frequency__popup-meat'><span class="frequency__popup-emphasis">Percent Change</span> ${
                   feat.vPercent
                 }<span class="frequency__popup-unit">%</span></div>
               </div>
@@ -1075,10 +1112,10 @@ const LoadBus = map => {
         popup = `
           <div class="frequency__popup-container">
             <div class="frequency__popup-header">${operator} Route ${target}</div>
-            <div class="frequency__popup-content"><span class="frequency__popup-emphasis">Actual Change</span> ${FormatNumber(
+            <div class="frequency__popup-meat"><span class="frequency__popup-emphasis">Actual Change</span> ${FormatNumber(
               Math.floor(route.AllBusAbsolute)
             )} <span class="frequency__popup-unit">Passengers / Day</span></div>
-            <div class="frequency__popup-content"><span class="frequency__popup-emphasis">Percent Change</span> ${
+            <div class="frequency__popup-meat"><span class="frequency__popup-emphasis">Percent Change</span> ${
               route.AllBusPercent
             }<span class="frequency__popup-unit">%</span></div>
           </div>  
@@ -1281,10 +1318,10 @@ const LoadRail = map => {
       popup = `
         <div class='frequency__popup-container'>
           <div class='frequency__popup-header'>${name}</div>
-          <div class='frequency__popup-content'><span class="frequency__popup-emphasis">Absolute Change</span> ${FormatNumber(
+          <div class='frequency__popup-meat'><span class="frequency__popup-emphasis">Absolute Change</span> ${FormatNumber(
             Math.floor(feat.absolute)
           )} <span class="frequency__popup-unit">Passengers / Day</span></div>
-          <div class='frequency__popup-content'><span class="frequency__popup-emphasis">Percent Change</span> ${
+          <div class='frequency__popup-meat'><span class="frequency__popup-emphasis">Percent Change</span> ${
             feat.percent
           }<span class="frequency__popup-unit">%</span></div>
         </div>
