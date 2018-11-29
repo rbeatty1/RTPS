@@ -293,24 +293,46 @@ const contentRef = {
   }
 };
 
+/*
+  FormatNumber(num)
+    @desc: Returns a formatted number for display–either a percentage or comma-separated value
+    @param:
+      - num => number to be formatted
+    @return: formatted number for display    
+*/
 const FormatNumber = num => {
-  return num.toString().indexOf(".") != -1
-    ? num + "%"
-    : num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return num.toString().indexOf(".") != -1 // check if there is a decimal
+    ? num + "%" // decimal present => format as percentage
+    : num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); // decimal not present => insert comma after every third digit
 };
+
+/*
+  ResymbolizeFeatureLayer(map,section)
+    @desc: Called when ScrollStory hits a triggerpoint and displays appropriate layer. Changes visibility property of appropriate map data to visible
+    @param: 
+      - map => map component to pass change in visibility to
+      - section => section reference object in order to grab appropriate layer
+*/
 const ResymbolizeFeatureLayer = (map, section) => {
   let info = section.content.map;
+  // if section has a map && feature layer already exists
   if (info && map.getLayer(`${info.source}-${info.layer}`)) {
+    // make visible
     map.setLayoutProperty(
       `${info.source}-${info.layer}`,
       "visibility",
       "visible"
     );
-    info.filter
-      ? map.setFilter(`${info.source}-${info.layer}`, info.filter)
-      : null;
   }
 };
+
+/*
+  HideFeatureLayer(map,section)
+    @desc: Called when ScrollStory exits a scene. Changes visibility property of appropriate map data to none
+    @param: 
+      - map => map component to pass change in visibility to
+      - section => section reference object in order to grab appropriate layer
+*/
 const HideFeatureLayer = (map, section) => {
   let info = section.content.map;
   map.getLayer(`${info.source}-${info.layer}`)
@@ -321,33 +343,70 @@ const HideFeatureLayer = (map, section) => {
       )
     : null;
 };
+
+/*
+  CreateTable(data)
+    @desc: Creates an HTML table containing specified data
+    @param:
+      data => formatted data to be inserted into table
+    @return: a <table></table> element to be appended to the ScrollStory section content
+*/
 const CreateTable = data => {
+  /*
+    CreateHeaderRow(table, labels)
+      @desc: Creates a header row for the section's table
+      @param:
+        -table => table element that header will be appended to
+        - labels => labels to be inserted into header cells
+      @return: table that has had the header row appended to it
+  */
   const CreateHeaderRow = (table, labels) => {
+    // create row element
     let header = document.createElement("thead");
     header.classList.add("frequency__storySection-tableHeader");
-    labels.columns.map((col, index) => {
+    // append cells for each column
+    labels.columns.map(col => {
       let label = document.createElement("td");
       label.innerText = col;
       header.appendChild(label);
     });
     return table.appendChild(header);
   };
+  /*
+    CreateCountyContent(state, county)
+      @desc: Creates rows for each county in the table and populates cells with appropriate data
+      @param:
+        - state => state that the county resides in
+        - county => county that will be used to grab data from the reference object
+      @return => a <tr></tr> element contain cells for each column of the table that are populated with the appropriate data
+  */
   const CreateCountyContent = (state, county) => {
+    // create row and row label cell
     let dataRow = document.createElement("tr"),
       cell = document.createElement("td");
-
     cell.innerText = county;
     dataRow.appendChild(cell);
+    // append cell for each data point in dataset stored in reference object
     datasets[state][county].map((data, index) => {
       let dataCell = document.createElement("td");
       summaries[state].temp[index]
         ? summaries[state].temp[index].push(data)
         : null;
+      // format number
       dataCell.innerText = FormatNumber(data);
       dataRow.appendChild(dataCell);
     });
     return dataRow;
   };
+  /*
+    CreateSummaryContent(state, dataset)
+      @desc: Creates a row for the summary of the specified table rows
+      @param:
+        - state => state that will be summarized
+        - dataset => something?
+      @return: a <tr></tr> element containing cells for each column of the table that are populated with the appropriate data
+      @TODO: I think this can be better. Especially since it doesn't include the formatting, and is missing the suburban PA and DVRPC Regional summaries.
+  */
   const CreateSummaryContent = (state, dataset) => {
     let dataRow = document.createElement("tr");
     dataRow.classList.add("summary");
@@ -370,6 +429,7 @@ const CreateTable = data => {
   table.classList.add("frequency__storySection-table");
   CreateHeaderRow(table, labels);
 
+  // Create the appropriate amount of content rows
   for (let set in labels.rows) {
     let state = set,
       counties = labels.rows[set];
@@ -385,6 +445,7 @@ const CreateTable = data => {
       table.appendChild(CreateCountyContent(state, county));
     });
     // create state summaries
+    // TODO: You can do better.
     summaries[state].temp.map(col => {
       summaries[state].final.push(col.reduce((num, value) => num + value, 0));
     });
@@ -395,17 +456,30 @@ const CreateTable = data => {
   }
   return table;
 };
+
+/*
+  BuildLegend(section)
+    @desc: Builds appropriate legend, driven by the content being displayed on the map
+    @param:
+      - section => section that the legend will be built for
+*/
 const BuildLegend = section =>{
+  // is there a map for this section?
   if (contentRef[section.id].content.map){
+    // set things up
     let data = contentRef[section.id].content.map.legend,
       legend = section.querySelector('.frequency__storySection-legend'),
       title = document.createElement('p'),
       breakContainer = document.createElement('div')
+    
+    // house keeping
     title.innerText = data.name
     title.classList.add('frequency__legend-title')
     title.style.color = data.scheme[data.scheme.length-1][1]
     breakContainer.classList.add('frequency__legend-breakContainer')
     legend.appendChild(title)
+
+    // Do you have to specify the map units?
     if (data.units){
       let units = document.createElement('p')
       units.classList.add('frequency__legend-units')
@@ -414,22 +488,39 @@ const BuildLegend = section =>{
     }
     legend.appendChild(breakContainer)
     let i = 0
+    // create element for each legend break
     for (let color of data.scheme){
       let container = document.createElement('div'),
-        thisBreak, label;
+        thisBreak;
       container.classList.add('frequency__legend-break')
       breakContainer.style.justifyContent = '';
       thisBreak = document.createElement('div')
       thisBreak.classList.add('frequency__legend-rect')
       thisBreak.style.background = color[1]
       thisBreak.innerText = color[0]
+      // make sure the first element has enough text contrast by making the text color the darkest value of the color scheme
       if (i == 0) thisBreak.style.color = data.scheme[data.scheme.length-1][1]
       breakContainer.appendChild(thisBreak)
       i ++
     }
   }
 }
+
+/*
+  BuildContent(content, key, component)
+    @desc: Actually build the HTML content that will contain the ScrollStory content
+    @param: 
+      - content => section content
+      - key => name of section
+      - component => page component to append to
+*/
 const BuildContent = (content, key, component) => {
+  /*
+    BuildScene(element)
+      @desc: Builds the ScrollStory scene and defines appropriate trigger functions
+      @param:
+        - element => element that will be designated as a ScrollStory scene
+  */
   const BuildScene = element => {
     let link = document.querySelector(`#${element.id}-link`);
     new ScrollMagic.Scene({
@@ -438,22 +529,28 @@ const BuildContent = (content, key, component) => {
     })
       .on("enter", e => {
         if (contentRef[element.id].content.map)
+          // symbolize correct layer and sections
           ResymbolizeFeatureLayer(component.map, contentRef[element.id]);
         link.classList.add("active");
         element.classList.add("active");
       })
       .on("leave", e => {
         if (contentRef[element.id].content.map)
+          // Remove symbolization from correct layer and sections
           HideFeatureLayer(component.map, contentRef[element.id]);
         link.classList.remove("active");
         element.classList.remove("active");
       })
       .addTo(component.scroll);
   };
-  let masterContainer = document.querySelector(".frequency__content-story");
-  let section = document.createElement("div");
+
+  // setting up
+  let masterContainer = document.querySelector(".frequency__content-story"),
+    section = document.createElement("div");
   section.classList.add("frequency__story-section");
+
   if (contentRef[key].active) section.classList.add("active");
+  // return appropriate HTML content
   switch (key) {
     case "overview":
       section.innerHTML = `
@@ -490,6 +587,7 @@ const BuildContent = (content, key, component) => {
       break;
   }
   section.id = key;
+  // create table if needed
   if (content.table) {
     section
       .querySelector(".frequency__storySection-content")
@@ -500,10 +598,19 @@ const BuildContent = (content, key, component) => {
   BuildScene(section);
   BuildLegend(section)
 };
+
+/*
+  BuildNav(component, sections)
+  @desc: does a lot more than the title suggests. This is basically where everything that drives the storySection content creation is invoked
+  @param:
+    - component => Page component to append everything to
+    - sections => sections reference to iterate through and drive element creation
+*/
 const BuildNav = (component, sections) => {
-  const nav = document.querySelector(".frequency__nav-container");
+  const nav = document.querySelector(".frequency__nav-container")
   let cnt = 1;
   for (let i in sections) {
+    // don't build a section for the mapData
     if (i != "mapData") {
       let sectionLink = document.createElement("div"),
         tooltip = document.createElement("div");
@@ -515,10 +622,13 @@ const BuildNav = (component, sections) => {
       sectionLink.appendChild(tooltip);
       sectionLink.id = i + "-link";
       sections[i].active ? sectionLink.classList.add("active") : null;
+
+      // add listeners
       sectionLink.addEventListener("click", e => {
         for (let node of document.querySelectorAll(
           ".frequency__story-section"
         )) {
+          // navigate to clicked section
           if (node.id == i) {
             sections[i].active = true;
             node.classList.add("active");
@@ -553,6 +663,7 @@ const BuildNav = (component, sections) => {
         }
       });
       nav.appendChild(sectionLink);
+      // build content
       BuildContent(sections[i].content, i, component);
       cnt += 1;
     }
@@ -561,26 +672,68 @@ const BuildNav = (component, sections) => {
       .addEventListener("scroll", e => {});
   }
 };
+
+/*
+  LoadExisting(map)
+    @desc: Load the layers associated with the existing transit scenario. 
+    @param:
+      - map => map component that the layers will be added to
+*/
 const LoadExisting = map => {
+  /*
+    OverviewColor(data, target, line)
+      @desc: Function that creates the mapbox data expression for the fill-color property for the layer associated with the overview section
+      @param:
+        - data => data that will be used for the operators
+        - target => data expression that will be appended to
+        - line => linename that will be used to match the appropriate features in 
+  */
   const OverviewColor = (data, target, line) => {
-    let colors = contentRef.overview.content.map.legend.scheme
+    let colors = contentRef.overview.content.map.legend.scheme // that's a lot of fucking typing just to get some colors
     if (data < 15) target.push(line, colors[3][1]);
     else if (data >= 15 && data < 30) target.push(line, colors[2][1]);
     else if (data >= 30 && data < 60) target.push(line, colors[1][1]);
     else target.push(line, colors[0][1]);
   };
+  /*
+    ExistingColor(data, target, line)
+      @desc: Function that creates the mapbox data expression for the fill-color property for the layer associated with the existing section
+      @param:
+        - data => data that will be used for the operators
+        - target => data expression that will be appended to
+        - line => linename that will be used to match the appropriate features in 
+  */
   const ExistingColor = (data, target, line) => {
-    let colors = contentRef.existing.content.map.legend.scheme
+    let colors = contentRef.existing.content.map.legend.scheme // that's a lot of fucking typing just to get some colors
     if (data < 21) target.push(line, colors[2][1]);
     else if (data >= 21 && data < 45) target.push(line, colors[1][1]);
     else target.push(line, colors[0][1]);
   };
+  /*
+    PopUps(event, data)
+      @desc: return a popup HTML element for the clicked feature
+      @param:
+        - event => event that triggered the popup creation
+        - data => reference object to pull popup content from
+  */
   const PopUps = (event, data) => {
+    /* TODO:  
+      How to deal with lines that overlap with one another???
+      storage array
+      iterate through event features
+        check if linename already in array ? push linename : fuck off
+      create pop-up for each line
+        grab data from mapData in reference object
+      How to change what is displayed on pop-up?
+        pagination? dot nav? pre-rendered or rendered on the fly?
+    */
     let feature = event.features[0].properties.linename,
       operator;
+    // this isn't as simple as this. there are more operators than NJT and SEPTA but I'm lazy (BurLink, Princeton Junction, probably others)
     event.features[0].properties.name.indexOf("njt") != -1
       ? (operator = "NJT")
       : (operator = "SEPTA");
+    // does this feature even have data?
     if (data[feature]) {
       let popup = `
           <div class='frequency__popup-container'>
@@ -661,8 +814,11 @@ const LoadExisting = map => {
           line
         );
       }
+
+      // default value == transparent
       layerDef[0].paint["line-color"].push("rgba(255,255,255,0)");
       layerDef[1].paint["line-color"].push("rgba(255,255,255,0)");
+
       layerDef.map(layer => {
         map.addLayer(layer, "base-hwyLabels");
         map.on("click", layer.id, e => {
@@ -698,7 +854,21 @@ const LoadExisting = map => {
       });
     });
 };
+/*
+  LoadTaz(map)
+    @desc: Load the layers associated with the traffic analysis zones. 
+    @param:
+      - map => map component that the layers will be added to
+*/
 const LoadTaz = map => {
+  /*
+    PopUps(layer, event, data)
+      @desc: return a popup HTML element for the clicked feature
+      @param:
+        - layer => layer to create the popup for
+        - event => event that triggered the popup creation
+        - data => reference object to pull popup content from
+  */
   const PopUps = (layer, event, data) => {
     let target = event.features[0].properties.TAZN;
     if (data[target]) {
@@ -873,7 +1043,20 @@ const LoadTaz = map => {
         });
     });
 };
+/*
+  LoadBus(map)
+    @desc: Load the layers associated with the bus ridership. 
+    @param:
+      - map => map component that the layers will be added to
+*/
 const LoadBus = map => {
+  /*
+    PopUps(data, event)
+      @desc: return a popup HTML element for the clicked feature
+      @param:
+        - event => event that triggered the popup creation
+        - data => reference object to pull popup content from
+  */
   const PopUps = (data, event) => {
     let target = event.features[0].properties.linename,
       operator,
@@ -1029,7 +1212,21 @@ const LoadBus = map => {
       });
     });
 };
+/*
+  LoadRail(map)
+    @desc: Load the layers associated with the rail ridership. 
+    @param:
+      - map => map component that the layers will be added to
+*/
 const LoadRail = map => {
+  /*
+    LineWidth(data, target, line)
+      @desc: Function that creates the mapbox data expression for the line-width property for the layer associated with the rail ridership section
+      @param:
+        - data => data that will be used for the operators
+        - target => data expression that will be appended to
+        - name => linename that will be used to match the appropriate features in 
+  */
   const LineWidth = (data, target, name) => {
     if (data < 0) target.push(name, 0.5);
     else if (data >= 0 && data < 30) target.push(name, 1);
@@ -1038,13 +1235,29 @@ const LoadRail = map => {
     else if (data >= 80 && data < 100) target.push(name, 4);
     else if (data >= 100) target.push(name, 5);
   };
+  /*
+    LineColor(data, target, line)
+      @desc: Function that creates the mapbox data expression for the line-color  property for the layer associated with the rail ridership section
+      @param:
+        - data => data that will be used for the operators
+        - target => data expression that will be appended to
+        - name => linename that will be used to match the appropriate features in 
+  */
   const LineColor = (data, target, name) => {
-    if (data < -100) target.push(name, "#d8c72e");
-    else if (data >= -100 && data < 0) target.push(name, "#eadb96");
-    else if (data >= 0 && data < 1000) target.push(name, "#06bf9c");
-    else if (data >= 1000 && data < 5000) target.push(name, "#859cad");
-    else if (data >= 5000) target.push(name, "#08506d");
+    let colors = contentRef.railLineChange.content.map.legend.scheme
+    if (data < -100) target.push(name, colors[0][1]);
+    else if (data >= -100 && data < 0) target.push(name, colors[1][1]);
+    else if (data >= 0 && data < 1000) target.push(name, colors[2][1]);
+    else if (data >= 1000 && data < 5000) target.push(name, colors[3][1]);
+    else if (data >= 5000) target.push(name, colors[4][1]);
   };
+  /*
+    PopUps(data, event)
+      @desc: return a popup HTML element for the clicked feature
+      @param:
+        - event => event that triggered the popup creation
+        - data => reference object to pull popup content from
+  */
   const PopUps = (data, event) => {
     let target = event.features[0].properties.linename,
       popup;
