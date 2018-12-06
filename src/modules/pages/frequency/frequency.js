@@ -206,7 +206,7 @@ const contentRef = {
       },
       table: false,
       text:
-        "This map shows the 25 bus routes with the greatest expected absolute increase in dailyu ridership between the existing and doubled frequency scenarios. Bus ridership refers to the number of passengers using that bus route on an average weekday. The darker the blue color, the greater the absolute increase in ridership."
+        "This map shows the 25 bus routes with the greatest expected absolute increase in daily ridership between the existing and doubled frequency scenarios. Bus ridership refers to the number of passengers using that bus route on an average weekday. The darker the blue color, the greater the absolute increase in ridership."
     }
   },
   busPercent: {
@@ -229,7 +229,7 @@ const contentRef = {
       },
       table: false,
       text:
-        "This map shows the 25 bus routes with the largest percent increase in daily ridership between the existing and doubled frequency scenarios. It is important to keep in mind that percent change is sometimes deceiving when base ridership is very low, making a small incrase appear as a substantial change. Only those bus routes with an estimated base scenario ridership of at least 100 are included. Many of the routes in this map are in suburban areas where base frequencies tend to be lower. The darker the blue color, the greater the percent increase in forecast ridership fi frequency is doubled."
+        "This map shows the 25 bus routes with the largest percent increase in daily ridership between the existing and doubled frequency scenarios. It is important to keep in mind that percent change is sometimes deceiving when base ridership is very low, making a small incrase appear as a substantial change. Only those bus routes with an estimated base scenario ridership of at least 100 are included. Many of the routes in this map are in suburban areas where base frequencies tend to be lower. The darker the blue color, the greater the percent increase in forecast ridership if frequency is doubled."
     }
   },
   mapData: {
@@ -559,6 +559,11 @@ const BuildContent = (content, key, component) => {
   */
   const BuildScene = element => {
     let link = document.querySelector(`#${element.id}-link`);
+    const RemovePopup = element =>{
+      while (element.firstChild) element.removeChild(element.firstChild)
+      component.map.setFilter('transitRef-all', ['==', 'linename', ''])
+      component.map.setFilter('zone-reference', ['==', 'no', ''])
+    }
     new ScrollMagic.Scene({
       triggerElement: element,
       duration: element.getBoundingClientRect().height + 20
@@ -571,11 +576,13 @@ const BuildContent = (content, key, component) => {
         element.classList.add("active");
       })
       .on("leave", e => {
-        if (contentRef[element.id].content.map)
+        if (contentRef[element.id].content.map){
           // Remove symbolization from correct layer and sections
           HideFeatureLayer(component.map, contentRef[element.id]);
-        link.classList.remove("active");
-        element.classList.remove("active");
+          link.classList.remove("active");
+          element.classList.remove("active");
+        }
+        if (document.querySelector('.mapboxgl-popup')) RemovePopup(document.querySelector('.mapboxgl-popup'))
       })
       .addTo(component.scroll);
   };
@@ -917,36 +924,32 @@ const LoadExisting = map => {
       layerDef.map(layer => {
         map.addLayer(layer, "base-muniOutline");
         map.on("click", layer.id, e => {
-            if (existing.cargo[e.features[0].properties.linename]){
-              map.setFilter("transitRef-all", [
-              "==",
-              "linename",
-              e.features[0].properties.linename
-              ]);
-              let offsets = {
-                top: [0, 0],
-                "top-left": [0, 0],
-                "top-right": [0, 0],
-                bottom: [0, 0],
-                "bottom-left": [0, 0],
-                "bottom-right": [0, 0],
-                left: [0, 0],
-                right: [0, 0]
-              };
-              let content = PopUps(e);
-              let popup = new mapboxgl.Popup({
-                offset: offsets,
-                className: "frequency__popup"
-              })
-                .setLngLat(e.lngLat)
-                .setHTML(content)
-                .addTo(map)
-                .on("close", () => {
-                  map.setFilter("transitRef-all", ["==", "linename", ""]);
-                });
-              let navDots = document.querySelectorAll(".frequency__popup-navDot");
-              for (let dot of navDots) PaginationListener(map, dot);
-            }
+          if (existing.cargo[e.features[0].properties.linename]){
+            map.setFilter('transitRef-all', ['==', 'linename', e.features[0].properties.linename])
+            let offsets = {
+              top: [0, 0],
+              "top-left": [0, 0],
+              "top-right": [0, 0],
+              bottom: [0, 0],
+              "bottom-left": [0, 0],
+              "bottom-right": [0, 0],
+              left: [0, 0],
+              right: [0, 0]
+            };
+            let content = PopUps(e);
+            let popup = new mapboxgl.Popup({
+              offset: offsets,
+              className: "frequency__popup"
+            })
+              .setLngLat(e.lngLat)
+              .setHTML(content)
+              .addTo(map)
+              .on("close", () => {
+                map.setFilter("transitRef-all", ["==", "linename", ""]);
+              });
+            let navDots = document.querySelectorAll(".frequency__popup-navDot");
+            for (let dot of navDots) PaginationListener(map, dot);
+          }
         });
         map.on(
           "mouseenter",
@@ -1227,18 +1230,14 @@ const LoadBus = map => {
             let name = route.linename
             layer.filter.push(['match', ['get', 'linename'], name, true, false])
             if (value <= 85){
-              console.log(name)
               layer.paint["line-color"].push(name, colors[0][1]);
             }
             else if (value <= 100 && value > 85){
-              console.log(name)
               layer.paint["line-color"].push(name, colors[1][1]);}
             else if (value <= 130 && value > 100){
-              console.log(name)
               layer.paint["line-color"].push(name, colors[2][1]);
             }
             else if (value > 130){
-              console.log(name)
               layer.paint["line-color"].push(name, colors[3][1]);
             }
           }
