@@ -227,19 +227,18 @@
 }
 .frequency__popup-navigation{
   display: flex;
-  width: 50%;
-  justify-content: space-evenly;
   align-items: center;
-  margin: auto;
+  width: 85%;
+  flex-flow: row wrap;
 }
 .frequency__popup-navDot{
-  width: .75rem;
-  height: .75rem;
-  border-radius: 50%;
-  border: .5px solid #ccc
+  font-size: .85rem;
+  color: #ccc;
+  margin: 0 1%;
+  cursor: pointer;
 }
 .frequency__popup-navDot.active{
-  background: #d8c72e;
+  color: #06bf9c;
   border: none;
 }
 .frequency__popup-header{

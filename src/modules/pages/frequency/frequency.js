@@ -11,10 +11,15 @@ const contentRef = {
       map: {
         source: "transit",
         layer: "overview",
-        legend : {
-          name : 'Midday Base Frequency',
-          units: 'Minutes',
-          scheme : [['0–15','#ccc'], ['15–30', '#aed8ca'], ['30–60','#74ccb3'], ['> 60', '#06bf9c']]
+        legend: {
+          name: "Midday Base Frequency",
+          units: "Minutes",
+          scheme: [
+            ["0–15", "#ddd"],
+            ["15–30", "#aed8ca"],
+            ["30–60", "#74ccb3"],
+            ["> 60", "#06bf9c"]
+          ]
         }
       },
       table: false,
@@ -30,9 +35,9 @@ const contentRef = {
       map: {
         source: "transit",
         layer: "existing",
-        legend : {
-          name : 'AM Peak Frequency Classification',
-          scheme : [['Low', '#ccc'], ['Medium', '#e9da94'], ['High', '#d8c72e']]
+        legend: {
+          name: "AM Peak Frequency Classification",
+          scheme: [["Low", "#ddd"], ["Medium", "#e9da94"], ["High", "#d8c72e"]]
         }
       },
       table: false,
@@ -48,9 +53,15 @@ const contentRef = {
       map: {
         source: "taz",
         layer: "transit",
-        legend : {
-          name : 'Increase in Transit Activity',
-          scheme : [['Very Small', '#faffe2'], ['Small', '#e0ebb8'], ['Moderate', '#c5d890'], ['Great', '#a9c568'], ['Greatest', '#8bb23f']]
+        legend: {
+          name: "Increase in Transit Activity",
+          scheme: [
+            ["Very Small", "#faffe2"],
+            ["Small", "#e0ebb8"],
+            ["Moderate", "#c5d890"],
+            ["Great", "#a9c568"],
+            ["Greatest", "#8bb23f"]
+          ]
         }
       },
       table: {
@@ -99,9 +110,15 @@ const contentRef = {
       map: {
         source: "taz",
         layer: "vehicles",
-        legend : {
-          name : 'Decrease in Automobile Activity',
-          scheme : [['Very Small', '#fffae1'], ['Small', '#f5e3b2'], ['Moderate', '#eeca86'], ['Great', '#ebaf5c'], ['Greatest', '#e89234']]
+        legend: {
+          name: "Decrease in Automobile Activity",
+          scheme: [
+            ["Very Small", "#fffae1"],
+            ["Small", "#f5e3b2"],
+            ["Moderate", "#eeca86"],
+            ["Great", "#ebaf5c"],
+            ["Greatest", "#e89234"]
+          ]
         }
       },
       table: {
@@ -150,10 +167,16 @@ const contentRef = {
       map: {
         source: "transit",
         layer: "railLineChange",
-        legend : {
-          units:  "Estimated Passengers per Day",
-          name : 'Absolute Ridership Change',
-          scheme : [['Low', '#dcfffa'], ['','#b2f0e5'], ['','#88e0ce'], ['','#59d0b6'], ['High', '#06bf9c']]
+        legend: {
+          units: "Estimated Passengers per Day",
+          name: "Absolute Ridership Change",
+          scheme: [
+            ["Low", "#bde8ff"],
+            ["", "#92c0d8"],
+            ["", "#6899b3"],
+            ["", "#3e738f"],
+            ["High", "#08506d"]
+          ]
         }
       },
       table: false,
@@ -161,18 +184,24 @@ const contentRef = {
         "This map shows passenger rail lines symbolized by the estimated change in ridership if frequencies of all transit lines are doubled. Line color represents the absolute change in ridership, while the line weight represents the percent change. For example, a dark, thin line would imply a line where a large absolute increase in ridership is expected, but the change is relatively small due to high base ridership on the line. Nominal declines in forecasted ridership for a handful of lines reflect cases where passengers may be attracted to other (newly frequent) options, or simply variations in forecast results where percent changes are small."
     }
   },
-  busLineAbsChange: {
+  busAbsChange: {
     active: false,
     title: "Absolute Change in Bus Ridership",
     scenario: "Doubled Frequency",
     content: {
       map: {
         source: "transit",
-        layer: "busLineAbsChange",
-        legend : {
-          name : 'Absolute Ridership Change',
-          units:  "Estimated Passengers per Day",
-          scheme : [['< 1,400', '#d8c72e'], ['1,400–1,600', '#a1dab4'], ['1,601–1,800', '#41b6c4'], ['1,801–2,200', '#2c7fb8'], ['> 2,200', '#08506d']]
+        layer: "busAbsChange",
+        legend: {
+          name: "Absolute Ridership Change",
+          units: "Estimated Passengers per Day",
+          scheme: [
+            ["< 1,400", "#06bf9c"],
+            ["1,400–1,600", "#0d9f7b"],
+            ["1,601–1,800", "#0c805d"],
+            ["1,801–2,200", "#066342"],
+            ["> 2,200", "#004729"]
+          ]
         }
       },
       table: false,
@@ -180,17 +209,22 @@ const contentRef = {
         "This map shows the 25 bus routes with the greatest expected absolute increase in dailyu ridership between the existing and doubled frequency scenarios. Bus ridership refers to the number of passengers using that bus route on an average weekday. The darker the blue color, the greater the absolute increase in ridership."
     }
   },
-  busLinePerChange: {
+  busPercent: {
     active: false,
     title: "Percent Change in Bus Ridership",
     scenario: "Doubled Frequency",
     content: {
       map: {
         source: "transit",
-        layer: "busLinePerChange",
-        legend : {
-          name : 'Percent Change in Ridership',
-          scheme : [['< 85%', '#d8c72e'], ['85%–100%', '#a1dab4'], ['101%–130%', '#41b6c4'], ['> 130%', '#225ea8']]
+        layer: "busPercent",
+        legend: {
+          name: "Percent Change in Ridership",
+          scheme: [
+            ["< 85%", "#d8c72e"],
+            ["85%–100%", "#b5771d"],
+            ["101%–130%", "#793418"],
+            ["> 130%", "#330100"]
+          ]
         }
       },
       table: false,
@@ -199,6 +233,7 @@ const contentRef = {
     }
   },
   mapData: {
+    existing: {},
     zones: undefined,
     rail: {
       api: undefined,
@@ -463,48 +498,49 @@ const CreateTable = data => {
     @param:
       - section => section that the legend will be built for
 */
-const BuildLegend = section =>{
+const BuildLegend = section => {
   // is there a map for this section?
-  if (contentRef[section.id].content.map){
+  if (contentRef[section.id].content.map) {
     // set things up
     let data = contentRef[section.id].content.map.legend,
-      legend = section.querySelector('.frequency__storySection-legend'),
-      title = document.createElement('p'),
-      breakContainer = document.createElement('div')
-    
+      legend = section.querySelector(".frequency__storySection-legend"),
+      title = document.createElement("p"),
+      breakContainer = document.createElement("div");
+
     // house keeping
-    title.innerText = data.name
-    title.classList.add('frequency__legend-title')
-    title.style.color = data.scheme[data.scheme.length-1][1]
-    breakContainer.classList.add('frequency__legend-breakContainer')
-    legend.appendChild(title)
+    title.innerText = data.name;
+    title.classList.add("frequency__legend-title");
+    title.style.color = data.scheme[data.scheme.length - 1][1];
+    breakContainer.classList.add("frequency__legend-breakContainer");
+    legend.appendChild(title);
 
     // Do you have to specify the map units?
-    if (data.units){
-      let units = document.createElement('p')
-      units.classList.add('frequency__legend-units')
-      units.innerText = `(${data.units})`
-      legend.appendChild(units)
+    if (data.units) {
+      let units = document.createElement("p");
+      units.classList.add("frequency__legend-units");
+      units.innerText = `(${data.units})`;
+      legend.appendChild(units);
     }
-    legend.appendChild(breakContainer)
-    let i = 0
+    legend.appendChild(breakContainer);
+    let i = 0;
     // create element for each legend break
-    for (let color of data.scheme){
-      let container = document.createElement('div'),
+    for (let color of data.scheme) {
+      let container = document.createElement("div"),
         thisBreak;
-      container.classList.add('frequency__legend-break')
-      breakContainer.style.justifyContent = '';
-      thisBreak = document.createElement('div')
-      thisBreak.classList.add('frequency__legend-rect')
-      thisBreak.style.background = color[1]
-      thisBreak.innerText = color[0]
+      container.classList.add("frequency__legend-break");
+      breakContainer.style.justifyContent = "";
+      thisBreak = document.createElement("div");
+      thisBreak.classList.add("frequency__legend-rect");
+      thisBreak.style.background = color[1];
+      thisBreak.innerText = color[0];
       // make sure the first element has enough text contrast by making the text color the darkest value of the color scheme
-      if (i == 0) thisBreak.style.color = data.scheme[data.scheme.length-1][1]
-      breakContainer.appendChild(thisBreak)
-      i ++
+      if (i == 0)
+        thisBreak.style.color = data.scheme[data.scheme.length - 1][1];
+      breakContainer.appendChild(thisBreak);
+      i++;
     }
   }
-}
+};
 
 /*
   BuildContent(content, key, component)
@@ -596,7 +632,7 @@ const BuildContent = (content, key, component) => {
   section.style.height = masterContainer.getBoundingClientRect().height / 2;
   masterContainer.appendChild(section);
   BuildScene(section);
-  BuildLegend(section)
+  BuildLegend(section);
 };
 
 /*
@@ -607,7 +643,7 @@ const BuildContent = (content, key, component) => {
     - sections => sections reference to iterate through and drive element creation
 */
 const BuildNav = (component, sections) => {
-  const nav = document.querySelector(".frequency__nav-container")
+  const nav = document.querySelector(".frequency__nav-container");
   let cnt = 1;
   for (let i in sections) {
     // don't build a section for the mapData
@@ -621,7 +657,7 @@ const BuildNav = (component, sections) => {
       tooltip.innerText = sections[i].title;
       sectionLink.appendChild(tooltip);
       sectionLink.id = i + "-link";
-      sections[i].active ? sectionLink.classList.add("active") : null;
+      sections[i].active ? sectionLink.classList.add("active") : sectionLink.classList.remove('active');
 
       // add listeners
       sectionLink.addEventListener("click", e => {
@@ -667,18 +703,97 @@ const BuildNav = (component, sections) => {
       BuildContent(sections[i].content, i, component);
       cnt += 1;
     }
-    document
-      .querySelector(".frequency__content-story")
-      .addEventListener("scroll", e => {});
+    document.querySelector(".frequency__content-story");
   }
 };
 
+const PopupPagination = (event, data, popup) => {
+  let allRoutes = [];
+  // loop through event features and push unique lines to an array
+  event.features.map(feature => {
+    data[feature.properties.linename] &&
+    allRoutes.indexOf(feature.properties.linename) == -1
+      ? allRoutes.push(feature.properties.linename)
+      : null;
+  });
+  if (allRoutes.length > 1) {
+    popup.innerHTML =
+      '<div class="frequency__popup-navigation"></div><div class="frequency__popup-content"></div>';
+    let popupNav = popup.querySelector(".frequency__popup-navigation");
+    allRoutes.forEach((route, index) => {
+      let navLink = document.createElement("div");
+      navLink.classList.add("frequency__popup-navDot");
+      index == 0 ? navLink.classList.add("active") : null;
+      navLink.id = `route-${route}-popup`;
+      navLink.innerText = route;
+      popupNav.appendChild(navLink);
+    });
+  }
+};
+
+const PaginationListener = (map, link) => {
+  let dots = document.querySelectorAll(".frequency__popup-navDot"),
+    content = document.querySelector(".frequency__popup-content");
+  link.addEventListener("click", event => {
+    let target = event.target,
+      route = target.id.split("-")[1];
+    for (let i of dots)
+      i == target ? i.classList.add("active") : i.classList.remove("active");
+    map.setFilter("transitRef-all", ["==", "linename", route]);
+    // change popup content
+    let active, data;
+    for (let section of document.querySelectorAll(
+      ".frequency__story-section"
+    )) {
+      section.classList.contains("active") ? (active = section.id) : null;
+    }
+    if (active == "overview" || active == "existing")
+      data = contentRef.mapData.existing;
+    else if (active.indexOf("bus") != -1) data = contentRef.mapData.bus;
+    else if (active.indexOf("rail") != -1) data = contentRef.mapData.rail.api;
+    if (active == "overview" || active == "existing") {
+      content.innerHTML = `<div class='frequency__popup-header'>Route ${route}</div><div class='frequency__popup-meat'><span class="frequency__popup-emphasis">${
+        data[route].am
+      } Minute</span> <span class="frequency__popup-unit">AM Peak Frequency</span></div><div class='frequency__popup-meat'><span class="frequency__popup-emphasis">${
+        data[route].midday
+      } Minute</span> <span class="frequency__popup-unit">Mid-day Base Frequency</span></div>`;
+    }
+    else if (active[0] == 'b' && data[route]){
+      content.innerHTML = `
+      <div class="frequency__popup-header">Route ${route}</div>
+      <div class="frequency__popup-meat"><span class="frequency__popup-emphasis">Actual Change</span> ${FormatNumber(
+        Math.floor(data[route].AbsChange)
+      )} <span class="frequency__popup-unit">Passengers / Day</span></div>
+      <div class="frequency__popup-meat"><span class="frequency__popup-emphasis">Percent Change</span> ${
+        data[route].Percent
+      }<span class="frequency__popup-unit">%</span></div>
+  `;
+    }
+    else if (active[0] == 'r'){
+      let lookup = contentRef.mapData.rail.lookup;
+      let name;
+      lookup[route]
+        ? (name = `${lookup[route].operator} ${lookup[route].name}`)
+        : (name = `Trolley Route ${route}`);
+      content.innerHTML = `
+          <div class='frequency__popup-header'>${name}</div>
+          <div class='frequency__popup-meat'><span class="frequency__popup-emphasis">Absolute Change</span> ${FormatNumber(
+            Math.floor(data[route].absolute)
+          )} <span class="frequency__popup-unit">Passengers / Day</span></div>
+          <div class='frequency__popup-meat'><span class="frequency__popup-emphasis">Percent Change</span> ${
+            data[route].percent
+          }<span class="frequency__popup-unit">%</span></div>
+      `;
+    }
+  });
+};
 /*
   LoadExisting(map)
     @desc: Load the layers associated with the existing transit scenario. 
     @param:
       - map => map component that the layers will be added to
 */
+
 const LoadExisting = map => {
   /*
     OverviewColor(data, target, line)
@@ -689,7 +804,7 @@ const LoadExisting = map => {
         - line => linename that will be used to match the appropriate features in 
   */
   const OverviewColor = (data, target, line) => {
-    let colors = contentRef.overview.content.map.legend.scheme // that's a lot of fucking typing just to get some colors
+    let colors = contentRef.overview.content.map.legend.scheme; // that's a lot of fucking typing just to get some colors
     if (data < 15) target.push(line, colors[3][1]);
     else if (data >= 15 && data < 30) target.push(line, colors[2][1]);
     else if (data >= 30 && data < 60) target.push(line, colors[1][1]);
@@ -704,57 +819,31 @@ const LoadExisting = map => {
         - line => linename that will be used to match the appropriate features in 
   */
   const ExistingColor = (data, target, line) => {
-    let colors = contentRef.existing.content.map.legend.scheme // that's a lot of fucking typing just to get some colors
+    let colors = contentRef.existing.content.map.legend.scheme; // that's a lot of fucking typing just to get some colors
     if (data < 21) target.push(line, colors[2][1]);
     else if (data >= 21 && data < 45) target.push(line, colors[1][1]);
     else target.push(line, colors[0][1]);
   };
   /*
-    PopUps(event, data)
+    PopUps(event)
       @desc: return a popup HTML element for the clicked feature
       @param:
         - event => event that triggered the popup creation
-        - data => reference object to pull popup content from
   */
-  const PopUps = (event, data) => {
-    /* TODO:  
-      How to deal with lines that overlap with one another???
-      storage array
-      iterate through event features
-        check if linename already in array ? push linename : fuck off
-      create pop-up for each line
-        grab data from mapData in reference object
-      How to change what is displayed on pop-up?
-        pagination? dot nav? pre-rendered or rendered on the fly?
-    */
-    let allRoutes = []
-    let popupContainer = document.createElement('div')
-    popupContainer.classList.add('frequency__popup-container')
-    popupContainer.innerHTML = '<div class="frequency__popup-navigation"></div><div class="frequency__popup-content"></div>'
-    let popupNav = popupContainer.querySelector('.frequency__popup-navigation')
-    event.features.map(feat=>{
-      if (data[feat.properties.linename] && allRoutes.indexOf(feat.properties.linename) == -1) {allRoutes.push(feat.properties.linename)} 
-    })
-    if (allRoutes.length > 1){
-      allRoutes.forEach((route, index)=>{
-        let navDot = document.createElement('div')
-        index == 0 ? navDot.classList.add('active') : null
-        navDot.classList.add('frequency__popup-navDot')
-        navDot.id = `route-${route}-popup`
-        popupNav.append(navDot)
-      })
-    }
-    let feature = event.features[0].properties.linename,
-      operator;
-    // this isn't as simple as this. there are more operators than NJT and SEPTA but I'm lazy (BurLink, Princeton Junction, probably others)
-    event.features[0].properties.name.indexOf("njt") != -1
-      ? (operator = "NJT")
-      : (operator = "SEPTA");
+  const PopUps = event => {
+    let data = contentRef.mapData.existing;
+    let popupContainer = document.createElement("div");
+    popupContainer.classList.add("frequency__popup-container");
+    popupContainer.innerHTML = '<div class="frequency__popup-content"></div>';
+    PopupPagination(event, data, popupContainer);
+    let feature = event.features[0].properties.linename;
     // does this feature even have data?
     if (data[feature]) {
-      let popupContent = popupContainer.querySelector('.frequency__popup-content')
+      let popupContent = popupContainer.querySelector(
+        ".frequency__popup-content"
+      );
       popupContent.innerHTML = `
-            <div class='frequency__popup-header'>${operator} Route ${feature}</div>
+            <div class='frequency__popup-header'>Route ${feature}</div>
             <div class='frequency__popup-meat'><span class="frequency__popup-emphasis">${
               data[feature].am
             } Minute</span> <span class="frequency__popup-unit">AM Peak Frequency</span></div>
@@ -771,6 +860,7 @@ const LoadExisting = map => {
         response.ok ? response.json() : console.error("error will robinson")
     )
     .then(existing => {
+      contentRef.mapData.existing = existing.cargo;
       let layerDef = [
         {
           id: "transit-overview",
@@ -778,15 +868,7 @@ const LoadExisting = map => {
           "source-layer": "transit_lines",
           type: "line",
           paint: {
-            "line-width": [
-              "interpolate",
-              ["linear"],
-              ["zoom"],
-              7,
-              0.05,
-              12,
-              3
-            ],
+            "line-width": ["interpolate", ["linear"], ["zoom"], 7, 0.05, 12, 3],
             "line-color": ["match", ["get", "linename"]]
           },
           layout: { visibility: "visible" }
@@ -833,50 +915,38 @@ const LoadExisting = map => {
       layerDef[1].paint["line-color"].push("rgba(255,255,255,0)");
 
       layerDef.map(layer => {
-        map.addLayer(layer, 'base-muniOutline');
+        map.addLayer(layer, "base-muniOutline");
         map.on("click", layer.id, e => {
-          map.setFilter('transitRef-all', ['==', 'linename', e.features[0].properties.linename])
-          let offsets = {
-            top: [0, 0],
-            "top-left": [0, 0],
-            "top-right": [0, 0],
-            bottom: [0, 0],
-            "bottom-left": [0, 0],
-            "bottom-right": [0, 0],
-            left: [0, 0],
-            right: [0, 0]
-          };
-          let content = PopUps(e, existing.cargo);
-          let popup = new mapboxgl.Popup({
-            offset: offsets,
-            className: "frequency__popup"
-          })
-            .setLngLat(e.lngLat)
-            .setHTML(content)
-            .addTo(map)
-            .on('close', ()=>{
-              map.setFilter('transitRef-all', ['==', 'linename', ''])
-            });
-          let navDots = document.querySelectorAll('.frequency__popup-navDot')
-          for (let dot of navDots){
-            dot.addEventListener('click', e=>{
-              for (let anotherDot of navDots){
-                anotherDot == dot ? dot.classList.add('active') : anotherDot.classList.remove('active')
-              }
-              let target = e.target.id.split('-')[1]
-              let popupContent = document.querySelector('.frequency__popup-content')
-              map.setFilter('transitRef-all', ['==', 'linename', target])
-              popupContent.innerHTML = `
-              <div class='frequency__popup-header'>Route ${target}</div>
-              <div class='frequency__popup-meat'><span class="frequency__popup-emphasis">${
-                existing.cargo[target].am
-              } Minute</span> <span class="frequency__popup-unit">AM Peak Frequency</span></div>
-              <div class='frequency__popup-meat'><span class="frequency__popup-emphasis">${
-                existing.cargo[target].midday
-              } Minute</span> <span class="frequency__popup-unit">Mid-day Base Frequency</span></div>
-              `
-            })
-          }
+            if (existing.cargo[e.features[0].properties.linename]){
+              map.setFilter("transitRef-all", [
+              "==",
+              "linename",
+              e.features[0].properties.linename
+              ]);
+              let offsets = {
+                top: [0, 0],
+                "top-left": [0, 0],
+                "top-right": [0, 0],
+                bottom: [0, 0],
+                "bottom-left": [0, 0],
+                "bottom-right": [0, 0],
+                left: [0, 0],
+                right: [0, 0]
+              };
+              let content = PopUps(e);
+              let popup = new mapboxgl.Popup({
+                offset: offsets,
+                className: "frequency__popup"
+              })
+                .setLngLat(e.lngLat)
+                .setHTML(content)
+                .addTo(map)
+                .on("close", () => {
+                  map.setFilter("transitRef-all", ["==", "linename", ""]);
+                });
+              let navDots = document.querySelectorAll(".frequency__popup-navDot");
+              for (let dot of navDots) PaginationListener(map, dot);
+            }
         });
         map.on(
           "mouseenter",
@@ -980,10 +1050,9 @@ const LoadTaz = map => {
                 apiJson.cargo[zone.properties.TAZN.toString()].tActual;
               zone.properties["vActual"] =
                 apiJson.cargo[zone.properties.TAZN.toString()].vActual;
-            }
-            else{ 
-              zone.properties['tActual'] = 0
-              zone.properties['vActual'] = 0
+            } else {
+              zone.properties["tActual"] = 0;
+              zone.properties["vActual"] = 0;
             }
           });
           let sourceDef = {
@@ -992,8 +1061,9 @@ const LoadTaz = map => {
           };
           map.addSource("taz", sourceDef);
 
-          let transitColors = contentRef.transitChange.content.map.legend.scheme,
-            autoColors = contentRef.autoChange.content.map.legend.scheme
+          let transitColors =
+              contentRef.transitChange.content.map.legend.scheme,
+            autoColors = contentRef.autoChange.content.map.legend.scheme;
           let layerDefs = [
             {
               id: "taz-transit",
@@ -1051,7 +1121,11 @@ const LoadTaz = map => {
           layerDefs.map(layer => {
             map.addLayer(layer, "base-interstates");
             map.on("click", layer.id, e => {
-              map.setFilter('zone-reference', ['==', 'no', e.features[0].properties.TAZN])
+              map.setFilter("zone-reference", [
+                "==",
+                "no",
+                e.features[0].properties.TAZN
+              ]);
               let offsets = {
                 top: [0, 0],
                 "top-left": [0, 0],
@@ -1070,7 +1144,9 @@ const LoadTaz = map => {
                 .setLngLat(e.lngLat)
                 .setHTML(content)
                 .addTo(map)
-                .on('close', ()=> map.setFilter('zone-reference', ['==', 'no', '']));
+                .on("close", () =>
+                  map.setFilter("zone-reference", ["==", "no", ""])
+                );
             });
             map.on(
               "mouseenter",
@@ -1100,29 +1176,74 @@ const LoadBus = map => {
         - event => event that triggered the popup creation
         - data => reference object to pull popup content from
   */
-  const PopUps = (data, event) => {
+  const PopUps = event => {
+    console.log({event})
     let target = event.features[0].properties.linename,
-      operator,
-      popup;
-    event.features[0].properties.name.indexOf("njt") != -1
-      ? (operator = "NJT")
-      : (operator = "SEPTA");
+      data = contentRef.mapData.bus,
+      popupContainer = document.createElement("div");
+    popupContainer.classList.add("frequency__popup-container");
+    popupContainer.innerHTML = '<div class="frequency__popup-content"></div>';
+    PopupPagination(event, data, popupContainer);
     data.map(route => {
-      if (route.linename == target) {
-        popup = `
-          <div class="frequency__popup-container">
-            <div class="frequency__popup-header">${operator} Route ${target}</div>
+      if ( route.linename == target) {
+        popupContainer.querySelector(".frequency__popup-content").innerHTML = `
+            <div class="frequency__popup-header">Route ${target}</div>
             <div class="frequency__popup-meat"><span class="frequency__popup-emphasis">Actual Change</span> ${FormatNumber(
-              Math.floor(route.AllBusAbsolute)
+              Math.floor(route.AbsChange)
             )} <span class="frequency__popup-unit">Passengers / Day</span></div>
             <div class="frequency__popup-meat"><span class="frequency__popup-emphasis">Percent Change</span> ${
-              route.AllBusPercent
+              route.Percent
             }<span class="frequency__popup-unit">%</span></div>
-          </div>  
         `;
       }
     });
-    return popup;
+    return popupContainer.outerHTML;
+  };
+  const StyleLayer = layer => {
+    let data = contentRef.mapData.bus,
+      colors = contentRef[layer.id.split("-")[1]].content.map.legend.scheme,
+      sortField = layer.id.split("bus")[1];
+    data.sort((a, b) => b[sortField] - a[sortField]);
+    data.map((route, index) => {
+      if (sortField == 'AbsChange') {
+        let name = route.linename;
+        if (index < 25) {
+          layer.filter.push(['match', ['get', 'linename'], name, true, false])
+          let value = route[sortField];
+          if (value < 1400) layer.paint["line-color"].push(name, colors[0][1]);
+          else if (value <= 1600 && value > 1400)
+            layer.paint["line-color"].push(name, colors[1][1]);
+          else if (value <= 1800 && value > 1600)
+            layer.paint["line-color"].push(name, colors[2][1]);
+          else if (value <= 2200 && value > 1800)
+            layer.paint["line-color"].push(name, colors[3][1]);
+          else if (value > 2200)
+            layer.paint["line-color"].push(name, colors[4][1]);
+          }
+        }
+        else {
+          let value = route[sortField];
+          if(value >= 72 && value < 234){
+            let name = route.linename
+            layer.filter.push(['match', ['get', 'linename'], name, true, false])
+            if (value <= 85){
+              console.log(name)
+              layer.paint["line-color"].push(name, colors[0][1]);
+            }
+            else if (value <= 100 && value > 85){
+              console.log(name)
+              layer.paint["line-color"].push(name, colors[1][1]);}
+            else if (value <= 130 && value > 100){
+              console.log(name)
+              layer.paint["line-color"].push(name, colors[2][1]);
+            }
+            else if (value > 130){
+              console.log(name)
+              layer.paint["line-color"].push(name, colors[3][1]);
+            }
+          }
+        }
+    });
   };
   fetch("https://a.michaelruane.com/api/rtps/frequency?bus")
     .then(
@@ -1130,9 +1251,10 @@ const LoadBus = map => {
         response.ok ? response.json() : console.error("error, will robinson")
     )
     .then(bus => {
+      contentRef.mapData.bus = bus.cargo;
       let busLayers = [
         {
-          id: "transit-busLineAbsChange",
+          id: "transit-busAbsChange",
           source: "transit",
           "source-layer": "transit_lines",
           type: "line",
@@ -1152,10 +1274,11 @@ const LoadBus = map => {
             ],
             "line-color": ["match", ["get", "linename"]]
           },
-          layout: { visibility: "none" }
+          layout: { visibility: "none" },
+          filter: ['any']
         },
         {
-          id: "transit-busLinePerChange",
+          id: "transit-busPercent",
           source: "transit",
           "source-layer": "transit_lines",
           type: "line",
@@ -1175,74 +1298,49 @@ const LoadBus = map => {
             ],
             "line-color": ["match", ["get", "linename"]]
           },
-          layout: { visibility: "none" }
+          layout: { visibility: "none" },
+          filter: ['any']
         }
       ];
-      contentRef.mapData.bus = { absolute: [], percent: [] };
-      bus.cargo.forEach(route => {
-        contentRef.mapData.bus.absolute.push(route);
-        contentRef.mapData.bus.percent.push(route);
-      });
-      contentRef.mapData.bus.absolute.sort(
-        (a, b) => b.AllBusAbsolute - a.AllBusAbsolute
-      );
-      contentRef.mapData.bus.percent.sort(
-        (a, b) => b.AllBusPercent - a.AllBusPercent
-      );
-      contentRef.mapData.bus.absolute.map((value, index) => {
-        let colors = contentRef.busLineAbsChange.content.map.legend.scheme
-        if (index < 25) {
-          if (value.AllBusAbsolute < 1400)
-            busLayers[0].paint["line-color"].push(value.linename, colors[0][1]);
-          else if (value.AllBusAbsolute <= 1600 && value.AllBusAbsolute > 1400)
-            busLayers[0].paint["line-color"].push(value.linename, colors[1][1]);
-          else if (value.AllBusAbsolute <= 1800 && value.AllBusAbsolute > 1600)
-            busLayers[0].paint["line-color"].push(value.linename, colors[2][1]);
-          else if (value.AllBusAbsolute <= 2200 && value.AllBusAbsolute > 1800)
-            busLayers[0].paint["line-color"].push(value.linename, colors[3][1]);
-          else if (value.AllBusAbsolute > 2200)
-            busLayers[0].paint["line-color"].push(value.linename, colors[4][1]);
-        }
-      });
-      contentRef.mapData.bus.percent.map((value, index) => {
-        let colors = contentRef.busLinePerChange.content.map.legend.scheme
-        if (index < 25) {
-          if (value.AllBusPercent <= 85)
-            busLayers[1].paint["line-color"].push(value.linename, colors[0][1]);
-          else if (value.AllBusPercent <= 100 && value.AllBusPercent > 85)
-            busLayers[1].paint["line-color"].push(value.linename, colors[1][1]);
-          else if (value.AllBusPercent <= 130 && value.AllBusPercent > 100)
-            busLayers[1].paint["line-color"].push(value.linename, colors[2][1]);
-          else if (value.AllBusPercent > 130)
-            busLayers[1].paint["line-color"].push(value.linename, colors[3][1]);
-        }
-      });
-      for (let layer in busLayers) {
-        busLayers[layer].paint["line-color"].push("rgba(255,255,255,0)");
+      for (let layer of busLayers) {
+        StyleLayer(layer);
+        layer.paint["line-color"].push("rgba(255,255,255,0)");
       }
       busLayers.map(layer => {
         map.addLayer(layer, "base-muniOutline");
         map.on("click", layer.id, e => {
-          map.setFilter('transitRef-all', ['==', 'linename', e.features[0].properties.linename])
-          let offsets = {
-            top: [0, 0],
-            "top-left": [0, 0],
-            "top-right": [0, 0],
-            bottom: [0, 0],
-            "bottom-left": [0, 0],
-            "bottom-right": [0, 0],
-            left: [0, 0],
-            right: [0, 0]
-          };
-          let content = PopUps(bus.cargo, e);
-          let popup = new mapboxgl.Popup({
-            offset: offsets,
-            className: "frequency__popup"
+          bus.cargo.map(route=>{
+            if (route.linename == e.features[0].properties.linename){
+              map.setFilter("transitRef-all", [
+                "==",
+                "linename",
+                e.features[0].properties.linename
+              ]);
+              let offsets = {
+                top: [0, 0],
+                "top-left": [0, 0],
+                "top-right": [0, 0],
+                bottom: [0, 0],
+                "bottom-left": [0, 0],
+                "bottom-right": [0, 0],
+                left: [0, 0],
+                right: [0, 0]
+              };
+              let content = PopUps(e, layer.id.split('bus')[1]);
+              let popup = new mapboxgl.Popup({
+                offset: offsets,
+                className: "frequency__popup"
+              })
+                .setLngLat(e.lngLat)
+                .setHTML(content)
+                .addTo(map)
+                .on("close", e =>
+                  map.setFilter("transitRef-all", ["==", "linename", ""])
+                );
+              let navDots = document.querySelectorAll(".frequency__popup-navDot");
+              for (let dot of navDots) PaginationListener(map, dot);
+            }
           })
-            .setLngLat(e.lngLat)
-            .setHTML(content)
-            .addTo(map)
-            .on('close', e=> map.setFilter('transitRef-all', ['==', 'linename', '']));
         });
         map.on(
           "mouseenter",
@@ -1289,7 +1387,7 @@ const LoadRail = map => {
         - name => linename that will be used to match the appropriate features in 
   */
   const LineColor = (data, target, name) => {
-    let colors = contentRef.railLineChange.content.map.legend.scheme
+    let colors = contentRef.railLineChange.content.map.legend.scheme;
     if (data < -100) target.push(name, colors[0][1]);
     else if (data >= -100 && data < 0) target.push(name, colors[1][1]);
     else if (data >= 0 && data < 1000) target.push(name, colors[2][1]);
@@ -1303,19 +1401,21 @@ const LoadRail = map => {
         - event => event that triggered the popup creation
         - data => reference object to pull popup content from
   */
-  const PopUps = (data, event) => {
+  const PopUps = (event) => {
     let target = event.features[0].properties.linename,
-      popup;
+      popupContainer = document.createElement('div'),
+      data = contentRef.mapData.rail.api;
+    popupContainer.classList.add('frequency__popup-container')
+    popupContainer.innerHTML = '<div class="frequency__popup-content"></div>'
+    PopupPagination(event, data, popupContainer)
     if (data[target]) {
       let feat = data[target];
       let lookup = contentRef.mapData.rail.lookup;
       let name;
       lookup[target]
-        ? (name = `${lookup[target].operator} ${
-            lookup[target].name
-          }`)
+        ? (name = `${lookup[target].operator} ${lookup[target].name}`)
         : (name = `Trolley Route ${target}`);
-      popup = `
+      popupContainer.querySelector('.frequency__popup-content').innerHTML = `
         <div class='frequency__popup-container'>
           <div class='frequency__popup-header'>${name}</div>
           <div class='frequency__popup-meat'><span class="frequency__popup-emphasis">Absolute Change</span> ${FormatNumber(
@@ -1327,7 +1427,7 @@ const LoadRail = map => {
         </div>
       `;
     }
-    return popup;
+    return popupContainer.outerHTML;
   };
   fetch("https://a.michaelruane.com/api/rtps/frequency?rail")
     .then(
@@ -1335,7 +1435,7 @@ const LoadRail = map => {
         response.ok ? response.json() : console.error("error will robinson")
     )
     .then(rail => {
-      contentRef.mapData.rail.api = rail;
+      contentRef.mapData.rail.api = rail.cargo;
       let layerDef = {
         id: "transit-railLineChange",
         source: "transit",
@@ -1357,26 +1457,36 @@ const LoadRail = map => {
       layerDef.paint["line-color"].push("rgba(255,255,255,0)");
       map.addLayer(layerDef, "base-muniOutline");
       map.on("click", layerDef.id, e => {
-        map.setFilter('transitRef-all', ['==', 'linename', e.features[0].properties.linename])        
-        let offsets = {
-          top: [0, 0],
-          "top-left": [0, 0],
-          "top-right": [0, 0],
-          bottom: [0, 0],
-          "bottom-left": [0, 0],
-          "bottom-right": [0, 0],
-          left: [0, 0],
-          right: [0, 0]
-        };
-        let content = PopUps(rail.cargo, e);
-        let popup = new mapboxgl.Popup({
-          offset: offsets,
-          className: "frequency__popup"
-        })
-          .setLngLat(e.lngLat)
-          .setHTML(content)
-          .addTo(map)
-          .on('close', e=> map.setFilter('transitRef-all', ['==', 'linename', '']));
+        if (rail.cargo[e.features[0].properties.linename]){
+          map.setFilter("transitRef-all", [
+          "==",
+          "linename",
+          e.features[0].properties.linename
+          ]);
+          let offsets = {
+            top: [0, 0],
+            "top-left": [0, 0],
+            "top-right": [0, 0],
+            bottom: [0, 0],
+            "bottom-left": [0, 0],
+            "bottom-right": [0, 0],
+            left: [0, 0],
+            right: [0, 0]
+          };
+          let content = PopUps(e);
+          let popup = new mapboxgl.Popup({
+            offset: offsets,
+            className: "frequency__popup"
+          })
+            .setLngLat(e.lngLat)
+            .setHTML(content)
+            .addTo(map)
+            .on("close", e =>
+              map.setFilter("transitRef-all", ["==", "linename", ""])
+            );
+            let navDots = document.querySelectorAll(".frequency__popup-navDot");
+            for (let dot of navDots) PaginationListener(map, dot);
+        }
       });
       map.on(
         "mouseenter",
@@ -1437,6 +1547,9 @@ const BuildMap = container => {
 
 export class Frequency {
   constructor() {
+    for (let section in contentRef){
+      section == 'overview' ? contentRef[section].active = true : contentRef[section].active = false
+    }
     this.render();
   }
   render() {
