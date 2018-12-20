@@ -2,10 +2,11 @@ import '../../../../css/pages/map/sidebar.css'
 import { QueryContainer } from './queryInput/queryInput.js'
 import { HeaderElements } from '../../../header/HeaderElements.js'
 
-const MenuContent = (menu, content) =>{
+const MenuContent = (menu, container, content) =>{
   let jawn = document.createElement('div')
   jawn.className = 'map__sidebar-menuContent'
   jawn.id = `${menu.innerText.toLowerCase()}_dropdownContent`
+  if (menu.innerText.toLowerCase() != 'summary') menu.classList.add('active')
 
   // function to return proper HTML strings
   const createContent = menu =>{
@@ -19,29 +20,35 @@ const MenuContent = (menu, content) =>{
     }
   }
   jawn.innerHTML =  createContent(menu)
-  menu.parentNode.appendChild(jawn)
+  container.appendChild(jawn)
 }
-const BuildMenus = ( content) =>{
+
+
+const BuildMenus = content =>{
   let container = document.querySelector('.gap').appendChild(document.createElement('div'))
-  container.className = 'map__sidebar'
-  let sidebar = container.appendChild(document.createElement('div'))
-  sidebar.classList = 'map__sidebar-menuContainer'
+  container.classList.add('map__sidebar')
+  let sidebar = document.createElement('ul')
+  sidebar.classList.add('map__sidebar-menuContainer')
+  let sidebarContent = document.createElement('div')
+  sidebarContent.classList.add('map__sidebar-content')
   for (let key in content){
-    let menu = document.createElement('button')
-    menu.className = 'map__sidebar-menu'
-    menu.id = `dropdown_${key}`
-    // titlecase
-    let title = key.toLowerCase().split(' ').map(each=>{
-      return each.replace(each[0], each[0].toUpperCase());
-    }).join(' ');
-    menu.innerText = title
-    sidebar.appendChild(menu)
-    MenuContent(menu, content[key])
-    menu.addEventListener('click', e=>{
-      let viz = document.querySelector(`#${menu.innerText.toLowerCase()}_dropdownContent`)
-      viz.classList.contains('active') ? viz.classList.remove('active') : viz.classList.add('active')
+    let header = document.createElement('li')
+    header.classList.add('map__sidebar-menuHeader')
+    let title = key.toLowerCase().split(' ').map(each=> each.replace(each[0], each[0].toUpperCase()))
+    header.innerText = title
+    sidebar.appendChild(header)
+    MenuContent(header, sidebarContent, content[key])
+    header.addEventListener('click', e=>{
+      let sections = document.querySelectorAll('.map__sidebar-menuContent'),
+      headers = document.querySelectorAll('.map__sidebar-menuHeader')
+      for (let header of headers) header == e.target ? header.classList.add('active') : header.classList.remove('active');
+      for (let section of sections) section.id == `${e.target.innerText.toLowerCase()}_dropdownContent` ? section.classList.add('active') : section.classList.remove('active')
     })
+    
   }
+  container.appendChild(sidebar)
+  container.appendChild(sidebarContent)
+
 }
 
 class Sidebar{

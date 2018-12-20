@@ -224,6 +224,7 @@ const BuildMap = (container, props) =>{
     map.getCanvas().style.cursor = "pointer"
     const marker = { props: e.features[0].properties, long: e.features[0].geometry.coordinates[0], lat: e.features[0].geometry.coordinates[1]}
     let color;
+    // pop up to reflect level of accessibility
     switch(marker.props.accessibility){
       case 0:
         color = 'rgba(232,146,52,.85)'
@@ -318,27 +319,27 @@ class Accessibility{
         allAccessibility: {
           id: 'AccAll',
           title: 'Accessibility from All Rail Stations',
-          description: '<p>This shows the number of destinations reachable via rail from each zone for passengers that can use all rail stations. The results are mapped by TAZ. The darker the blue, the more destinations are reachable from that TAZ.</p>'
+          description: '<p>This map serves as the baseline. It shows the number of destinations reachable via rail from each zone for passengers that can use all rail stations. The darker the color, the more destinations are reachable from that TAZ via rail.</p>'
         },
         currentAccessibility:{
           id: 'AccCur',
           title: 'Accessible Destinations using Only Wheelchair Accessible Stations',
-          description: '<p>The next map shows the destinations reachable when you can only use wheelchair accessible stations. So same thing here – the darker the blue, the more destinations are reachable via rail. However, you can see that not only is there a lot less dark blue, there is a lot less blue overall- meaning that there when you can’t use inaccessible stations, there are a lot of destinations you cannot reach via rail.</p>'
+          description: '<p>This map shows the destinations reachable by wheelchair users who can only use wheelchair accessible stations. The darker the color, the more destinations are reachable from that TAZ via rail.</p>'
         },
         currentDisparity:{
           id: 'DisCur',
           title: 'Destination Disparity for Wheelchair users in Comparison with All Users',
-          description: '<p>This map highlights the differences between the baseline and the wheelchair accessible map. The darker the orange, the larger the gap in reachable destinations for wheelchair users. So the darkest places are those where wheelchair users lose out on the most destinations due to inaccessible stations and where improvements should be focused.</p>'
+          description: '<p>This map highlights the differences between the baseline and wheelchair accessible map. The darker the color, the greater the disparity for wheelchair users in comparison with all users.</p>'
         },
         futureAccessibility:{
           id: 'AccFut',
           title: 'Destinations Accessible using Accessible Stations or Those with Programmed Improvements',
-          description: '<p>We know that there are a number of stations that are programmed for wheelchair accessibility improvements or have improvements in progress. So this map considers those. This one includes stations that are currently accessible and those that are programmed for improvement. Again, the darker the blue, the more destinations are reachable via rail from that zone.</p>'
+          description: '<p>This map considers which stations are programmed for wheelchair accessibility improvements or have improvements in progress. It includes stations that are currently accessible and those that are programmed for improvement. Again, the darker the color, the more destinations are reachable via rail from that zone.</p>'
         },
         futureDisparity:{
           id: 'DisFut',
           title: 'Destination Disparity using Accessible Stations or Those with Programmed Improvements',
-          description: '<p>And this maps shows where the gaps remain – in the darkest orange. So these are the places that we would want to focus on for the next batch of wheelchair accessibility improvements.</p>'
+          description: '<p>This map compares the previous map to the baseline map. It shows where the disparity remains. These are the places that should be the focus of the next batch of wheelchair accessibility improvements at rail stations.</p>'
         }
       }
     }
