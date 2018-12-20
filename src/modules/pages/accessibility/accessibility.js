@@ -224,6 +224,7 @@ const BuildMap = (container, props) =>{
     map.getCanvas().style.cursor = "pointer"
     const marker = { props: e.features[0].properties, long: e.features[0].geometry.coordinates[0], lat: e.features[0].geometry.coordinates[1]}
     let color;
+    // pop up to reflect level of accessibility
     switch(marker.props.accessibility){
       case 0:
         color = 'rgba(232,146,52,.85)'
