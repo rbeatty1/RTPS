@@ -216,7 +216,7 @@ const contentRef = {
       },
       table: false,
       text:
-        "This map shows the 25 bus routes with the greatest expected absolute increase in daily ridership between the existing and doubled frequency scenarios. Bus ridership refers to the number of passengers using that bus route on an average weekday. The darker the blue color, the greater the absolute increase in ridership."
+        "This map shows the 25 bus routes with the greatest expected absolute increase in daily ridership between the existing and doubled frequency scenarios. Bus ridership refers to the number of passengers using that bus route on an average weekday. The darker the green, the greater the absolute increase in ridership."
     }
   },
   busPercent: {
@@ -239,7 +239,7 @@ const contentRef = {
       },
       table: false,
       text:
-        "This map shows the 25 bus routes with the largest percent increase in daily ridership between the existing and doubled frequency scenarios. It is important to keep in mind that percent change is sometimes deceiving when base ridership is very low, making a small incrase appear as a substantial change. Only those bus routes with an estimated base scenario ridership of at least 100 are included. Many of the routes in this map are in suburban areas where base frequencies tend to be lower. The darker the blue color, the greater the percent increase in forecast ridership if frequency is doubled."
+        "This map shows the 25 bus routes with the largest percent increase in daily ridership between the existing and doubled frequency scenarios. It is important to keep in mind that percent change is sometimes deceiving when base ridership is very low, making a small incrase appear as a substantial change. Only those bus routes with an estimated base scenario ridership of at least 100 are included. Many of the routes in this map are in suburban areas where base frequencies tend to be lower. The darker the orange, the greater the percent increase in forecast ridership if frequency is doubled."
     }
   },
   mapData: {
