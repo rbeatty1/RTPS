@@ -3,10 +3,20 @@ import { LoadLayers } from "../../../utils/loadMapLayers";
 import { styles } from "../map/map_styles/frequency";
 
 const contentRef = {
-  overview: {
-    active: true,
-    title: "Overview",
+  about: {
+    active: false,
+    title: 'Overview',
     scenario: undefined,
+    content: {
+      map: false,
+      table: false,
+      text: "What happens if we double transit service frequency for all lines?<br>How does the doubled service frequency scenario compare to the existing scenario?</br></br>The answers below help us understand where potential latent demand for higher frequency transit exists. Want to know how your neighborhood or favorite routes might respond? Go ahead and scroll down to begin exploring!"
+    }
+  },
+  overview: {
+    active: false,
+    title: "Weekday Frequency",
+    scenario: "Existing",
     content: {
       map: {
         source: "transit",
@@ -23,8 +33,8 @@ const contentRef = {
         }
       },
       table: false,
-      text:
-        "What happens if we double transit service frequency for all lines?<br>How does the doubled service frequency scenario compare to the existing scenario?</br></br>The answers below help us understand where potential latent demand for higher frequency transit exists. Want to know how your neighborhood or favorite routes might respond? Go ahead and explore!"
+      text: "This map depicts the existing weekday transit frequency by average trips/hour. Darker colors represent transit routes that have less frequency service. When clicking the lines on the map, the pop-up shows the peak AM frequency as well as the average weekday trips/hour."
+        
     }
   },
   existing: {
@@ -569,19 +579,16 @@ const BuildContent = (content, key, component) => {
       duration: element.getBoundingClientRect().height + 20
     })
       .on("enter", e => {
-        if (contentRef[element.id].content.map)
-          // symbolize correct layer and sections
-          ResymbolizeFeatureLayer(component.map, contentRef[element.id]);
+        // symbolize correct layer and sections
+        ResymbolizeFeatureLayer(component.map, contentRef[element.id]);
         link.classList.add("active");
         element.classList.add("active");
       })
       .on("leave", e => {
-        if (contentRef[element.id].content.map){
-          // Remove symbolization from correct layer and sections
-          HideFeatureLayer(component.map, contentRef[element.id]);
-          link.classList.remove("active");
-          element.classList.remove("active");
-        }
+        // Remove symbolization from correct layer and sections
+        HideFeatureLayer(component.map, contentRef[element.id]);
+        link.classList.remove("active");
+        element.classList.remove("active");
         if (document.querySelector('.mapboxgl-popup')) RemovePopup(document.querySelector('.mapboxgl-popup'))
       })
       .addTo(component.scroll);
@@ -592,10 +599,10 @@ const BuildContent = (content, key, component) => {
     section = document.createElement("div");
   section.classList.add("frequency__story-section");
 
-  if (contentRef[key].active) section.classList.add("active");
+  contentRef[key].active ? console.log(`${key} is active`) : console.log(`${key} is inactive`)
   // return appropriate HTML content
   switch (key) {
-    case "overview":
+    case "about":
       section.innerHTML = `
       <div class="frequency__storySection-title">
         <div class="frequency__storySection-TitleDivider">
@@ -878,7 +885,7 @@ const LoadExisting = map => {
             "line-width": ["interpolate", ["linear"], ["zoom"], 7, 0.05, 12, 3],
             "line-color": ["match", ["get", "linename"]]
           },
-          layout: { visibility: "visible" }
+          layout: { visibility: "none" }
         },
         {
           id: "transit-existing",
@@ -1547,7 +1554,7 @@ const BuildMap = container => {
 export class Frequency {
   constructor() {
     for (let section in contentRef){
-      section == 'overview' ? contentRef[section].active = true : contentRef[section].active = false
+      section == 'about' ? contentRef[section].active = true : contentRef[section].active = false
     }
     this.render();
   }
