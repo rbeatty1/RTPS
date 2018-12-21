@@ -1,6 +1,6 @@
 import "../../../css/pages/frequency/frequency.css";
 import { LoadLayers } from "../../../utils/loadMapLayers";
-import { styles } from "../map/map_styles/frequency";
+import { styles, addRailLayers } from "../map/map_styles/frequency";
 
 const contentRef = {
   about: {
@@ -583,12 +583,22 @@ const BuildContent = (content, key, component) => {
         ResymbolizeFeatureLayer(component.map, contentRef[element.id]);
         link.classList.add("active");
         element.classList.add("active");
+        if (element.id == 'transitChange' || element.id == 'autoChange') {
+          let transit = component.map.getLayer('passengerRail-lines')
+          transit.visibility == 'none' ? component.map.setLayoutProperty('passengerRail-labels', 'visibility', 'visible') : null
+          transit.visibility == 'none' ? component.map.setLayoutProperty('passengerRail-lines', 'visibility', 'visible') : null
+        }
       })
       .on("leave", e => {
         // Remove symbolization from correct layer and sections
         HideFeatureLayer(component.map, contentRef[element.id]);
         link.classList.remove("active");
         element.classList.remove("active");
+        if (element.id == 'transitChange' || element.id == 'autoChange') {
+          let transit = component.map.getLayer('passengerRail-lines')
+          transit.visibility == 'visible' ? component.map.setLayoutProperty('passengerRail-labels', 'visibility', 'none') : null
+          transit.visibility == 'visible' ? component.map.setLayoutProperty('passengerRail-lines', 'visibility', 'none') : null
+        }
         if (document.querySelector('.mapboxgl-popup')) RemovePopup(document.querySelector('.mapboxgl-popup'))
       })
       .addTo(component.scroll);
@@ -599,7 +609,6 @@ const BuildContent = (content, key, component) => {
     section = document.createElement("div");
   section.classList.add("frequency__story-section");
 
-  contentRef[key].active ? console.log(`${key} is active`) : console.log(`${key} is inactive`)
   // return appropriate HTML content
   switch (key) {
     case "about":
@@ -1187,7 +1196,6 @@ const LoadBus = map => {
         - data => reference object to pull popup content from
   */
   const PopUps = event => {
-    console.log({event})
     let target = event.features[0].properties.linename,
       data = contentRef.mapData.bus,
       popupContainer = document.createElement("div");
@@ -1540,6 +1548,7 @@ const BuildMap = container => {
     LoadTaz(map);
     LoadBus(map);
     LoadRail(map);
+    addRailLayers(map)
     map.flyTo({
       center: extent.center,
       zoom: extent.zoom
