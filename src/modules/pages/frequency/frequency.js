@@ -12,13 +12,13 @@ const contentRef = {
         source: "transit",
         layer: "overview",
         legend: {
-          name: "Midday Base Frequency",
-          units: "Minutes",
+          name: "Average Weekday Frequency",
+          units: "Trips/Hour",
           scheme: [
-            ["0–15", "#ddd"],
-            ["15–30", "#aed8ca"],
-            ["30–60", "#74ccb3"],
-            ["> 60", "#06bf9c"]
+            ["4 +", "#ddd"],
+            ["2–3", "#aed8ca"],
+            ["1", "#74ccb3"],
+            ["0", "#06bf9c"]
           ]
         }
       },
@@ -762,7 +762,7 @@ const PaginationListener = (map, link) => {
       content.innerHTML = `<div class='frequency__popup-header'>Route ${route}</div><div class='frequency__popup-meat'><span class="frequency__popup-emphasis">${
         data[route].am
       } Minute</span> <span class="frequency__popup-unit">AM Peak Frequency</span></div><div class='frequency__popup-meat'><span class="frequency__popup-emphasis">${
-        data[route].midday
+        data[route].avg_freq
       } Minute</span> <span class="frequency__popup-unit">Mid-day Base Frequency</span></div>`;
     }
     else if (active[0] == 'b' && data[route]){
@@ -812,10 +812,10 @@ const LoadExisting = map => {
   */
   const OverviewColor = (data, target, line) => {
     let colors = contentRef.overview.content.map.legend.scheme; // that's a lot of fucking typing just to get some colors
-    if (data < 15) target.push(line, colors[3][1]);
-    else if (data >= 15 && data < 30) target.push(line, colors[2][1]);
-    else if (data >= 30 && data < 60) target.push(line, colors[1][1]);
-    else target.push(line, colors[0][1]);
+    if (data >= 4) target.push(line, colors[0][1]);
+    else if (data >= 2 && data < 4) target.push(line, colors[1][1]);
+    else if (data >= 1 && data < 2) target.push(line, colors[2][1]);
+    else target.push(line, colors[3][1]);
   };
   /*
     ExistingColor(data, target, line)
@@ -855,8 +855,8 @@ const LoadExisting = map => {
               data[feature].am
             } Minute</span> <span class="frequency__popup-unit">AM Peak Frequency</span></div>
             <div class='frequency__popup-meat'><span class="frequency__popup-emphasis">${
-              data[feature].midday
-            } Minute</span> <span class="frequency__popup-unit">Mid-day Base Frequency</span></div>
+              Math.ceil(Math.round(data[feature].avg_freq, 2))
+            } Trips/Hour</span> <span class="frequency__popup-unit">Average Weekday Frequency</span></div>
             `;
     }
     return popupContainer.outerHTML;
@@ -906,7 +906,7 @@ const LoadExisting = map => {
       ];
       for (let line in existing.cargo) {
         OverviewColor(
-          existing.cargo[line].midday,
+          existing.cargo[line].avg_freq,
           layerDef[0].paint["line-color"],
           line
         );
