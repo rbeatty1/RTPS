@@ -778,8 +778,8 @@ const PaginationListener = (map, link) => {
       content.innerHTML = `<div class='frequency__popup-header'>Route ${route}</div><div class='frequency__popup-meat'><span class="frequency__popup-emphasis">${
         data[route].am
       } Minute</span> <span class="frequency__popup-unit">AM Peak Frequency</span></div><div class='frequency__popup-meat'><span class="frequency__popup-emphasis">${
-        data[route].avg_freq
-      } Minute</span> <span class="frequency__popup-unit">Mid-day Base Frequency</span></div>`;
+        Math.ceil(Math.round(data[route].avg_freq,2))
+      } Trips/Hour</span> <span class="frequency__popup-unit">Average Weekday Frequency</span></div>`;
     }
     else if (active[0] == 'b' && data[route]){
       content.innerHTML = `
