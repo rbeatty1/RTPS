@@ -181,11 +181,11 @@ const contentRef = {
           units: "Estimated Passengers per Day",
           name: "Absolute Ridership Change",
           scheme: [
-            ["Low", "#bde8ff"],
-            ["", "#92c0d8"],
-            ["", "#6899b3"],
-            ["", "#3e738f"],
-            ["High", "#08506d"]
+            ["Low", "#d8c72e"],
+            ["", "#a9ca46"],
+            ["", "#7cca64"],
+            ["", "#4dc682"],
+            ["High", "#06bf9c"]
           ]
         }
       },
@@ -671,14 +671,9 @@ const BuildNav = (component, sections) => {
   for (let i in sections) {
     // don't build a section for the mapData
     if (i != "mapData") {
-      let sectionLink = document.createElement("div"),
-        tooltip = document.createElement("div");
-      tooltip.classList.add("tooltip");
-      sectionLink.innerHTML = `<p>${cnt}</p>`;
+      let sectionLink = document.createElement("div")
+      sectionLink.innerHTML = `<div class="frequency__nav-linkSection">${cnt}<span class="frequency__nav-linkTooltip">${sections[i].title}</span></div>`;
       sectionLink.classList.add("frequency__nav-link");
-
-      tooltip.innerText = sections[i].title;
-      sectionLink.appendChild(tooltip);
       sectionLink.id = i + "-link";
       sections[i].active ? sectionLink.classList.add("active") : sectionLink.classList.remove('active');
 
@@ -704,22 +699,6 @@ const BuildNav = (component, sections) => {
             : null;
         }
         sectionLink.classList.toggle("active");
-      });
-      sectionLink.addEventListener("mouseenter", e => {
-        let target = e.target;
-        if (target.classList.contains("frequency__nav-link")) {
-          target.children[1].classList.contains("active")
-            ? null
-            : target.children[1].classList.add("active");
-        }
-      });
-      sectionLink.addEventListener("mouseleave", e => {
-        let target = e.target;
-        if (target.classList.contains("frequency__nav-link")) {
-          target.children[1].classList.contains("active")
-            ? target.children[1].classList.remove("active")
-            : null;
-        }
       });
       nav.appendChild(sectionLink);
       // build content
