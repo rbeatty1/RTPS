@@ -221,6 +221,11 @@
   font-weight: 700;
   color: white;
 }
+.dvrpc-summary{
+  background: #d8c72e;
+  font-weight: 700;
+  color: white;
+}
 #busLinePerChange{
   margin-bottom: 5rem;
 }

@@ -351,6 +351,7 @@ const FormatNumber = num => {
     : num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); // decimal not present => insert comma after every third digit
 };
 
+
 /*
   ResymbolizeFeatureLayer(map,section)
     @desc: Called when ScrollStory hits a triggerpoint and displays appropriate layer. Changes visibility property of appropriate map data to visible
@@ -499,6 +500,41 @@ const CreateTable = data => {
     );
     table.appendChild(CreateSummaryContent(state, summaries[state].final));
   }
+
+  const CreateRegionSummary = summaries =>{
+    let temp = []
+    for (let state in summaries){
+      summaries[state].final.map((data, index)=>{
+        if (!temp[index]) temp.push(parseFloat(data))
+        else{
+          if (index < 2){
+            temp[index] = temp[index] + parseFloat(data)
+          }
+          else if (index == 2){
+            temp[2] = temp[0] - temp[1]
+          }
+          else {
+            
+          }
+        } 
+      })
+    }
+    let row = document.createElement('tr'),
+      label = document.createElement('td')
+    row.classList.add('dvrpc-summary')
+    label.innerText = 'DVRPC'
+    row.appendChild(label)
+    
+    temp.map(data=>{
+      let cell = document.createElement('td')
+      cell.innerText = FormatNumber(data)
+      row.appendChild(cell)
+    })
+    return row
+  }
+
+  let dvrpcSummary = CreateRegionSummary(summaries)
+  table.appendChild(dvrpcSummary)
   return table;
 };
 
