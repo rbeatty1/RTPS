@@ -1,6 +1,6 @@
 import "../../../css/pages/frequency/frequency.css";
-import { LoadLayers } from "../../../utils/loadMapLayers";
-import { styles, addRailLayers } from "../map/map_styles/frequency";
+import { LoadLayers, addRailLayers } from "../../../utils/loadMapLayers";
+import { styles } from "../map/map_styles/frequency";
 
 const contentRef = {
   about: {
