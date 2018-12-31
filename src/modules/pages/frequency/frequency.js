@@ -507,15 +507,9 @@ const CreateTable = data => {
       summaries[state].final.map((data, index)=>{
         if (!temp[index]) temp.push(parseFloat(data))
         else{
-          if (index < 2){
-            temp[index] = temp[index] + parseFloat(data)
-          }
-          else if (index == 2){
-            temp[2] = temp[0] - temp[1]
-          }
-          else {
-            
-          }
+          if (index < 2 ) temp[index] = temp[index] + parseFloat(data)
+          else if (index == 2)temp[2] = temp[1] - temp[0]
+          else temp[index] = ((temp[2]/temp[0])*100).toFixed(2)
         } 
       })
     }
