@@ -1,5 +1,6 @@
 import "../../../css/pages/frequency/frequency.css";
 import { LoadLayers, addRailLayers } from "../../../utils/loadMapLayers";
+import {FormatNumber} from "../../../utils/formatNumber"
 import { styles } from "../map/map_styles/frequency";
 
 const contentRef = {
@@ -338,18 +339,7 @@ const contentRef = {
   }
 };
 
-/*
-  FormatNumber(num)
-    @desc: Returns a formatted number for display–either a percentage or comma-separated value
-    @param:
-      - num => number to be formatted
-    @return: formatted number for display    
-*/
-const FormatNumber = num => {
-  return num.toString().indexOf(".") != -1 // check if there is a decimal
-    ? num + "%" // decimal present => format as percentage
-    : num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); // decimal not present => insert comma after every third digit
-};
+
 
 
 /*

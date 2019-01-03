@@ -1,6 +1,7 @@
 import '../../../css/pages/reliability/reliability.css'
 import {LoadLayers} from '../../../utils/loadMapLayers';
 import { styles } from '../map/map_styles/reliability.js'
+import { FormatNumber } from '../../../utils/formatNumber';
 
 
 const BuildPage = structure =>{
@@ -34,8 +35,13 @@ const BuildMap = pageContent =>{
   
   }
 
-  const LayerVisibilityCheck = layerId =>{
-    if (map.getLayoutProperty(layerId, 'visibility') == 'visible') document.querySelector(`input[name=${layerId.split('-')[1]}]`).checked = true
+  const LayerVisibilityCheck = layerName =>{
+    let layerId = `reliability-${layerName}`,
+      checkboxId = `#legend-${layerName}`
+    if (map.getLayoutProperty(layerId, 'visibility') == 'visible') {
+      document.querySelector(`input[name=${layerId.split('-')[1]}]`).checked = true
+      document.querySelector(checkboxId).style.display = 'flex'
+    }
   }
 
 
@@ -62,11 +68,12 @@ const BuildMap = pageContent =>{
 
     LoadData(pageContent.data)
 
-    for (let layer in styles.reliability.layers) LayerVisibilityCheck(`reliability-${layer}`)
+    for (let layer in styles.reliability.layers) LayerVisibilityCheck(layer)
   })
 
   return map
 }
+
 
 
 const BuildSidebar = map =>{
@@ -156,17 +163,17 @@ const BuildSidebar = map =>{
     parent.appendChild(element)
   }
 
-  const BuildLayerTab = element =>{
+  const BuildLayerSection = element =>{
     const BuildLayerControl = element =>{
 
       const LayerVisibilityChange = layer =>{
-        let layerID = `reliability-${layer}`
+        let layerID = `reliability-${layer}`,
+          boxes = document.querySelectorAll('.reliability__layer-checkbox')
         let visibility = map.getLayoutProperty(layerID, 'visibility')
-        for (let refLayer in styles.reliability.layers){
-          if (refLayer == layer){
-            visibility == 'none' ? map.setLayoutProperty(layerID, 'visibility', 'visible') : map.setLayoutProperty(layerID, 'visibility', 'none')
-          }
-        }
+        for (let refLayer in styles.reliability.layers) if (refLayer == layer) visibility == 'none' ? map.setLayoutProperty(layerID, 'visibility', 'visible') : map.setLayoutProperty(layerID, 'visibility', 'none')
+
+        for (let box of boxes) box.checked ? document.querySelector(`#legend-${box.name}`).style.display = 'flex' : document.querySelector(`#legend-${box.name}`).style.display = 'none'
+
       }
 
       let layers = [
@@ -175,7 +182,7 @@ const BuildSidebar = map =>{
         ['reliability-speed', '<span class="reliability__layer-emphasis">Input:</span> Average Speed by Line'],
         ['reliability-otp', '<span class="reliability__layer-emphasis">Input:</span> On Time Performance'],
         ['reliability-tti', '<span class="reliability__layer-emphasis">Input:</span> Travel Time Index'],
-        ['reliability-septa', '<span class="reliability__layer-emphasis">Input:</span> SEPTA Surface Transit Loads'],
+        // ['reliability-septa', '<span class="reliability__layer-emphasis">Input:</span> SEPTA Surface Transit Loads'],
         ['reliability-njt', '<span class="reliability__layer-emphasis">Input:</span> New Jersey Transit Ridership']
       ]
 
@@ -226,6 +233,57 @@ const BuildSidebar = map =>{
     container.appendChild(filterControl)
     element.appendChild(container)
   }
+
+  const BuildLegendSection = element =>{
+    let titleRef = {
+      score: 'Reliability Score',
+      weighted: 'Ridership Weighted Reliability Score',
+      speed: 'Average Speed by Line',
+      otp: 'On Time Performance',
+      tti: 'Travel Time Index',
+      njt: 'New Jersey Transit Ridership'
+    }
+    let legend = document.createElement('div')
+    legend.classList.add('reliability__sidebar-sectionContent')
+    legend.id = 'content-legend'
+    for (let layer in styles.reliability.layers){
+      let legendSection = document.createElement('div'),
+        title = document.createElement('div'),
+        items = document.createElement('div')
+
+      
+      legendSection.classList.add('reliability__legend-section')
+      legendSection.id = `legend-${layer}`
+
+      title.innerText = titleRef[layer]
+      title.classList.add('reliability__legend-title')
+      items.classList.add('reliability__legend-items')
+      let colorExpression = styles.reliability.layers[layer].paint['line-color'],
+        colors = new Array(),
+        labels = new Array() ;
+      colorExpression.map(statement=> {
+        if (statement[0] == '#') colors.push(statement)
+        else if (typeof statement == 'number') labels.push(statement)
+      })
+
+      colors.map((color, index)=>{
+        let test = document.createElement('div')
+        test.classList.add('reliability__legend-item')
+        if (labels[index] && layer != 'tti') index == 0 ? test.innerText = `0–${FormatNumber(labels[index])}` : test.innerText = `${FormatNumber(labels[index-1]+1)}–${FormatNumber(labels[index])}`
+        else if (labels[index] && layer == 'tti') index == 0 ? test.innerText = `0–${labels[index]}` : test.innerText = `${labels[index-1]+.1}–${labels[index]}`
+        else if (!labels[index] && layer == 'tti') test.innerText = `${labels[index-1]+.1} +`
+        else test.innerText = `${FormatNumber(labels[index-1])} +`
+        test.style.borderBottom = `10px solid ${color}`
+        test.style.width = `${100/colors.length}%`
+        items.appendChild(test)
+      })
+
+      legendSection.appendChild(title)
+      legendSection.appendChild(items)
+      legend.appendChild(legendSection)
+    }
+    element.appendChild(legend)
+  }
   
   let sidebar = document.querySelector('#reliability__sidebar'),
     content = document.createElement('div'),
@@ -235,7 +293,8 @@ const BuildSidebar = map =>{
   sidebar.appendChild(content)
   
   BuildAboutSection(content)
-  BuildLayerTab(content)
+  BuildLayerSection(content)
+  BuildLegendSection(content)
 
 }
 export class Reliability{

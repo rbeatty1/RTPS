@@ -11,6 +11,7 @@
   width: 20%;
   height: 100%;
   border-left: 2px solid #06bf9c;
+  background: whitesmoke
 }
 
 .reliability__sidebar-tabs{
@@ -101,4 +102,30 @@
 .reliability__layer-emphasis{
   color: #08506d;
   font-weight: 700;
+}
+.reliability__legend-section{
+  display: none;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.reliability__legend-title{
+  /* width: 50%; */
+  color: #666;
+  text-align: center;
+  margin: 10px auto;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.reliability__legend-items{
+  display: flex;
+  width: 100%
+}
+.reliability__legend-item{
+  text-align: center;
+  padding-bottom: 5px
 }
