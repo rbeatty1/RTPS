@@ -205,8 +205,7 @@ const BuildMap = (container, props) =>{
     style: 'mapbox://styles/beattyre1/cjky7crbr17og2rldo6g7w5al',
     center: extent.center,
     zoom: extent.zoom,
-    minZoom: 8,
-    hash: true
+    minZoom: 8
   })
   let popup;
   map.on('load', _ => {

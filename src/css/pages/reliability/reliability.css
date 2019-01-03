@@ -10,7 +10,7 @@
 #reliability__sidebar{
   width: 20%;
   height: 100%;
-  border-left: 2px solid #08506d;
+  border-left: 2px solid #06bf9c;
 }
 
 .reliability__sidebar-tabs{
@@ -25,16 +25,20 @@
 }
 .reliability__sidebar-nav{
   list-style: none;
-  padding: 15px;
-  width: 33%;
+  height: 75%;
   font-size: 1.25rem;
   color:#7eaad2;
   font-weight: 400;
+  display: flex;
+  align-items: center;
+
 }
 .reliability__sidebar-nav.active{
   font-weight: 700;
   font-size: 1.5rem;
   color: #08506d;
+  border-bottom: 2px solid #06bf9c;
+  
 }
 .reliability__sidebar-content{
   width: 80%;
@@ -85,8 +89,12 @@
   text-align: center;
 }
 
+.reliability__layer-option{
+  display: flex;
+  align-items: center
+}
 .reliability__layer-checkbox{
-  margin: .5rem auto;
+  margin: .5rem;
   color: #999;
   font-size: 1rem;
 }

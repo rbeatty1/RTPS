@@ -27,8 +27,7 @@ const BuildMap = () => {
         container: mapBody,
         style: 'mapbox://styles/beattyre1/cjdbtddl12scq2st5zybjm8r6',
         center: extent.center,
-        zoom: extent.zoom,
-        hash: true
+        zoom: extent.zoom
     })
     return map
 }

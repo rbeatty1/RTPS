@@ -34,8 +34,7 @@ const styles = {
             'interpolate',
             ['linear'],
             ['zoom'],
-            0, .05,
-            8, .5,
+            8, .2,
             12, 3
           ],
           'line-color': [
@@ -53,10 +52,51 @@ const styles = {
             19, '#67001F'
           ]
         },
+        layout: {
+          visibility: 'visible'
+        },
+        placement: "admin-2-boundaries",
         filter: [
-          '==',
-          'gid',
-          ''
+          'case',
+          ['all', 
+            ['<', ['zoom'], 8],
+            ['any',
+              ['>=', ['number', ['get', 'score']], 19],
+              ['<=', ['number', ['get', 'score']], 4]
+            ]
+          ], true, 
+          ['all', 
+            ['all',
+              ['<', ['zoom'], 9],
+              ['>=', ['zoom'], 8]
+            ],
+            ['any',
+              ['>=', ['number', ['get', 'score']], 16],
+              ['<=', ['number', ['get', 'score']], 6]
+            ]
+          ], true,
+          ['all', 
+            ['all',
+              ['<', ['zoom'], 10],
+              ['>=', ['zoom'], 9]
+            ],
+            ['any',
+              ['>=', ['number', ['get', 'score']], 14],
+              ['<=', ['number', ['get', 'score']], 8]
+            ]
+          ], true,  
+          ['all', 
+            ['all',
+              ['<', ['zoom'], 11],
+              ['>=', ['zoom'], 10]
+            ],
+            ['any',
+              ['>=', ['number', ['get', 'score']], 12],
+              ['<=', ['number', ['get', 'score']], 10]
+            ]
+          ], true,
+          ['>=', ['zoom'], 11], true, 
+          false
         ]
       },
       weighted: {
@@ -67,8 +107,7 @@ const styles = {
             'interpolate',
             ['linear'],
             ['zoom'],
-            0, .05,
-            8, .5,
+            8, .2,
             12, 3
           ],
           'line-color': [
@@ -86,10 +125,51 @@ const styles = {
             19, '#67001F'
           ]
         },
+        layout: {
+          visibility: 'none'
+        },
+        placement: "admin-2-boundaries",
         filter: [
-          '==',
-          'gid',
-          ''
+          'case',
+          ['all', 
+            ['<', ['zoom'], 8],
+            ['any',
+              ['>=', ['number', ['get', 'weighted']], 19],
+              ['<=', ['number', ['get', 'weighted']], 4]
+            ]
+          ], true, 
+          ['all', 
+            ['all',
+              ['<', ['zoom'], 9],
+              ['>=', ['zoom'], 8]
+            ],
+            ['any',
+              ['>=', ['number', ['get', 'weighted']], 16],
+              ['<=', ['number', ['get', 'weighted']], 6]
+            ]
+          ], true,
+          ['all', 
+            ['all',
+              ['<', ['zoom'], 10],
+              ['>=', ['zoom'], 9]
+            ],
+            ['any',
+              ['>=', ['number', ['get', 'weighted']], 14],
+              ['<=', ['number', ['get', 'weighted']], 8]
+            ]
+          ], true,  
+          ['all', 
+            ['all',
+              ['<', ['zoom'], 11],
+              ['>=', ['zoom'], 10]
+            ],
+            ['any',
+              ['>=', ['number', ['get', 'weighted']], 12],
+              ['<=', ['number', ['get', 'weighted']], 10]
+            ]
+          ], true,
+          ['>=', ['zoom'], 11], true, 
+          false
         ]
       },
       otp: {
@@ -100,8 +180,7 @@ const styles = {
             'interpolate',
             ['linear'],
             ['zoom'],
-            0, .05,
-            8, .5,
+            8, .2,
             12, 3
           ],
           'line-color': [
@@ -114,10 +193,47 @@ const styles = {
             90, '#EBE6DF'
           ]
         },
+        layout: {
+          visibility: 'none'
+        },
+        placement: "admin-2-boundaries",
         filter: [
-          '==',
-          'gid',
-          ''
+          'case',
+          ['all', 
+            ['<', ['zoom'], 8],
+            ['any',
+              ['>=', ['number', ['get', 'otp']], 90],
+            ]
+          ], true, 
+          ['all', 
+            ['all',
+              ['<', ['zoom'], 9],
+              ['>=', ['zoom'], 8]
+            ],
+            ['any',
+              ['>=', ['number', ['get', 'otp']], 80],
+            ]
+          ], true,
+          ['all', 
+            ['all',
+              ['<', ['zoom'], 10],
+              ['>=', ['zoom'], 9]
+            ],
+            ['any',
+              ['>=', ['number', ['get', 'otp']], 70],
+            ]
+          ], true,  
+          ['all', 
+            ['all',
+              ['<', ['zoom'], 11],
+              ['>=', ['zoom'], 10]
+            ],
+            ['any',
+              ['>=', ['number', ['get', 'otp']], 60],
+            ]
+          ], true,
+          ['>=', ['zoom'], 11], true, 
+          false
         ]
       },
       njt: {
@@ -128,13 +244,12 @@ const styles = {
             'interpolate',
             ['linear'],
             ['zoom'],
-            0, .05,
-            8, .5,
+            8, .2,
             12, 3
           ],
           'line-color': [
             'step',
-            ['get', 'daily_rider'],
+            ['get', 'ridership'],
             '#E6EECF',
             200, '#9BC4C1',
             750, '#69A8B7',
@@ -142,11 +257,10 @@ const styles = {
             2000, '#2E557A'
           ]
         },
-        // filter: [
-        //   '==',
-        //   'gid',
-        //   ''
-        // ]
+        placement: "admin-2-boundaries",
+        layout: {
+          visibility: 'none'
+        }
       },
       // septa: {
       //   type: 'line',
@@ -155,11 +269,9 @@ const styles = {
       //     'line-color': '#f00',
       //     'line-width': 1
       //   },
-      //   filter: [
-      //     '==',
-      //     'gid',
-      //     ''
-      //   ]
+      //   layout: {
+      //     visibility: 'none'
+      //   }
       // },
       speed: {
         type: 'line',
@@ -175,18 +287,57 @@ const styles = {
           ],
           'line-color': [
             'step',
-            ['get', 'avgspeed'],
-            '#BE3027',
-            10, '#D5857F',
-            25, '#EBD9D8',
-            40, '#97A2B3',
-            65, '#667181'
+            ['get', 'speed'],
+            '#730000',
+            10, '#e60000',
+            20, '#f07d02',
+            30, '#ffcb0d',
+            40, '#FF0',
+            50, '#AF0',
+            60, '#38a800'
           ]
         },
+        layout: {
+          visibility: 'none'
+        },
+        placement: "admin-2-boundaries",
         filter: [
-          '==',
-          'gid',
-          ''
+          'case',
+          ['all', 
+            ['<', ['zoom'], 8],
+            ['any',
+              ['>=', ['number', ['get', 'speed']], 60],
+            ]
+          ], true, 
+          ['all', 
+            ['all',
+              ['<', ['zoom'], 9],
+              ['>=', ['zoom'], 8]
+            ],
+            ['any',
+              ['>=', ['number', ['get', 'speed']], 50],
+            ]
+          ], true,
+          ['all', 
+            ['all',
+              ['<', ['zoom'], 10],
+              ['>=', ['zoom'], 9]
+            ],
+            ['any',
+              ['>=', ['number', ['get', 'speed']], 40],
+            ]
+          ], true,
+          ['all', 
+            ['all',
+              ['<', ['zoom'], 11],
+              ['>=', ['zoom'], 10]
+            ],
+            ['any',
+              ['>=', ['number', ['get', 'speed']], 30],
+            ]
+          ], true,
+          ['>=', ['zoom'], 11], true, 
+          false
         ]
       },
       tti: {
@@ -197,8 +348,7 @@ const styles = {
             'interpolate',
             ['linear'],
             ['zoom'],
-            0, .05,
-            8, .5,
+            8, .2,
             12, 3
           ],
           'line-color': [
@@ -210,15 +360,42 @@ const styles = {
             1.5, '#B24625',
           ]
         },
+        layout: {
+          visibility: 'none'
+        },
+        placement: "admin-2-boundaries",
         filter: [
-          '==',
-          'gid',
-          ''
+          'case',
+          ['all', 
+            ['<', ['zoom'], 8],
+            ['any',
+              ['>=', ['number', ['get', 'tti']], 1.5],
+            ]
+          ], true, 
+          ['all', 
+            ['all',
+              ['<', ['zoom'], 9],
+              ['>=', ['zoom'], 8]
+            ],
+            ['any',
+              ['>=', ['number', ['get', 'tti']], 1.2],
+            ]
+          ], true,
+          ['all', 
+            ['all',
+              ['<', ['zoom'], 10],
+              ['>=', ['zoom'], 9]
+            ],
+            ['any',
+              ['>=', ['number', ['get', 'tti']], 1],
+            ]
+          ], true,
+          ['>=', ['zoom'], 10], true, 
+          false
         ]
       }
     }
   }
 }
-
 
 export {styles}

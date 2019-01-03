@@ -1543,8 +1543,7 @@ const BuildMap = container => {
     style: "mapbox://styles/beattyre1/cjky7crbr17og2rldo6g7w5al",
     center: extent.center,
     zoom: extent.zoom,
-    minZoom: 7,
-    hash: true
+    minZoom: 7
   });
   map.on("load", () => {
     map.addSource("transit", {

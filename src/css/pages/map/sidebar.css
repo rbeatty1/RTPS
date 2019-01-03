@@ -5,6 +5,8 @@
 .map__sidebar-menuContainer{
   display: flex;
   align-items: center;
+  justify-content: center;
+  height: 5%;
   width: 100%;
   margin: 0;
   padding: 0;
@@ -16,23 +18,20 @@
 }
 
 .map__sidebar-menuHeader{
-  font-family: 'Arial Narrow', sans-serif;
-  background-color: whitesmoke;
-  width: 50%;
-  list-style: none;
-  opacity: 1;
-  color: #e89234;
-  font-size: 1.1em;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 1rem;
+    height: 75%;
+    list-style: none;
+    color: #7eaad2;
+    font-size: 1.25em;
+    display: flex;
+    align-items: center;
+    margin: 0 25px;
 }
 
 .map__sidebar-menuHeader.active{
   font-weight: 700;
   font-size: 1.5rem;
-  color: #e89234;
+  color: #08506d;
+  border-bottom: 2px solid #e89234;
 }
 
 .map__sidebar-menuContent{

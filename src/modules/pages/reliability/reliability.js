@@ -1,5 +1,5 @@
 import '../../../css/pages/reliability/reliability.css'
-import {LoadLayers, addRailLayers} from '../../../utils/loadMapLayers';
+import {LoadLayers} from '../../../utils/loadMapLayers';
 import { styles } from '../map/map_styles/reliability.js'
 
 
@@ -34,6 +34,10 @@ const BuildMap = pageContent =>{
   
   }
 
+  const LayerVisibilityCheck = layerId =>{
+    if (map.getLayoutProperty(layerId, 'visibility') == 'visible') document.querySelector(`input[name=${layerId.split('-')[1]}]`).checked = true
+  }
+
 
 
   let extent = {
@@ -43,24 +47,29 @@ const BuildMap = pageContent =>{
   mapboxgl.accessToken = 'pk.eyJ1IjoiYmVhdHR5cmUxIiwiYSI6ImNqOGFpY3o0cTAzcXoycXE4ZTg3d3g5ZGUifQ.VHOvVoTgZ5cRko0NanhtwA';
   let map = new mapboxgl.Map({
       container: pageContent.content.map,
-      style: 'mapbox://styles/beattyre1/cjdbtddl12scq2st5zybjm8r6',
+      style: 'mapbox://styles/mapbox/light-v9',
       center: extent.center,
-      zoom: extent.zoom,
-      hash: true
+      zoom: extent.zoom
   })
 
   map.on('load', ()=> {
     map.resize()
+    map.flyTo({
+      center: extent.center,
+      zoom: extent.zoom
+    })
     LoadLayers(map, styles)
 
     LoadData(pageContent.data)
 
-
+    for (let layer in styles.reliability.layers) LayerVisibilityCheck(`reliability-${layer}`)
   })
+
+  return map
 }
 
 
-const BuildSidebar = () =>{
+const BuildSidebar = map =>{
   const BuildSidebarNav = () =>{
     let tabs = document.createElement('ul'),
       sections = ['About', 'Layers', 'Legend']
@@ -150,6 +159,16 @@ const BuildSidebar = () =>{
   const BuildLayerTab = element =>{
     const BuildLayerControl = element =>{
 
+      const LayerVisibilityChange = layer =>{
+        let layerID = `reliability-${layer}`
+        let visibility = map.getLayoutProperty(layerID, 'visibility')
+        for (let refLayer in styles.reliability.layers){
+          if (refLayer == layer){
+            visibility == 'none' ? map.setLayoutProperty(layerID, 'visibility', 'visible') : map.setLayoutProperty(layerID, 'visibility', 'none')
+          }
+        }
+      }
+
       let layers = [
         ['reliability-score', '<span class="reliability__layer-emphasis">Result:</span> Reliability Score'],
         ['reliability-weighted', '<span class="reliability__layer-emphasis">Result:</span> Ridership Weighted Reliability Score'],
@@ -167,12 +186,17 @@ const BuildSidebar = () =>{
           input = document.createElement('input'),
           label = document.createElement('label')
         
-        checkbox.classList.add('reliability__layer-checkbox')
+        checkbox.classList.add('reliability__layer-option')
+        input.classList.add('reliability__layer-checkbox')
+        
         input.setAttribute('type', 'checkbox')
         input.setAttribute('name', layer[0].split('-')[1])
   
         label.setAttribute('for', layer[0].split('-')[1])
         label.innerHTML = layer[1]
+
+        input.addEventListener('input', ()=> LayerVisibilityChange(input.name))
+
         checkbox.appendChild(input)
         checkbox.appendChild(label)
         element.appendChild(checkbox)
@@ -227,8 +251,8 @@ export class Reliability{
 
   render(){
     BuildPage(this.content)
-    BuildMap(this)
-    BuildSidebar()
+    let map = BuildMap(this)
+    BuildSidebar(map)
 
   }
 
