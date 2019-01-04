@@ -74,12 +74,10 @@ const BuildMap = pageContent =>{
   return map
 }
 
-
-
 const BuildSidebar = map =>{
   const BuildSidebarNav = () =>{
     let tabs = document.createElement('ul'),
-      sections = ['About', 'Layers', 'Legend']
+      sections = ['About', 'Layers']
     
     tabs.classList.add('reliability__sidebar-tabs')
     
@@ -168,12 +166,45 @@ const BuildSidebar = map =>{
 
       const LayerVisibilityChange = layer =>{
         let layerID = `reliability-${layer}`,
-          boxes = document.querySelectorAll('.reliability__layer-checkbox')
+          boxes = document.querySelectorAll('input[type=checkbox]')
         let visibility = map.getLayoutProperty(layerID, 'visibility')
         for (let refLayer in styles.reliability.layers) if (refLayer == layer) visibility == 'none' ? map.setLayoutProperty(layerID, 'visibility', 'visible') : map.setLayoutProperty(layerID, 'visibility', 'none')
 
         for (let box of boxes) box.checked ? document.querySelector(`#legend-${box.name}`).style.display = 'flex' : document.querySelector(`#legend-${box.name}`).style.display = 'none'
 
+      }
+
+      const BuildLegendSection = (element, layer) =>{
+        let legendSection = document.createElement('div'),
+          items = document.createElement('div')
+  
+        
+        legendSection.classList.add('reliability__legend-section')
+        legendSection.id = `legend-${layer}`
+        
+        items.classList.add('reliability__legend-items')
+        let colorExpression = styles.reliability.layers[layer].paint['line-color'],
+          colors = new Array(),
+          labels = new Array() ;
+        colorExpression.map(statement=> {
+          if (statement[0] == '#') colors.push(statement)
+          else if (typeof statement == 'number') labels.push(statement)
+        })
+  
+        colors.map((color, index)=>{
+          let test = document.createElement('div')
+          test.classList.add('reliability__legend-item')
+          if (labels[index] && layer != 'tti') index == 0 ? test.innerText = `0–${FormatNumber(labels[index])}` : test.innerText = `${FormatNumber(labels[index-1]+1)}–${FormatNumber(labels[index])}`
+          else if (labels[index] && layer == 'tti') index == 0 ? test.innerText = `0–${labels[index]}` : test.innerText = `${labels[index-1]+.1}–${labels[index]}`
+          else if (!labels[index] && layer == 'tti') test.innerText = `${labels[index-1]+.1} +`
+          else test.innerText = `${FormatNumber(labels[index-1])} +`
+          test.style.borderBottom = `10px solid ${color}`
+          test.style.width = `${100/colors.length}%`
+          items.appendChild(test)
+        })
+  
+        legendSection.appendChild(items)
+        element.appendChild(legendSection)
       }
 
       let layers = [
@@ -189,12 +220,13 @@ const BuildSidebar = map =>{
       element.classList.add('reliability__sidebar-control')
 
       layers.map(layer=>{
-        let checkbox = document.createElement('div'),
+        let option = document.createElement('div'),
+          checkbox = document.createElement('div'),
           input = document.createElement('input'),
           label = document.createElement('label')
         
-        checkbox.classList.add('reliability__layer-option')
-        input.classList.add('reliability__layer-checkbox')
+        option.classList.add('reliability__layer-option')
+        checkbox.classList.add('reliability__layer-checkbox')
         
         input.setAttribute('type', 'checkbox')
         input.setAttribute('name', layer[0].split('-')[1])
@@ -206,15 +238,97 @@ const BuildSidebar = map =>{
 
         checkbox.appendChild(input)
         checkbox.appendChild(label)
-        element.appendChild(checkbox)
+
+        option.appendChild(checkbox)
+        BuildLegendSection(option, input.name)
+        element.appendChild(option)
       })
 
     }
 
     const BuildFilterControl = element =>{
+      let filterRef = {
+        core: ['6', '17', '21', '23', '33', '46', '47', '52', '56', '58', '60', '66', '79', '108', '113', 'R', '18', '26', 'G', '7', '10', '11', '13', '34', '36', 'MFL', 'BSL'],
+      }
       element.classList.add('reliability__sidebar-control')
 
       element.innerHTML = '<h2 class="reliability__control-title">Filter</h2>'
+
+      let form = document.createElement('form'),
+        dropdown = document.createElement('select'),
+        add = document.createElement('input'),
+        clear = document.createElement('input'),
+        submit = document.createElement('input')
+      
+      dropdown.innerHTML = '<option value="all" selected>All Routes</option>'
+      dropdown.id = 'reliability-filter-options'
+
+      add.setAttribute('type', 'submit')
+      add.setAttribute('value', 'Add to Filter')
+      add.setAttribute('aria-label', 'Add to Filter')
+
+      clear.setAttribute('type', 'submit')
+      clear.setAttribute('value', 'Clear Filter')
+      clear.setAttribute('aria-label', 'Clear Filter')
+
+      submit.setAttribute('type', 'submit')
+      submit.setAttribute('value', 'Submit Filter')
+      submit.setAttribute('aria-label', 'Submit Filter')
+
+      let filterSummary = document.createElement('div'),  
+        filterRoutes = []
+      filterSummary.innerText = `Currently displaying ${dropdown.value} routes`
+
+      fetch('http://localhost:8000/api/rtps/reliability?filter')
+      .then(response=> response.ok ? response.json() : null)
+      .then(jawn=>{
+        for (let route in jawn.cargo){
+          route.replace(' ', '_')
+          filterRef[route.toString()] = route.toString()
+        }
+        return filterRef
+      })
+      .then(data=>{
+        for (let route in data){
+          let option = document.createElement('option')
+          option.setAttribute('value', route)
+          option.innerText = route
+          dropdown.appendChild(option)
+        }
+      })
+
+      add.addEventListener('click', e=>{
+        let selection = document.querySelector('#reliability-filter-options')
+        selection.value != 'all' && filterRoutes.indexOf(selection.value) == -1 ? filterRoutes.push(selection.value) : null
+        filterSummary.innerText = `Currently displaying routes ${filterRoutes}`
+      })
+
+      submit.addEventListener('click', e=>{
+        let filterExpression = ['any']
+        filterRoutes.map(route=>{
+          let expressionStatement = ['==', 'linename', route]
+          filterExpression.push(expressionStatement)
+        })
+        map.setFilter('reliability-otp', filterExpression)
+        map.setFilter('reliability-speed', filterExpression)
+      })
+
+      clear.addEventListener('click', e=>{
+        filterRoutes = []
+        map.setFilter('reliability-otp', undefined)
+        map.setFilter('reliability-speed', undefined)
+        dropdown.value = 'all'
+        filterSummary.innerText = `Currently displaying ${dropdown.value} routes`
+
+      })
+
+
+      form.appendChild(dropdown)
+      form.appendChild(add)
+      form.appendChild(submit)
+      form.appendChild(clear)
+      element.appendChild(form)
+      element.appendChild(filterSummary)
 
     }
 
@@ -233,57 +347,6 @@ const BuildSidebar = map =>{
     container.appendChild(filterControl)
     element.appendChild(container)
   }
-
-  const BuildLegendSection = element =>{
-    let titleRef = {
-      score: 'Reliability Score',
-      weighted: 'Ridership Weighted Reliability Score',
-      speed: 'Average Speed by Line',
-      otp: 'On Time Performance',
-      tti: 'Travel Time Index',
-      njt: 'New Jersey Transit Ridership'
-    }
-    let legend = document.createElement('div')
-    legend.classList.add('reliability__sidebar-sectionContent')
-    legend.id = 'content-legend'
-    for (let layer in styles.reliability.layers){
-      let legendSection = document.createElement('div'),
-        title = document.createElement('div'),
-        items = document.createElement('div')
-
-      
-      legendSection.classList.add('reliability__legend-section')
-      legendSection.id = `legend-${layer}`
-
-      title.innerText = titleRef[layer]
-      title.classList.add('reliability__legend-title')
-      items.classList.add('reliability__legend-items')
-      let colorExpression = styles.reliability.layers[layer].paint['line-color'],
-        colors = new Array(),
-        labels = new Array() ;
-      colorExpression.map(statement=> {
-        if (statement[0] == '#') colors.push(statement)
-        else if (typeof statement == 'number') labels.push(statement)
-      })
-
-      colors.map((color, index)=>{
-        let test = document.createElement('div')
-        test.classList.add('reliability__legend-item')
-        if (labels[index] && layer != 'tti') index == 0 ? test.innerText = `0–${FormatNumber(labels[index])}` : test.innerText = `${FormatNumber(labels[index-1]+1)}–${FormatNumber(labels[index])}`
-        else if (labels[index] && layer == 'tti') index == 0 ? test.innerText = `0–${labels[index]}` : test.innerText = `${labels[index-1]+.1}–${labels[index]}`
-        else if (!labels[index] && layer == 'tti') test.innerText = `${labels[index-1]+.1} +`
-        else test.innerText = `${FormatNumber(labels[index-1])} +`
-        test.style.borderBottom = `10px solid ${color}`
-        test.style.width = `${100/colors.length}%`
-        items.appendChild(test)
-      })
-
-      legendSection.appendChild(title)
-      legendSection.appendChild(items)
-      legend.appendChild(legendSection)
-    }
-    element.appendChild(legend)
-  }
   
   let sidebar = document.querySelector('#reliability__sidebar'),
     content = document.createElement('div'),
@@ -294,7 +357,6 @@ const BuildSidebar = map =>{
   
   BuildAboutSection(content)
   BuildLayerSection(content)
-  BuildLegendSection(content)
 
 }
 export class Reliability{

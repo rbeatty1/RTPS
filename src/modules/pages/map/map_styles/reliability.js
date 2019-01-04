@@ -34,7 +34,7 @@ const styles = {
             'interpolate',
             ['linear'],
             ['zoom'],
-            8, .2,
+            8, .5,
             12, 3
           ],
           'line-color': [
