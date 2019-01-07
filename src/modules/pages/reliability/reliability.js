@@ -74,7 +74,7 @@ const BuildMap = pageContent =>{
   return map
 }
 
-const BuildSidebar = map =>{
+const BuildSidebar = (map, data) =>{
   const BuildSidebarNav = () =>{
     let tabs = document.createElement('ul'),
       sections = ['About', 'Layers']
@@ -247,37 +247,123 @@ const BuildSidebar = map =>{
     }
 
     const BuildFilterControl = element =>{
+
+      const BuildDropdownOption = (container, item) =>{
+        let listItem = document.createElement('li'),
+          option = document.createElement('input'),
+          label = document.createElement('label')
+
+        listItem.classList.add('reliability__filter-item')
+
+        option.type = 'checkbox'
+        option.id = `filterOption-${item}`
+        option.name = item
+        option.value = item
+
+        label.setAttribute('for', item)
+        label.innerText = item
+
+        listItem.appendChild(option)
+        listItem.appendChild(label)
+        container.querySelector('.reliability__filter-options').appendChild(listItem)
+        return listItem
+        
+      }
+
+      const CheckboxListeners = (list, summary) =>{
+        const SetMapFilters = filter =>{
+
+          let layers = styles.reliability.layers
+          for (let layer in layers){
+            if (layer == 'speed' || layer == 'otp' || layer == 'njt'){
+              let filterExp = ['any']
+              filter.map(route=>{
+                let statement = ['==', 'linename', route]
+                filterExp.push(statement)
+              })
+              map.setFilter(`reliability-${layer}`, filterExp)
+            }
+            else if (layer == 'score' || layer == 'weighted'){
+              let filterExp = ['any']
+              filter.map(route=>{
+                for (let segment in data[layer]){
+                  let feature = data[layer][segment]
+                  if (feature.lines != null){
+                    let lines = feature.lines.split(',')
+                    lines.map(line=>{
+                      let statement = ['==', 'gid']
+                      if (line == route){
+                        statement.push(parseInt(segment))
+                        filterExp.push(statement)
+                      }
+                    })
+                  }
+                }
+              })
+              map.setFilter(`reliability-${layer}`, filterExp)
+            }
+          }
+        }
+        let filtered = []
+        let allBoxes = list.querySelectorAll('input[type="checkbox"]')
+        for (let box of allBoxes){
+          box.checked == true && filtered.indexOf(box.value) == -1 ? filtered.push(box.value) : null
+        }
+
+        summary.innerHTML = ''
+        filtered.map(route=>{
+          let selected = document.createElement('div')
+          selected.classList.add('reliability__filter-selection')
+          selected.innerHTML = `Route ${route}<span class="reliability__filter-remove">X</span>`
+          summary.appendChild(selected)
+        })
+
+        let remove = document.querySelectorAll('.reliability__filter-remove')
+        for (let x of remove){
+          x.addEventListener('click', e=>{
+            let item = e.target.parentNode,
+              route = item.childNodes[0].textContent.split(' ')[1],
+              box = document.querySelector(`input[type="checkbox"][name="${route}"]`)
+            
+
+            for (let child of item.childNodes) item.remove(child)
+            box.checked = false
+
+            let index = filtered.indexOf(route)
+            filtered.splice(index, 1)
+            if (filtered.length > 0) SetMapFilters(filtered)
+            else for (let layer in styles.reliability.layers){ map.setFilter(`reliability-${layer}`, undefined)}
+
+          })
+        }
+
+        if (filtered.length > 0) SetMapFilters(filtered)
+        else for (let layer in styles.reliability.layers){ map.setFilter(`reliability-${layer}`, undefined)}
+      }
+
+
       let filterRef = {
         core: ['6', '17', '21', '23', '33', '46', '47', '52', '56', '58', '60', '66', '79', '108', '113', 'R', '18', '26', 'G', '7', '10', '11', '13', '34', '36', 'MFL', 'BSL'],
       }
       element.classList.add('reliability__sidebar-control')
 
-      element.innerHTML = '<h2 class="reliability__control-title">Filter</h2>'
-
-      let form = document.createElement('form'),
-        dropdown = document.createElement('select'),
-        add = document.createElement('input'),
-        clear = document.createElement('input'),
-        submit = document.createElement('input')
+      let controls = document.createElement('div'),
+        dropdown = document.createElement('div'),
+        summary = document.createElement('div'),
+        clear = document.createElement('button')
       
-      dropdown.innerHTML = '<option value="all" selected>All Routes</option>'
-      dropdown.id = 'reliability-filter-options'
+      
+      controls.classList.add('reliability__filter-actions')
+      clear.type = 'button'
+      clear.id = 'filter-clear'
+      clear.classList.add('reliability__filter-button')
+      clear.innerText = 'clear'
+      controls.appendChild(clear)
 
-      add.setAttribute('type', 'submit')
-      add.setAttribute('value', 'Add to Filter')
-      add.setAttribute('aria-label', 'Add to Filter')
+      // element.appendChild(controls)
+      element.appendChild(dropdown)
+      element.appendChild(summary)
 
-      clear.setAttribute('type', 'submit')
-      clear.setAttribute('value', 'Clear Filter')
-      clear.setAttribute('aria-label', 'Clear Filter')
-
-      submit.setAttribute('type', 'submit')
-      submit.setAttribute('value', 'Submit Filter')
-      submit.setAttribute('aria-label', 'Submit Filter')
-
-      let filterSummary = document.createElement('div'),  
-        filterRoutes = []
-      filterSummary.innerText = `Currently displaying ${dropdown.value} routes`
 
       fetch('http://localhost:8000/api/rtps/reliability?filter')
       .then(response=> response.ok ? response.json() : null)
@@ -289,46 +375,20 @@ const BuildSidebar = map =>{
         return filterRef
       })
       .then(data=>{
-        for (let route in data){
-          let option = document.createElement('option')
-          option.setAttribute('value', route)
-          option.innerText = route
-          dropdown.appendChild(option)
+        dropdown.classList.add('reliability__filter-dropdown')
+        dropdown.innerHTML = '<span class="reliability__filter-default">Filter Surface Transit Routes</span><ul class="reliability__filter-options"></ul>'
+        for (let route in data)  BuildDropdownOption(dropdown, route)
+        dropdown.querySelector('.reliability__filter-default').onclick = e =>{
+          let ul = e.target.nextSibling
+          if (ul.classList.contains('visible')){
+            ul.classList.remove('visible')
+            CheckboxListeners(ul, summary)
+          }
+          else{
+            ul.classList.add('visible')
+          }
         }
       })
-
-      add.addEventListener('click', e=>{
-        let selection = document.querySelector('#reliability-filter-options')
-        selection.value != 'all' && filterRoutes.indexOf(selection.value) == -1 ? filterRoutes.push(selection.value) : null
-        filterSummary.innerText = `Currently displaying routes ${filterRoutes}`
-      })
-
-      submit.addEventListener('click', e=>{
-        let filterExpression = ['any']
-        filterRoutes.map(route=>{
-          let expressionStatement = ['==', 'linename', route]
-          filterExpression.push(expressionStatement)
-        })
-        map.setFilter('reliability-otp', filterExpression)
-        map.setFilter('reliability-speed', filterExpression)
-      })
-
-      clear.addEventListener('click', e=>{
-        filterRoutes = []
-        map.setFilter('reliability-otp', undefined)
-        map.setFilter('reliability-speed', undefined)
-        dropdown.value = 'all'
-        filterSummary.innerText = `Currently displaying ${dropdown.value} routes`
-
-      })
-
-
-      form.appendChild(dropdown)
-      form.appendChild(add)
-      form.appendChild(submit)
-      form.appendChild(clear)
-      element.appendChild(form)
-      element.appendChild(filterSummary)
 
     }
 
@@ -357,6 +417,7 @@ const BuildSidebar = map =>{
   
   BuildAboutSection(content)
   BuildLayerSection(content)
+  
 
 }
 export class Reliability{
@@ -373,7 +434,7 @@ export class Reliability{
   render(){
     BuildPage(this.content)
     let map = BuildMap(this)
-    BuildSidebar(map)
+    BuildSidebar(map, this.data)
 
   }
 

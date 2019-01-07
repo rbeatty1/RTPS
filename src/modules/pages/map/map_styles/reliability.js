@@ -50,29 +50,7 @@ const styles = {
         layout: {
           visibility: 'visible'
         },
-        placement: "admin-2-boundaries",
-        // filter: [
-        //   'case',
-        //   ['all', 
-        //     ['<', ['zoom'], 8],
-        //     ['any',
-        //       ['>=', ['number', ['get', 'score']], 16],
-        //       ['<=', ['number', ['get', 'score']], 4]
-        //     ]
-        //   ], true, 
-        //   ['all', 
-        //     ['all',
-        //       ['<', ['zoom'], 9],
-        //       ['>=', ['zoom'], 8]
-        //     ],
-        //     ['any',
-        //       ['>=', ['number', ['get', 'score']], 12],
-        //       ['<=', ['number', ['get', 'score']], 8]
-        //     ]
-        //   ], true,
-        //   ['>=', ['zoom'], 9], true, 
-        //   false
-        // ]
+        placement: "admin-2-boundaries"
       },
       weighted: {
         type: 'line',
@@ -98,49 +76,7 @@ const styles = {
         layout: {
           visibility: 'none'
         },
-        placement: "admin-2-boundaries",
-        // filter: [
-        //   'case',
-        //   ['all', 
-        //     ['<', ['zoom'], 8],
-        //     ['any',
-        //       ['>=', ['number', ['get', 'weighted']], 19],
-        //       ['<=', ['number', ['get', 'weighted']], 4]
-        //     ]
-        //   ], true, 
-        //   ['all', 
-        //     ['all',
-        //       ['<', ['zoom'], 9],
-        //       ['>=', ['zoom'], 8]
-        //     ],
-        //     ['any',
-        //       ['>=', ['number', ['get', 'weighted']], 16],
-        //       ['<=', ['number', ['get', 'weighted']], 6]
-        //     ]
-        //   ], true,
-        //   ['all', 
-        //     ['all',
-        //       ['<', ['zoom'], 10],
-        //       ['>=', ['zoom'], 9]
-        //     ],
-        //     ['any',
-        //       ['>=', ['number', ['get', 'weighted']], 14],
-        //       ['<=', ['number', ['get', 'weighted']], 8]
-        //     ]
-        //   ], true,  
-        //   ['all', 
-        //     ['all',
-        //       ['<', ['zoom'], 11],
-        //       ['>=', ['zoom'], 10]
-        //     ],
-        //     ['any',
-        //       ['>=', ['number', ['get', 'weighted']], 12],
-        //       ['<=', ['number', ['get', 'weighted']], 10]
-        //     ]
-        //   ], true,
-        //   ['>=', ['zoom'], 11], true, 
-        //   false
-        // ]
+        placement: "admin-2-boundaries"
       },
       otp: {
         type: 'line',
