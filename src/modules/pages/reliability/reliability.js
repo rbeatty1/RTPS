@@ -23,7 +23,7 @@ const BuildMap = pageContent =>{
   const LoadData = data =>{
     let endpoints = ['score', 'tti', 'speed', 'otp', 'weighted', 'njt', 'septa' ]
     endpoints.map(query=>{
-      fetch(`http://localhost:8000/api/rtps/reliability?${query}`)
+      fetch(`https://a.michaelruane.com/api/rtps/reliability?${query}`)
       .then(response=>{
         if (response.ok) return response.json()
       })
@@ -365,7 +365,7 @@ const BuildSidebar = (map, data) =>{
       element.appendChild(summary)
 
 
-      fetch('http://localhost:8000/api/rtps/reliability?filter')
+      fetch('https://a.michaelruane.com/api/rtps/reliability?filter')
       .then(response=> response.ok ? response.json() : null)
       .then(jawn=>{
         for (let route in jawn.cargo){
