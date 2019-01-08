@@ -13,7 +13,7 @@ class Footer{
     }
 
     render(){
-        let feet = document.createElement('div')
+        let feet = document.createElement('footer')
         feet.className = 'footer__container'
         for (var k in FooterElements){
             let foot = document.createElement('div')
