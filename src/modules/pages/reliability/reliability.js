@@ -20,6 +20,8 @@ const BuildPage = structure =>{
 }
 
 const BuildMap = pageContent =>{
+  // hit API endpoints and download all data
+  // needed? VT's have the data in them for the most part now.
   const LoadData = data =>{
     let endpoints = ['score', 'tti', 'speed', 'otp', 'weighted', 'njt', 'septa' ]
     endpoints.map(query=>{
@@ -35,10 +37,12 @@ const BuildMap = pageContent =>{
   
   }
 
+  // toggle legends based on visible layers
   const LayerVisibilityCheck = layerName =>{
     let layerId = `reliability-${layerName}`,
       checkboxId = `#legend-${layerName}`
     if (map.getLayoutProperty(layerId, 'visibility') == 'visible') {
+      // check to see which layers are visible
       document.querySelector(`input[name=${layerId.split('-')[1]}]`).checked = true
       document.querySelector(checkboxId).style.display = 'flex'
     }
@@ -60,6 +64,7 @@ const BuildMap = pageContent =>{
 
   map.on('load', ()=> {
     map.resize()
+    // make sure things are centered on load
     map.flyTo({
       center: extent.center,
       zoom: extent.zoom
@@ -81,6 +86,7 @@ const BuildSidebar = (map, data) =>{
     
     tabs.classList.add('reliability__sidebar-tabs')
     
+    // build sidebar tabs.
     sections.map(section=>{
       let tab = document.createElement('li')
       tab.classList.add('reliability__sidebar-nav')
@@ -89,17 +95,10 @@ const BuildSidebar = (map, data) =>{
       if (section == 'About') tab.classList.add('active')
       tab.addEventListener('click', e=>{
         let tabs = document.querySelectorAll('.reliability__sidebar-nav')
-        for (let section of tabs){
-          e.target === section ? section.classList.add('active') : section.classList.remove('active')
-        }
+        for (let section of tabs) e.target === section ? section.classList.add('active') : section.classList.remove('active')
         let sections = document.querySelectorAll('.reliability__sidebar-sectionContent')
-        for (let section of sections){
-          if (e.target.id.split('-')[1] == section.id.split('-')[1]){
-            section.classList.add('active')
-          }
-          else { section.classList.remove('active')}
-        }
-      })
+        for (let section of sections) e.target.id.split('-')[1] == section.id.split('-')[1] ? section.classList.add('active') : section.classList.remove('active')
+        })
       tabs.appendChild(tab)
     })
     return tabs
@@ -259,8 +258,17 @@ const BuildSidebar = (map, data) =>{
               if (layer == 'speed' || layer == 'otp' || layer == 'njt'){
                 let filterExp = ['any']
                 filter.map(route=>{
-                  let statement = ['==', 'linename', route]
-                  filterExp.push(statement)
+                  if (route != 'core'){
+                    let statement = ['==', 'linename', route]
+                    filterExp.push(statement)
+                  }
+                  else{
+                    let core = filterRef[route]
+                    core.map(x=>{
+                      let statement = ['==', 'linename', x]
+                      filterExp.push(statement)
+                    })
+                  }
                 })
                 map.setFilter(`reliability-${layer}`, filterExp)
               }
@@ -271,13 +279,27 @@ const BuildSidebar = (map, data) =>{
                     let feature = data[layer][segment]
                     if (feature.lines != null){
                       let lines = feature.lines.split(',')
-                      lines.map(line=>{
-                        let statement = ['==', 'gid']
-                        if (line == route){
-                          statement.push(parseInt(segment))
-                          filterExp.push(statement)
-                        }
-                      })
+                      if (route != 'core'){
+                        lines.map(line=>{
+                          let statement = ['==', 'gid']
+                          if (line == route){
+                            statement.push(parseInt(segment))
+                            filterExp.push(statement)
+                          }
+                        })
+                      }
+                      else{
+                        let core = filterRef[route]
+                        lines.map(line=>{
+                          core.map(x=>{
+                            let statement = ['==', 'gid']
+                            if (line == x){
+                              statement.push(parseInt(segment))
+                              filterExp.push(statement)
+                            }
+                          })
+                        })
+                      }
                     }
                   }
                 })
@@ -295,7 +317,7 @@ const BuildSidebar = (map, data) =>{
           filtered.map(route=>{
             let selected = document.createElement('div')
             selected.classList.add('reliability__filter-selection')
-            selected.innerHTML = `Route ${route}`
+            route != 'core' ? selected.innerHTML = `Route ${route}` : selected.innerHTML = 'SEPTA Core Routes'
             summary.appendChild(selected)
           })
   
@@ -304,7 +326,9 @@ const BuildSidebar = (map, data) =>{
             x.addEventListener('click', e=>{
               let item = e.target.childNodes[0],
                 route = item.textContent.split(' ')[1],
-                box = document.querySelector(`input[type="checkbox"][name="${route}"]`)
+                box = document.querySelector(`input[type="checkbox"][name="${route.toLowerCase()}"]`)
+              
+              
               
               e.target.outerHTML = ''
               box.checked = false
@@ -333,7 +357,7 @@ const BuildSidebar = (map, data) =>{
         option.onchange = e => CheckboxListeners(e.target.parentNode.parentNode)
 
         label.setAttribute('for', item)
-        label.innerText = 'Route '+item
+        item != 'core' ? label.innerHTML = `Route ${item}` : label.innerHTML = 'SEPTA Core Routes'
 
         listItem.appendChild(option)
         listItem.appendChild(label)
