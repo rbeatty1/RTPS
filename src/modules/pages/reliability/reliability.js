@@ -45,7 +45,6 @@ const BuildMap = pageContent =>{
     let layerId = `reliability-${layerName}`,
       checkboxId = `#legend-${layerName}`
     if (map.getLayoutProperty(layerId, 'visibility') == 'visible') {
-      // check to see which layers are visible
       document.querySelector(`input[name=${layerId.split('-')[1]}]`).checked = true
       document.querySelector(checkboxId).style.display = 'flex'
     }
@@ -93,7 +92,6 @@ const BuildSidebar = (map, data) =>{
     
     tabs.classList.add('reliability__sidebar-tabs')
     
-    // build sidebar tabs.
     sections.map(section=>{
       let tab = document.createElement('li')
       tab.classList.add('reliability__sidebar-nav')
@@ -103,10 +101,17 @@ const BuildSidebar = (map, data) =>{
       // listener to switch sidebar content on tab click
       tab.addEventListener('click', e=>{
         let tabs = document.querySelectorAll('.reliability__sidebar-nav')
-        for (let section of tabs) e.target === section ? section.classList.add('active') : section.classList.remove('active')
+        for (let section of tabs){
+          e.target === section ? section.classList.add('active') : section.classList.remove('active')
+        }
         let sections = document.querySelectorAll('.reliability__sidebar-sectionContent')
-        for (let section of sections) e.target.id.split('-')[1] == section.id.split('-')[1] ? section.classList.add('active') : section.classList.remove('active')
-        })
+        for (let section of sections){
+          if (e.target.id.split('-')[1] == section.id.split('-')[1]){
+            section.classList.add('active')
+          }
+          else { section.classList.remove('active')}
+        }
+      })
       tabs.appendChild(tab)
     })
     return tabs
@@ -288,17 +293,8 @@ const BuildSidebar = (map, data) =>{
                 let filterExp = ['any']
                 // build important stuff of filter expression
                 filter.map(route=>{
-                  if (route != 'core'){
-                    let statement = ['==', 'linename', route]
-                    filterExp.push(statement)
-                  }
-                  else{
-                    let core = filterRef[route]
-                    core.map(x=>{
-                      let statement = ['==', 'linename', x]
-                      filterExp.push(statement)
-                    })
-                  }
+                  let statement = ['==', 'linename', route]
+                  filterExp.push(statement)
                 })
                 // set filter
                 map.setFilter(`reliability-${layer}`, filterExp)
@@ -341,7 +337,7 @@ const BuildSidebar = (map, data) =>{
           filtered.map(route=>{
             let selected = document.createElement('div')
             selected.classList.add('reliability__filter-selection')
-            route != 'core' ? selected.innerHTML = `Route ${route}` : selected.innerHTML = 'SEPTA Core Routes'
+            selected.innerHTML = `Route ${route}`
             summary.appendChild(selected)
           })
   
@@ -384,7 +380,7 @@ const BuildSidebar = (map, data) =>{
         option.onchange = e => CheckboxListeners(e.target.parentNode.parentNode)
 
         label.setAttribute('for', item)
-        item != 'core' ? label.innerHTML = `Route ${item}` : label.innerHTML = 'SEPTA Core Routes'
+        label.innerText = 'Route '+item
 
         listItem.appendChild(option)
         listItem.appendChild(label)
