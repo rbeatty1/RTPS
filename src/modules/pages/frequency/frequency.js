@@ -38,24 +38,6 @@ const contentRef = {
         
     }
   },
-  existing: {
-    active: false,
-    title: "AM Peak Frequency",
-    scenario: "Existing",
-    content: {
-      map: {
-        source: "transit",
-        layer: "existing",
-        legend: {
-          name: "AM Peak Frequency Classification",
-          scheme: [["Low", "#ddd"], ["Medium", "#e9da94"], ["High", "#d8c72e"]]
-        }
-      },
-      table: false,
-      text:
-        "This map depicts the current AM peak transit frequency (base scenario). Darker colors represent transit routes with more frequenct service. When clicking lines on the map, the pop-up will show the peak frequency as well as the mid-day frequency."
-    }
-  },
   transitChange: {
     active: false,
     title: "Changes in Transit Activity",
@@ -833,20 +815,6 @@ const LoadExisting = map => {
     else target.push(line, colors[3][1]);
   };
   /*
-    ExistingColor(data, target, line)
-      @desc: Function that creates the mapbox data expression for the fill-color property for the layer associated with the existing section
-      @param:
-        - data => data that will be used for the operators
-        - target => data expression that will be appended to
-        - line => linename that will be used to match the appropriate features in 
-  */
-  const ExistingColor = (data, target, line) => {
-    let colors = contentRef.existing.content.map.legend.scheme; // that's a lot of fucking typing just to get some colors
-    if (data < 21) target.push(line, colors[2][1]);
-    else if (data >= 21 && data < 45) target.push(line, colors[1][1]);
-    else target.push(line, colors[0][1]);
-  };
-  /*
     PopUps(event)
       @desc: return a popup HTML element for the clicked feature
       @param:
@@ -894,29 +862,6 @@ const LoadExisting = map => {
             "line-color": ["match", ["get", "linename"]]
           },
           layout: { visibility: "none" }
-        },
-        {
-          id: "transit-existing",
-          source: "transit",
-          type: "line",
-          "source-layer": "transit_lines",
-          paint: {
-            "line-width": [
-              "interpolate",
-              ["linear"],
-              ["zoom"],
-              7,
-              0.25,
-              8,
-              0.75,
-              9,
-              1,
-              12,
-              3
-            ],
-            "line-color": ["match", ["get", "linename"]]
-          },
-          layout: { visibility: "none" }
         }
       ];
       for (let line in existing.cargo) {
@@ -925,16 +870,10 @@ const LoadExisting = map => {
           layerDef[0].paint["line-color"],
           line
         );
-        ExistingColor(
-          existing.cargo[line].am,
-          layerDef[1].paint["line-color"],
-          line
-        );
       }
 
       // default value == transparent
       layerDef[0].paint["line-color"].push("rgba(255,255,255,0)");
-      layerDef[1].paint["line-color"].push("rgba(255,255,255,0)");
 
       layerDef.map(layer => {
         map.addLayer(layer, "base-muniOutline");
