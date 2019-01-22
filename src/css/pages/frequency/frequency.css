@@ -192,7 +192,7 @@
   width: 100%;
 }
 .frequency__storySection-content{
-  text-align: center;
+  text-align: right;
   width: 90%;
   margin: 2% auto;
   color: #999;
@@ -209,6 +209,7 @@
   border-radius: 5px;
   padding: 2%;
   background: whitesmoke;
+  text-align: center;
 }
 
 .frequency__storySection-tableHeader{
