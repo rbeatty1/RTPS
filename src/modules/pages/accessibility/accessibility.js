@@ -299,7 +299,11 @@ const BuildPage = props =>{
         if (section.id == e.target.id){
           let content = section.nextElementSibling
           content.classList.toggle('active')
+<<<<<<< HEAD
           section.classList.toggle('active')
+=======
+          !section.classList.contains('active') ? section.classList.add('active') : null
+>>>>>>> Update accessibility page styles close #17
           thisMap.setPaintProperty('zones-analysis', "fill-color", zoneRef[e.target.id].paint)
           thisMap.setFilter('station-access', zoneRef[e.target.id].filter)
         }

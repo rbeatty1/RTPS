@@ -62,7 +62,11 @@
 
 .accessibility-text{
   width: 40%;
+<<<<<<< HEAD
   height: 100%;
+=======
+  height: 80%;
+>>>>>>> Update accessibility page styles close #17
   display: flex;
   flex-flow: column;
   align-items: flex-end;
