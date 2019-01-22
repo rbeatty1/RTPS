@@ -163,6 +163,9 @@
   font-weight: 700;
   margin: 0;
 }
+.frequency__legend-title.railChange{
+  margin-top: 5%;
+}
 .frequency__legend-units{
   margin: 0;
   font-size: .9rem;
@@ -173,6 +176,9 @@
   justify-content: space-evenly;
   margin-top: 2%;
 }
+.frequency__legend-breakContainer.railChange{
+  align-items: center;
+}
 .frequency__legend-break{
   height: 100%;
   width: 100%;
@@ -181,7 +187,7 @@
   text-align: center;
   justify-content: center;
 }
-.frequency__legend-rect{
+.frequency__legend-rect, .frequency__legend-railPercent{
   font-size: .75rem;
   color: #fff;
   padding: 1%;
@@ -190,6 +196,10 @@
   align-items: center;
   justify-content: center;
   width: 100%;
+}
+.frequency__legend-railPercent{
+  color: #777;
+  margin: 0;
 }
 .frequency__storySection-content{
   text-align: right;

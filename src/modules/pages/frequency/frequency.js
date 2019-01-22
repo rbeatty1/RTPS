@@ -164,11 +164,11 @@ const contentRef = {
           units: "Estimated Passengers per Day",
           name: "Absolute Ridership Change",
           scheme: [
-            ["Low", "#d8c72e"],
-            ["", "#a9ca46"],
-            ["", "#7cca64"],
-            ["", "#4dc682"],
-            ["High", "#06bf9c"]
+            ["Low", "#f0f9e8"],
+            ["", "#bae4bc"],
+            ["", "#7bccc4"],
+            ["", "#43a2ca"],
+            ["High", "#0868ac"]
           ]
         }
       },
@@ -189,11 +189,11 @@ const contentRef = {
           name: "Absolute Ridership Change",
           units: "Estimated Passengers per Day",
           scheme: [
-            ["< 1,400", "#06bf9c"],
-            ["1,400–1,600", "#0d9f7b"],
-            ["1,601–1,800", "#0c805d"],
-            ["1,801–2,200", "#066342"],
-            ["> 2,200", "#004729"]
+            ["< 1,400", "#ffffec"],
+            ["1,400–1,600", "#f4f2c0"],
+            ["1,601–1,800", "#eae494"],
+            ["1,801–2,200", "#e1d665"],
+            ["> 2,200", "#d8c72e"]
           ]
         }
       },
@@ -213,10 +213,10 @@ const contentRef = {
         legend: {
           name: "Percent Change in Ridership",
           scheme: [
-            ["< 85%", "#d8c72e"],
-            ["85%–100%", "#b5771d"],
-            ["101%–130%", "#793418"],
-            ["> 130%", "#330100"]
+            ["< 85%", "#ddd"],
+            ["85%–100%", "#aed8ca"],
+            ["101%–130%", "#74ccb3"],
+            ["> 130%", "#06bf9c"]
           ]
         }
       },
@@ -546,10 +546,41 @@ const BuildLegend = section => {
       thisBreak.style.background = color[1];
       thisBreak.innerText = color[0];
       // make sure the first element has enough text contrast by making the text color the darkest value of the color scheme
-      if (i == 0)
+      if (i < 2)
         thisBreak.style.color = data.scheme[data.scheme.length - 1][1];
       breakContainer.appendChild(thisBreak);
       i++;
+    }
+    if (section.id == 'railLineChange'){
+      let title = document.createElement('p'),
+        breakContainer = document.createElement('div')
+
+      title.innerText = 'Percent Change in Ridership'
+      title.classList.add('frequency__legend-title')
+      title.classList.add('railChange')
+      title.style.color = data.scheme[data.scheme.length -1][1]
+      // title.style.marginTop = '3%'
+      breakContainer.classList.add('frequency__legend-breakContainer')
+      breakContainer.classList.add('railChange')
+      legend.appendChild(title)
+
+      let breaks = ['> 0', -1, 30, 50, 80, 100]
+      breaks.map((classBreak, index)=>{
+        let classification = document.createElement('p')
+        if (index == 0){
+          classification.innerText = `${classBreak}%`
+        }
+        else if (index == breaks.length-1){
+          classification.innerText = '100% <'
+        }
+        else{
+          classification.innerText = `${classBreak+1}% — ${breaks[index+1]}%`
+        }
+        classification.classList.add('frequency__legend-railPercent')
+        classification.style.borderBottom = `${(index+1)*2}px solid #aaa`
+        breakContainer.appendChild(classification)
+      })
+      legend.appendChild(breakContainer)
     }
   }
 };
