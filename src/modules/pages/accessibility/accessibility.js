@@ -299,11 +299,13 @@ const BuildPage = props =>{
         if (section.id == e.target.id){
           let content = section.nextElementSibling
           content.classList.toggle('active')
+          !section.classList.contains('active') ? section.classList.add('active') : null
           thisMap.setPaintProperty('zones-analysis', "fill-color", zoneRef[e.target.id].paint)
           thisMap.setFilter('station-access', zoneRef[e.target.id].filter)
         }
         else if (section.nextElementSibling.classList.contains('active')){
           section.nextElementSibling.classList.remove('active')
+          section.classList.contains('active') ? section.classList.remove('active') : null
         }
       }
     })
@@ -353,7 +355,7 @@ class Accessibility{
           <h2>Introduction</h2>
           <p>
             This analysis identifies places where wheelchair users' ability to reach essential services (jobs,
-            grocery stores, medical offices, etc.) via transit is most impoacted by inaccessible rail stations.
+            grocery stores, medical offices, etc.) via transit is most impacted by inaccessible rail stations.
             The goal was to prioritize station improvements, not to determine whether or not the mobility impaired
             can access a stop. Therefore, the assumption was made that wheelchair users can get to and from rail 
             stations. Since buses in the DVRPC region are generally accessible, they were excluded.
