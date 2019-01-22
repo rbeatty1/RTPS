@@ -851,10 +851,10 @@ const LoadExisting = map => {
   */
   const OverviewColor = (data, target, line) => {
     let colors = contentRef.overview.content.map.legend.scheme; // that's a lot of fucking typing just to get some colors
-    if (data >= 4) target.push(line, colors[0][1]);
-    else if (data >= 2 && data < 4) target.push(line, colors[1][1]);
-    else if (data >= 1 && data < 2) target.push(line, colors[2][1]);
-    else target.push(line, colors[3][1]);
+    if (data >= 4) target.push(line, colors[3][1]);
+    else if (data >= 2 && data < 4) target.push(line, colors[2][1]);
+    else if (data >= 1 && data < 2) target.push(line, colors[1][1]);
+    else target.push(line, colors[0][1]);
   };
   /*
     PopUps(event)
