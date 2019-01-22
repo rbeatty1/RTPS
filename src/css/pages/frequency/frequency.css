@@ -201,7 +201,10 @@
 .frequency__legend-railPercent{
   color: #777;
   margin: 0;
+<<<<<<< HEAD
   white-space: nowrap
+=======
+>>>>>>> Rail width aspect of rail ridership change legend added close #12
 }
 .frequency__storySection-content{
   text-align: right;
