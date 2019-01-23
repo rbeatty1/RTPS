@@ -26,6 +26,7 @@
   color: #eee;
 }
 .frequency__nav-link:hover{
+  cursor: pointer;
   background: rgba(6,191,156, .2);
   color: #06bf9c;
   box-shadow: 2px 2px 4px rgba(153,153,153,.5);
@@ -45,7 +46,7 @@
   visibility: hidden;
   width: 5rem;
   font-weight: 400;
-  background-color: #ccc;
+  background-color: #555;
   color: #fff;
   text-align: center;
   padding: 5px 0;
@@ -68,7 +69,7 @@
   margin-left: -5px;
   border-width: 5px;
   border-style: solid; 
-  border-color: transparent transparent #ccc transparent
+  border-color: transparent transparent #555 transparent
 }
 
 .frequency__nav-linkSection:hover .frequency__nav-linkTooltip{
@@ -200,6 +201,7 @@
 .frequency__legend-railPercent{
   color: #777;
   margin: 0;
+  white-space: nowrap
 }
 .frequency__storySection-content{
   text-align: right;
@@ -250,7 +252,7 @@
 .tooltip{
   display:none;
   width: 120px;
-  background-color: #555;
+  background-color: #222;
   color: #fff;
   text-align: center;
   padding: 5px 0;

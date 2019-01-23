@@ -33,7 +33,9 @@
   color: #08506d;
   border-bottom: 2px solid #e89234;
 }
-
+.map__sidebar-menuHeader:hover{
+  cursor: pointer;
+}
 .map__sidebar-menuContent{
   display: none;
   width: 60%;

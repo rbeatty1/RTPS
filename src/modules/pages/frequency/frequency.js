@@ -585,7 +585,7 @@ const BuildLegend = section => {
           classification.innerText = '100% <'
         }
         else{
-          classification.innerText = `${classBreak+1}% — ${breaks[index+1]}%`
+          classification.innerText = `${classBreak+1}%—${breaks[index+1]}%`
         }
         classification.classList.add('frequency__legend-railPercent')
         classification.style.borderBottom = `${(index+1)*2}px solid #aaa`

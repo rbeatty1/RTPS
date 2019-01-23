@@ -208,6 +208,7 @@
   margin: 1% 0;
 }
 .reliability__filter-selection:hover{
+  cursor: pointer;
   background: rgba(232,146,52,.5);
   font-size: .95rem;
 }
