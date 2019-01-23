@@ -3,26 +3,29 @@ import {LoadLayers} from '../../../utils/loadMapLayers';
 import { styles } from '../map/map_styles/reliability.js'
 import { FormatNumber } from '../../../utils/formatNumber';
 
-
+// function to build overall page structure
 const BuildPage = structure =>{
   let page = document.createElement('div')
   page.id = 'reliability__page'
 
+  // create HTML element for each defined page section. 
   for (let section in structure){
     let sectionElem = document.createElement('div')
     sectionElem.id = 'reliability__'+section
+    // append element to page
     page.appendChild(sectionElem)
+    // update state to include element
     structure[section] = sectionElem
   }
+  // append page to application
   document.querySelector('#main').appendChild(page)
-  return page
-
 }
 
+// function to build map and all of it's layers
 const BuildMap = pageContent =>{
-  // hit API endpoints and download all data
-  // needed? VT's have the data in them for the most part now.
+  // load data for each layer and add to state
   const LoadData = data =>{
+    // all API endpoints
     let endpoints = ['score', 'tti', 'speed', 'otp', 'weighted', 'njt', 'septa' ]
     endpoints.map(query=>{
       fetch(`https://a.michaelruane.com/api/rtps/reliability?${query}`)
@@ -37,7 +40,7 @@ const BuildMap = pageContent =>{
   
   }
 
-  // toggle legends based on visible layers
+  // function to update checkbox status and load legend when layer is activated.
   const LayerVisibilityCheck = layerName =>{
     let layerId = `reliability-${layerName}`,
       checkboxId = `#legend-${layerName}`
@@ -62,17 +65,20 @@ const BuildMap = pageContent =>{
       zoom: extent.zoom
   })
 
+  // load initial state of map
   map.on('load', ()=> {
+    // fill canvas
     map.resize()
-    // make sure things are centered on load
+    // center map on DVRPC region
     map.flyTo({
       center: extent.center,
       zoom: extent.zoom
     })
+    // load map layers
     LoadLayers(map, styles)
-
+    // assign data to local state
     LoadData(pageContent.data)
-
+    // display correct layers
     for (let layer in styles.reliability.layers) LayerVisibilityCheck(layer)
   })
 
@@ -80,6 +86,7 @@ const BuildMap = pageContent =>{
 }
 
 const BuildSidebar = (map, data) =>{
+  // function to build sidebar tabs
   const BuildSidebarNav = () =>{
     let tabs = document.createElement('ul'),
       sections = ['About', 'Layers']
@@ -93,6 +100,7 @@ const BuildSidebar = (map, data) =>{
       tab.innerText = section
       tab.id = `nav-${section.toLowerCase()}`
       if (section == 'About') tab.classList.add('active')
+      // listener to switch sidebar content on tab click
       tab.addEventListener('click', e=>{
         let tabs = document.querySelectorAll('.reliability__sidebar-nav')
         for (let section of tabs) e.target === section ? section.classList.add('active') : section.classList.remove('active')
@@ -105,6 +113,7 @@ const BuildSidebar = (map, data) =>{
   }
 
   const BuildAboutSection = parent =>{
+    // local content reference to populate about section
     let content = {
       purpose: "The goal of the surface transit reliability analysis was to identify corridors where surface transit service is particularly slow or delayed as places where road or transit improvements could increase reliability.",
       inputs:{
@@ -139,8 +148,10 @@ const BuildSidebar = (map, data) =>{
     container.classList.add('active')
     container.id = 'content-about'
     element.classList.add('reliability__sidebar-control')
+    // build about sections and fill with content
     for (let section in content){
       let container = document.createElement('div')
+      // input sections are styled differently to draw attention
       if (section != 'inputs'){
         container.innerHTML = content[section]
         container.classList.add('reliability__sidebar-contentSection')
@@ -163,9 +174,12 @@ const BuildSidebar = (map, data) =>{
     parent.appendChild(container)
   }
 
+  // build layer section of sidebar
   const BuildLayerSection = element =>{
-    const BuildLayerControl = element =>{
 
+    // build layer control portion of layer section
+    const BuildLayerControl = element =>{
+      // function to run when checkbox is changed. Displays correct layer on map and corresponding legend item
       const LayerVisibilityChange = layer =>{
         let layerID = `reliability-${layer}`,
           boxes = document.querySelectorAll('input[type=checkbox]')
@@ -176,6 +190,7 @@ const BuildSidebar = (map, data) =>{
 
       }
 
+      // build legends
       const BuildLegendSection = (element, layer) =>{
         let legendSection = document.createElement('div'),
           items = document.createElement('div')
@@ -185,20 +200,29 @@ const BuildSidebar = (map, data) =>{
         legendSection.id = `legend-${layer}`
         
         items.classList.add('reliability__legend-items')
+        // get appropriate colors from map styles
         let colorExpression = styles.reliability.layers[layer].paint['line-color'],
           colors = new Array(),
           labels = new Array() ;
         colorExpression.map(statement=> {
+          // get colors
           if (statement[0] == '#') colors.push(statement)
+          // get labels
           else if (typeof statement == 'number') labels.push(statement)
         })
-  
+
+        // build legend HTML elements
+          // TTI layer has labels that need to be formatted different because of the small number
         colors.map((color, index)=>{
           let test = document.createElement('div')
           test.classList.add('reliability__legend-item')
+          // not last item in colors array and layer is NOT TTI
           if (labels[index] && layer != 'tti') index == 0 ? test.innerText = `0–${FormatNumber(labels[index])}` : test.innerText = `${FormatNumber(labels[index-1]+1)}–${FormatNumber(labels[index])}`
+          // not last item in colors array and layer IS TTI
           else if (labels[index] && layer == 'tti') index == 0 ? test.innerText = `0–${labels[index]}` : test.innerText = `${labels[index-1]+.1}–${labels[index]}`
+          // last item in colors array and layer IS TTI
           else if (!labels[index] && layer == 'tti') test.innerText = `${labels[index-1]+.1} +`
+          // last item in colors array and layer is NOT TTI
           else test.innerText = `${FormatNumber(labels[index-1])} +`
           test.style.borderBottom = `10px solid ${color}`
           test.style.width = `${100/colors.length}%`
@@ -220,7 +244,7 @@ const BuildSidebar = (map, data) =>{
       ]
 
       element.classList.add('reliability__sidebar-control')
-
+      // build layer check boxes
       layers.map(layer=>{
         let option = document.createElement('div'),
           checkbox = document.createElement('div'),
@@ -248,15 +272,21 @@ const BuildSidebar = (map, data) =>{
 
     }
 
+    // function to build filter functionality
     const BuildFilterControl = element =>{
-
+      // build filter dropdown
       const BuildDropdownOption = (container, item) =>{
+        // listener to fire when one of the filter options is selected
         const CheckboxListeners = list =>{
+          // function to update map filter through all layers
           const SetMapFilters = filter =>{
+            // grab map layers
             let layers = styles.reliability.layers
             for (let layer in layers){
+              // speed, otp, njt have single routes per feature
               if (layer == 'speed' || layer == 'otp' || layer == 'njt'){
                 let filterExp = ['any']
+                // build important stuff of filter expression
                 filter.map(route=>{
                   if (route != 'core'){
                     let statement = ['==', 'linename', route]
@@ -270,50 +300,44 @@ const BuildSidebar = (map, data) =>{
                     })
                   }
                 })
+                // set filter
                 map.setFilter(`reliability-${layer}`, filterExp)
               }
+              // score and weighted layers have multiple routes per feature -.-
               else if (layer == 'score' || layer == 'weighted'){
                 let filterExp = ['any']
                 filter.map(route=>{
                   for (let segment in data[layer]){
                     let feature = data[layer][segment]
                     if (feature.lines != null){
+                      // grab individual routes from feature
                       let lines = feature.lines.split(',')
-                      if (route != 'core'){
-                        lines.map(line=>{
-                          let statement = ['==', 'gid']
-                          if (line == route){
-                            statement.push(parseInt(segment))
-                            filterExp.push(statement)
-                          }
-                        })
-                      }
-                      else{
-                        let core = filterRef[route]
-                        lines.map(line=>{
-                          core.map(x=>{
-                            let statement = ['==', 'gid']
-                            if (line == x){
-                              statement.push(parseInt(segment))
-                              filterExp.push(statement)
-                            }
-                          })
-                        })
-                      }
+                      lines.map(line=>{
+                        let statement = ['==', 'gid']
+                        // build filter expression
+                        if (line == route){
+                          statement.push(parseInt(segment))
+                          filterExp.push(statement)
+                        }
+                      })
                     }
                   }
                 })
+                // set filter
                 map.setFilter(`reliability-${layer}`, filterExp)
               }
             }
           }
           let filtered = []
+          // grab all of the filter checkboxes
           let allBoxes = list.querySelectorAll('input[type="checkbox"]')
+          // push all checked options to an array
           for (let box of allBoxes){
             box.checked == true && filtered.indexOf(box.value) == -1 ? filtered.push(box.value) : null
           }
           let summary = list.previousElementSibling
           summary.innerHTML = ''
+          // build little element to display each selected filter option
           filtered.map(route=>{
             let selected = document.createElement('div')
             selected.classList.add('reliability__filter-selection')
@@ -323,18 +347,21 @@ const BuildSidebar = (map, data) =>{
   
           let remove = document.querySelectorAll('.reliability__filter-selection')
           for (let x of remove){
+            // listener to remove filtered routes
             x.addEventListener('click', e=>{
               let item = e.target.childNodes[0],
+                // we only want the number of the route
                 route = item.textContent.split(' ')[1],
-                box = document.querySelector(`input[type="checkbox"][name="${route.toLowerCase()}"]`)
-              
-              
-              
+                // grab specific checkbox
+                box = document.querySelector(`input[type="checkbox"][name="${route}"]`)
+              // delete the jawn
               e.target.outerHTML = ''
+              // unchecked the jawn
               box.checked = false
   
               let index = filtered.indexOf(route)
               filtered.splice(index, 1)
+              // update the map jawn
               if (filtered.length > 0) SetMapFilters(filtered)
               else for (let layer in styles.reliability.layers){ map.setFilter(`reliability-${layer}`, undefined)}
   
@@ -377,7 +404,7 @@ const BuildSidebar = (map, data) =>{
 
       element.appendChild(dropdown)
 
-
+      // get all of the routes to build filter
       fetch('https://a.michaelruane.com/api/rtps/reliability?filter')
       .then(response=> response.ok ? response.json() : null)
       .then(jawn=>{
@@ -443,7 +470,6 @@ export class Reliability{
     this.content = {
       map: undefined,
       sidebar: undefined,
-      table: undefined
     }
     this.data = new Object();
     this.render()

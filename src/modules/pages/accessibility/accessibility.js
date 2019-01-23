@@ -299,11 +299,13 @@ const BuildPage = props =>{
         if (section.id == e.target.id){
           let content = section.nextElementSibling
           content.classList.toggle('active')
+          section.classList.toggle('active')
           thisMap.setPaintProperty('zones-analysis', "fill-color", zoneRef[e.target.id].paint)
           thisMap.setFilter('station-access', zoneRef[e.target.id].filter)
         }
         else if (section.nextElementSibling.classList.contains('active')){
           section.nextElementSibling.classList.remove('active')
+          section.classList.contains('active') ? section.classList.remove('active') : null
         }
       }
     })
@@ -317,27 +319,27 @@ class Accessibility{
       sections: {
         allAccessibility: {
           id: 'AccAll',
-          title: 'Accessibility from All Rail Stations',
+          title: 'Destinations Reachable Using All Rail Stations',
           description: '<p>This map serves as the baseline. It shows the number of destinations reachable via rail from each zone for passengers that can use all rail stations. The darker the color, the more destinations are reachable from that TAZ via rail.</p>'
         },
         currentAccessibility:{
           id: 'AccCur',
-          title: 'Accessible Destinations using Only Wheelchair Accessible Stations',
+          title: 'Destinations Reachable Using Only Wheelchair Accessible Rail Stations',
           description: '<p>This map shows the destinations reachable by wheelchair users who can only use wheelchair accessible stations. The darker the color, the more destinations are reachable from that TAZ via rail.</p>'
         },
         currentDisparity:{
           id: 'DisCur',
-          title: 'Destination Disparity for Wheelchair users in Comparison with All Users',
+          title: 'Destination Disparity For Wheelchair Users in Comparison With All Users',
           description: '<p>This map highlights the differences between the baseline and wheelchair accessible map. The darker the color, the greater the disparity for wheelchair users in comparison with all users.</p>'
         },
         futureAccessibility:{
           id: 'AccFut',
-          title: 'Destinations Accessible using Accessible Stations or Those with Programmed Improvements',
+          title: 'Destinations Reachable Using Stations Currently Wheelchair Accessible or Programmed For Improvement',
           description: '<p>This map considers which stations are programmed for wheelchair accessibility improvements or have improvements in progress. It includes stations that are currently accessible and those that are programmed for improvement. Again, the darker the color, the more destinations are reachable via rail from that zone.</p>'
         },
         futureDisparity:{
           id: 'DisFut',
-          title: 'Destination Disparity using Accessible Stations or Those with Programmed Improvements',
+          title: 'Destination Disparity For Wheelchair Users in Comparison With All Users (Programmed Improvements Included)',
           description: '<p>This map compares the previous map to the baseline map. It shows where the disparity remains. These are the places that should be the focus of the next batch of wheelchair accessibility improvements at rail stations.</p>'
         }
       }
@@ -348,7 +350,18 @@ class Accessibility{
   render(){
     this.props.container.innerHTML = `
     <div class="accessibility-page">
-      <div class="accessibility-text"></div>
+      <div class="accessibility-text">
+        <div class="accessibility-intro">
+          <h2>Introduction</h2>
+          <p>
+            This analysis identifies places where wheelchair users' ability to reach essential services (jobs,
+            grocery stores, medical offices, etc.) via transit is most impacted by inaccessible rail stations.
+            The goal was to prioritize station improvements, not to determine whether or not the mobility impaired
+            can access a stop. Therefore, the assumption was made that wheelchair users can get to and from rail 
+            stations. Since buses in the DVRPC region are generally accessible, they were excluded.
+          </p>
+        </div>
+      </div>
       <div class="accessibility-map"></div>
       </div>
   `
