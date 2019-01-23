@@ -129,17 +129,24 @@ const styles = {
           visibility: 'none'
         }
       },
-      // septa: {
-      //   type: 'line',
-      //   source: 'septa',
-      //   paint: {
-      //     'line-color': '#f00',
-      //     'line-width': 1
-      //   },
-      //   layout: {
-      //     visibility: 'none'
-      //   }
-      // },
+      septa: {
+        type: 'line',
+        source: 'septa',
+        paint: {
+          'line-color': [
+            'step',
+            ['get', 'tot_loads'],
+            '#730000',
+            333, '#e60000',
+            859, '#f07d02',
+            1571, '#ffcb0d'
+          ],
+          'line-width': 1
+        },
+        layout: {
+          visibility: 'none'
+        }
+      },
       speed: {
         type: 'line',
         source: 'speed',
