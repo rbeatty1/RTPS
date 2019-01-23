@@ -9,6 +9,23 @@
   background-color: whitesmoke
 }
 
+.accessibility-intro{
+  width: 90%;
+  margin: 0 auto;
+}
+.accessibility-intro h2{
+  color: #8bb23f;
+}
+.accessibility-intro p{
+  font-size: 1rem;
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: 1px 1px 1px 1px rgba(0,0,0,0.1);
+  padding: 10px;
+  color: #777;
+}
+
+
 .accessibility-section{
   display: flex;
   flex-flow: column;
@@ -17,22 +34,26 @@
 .accessibility-section-header{
   padding: 5px;
   color: #08506b;
-  text-align: right;
+  text-align: left;
   border-bottom: 2px dotted #8bb23f;
   cursor: pointer;
-  font-size: 20px;
   font-family: 'Arial', sans-serif;
+}
+.accessibility-section-header.active{
+  font-weight: 700;
+  color: #8bb234;
+  border-bottom-color: #08506b;
 }
 .accessibility-section-content{
   display: none;
   font-size: 14px;
   color: #6a6a6a;
   padding: 10px;
-  margin: 5px;
+  margin: 5px auto;
 }
 
 .accessibility-section-content.active{
-  width: 100%;
+  width: 90%;
   display: block;
   background-color: #fff;
   border-radius: 4px;
@@ -42,11 +63,10 @@
 .accessibility-text{
   width: 40%;
   height: 80%;
-  margin: auto 1rem;
   display: flex;
   flex-flow: column;
   align-items: flex-end;
-  justify-content: space-between;
+  justify-content: space-evenly;
 }
 .accessibility-text> h3{
   text-align: center;
