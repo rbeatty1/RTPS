@@ -120,21 +120,21 @@ const contentRef = {
             NJ: ["Burlington", "Camden", "Gloucester", "Mercer"],
             PA: ["Bucks", "Chester", "Delaware", "Montgomery", "Philadelphia"]
           },
-          columns: ["Geography", "Base", "2x Freq.", "Difference", "% Diff"]
+          columns: ["Geography", "Base", "2x Freq.", "Absolute Diff.", "% Diff.", "% Diff VMT"]
         },
         datasets: {
           NJ: {
-            Burlington: [1087429, 1086168, -1261, -0.12],
-            Camden: [1530889, 1527518, -3371, -0.22],
-            Gloucester: [802337, 801037, -1300, -0.16],
-            Mercer: [1320146, 1316283, -3863, -0.29]
+            Burlington: [1087429, 1086168, -1261, -0.12, -0.24],
+            Camden: [1530889, 1527518, -3371, -0.22, -0.21],
+            Gloucester: [802337, 801037, -1300, -0.16, -0.22],
+            Mercer: [1320146, 1316283, -3863, -0.29, -0.19]
           },
           PA: {
-            Bucks: [1503945, 1501437, -2508, -0.17],
-            Chester: [1284892, 1282801, -2091, -0.16],
-            Delaware: [1179321, 1170955, -5367, -0.46],
-            Montgomery: [2057847, 2050725, -7122, -0.35],
-            Philadelphia: [2859025, 2835172, -23854, -0.83]
+            Bucks: [1503945, 1501437, -2508, -0.17, -0.22],
+            Chester: [1284892, 1282801, -2091, -0.16, -0.19],
+            Delaware: [1179321, 1170955, -5367, -0.46, -0.40],
+            Montgomery: [2057847, 2050725, -7122, -0.35, -0.34],
+            Philadelphia: [2859025, 2835172, -23854, -0.83, -0.58]
           }
         },
         summaries: {
@@ -369,7 +369,7 @@ const HideFeatureLayer = (map, section) => {
       data => formatted data to be inserted into table
     @return: a <table></table> element to be appended to the ScrollStory section content
 */
-const CreateTable = data => {
+const CreateTable = (section, data) => {
   /*
     CreateHeaderRow(table, labels)
       @desc: Creates a header row for the section's table
@@ -409,7 +409,7 @@ const CreateTable = data => {
       let dataCell = document.createElement("td");
       summaries[state].temp[index]
         ? summaries[state].temp[index].push(data)
-        : null;
+        : null
       // format number
       dataCell.innerText = FormatNumber(data);
       dataRow.appendChild(dataCell);
@@ -436,8 +436,45 @@ const CreateTable = data => {
       dataCell.innerText = FormatNumber(data);
       dataRow.appendChild(dataCell);
     });
+    // the VMT data isn't really anywhere except for an excel sheet so this is easier than trying to compute the summaries for each state
+    if (section.id == 'autoChange'){
+      let dataCell = document.createElement('td')
+      dataCell.innerText = state == 'NJ' ? '-0.22%' : '-0.35%'
+      dataRow.appendChild(dataCell)
+    }
     return dataRow;
   };
+
+  const CreateRegionSummary = summaries =>{
+    let temp = []
+    for (let state in summaries){
+      summaries[state].final.map((data, index)=>{
+        if (!temp[index]) temp.push(parseFloat(data))
+        else{
+          if (index < 2 ) temp[index] = temp[index] + parseFloat(data)
+          else if (index == 2)temp[2] = temp[1] - temp[0]
+          else temp[index] = ((temp[2]/temp[0])*100).toFixed(2)
+        } 
+      })
+    }
+    let row = document.createElement('tr'),
+      label = document.createElement('td')
+    row.classList.add('dvrpc-summary')
+    label.innerText = 'DVRPC'
+    row.appendChild(label)
+    
+    temp.map(data=>{
+      let cell = document.createElement('td')
+      cell.innerText = FormatNumber(data)
+      row.appendChild(cell)
+    })
+    if (section.id == 'autoChange'){
+      let cell = document.createElement('td')
+      cell.innerText = '-0.30%'
+      row.appendChild(cell)
+    }
+    return row
+  }
 
   let labels = data.labels,
     datasets = data.datasets,
@@ -471,32 +508,6 @@ const CreateTable = data => {
       ((summaries[state].final[2] / summaries[state].final[0]) * 100).toFixed(2)
     );
     table.appendChild(CreateSummaryContent(state, summaries[state].final));
-  }
-
-  const CreateRegionSummary = summaries =>{
-    let temp = []
-    for (let state in summaries){
-      summaries[state].final.map((data, index)=>{
-        if (!temp[index]) temp.push(parseFloat(data))
-        else{
-          if (index < 2 ) temp[index] = temp[index] + parseFloat(data)
-          else if (index == 2)temp[2] = temp[1] - temp[0]
-          else temp[index] = ((temp[2]/temp[0])*100).toFixed(2)
-        } 
-      })
-    }
-    let row = document.createElement('tr'),
-      label = document.createElement('td')
-    row.classList.add('dvrpc-summary')
-    label.innerText = 'DVRPC'
-    row.appendChild(label)
-    
-    temp.map(data=>{
-      let cell = document.createElement('td')
-      cell.innerText = FormatNumber(data)
-      row.appendChild(cell)
-    })
-    return row
   }
 
   let dvrpcSummary = CreateRegionSummary(summaries)
@@ -683,7 +694,7 @@ const BuildContent = (content, key, component) => {
   if (content.table) {
     section
       .querySelector(".frequency__storySection-content")
-      .appendChild(CreateTable(content.table));
+      .appendChild(CreateTable(section, content.table));
   }
   section.style.height = masterContainer.getBoundingClientRect().height / 2;
   masterContainer.appendChild(section);
