@@ -72,7 +72,7 @@ const ProcessData = (data, helper) => {
         "source-layer": "tim-zones",
         "paint": {
             "fill-color": helper.fillExpression, // big long match expression
-            "fill-opacity": 0.5
+            "fill-opacity": 0.75
         }
     }
     return layerDef
@@ -89,14 +89,18 @@ const PerformQuery = async input => {
     // move helper to ProcessData() function?
     let helpers = {
         colorScheme: {
-            0: "rgba(255,255,255,0)",
-            1: "#7f2704",
-            2: "#a63603",
-            3: "#d94801",
-            4: "#f16913",
-            5: "#fd8d3c",
-            6: "#fdae6b",
-            7: "#fdd0a2"
+            1: "rgb(250,228,205)",
+            2: "rgb(245,206,164)",
+            3: "rgb(237,165,89)",
+            4: "rgb(232,146,50)",
+            5: "rgb(186,134,78)",
+            6: "rgb(141,115,85)",
+            7: "rgb(181,223,209)",
+            8: "rgb(144,209,190)",
+            9: "rgb(44,185,154)",
+            10: "rgb(89,159,140)",
+            11: "rgb(93,128,120)",
+            12: "rgb(79,82,90)"
         },
         fillExpression: ["match", ["get", "no"]],
         check: {},
