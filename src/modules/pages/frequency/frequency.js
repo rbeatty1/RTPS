@@ -26,34 +26,16 @@ const contentRef = {
           name: "Average Weekday Frequency",
           units: "Trips/Hour",
           scheme: [
-            ["4 +", "#ddd"],
-            ["2–3", "#aed8ca"],
-            ["1", "#74ccb3"],
-            ["0", "#06bf9c"]
+            ["0", "#ddd"],
+            ["1", "#aed8ca"],
+            ["2—3", "#74ccb3"],
+            ["4 +", "#06bf9c"]
           ]
         }
       },
       table: false,
       text: "This map depicts the existing weekday transit frequency by average trips/hour. Darker colors represent transit routes that have less frequency service. When clicking the lines on the map, the pop-up shows the peak AM frequency as well as the average weekday trips/hour."
         
-    }
-  },
-  existing: {
-    active: false,
-    title: "AM Peak Frequency",
-    scenario: "Existing",
-    content: {
-      map: {
-        source: "transit",
-        layer: "existing",
-        legend: {
-          name: "AM Peak Frequency Classification",
-          scheme: [["Low", "#ddd"], ["Medium", "#e9da94"], ["High", "#d8c72e"]]
-        }
-      },
-      table: false,
-      text:
-        "This map depicts the current AM peak transit frequency (base scenario). Darker colors represent transit routes with more frequenct service. When clicking lines on the map, the pop-up will show the peak frequency as well as the mid-day frequency."
     }
   },
   transitChange: {
@@ -138,21 +120,21 @@ const contentRef = {
             NJ: ["Burlington", "Camden", "Gloucester", "Mercer"],
             PA: ["Bucks", "Chester", "Delaware", "Montgomery", "Philadelphia"]
           },
-          columns: ["Geography", "Base", "2x Freq.", "Difference", "% Diff"]
+          columns: ["Geography", "Base", "2x Freq.", "Absolute Diff.", "% Diff.", "% Diff VMT"]
         },
         datasets: {
           NJ: {
-            Burlington: [1087429, 1086168, -1261, -0.12],
-            Camden: [1530889, 1527518, -3371, -0.22],
-            Gloucester: [802337, 801037, -1300, -0.16],
-            Mercer: [1320146, 1316283, -3863, -0.29]
+            Burlington: [1087429, 1086168, -1261, -0.12, -0.24],
+            Camden: [1530889, 1527518, -3371, -0.22, -0.21],
+            Gloucester: [802337, 801037, -1300, -0.16, -0.22],
+            Mercer: [1320146, 1316283, -3863, -0.29, -0.19]
           },
           PA: {
-            Bucks: [1503945, 1501437, -2508, -0.17],
-            Chester: [1284892, 1282801, -2091, -0.16],
-            Delaware: [1179321, 1170955, -5367, -0.46],
-            Montgomery: [2057847, 2050725, -7122, -0.35],
-            Philadelphia: [2859025, 2835172, -23854, -0.83]
+            Bucks: [1503945, 1501437, -2508, -0.17, -0.22],
+            Chester: [1284892, 1282801, -2091, -0.16, -0.19],
+            Delaware: [1179321, 1170955, -5367, -0.46, -0.40],
+            Montgomery: [2057847, 2050725, -7122, -0.35, -0.34],
+            Philadelphia: [2859025, 2835172, -23854, -0.83, -0.58]
           }
         },
         summaries: {
@@ -182,11 +164,11 @@ const contentRef = {
           units: "Estimated Passengers per Day",
           name: "Absolute Ridership Change",
           scheme: [
-            ["Low", "#d8c72e"],
-            ["", "#a9ca46"],
-            ["", "#7cca64"],
-            ["", "#4dc682"],
-            ["High", "#06bf9c"]
+            ["Low", "#f0f9e8"],
+            ["", "#bae4bc"],
+            ["", "#7bccc4"],
+            ["", "#43a2ca"],
+            ["High", "#0868ac"]
           ]
         }
       },
@@ -207,11 +189,11 @@ const contentRef = {
           name: "Absolute Ridership Change",
           units: "Estimated Passengers per Day",
           scheme: [
-            ["< 1,400", "#06bf9c"],
-            ["1,400–1,600", "#0d9f7b"],
-            ["1,601–1,800", "#0c805d"],
-            ["1,801–2,200", "#066342"],
-            ["> 2,200", "#004729"]
+            ["< 1,400", "#ffffec"],
+            ["1,400–1,600", "#f4f2c0"],
+            ["1,601–1,800", "#eae494"],
+            ["1,801–2,200", "#e1d665"],
+            ["> 2,200", "#d8c72e"]
           ]
         }
       },
@@ -231,10 +213,10 @@ const contentRef = {
         legend: {
           name: "Percent Change in Ridership",
           scheme: [
-            ["< 85%", "#d8c72e"],
-            ["85%–100%", "#b5771d"],
-            ["101%–130%", "#793418"],
-            ["> 130%", "#330100"]
+            ["< 85%", "#ddd"],
+            ["85%–100%", "#aed8ca"],
+            ["101%–130%", "#74ccb3"],
+            ["> 130%", "#06bf9c"]
           ]
         }
       },
@@ -387,7 +369,7 @@ const HideFeatureLayer = (map, section) => {
       data => formatted data to be inserted into table
     @return: a <table></table> element to be appended to the ScrollStory section content
 */
-const CreateTable = data => {
+const CreateTable = (section, data) => {
   /*
     CreateHeaderRow(table, labels)
       @desc: Creates a header row for the section's table
@@ -427,7 +409,7 @@ const CreateTable = data => {
       let dataCell = document.createElement("td");
       summaries[state].temp[index]
         ? summaries[state].temp[index].push(data)
-        : null;
+        : null
       // format number
       dataCell.innerText = FormatNumber(data);
       dataRow.appendChild(dataCell);
@@ -454,8 +436,45 @@ const CreateTable = data => {
       dataCell.innerText = FormatNumber(data);
       dataRow.appendChild(dataCell);
     });
+    // the VMT data isn't really anywhere except for an excel sheet so this is easier than trying to compute the summaries for each state
+    if (section.id == 'autoChange'){
+      let dataCell = document.createElement('td')
+      dataCell.innerText = state == 'NJ' ? '-0.22%' : '-0.35%'
+      dataRow.appendChild(dataCell)
+    }
     return dataRow;
   };
+
+  const CreateRegionSummary = summaries =>{
+    let temp = []
+    for (let state in summaries){
+      summaries[state].final.map((data, index)=>{
+        if (!temp[index]) temp.push(parseFloat(data))
+        else{
+          if (index < 2 ) temp[index] = temp[index] + parseFloat(data)
+          else if (index == 2)temp[2] = temp[1] - temp[0]
+          else temp[index] = ((temp[2]/temp[0])*100).toFixed(2)
+        } 
+      })
+    }
+    let row = document.createElement('tr'),
+      label = document.createElement('td')
+    row.classList.add('dvrpc-summary')
+    label.innerText = 'DVRPC'
+    row.appendChild(label)
+    
+    temp.map(data=>{
+      let cell = document.createElement('td')
+      cell.innerText = FormatNumber(data)
+      row.appendChild(cell)
+    })
+    if (section.id == 'autoChange'){
+      let cell = document.createElement('td')
+      cell.innerText = '-0.30%'
+      row.appendChild(cell)
+    }
+    return row
+  }
 
   let labels = data.labels,
     datasets = data.datasets,
@@ -489,32 +508,6 @@ const CreateTable = data => {
       ((summaries[state].final[2] / summaries[state].final[0]) * 100).toFixed(2)
     );
     table.appendChild(CreateSummaryContent(state, summaries[state].final));
-  }
-
-  const CreateRegionSummary = summaries =>{
-    let temp = []
-    for (let state in summaries){
-      summaries[state].final.map((data, index)=>{
-        if (!temp[index]) temp.push(parseFloat(data))
-        else{
-          if (index < 2 ) temp[index] = temp[index] + parseFloat(data)
-          else if (index == 2)temp[2] = temp[1] - temp[0]
-          else temp[index] = ((temp[2]/temp[0])*100).toFixed(2)
-        } 
-      })
-    }
-    let row = document.createElement('tr'),
-      label = document.createElement('td')
-    row.classList.add('dvrpc-summary')
-    label.innerText = 'DVRPC'
-    row.appendChild(label)
-    
-    temp.map(data=>{
-      let cell = document.createElement('td')
-      cell.innerText = FormatNumber(data)
-      row.appendChild(cell)
-    })
-    return row
   }
 
   let dvrpcSummary = CreateRegionSummary(summaries)
@@ -564,10 +557,41 @@ const BuildLegend = section => {
       thisBreak.style.background = color[1];
       thisBreak.innerText = color[0];
       // make sure the first element has enough text contrast by making the text color the darkest value of the color scheme
-      if (i == 0)
+      if (i < 2)
         thisBreak.style.color = data.scheme[data.scheme.length - 1][1];
       breakContainer.appendChild(thisBreak);
       i++;
+    }
+    if (section.id == 'railLineChange'){
+      let title = document.createElement('p'),
+        breakContainer = document.createElement('div')
+
+      title.innerText = 'Percent Change in Ridership'
+      title.classList.add('frequency__legend-title')
+      title.classList.add('railChange')
+      title.style.color = data.scheme[data.scheme.length -1][1]
+      // title.style.marginTop = '3%'
+      breakContainer.classList.add('frequency__legend-breakContainer')
+      breakContainer.classList.add('railChange')
+      legend.appendChild(title)
+
+      let breaks = ['> 0', -1, 30, 50, 80, 100]
+      breaks.map((classBreak, index)=>{
+        let classification = document.createElement('p')
+        if (index == 0){
+          classification.innerText = `${classBreak}%`
+        }
+        else if (index == breaks.length-1){
+          classification.innerText = '100% <'
+        }
+        else{
+          classification.innerText = `${classBreak+1}% — ${breaks[index+1]}%`
+        }
+        classification.classList.add('frequency__legend-railPercent')
+        classification.style.borderBottom = `${(index+1)*2}px solid #aaa`
+        breakContainer.appendChild(classification)
+      })
+      legend.appendChild(breakContainer)
     }
   }
 };
@@ -670,7 +694,7 @@ const BuildContent = (content, key, component) => {
   if (content.table) {
     section
       .querySelector(".frequency__storySection-content")
-      .appendChild(CreateTable(content.table));
+      .appendChild(CreateTable(section, content.table));
   }
   section.style.height = masterContainer.getBoundingClientRect().height / 2;
   masterContainer.appendChild(section);
@@ -827,23 +851,9 @@ const LoadExisting = map => {
   */
   const OverviewColor = (data, target, line) => {
     let colors = contentRef.overview.content.map.legend.scheme; // that's a lot of fucking typing just to get some colors
-    if (data >= 4) target.push(line, colors[0][1]);
-    else if (data >= 2 && data < 4) target.push(line, colors[1][1]);
-    else if (data >= 1 && data < 2) target.push(line, colors[2][1]);
-    else target.push(line, colors[3][1]);
-  };
-  /*
-    ExistingColor(data, target, line)
-      @desc: Function that creates the mapbox data expression for the fill-color property for the layer associated with the existing section
-      @param:
-        - data => data that will be used for the operators
-        - target => data expression that will be appended to
-        - line => linename that will be used to match the appropriate features in 
-  */
-  const ExistingColor = (data, target, line) => {
-    let colors = contentRef.existing.content.map.legend.scheme; // that's a lot of fucking typing just to get some colors
-    if (data < 21) target.push(line, colors[2][1]);
-    else if (data >= 21 && data < 45) target.push(line, colors[1][1]);
+    if (data >= 4) target.push(line, colors[3][1]);
+    else if (data >= 2 && data < 4) target.push(line, colors[2][1]);
+    else if (data >= 1 && data < 2) target.push(line, colors[1][1]);
     else target.push(line, colors[0][1]);
   };
   /*
@@ -894,29 +904,6 @@ const LoadExisting = map => {
             "line-color": ["match", ["get", "linename"]]
           },
           layout: { visibility: "none" }
-        },
-        {
-          id: "transit-existing",
-          source: "transit",
-          type: "line",
-          "source-layer": "transit_lines",
-          paint: {
-            "line-width": [
-              "interpolate",
-              ["linear"],
-              ["zoom"],
-              7,
-              0.25,
-              8,
-              0.75,
-              9,
-              1,
-              12,
-              3
-            ],
-            "line-color": ["match", ["get", "linename"]]
-          },
-          layout: { visibility: "none" }
         }
       ];
       for (let line in existing.cargo) {
@@ -925,16 +912,10 @@ const LoadExisting = map => {
           layerDef[0].paint["line-color"],
           line
         );
-        ExistingColor(
-          existing.cargo[line].am,
-          layerDef[1].paint["line-color"],
-          line
-        );
       }
 
       // default value == transparent
       layerDef[0].paint["line-color"].push("rgba(255,255,255,0)");
-      layerDef[1].paint["line-color"].push("rgba(255,255,255,0)");
 
       layerDef.map(layer => {
         map.addLayer(layer, "base-muniOutline");
