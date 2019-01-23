@@ -1,6 +1,6 @@
 {
   "name": "rtps",
-  "version": "0.0.19",
+  "version": "0.0.20",
   "description": "Tool to identify different types of transit gaps to assist in making data-driven decisions to evaluate and prioritize transit improvements throughout the Philadelphia region.",
   "main": "app.js",
   "scripts": {
