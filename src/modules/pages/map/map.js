@@ -100,7 +100,8 @@ const PerformQuery = async input => {
             9: "rgb(44,185,154)",
             10: "rgb(89,159,140)",
             11: "rgb(93,128,120)",
-            12: "rgb(79,82,90)"
+            12: "rgb(79,82,90)",
+            13: null
         },
         fillExpression: ["match", ["get", "no"]],
         check: {},
