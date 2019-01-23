@@ -293,8 +293,16 @@ const BuildSidebar = (map, data) =>{
                 let filterExp = ['any']
                 // build important stuff of filter expression
                 filter.map(route=>{
-                  let statement = ['==', 'linename', route]
-                  filterExp.push(statement)
+                  if (route == 'core'){
+                    filterRef[route].map(coreRoute=>{
+                      let statement = ['==', 'linename', coreRoute]
+                      filterExp.push(statement)
+                    })
+                  }
+                  else{
+                    let statement = ['==', 'linename', route]
+                    filterExp.push(statement)
+                  }
                 })
                 // set filter
                 map.setFilter(`reliability-${layer}`, filterExp)
@@ -311,7 +319,15 @@ const BuildSidebar = (map, data) =>{
                       lines.map(line=>{
                         let statement = ['==', 'gid']
                         // build filter expression
-                        if (line == route){
+                        if (route == 'core'){
+                          filterRef[route].map(coreRoute=>{
+                            if (line == coreRoute){
+                              statement.push(parseInt(segment))
+                              filterExp.push(statement)
+                            }
+                          })
+                        }
+                        else if (line == route){
                           statement.push(parseInt(segment))
                           filterExp.push(statement)
                         }
