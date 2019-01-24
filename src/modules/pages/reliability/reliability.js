@@ -187,12 +187,12 @@ const BuildSidebar = (map, data) =>{
       // function to run when checkbox is changed. Displays correct layer on map and corresponding legend item
       const LayerVisibilityChange = layer =>{
         let layerID = `reliability-${layer}`,
-          boxes = document.querySelectorAll('input[type=checkbox]')
-        let visibility = map.getLayoutProperty(layerID, 'visibility')
+          boxes = document.querySelectorAll('.reliability__layer-input'),
+          visibility = map.getLayoutProperty(layerID, 'visibility'),
+          mapLayer = map.getLayer(layerID)
         for (let refLayer in styles.reliability.layers) if (refLayer == layer) visibility == 'none' ? map.setLayoutProperty(layerID, 'visibility', 'visible') : map.setLayoutProperty(layerID, 'visibility', 'none')
 
         for (let box of boxes) box.checked ? document.querySelector(`#legend-${box.name}`).style.display = 'flex' : document.querySelector(`#legend-${box.name}`).style.display = 'none'
-
       }
 
       // build legends
@@ -244,7 +244,7 @@ const BuildSidebar = (map, data) =>{
         ['reliability-speed', '<span class="reliability__layer-emphasis">Input:</span> Average Speed by Line'],
         ['reliability-otp', '<span class="reliability__layer-emphasis">Input:</span> On Time Performance'],
         ['reliability-tti', '<span class="reliability__layer-emphasis">Input:</span> Travel Time Index'],
-        // ['reliability-septa', '<span class="reliability__layer-emphasis">Input:</span> SEPTA Surface Transit Loads'],
+        ['reliability-septa', '<span class="reliability__layer-emphasis">Input:</span> SEPTA Surface Transit Loads'],
         ['reliability-njt', '<span class="reliability__layer-emphasis">Input:</span> New Jersey Transit Ridership']
       ]
 
@@ -261,6 +261,7 @@ const BuildSidebar = (map, data) =>{
         
         input.setAttribute('type', 'checkbox')
         input.setAttribute('name', layer[0].split('-')[1])
+        input.classList.add('reliability__layer-input')
   
         label.setAttribute('for', layer[0].split('-')[1])
         label.innerHTML = layer[1]
@@ -289,12 +290,20 @@ const BuildSidebar = (map, data) =>{
             let layers = styles.reliability.layers
             for (let layer in layers){
               // speed, otp, njt have single routes per feature
-              if (layer == 'speed' || layer == 'otp' || layer == 'njt'){
+              if (layer == 'speed' || layer == 'otp' || layer == 'njt' || layer == 'septa'){
                 let filterExp = ['any']
                 // build important stuff of filter expression
                 filter.map(route=>{
-                  let statement = ['==', 'linename', route]
-                  filterExp.push(statement)
+                  if (route == 'core'){
+                    filterRef[route].map(coreRoute=>{
+                      let statement = ['==', 'linename', coreRoute]
+                      filterExp.push(statement)
+                    })
+                  }
+                  else{
+                    let statement = ['==', 'linename', route]
+                    filterExp.push(statement)
+                  }
                 })
                 // set filter
                 map.setFilter(`reliability-${layer}`, filterExp)
@@ -311,7 +320,15 @@ const BuildSidebar = (map, data) =>{
                       lines.map(line=>{
                         let statement = ['==', 'gid']
                         // build filter expression
-                        if (line == route){
+                        if (route == 'core'){
+                          filterRef[route].map(coreRoute=>{
+                            if (line == coreRoute){
+                              statement.push(parseInt(segment))
+                              filterExp.push(statement)
+                            }
+                          })
+                        }
+                        else if (line == route){
                           statement.push(parseInt(segment))
                           filterExp.push(statement)
                         }

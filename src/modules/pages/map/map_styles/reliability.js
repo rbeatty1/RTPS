@@ -129,17 +129,33 @@ const styles = {
           visibility: 'none'
         }
       },
-      // septa: {
-      //   type: 'line',
-      //   source: 'septa',
-      //   paint: {
-      //     'line-color': '#f00',
-      //     'line-width': 1
-      //   },
-      //   layout: {
-      //     visibility: 'none'
-      //   }
-      // },
+      septa: {
+        type: 'line',
+        source: 'septa',
+        paint: {
+          'line-color': [
+            'step',
+            ['get', 'loads'],
+            '#ffffcc',
+            455, '#c2e699',
+            1048, '#78c679',
+            1800, '#31a354',
+            2904, "#006837"
+          ],
+          'line-width': [
+            'interpolate',
+            ['linear'],
+            ['zoom'],
+            0, .05,
+            8, .5,
+            12, 3
+          ],
+        },
+        layout: {
+          visibility: 'none'
+        },
+        placement: "admin-2-boundaries",
+      },
       speed: {
         type: 'line',
         source: 'speed',
