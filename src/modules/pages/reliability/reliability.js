@@ -190,7 +190,6 @@ const BuildSidebar = (map, data) =>{
           boxes = document.querySelectorAll('.reliability__layer-input'),
           visibility = map.getLayoutProperty(layerID, 'visibility'),
           mapLayer = map.getLayer(layerID)
-        console.log({mapLayer})
         for (let refLayer in styles.reliability.layers) if (refLayer == layer) visibility == 'none' ? map.setLayoutProperty(layerID, 'visibility', 'visible') : map.setLayoutProperty(layerID, 'visibility', 'none')
 
         for (let box of boxes) box.checked ? document.querySelector(`#legend-${box.name}`).style.display = 'flex' : document.querySelector(`#legend-${box.name}`).style.display = 'none'
@@ -291,7 +290,7 @@ const BuildSidebar = (map, data) =>{
             let layers = styles.reliability.layers
             for (let layer in layers){
               // speed, otp, njt have single routes per feature
-              if (layer == 'speed' || layer == 'otp' || layer == 'njt'){
+              if (layer == 'speed' || layer == 'otp' || layer == 'njt' || layer == 'septa'){
                 let filterExp = ['any']
                 // build important stuff of filter expression
                 filter.map(route=>{

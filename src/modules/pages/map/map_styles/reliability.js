@@ -135,17 +135,26 @@ const styles = {
         paint: {
           'line-color': [
             'step',
-            ['get', 'tot_loads'],
-            '#730000',
-            333, '#e60000',
-            859, '#f07d02',
-            1571, '#ffcb0d'
+            ['get', 'loads'],
+            '#ffffcc',
+            455, '#c2e699',
+            1048, '#78c679',
+            1800, '#31a354',
+            2904, "#006837"
           ],
-          'line-width': 1
+          'line-width': [
+            'interpolate',
+            ['linear'],
+            ['zoom'],
+            0, .05,
+            8, .5,
+            12, 3
+          ],
         },
         layout: {
           visibility: 'none'
-        }
+        },
+        placement: "admin-2-boundaries",
       },
       speed: {
         type: 'line',
