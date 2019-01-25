@@ -237,3 +237,22 @@
 input[type=checkbox]:checked>label{
   color: #06bf9c;
 }
+
+.reliability__popup-container{
+  color: #08506d;
+  text-align: center;
+  margin: 1rem;
+}
+
+.reliability__popup-container h3{
+  background: #08506d;
+  color: white;
+  padding: .5rem 0;
+  border-radius: 10px;
+}
+.reliability__popup-container p{
+  margin: 0
+}
+.reliability__popup-data{
+  color: #aaa
+}
