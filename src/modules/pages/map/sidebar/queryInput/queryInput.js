@@ -70,7 +70,7 @@ class QueryContainer {
       let listElement = document.createElement("div");
       listElement.className = "sidebar__input-container";
       listElement.innerHTML =
-        '<div class="sidebar__input-dropdowns"></div><div class="sidebar__input-buttons"></div>';
+        '<form class="sidebar__input-dropdowns"></form><div class="sidebar__input-buttons"></div>';
       container.appendChild(listElement);
       container.classList.add("active");
       for (var k in this.list) {

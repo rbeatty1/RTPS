@@ -6,7 +6,7 @@ const Landing = props =>{
   container.classList.add('landing__container')
   document.querySelector('#main').appendChild(container)
   for (let section in props){
-    let jawn = document.createElement('div')
+    let jawn = document.createElement('section')
     jawn.classList.add('landing__section')
     jawn.innerHTML = `<h1>${section}</h1>`
     container.appendChild(jawn)

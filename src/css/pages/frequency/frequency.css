@@ -92,17 +92,16 @@
   margin: 0 2.5%;
 }
 .frequency__content-story{
-  width: 33%;
-  z-index: 2;
-  position: absolute;
-  left: 1%;
+  width: 30%;
   overflow-y: scroll;
+  direction: rtl
+}
+.frequency__content-story *{
+  direction: ltr;
 }
 .frequency__content-map{
   overflow: hidden;
-  position: absolute;
-  right: 0;
-  width: 60%;
+  width: 70%;
 }
 .frequency__story-section{
   width: 80%;
@@ -131,7 +130,7 @@
 }
 .frequency__storySection-SectionTitle{
   font-weight: 700;
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   color: #06bf9c;
   margin: 0;
 }
@@ -140,16 +139,17 @@
   justify-content: center;
   align-items: center;
 }
-.frequency__storySection-divider{
+.frequency__storySection-TitleDivider hr{
   width: 33%;
   height: 2px;
   background-color: #d8c72e;
   border: none;
 }
-.frequency__storySection-ScenarioTitle{
+.frequency__storySection-TitleDivider h2{
   font-weight: 700;
   color: #999;
   text-transform: capitalize;
+  font-size: 1.25rem;
 }
 
 .frequency__storySection-legend{
@@ -163,6 +163,7 @@
 .frequency__legend-title{
   font-weight: 700;
   margin: 0;
+  font-size: 1rem;
 }
 .frequency__legend-title.railChange{
   margin-top: 5%;
@@ -170,7 +171,8 @@
 .frequency__legend-units{
   margin: 0;
   font-size: .9rem;
-  color: #999
+  color: #999;
+  font-weight: 400;
 }
 .frequency__legend-breakContainer{
   display: flex;
@@ -201,23 +203,15 @@
 .frequency__legend-railPercent{
   color: #777;
   margin: 0;
-<<<<<<< HEAD
-<<<<<<< HEAD
   white-space: nowrap
-=======
->>>>>>> Rail width aspect of rail ridership change legend added close #12
-=======
->>>>>>> 3e51f33a5ffc09a55287b25276c5eeb764fc500b
-}
-.frequency__storySection-content{
-  text-align: right;
-  width: 90%;
-  margin: 2% auto;
-  color: #999;
 }
 .frequency__storySection-text{
   font-size: .95rem;
   margin: 2.5%;
+  text-align: left;
+  width: 90%;
+  margin: 2% auto;
+  color: #999;
 }
 .frequency__storySection-table{
   width: 85%;
@@ -228,6 +222,7 @@
   padding: 2%;
   background: whitesmoke;
   text-align: center;
+  color: #999;
 }
 
 .frequency__storySection-tableHeader{

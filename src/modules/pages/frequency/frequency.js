@@ -457,7 +457,7 @@ const CreateTable = (section, data) => {
         } 
       })
     }
-    let row = document.createElement('tr'),
+    let row = document.createElement('tfoot'),
       label = document.createElement('td')
     row.classList.add('dvrpc-summary')
     label.innerText = 'DVRPC'
@@ -527,7 +527,7 @@ const BuildLegend = section => {
     // set things up
     let data = contentRef[section.id].content.map.legend,
       legend = section.querySelector(".frequency__storySection-legend"),
-      title = document.createElement("p"),
+      title = document.createElement("h3"),
       breakContainer = document.createElement("div");
 
     // house keeping
@@ -539,7 +539,7 @@ const BuildLegend = section => {
 
     // Do you have to specify the map units?
     if (data.units) {
-      let units = document.createElement("p");
+      let units = document.createElement("h4");
       units.classList.add("frequency__legend-units");
       units.innerText = `(${data.units})`;
       legend.appendChild(units);
@@ -575,7 +575,7 @@ const BuildLegend = section => {
       breakContainer.classList.add('railChange')
       legend.appendChild(title)
 
-      let breaks = ['> 0', -1, 30, 50, 80, 100]
+      let breaks = ['< 0', -1, 30, 50, 80, 100]
       breaks.map((classBreak, index)=>{
         let classification = document.createElement('p')
         if (index == 0){
@@ -650,42 +650,40 @@ const BuildContent = (content, key, component) => {
 
   // setting up
   let masterContainer = document.querySelector(".frequency__content-story"),
-    section = document.createElement("div");
+    section = document.createElement("section");
   section.classList.add("frequency__story-section");
 
   // return appropriate HTML content
   switch (key) {
     case "about":
       section.innerHTML = `
-      <div class="frequency__storySection-title">
         <div class="frequency__storySection-TitleDivider">
-          <hr class="frequency__storySection-divider"><p class="frequency__storySection-SectionTitle">${
+          <hr class="frequency__storySection-divider"><h1 class="frequency__storySection-SectionTitle">${
             contentRef[key].title
-          }</p><hr class="frequency__storySection-divider">
+          }</h1><hr class="frequency__storySection-divider">
         </div>
-      </div>
       <div class="frequency__storySection-legend"></div>
-      <div class="frequency__storySection-content"><p class="frequency__storySection-text">${
+      <p class="frequency__storySection-text">${
         content.text
-      }</p></div>
+      }</p>
       `;
       break;
     default:
       section.innerHTML = `
       <div class="frequency__storySection-title">
-        <p class="frequency__storySection-SectionTitle">${
+        <h1 class="frequency__storySection-SectionTitle">${
           contentRef[key].title
-        }</p>
+        }</h1>
         <div class="frequency__storySection-TitleDivider">
-          <hr class="frequency__storySection-divider"><p class="frequency__storySection-ScenarioTitle">${
+          <hr class="frequency__storySection-divider"><h2 class="frequency__storySection-ScenarioTitle">${
             contentRef[key].scenario
-          }</p><hr class="frequency__storySection-divider">
+          }</h2><hr class="frequency__storySection-divider">
         </div>
       </div>
       <div class="frequency__storySection-legend"></div>
-      <div class="frequency__storySection-content"><p class="frequency__storySection-text">${
+      <p class="frequency__storySection-text">${
         content.text
-      }</p></div>
+      }</p>
       `;
       break;
   }
@@ -693,7 +691,7 @@ const BuildContent = (content, key, component) => {
   // create table if needed
   if (content.table) {
     section
-      .querySelector(".frequency__storySection-content")
+      // .querySelector(".frequency__storySection-content")
       .appendChild(CreateTable(section, content.table));
   }
   section.style.height = masterContainer.getBoundingClientRect().height / 2;
@@ -1549,10 +1547,10 @@ export class Frequency {
   render() {
     document.querySelector("#main").innerHTML = `
     <div id="frequency-page">
-      <div class="frequency__nav-container"></div>
+      <nav class="frequency__nav-container"></nav>
       <div class="frequency__content-container">
-        <div class="frequency__content-story"></div>
         <div class="frequency__content-map"></div>
+        <aside class="frequency__content-story"></aside>
       </div>
     </div>
     `;

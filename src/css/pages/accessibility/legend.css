@@ -13,6 +13,8 @@
 }
 .accessibility-legend h2{
   color: #8bb23f;
+  text-align: center;
+  margin: 0;
 }
 
 .accessibility__legend-content{
@@ -76,10 +78,6 @@ tbody{
   text-align: center;
   display: none;
   margin-top: .5rem;
-}
-h2{
-  text-align: center;
-  margin: 0;
 }
 .accessibility__legend-zoneBox{
   height: 20px;

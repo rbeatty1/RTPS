@@ -3,7 +3,7 @@ import { QueryContainer } from './queryInput/queryInput.js'
 import { HeaderElements } from '../../../header/HeaderElements.js'
 
 const MenuContent = (menu, container, content) =>{
-  let jawn = document.createElement('div')
+  let jawn = document.createElement('section')
   jawn.className = 'map__sidebar-menuContent'
   jawn.id = `${menu.innerText.toLowerCase()}_dropdownContent`
   if (menu.innerText.toLowerCase() != 'summary') menu.classList.add('active')
@@ -25,15 +25,17 @@ const MenuContent = (menu, container, content) =>{
 
 
 const BuildMenus = content =>{
-  let container = document.querySelector('.gap').appendChild(document.createElement('div'))
+  let container = document.querySelector('.gap').appendChild(document.createElement('aside'))
   container.classList.add('map__sidebar')
-  let sidebar = document.createElement('ul')
+  let sidebar = document.createElement('nav')
   sidebar.classList.add('map__sidebar-menuContainer')
   let sidebarContent = document.createElement('div')
   sidebarContent.classList.add('map__sidebar-content')
   for (let key in content){
-    let header = document.createElement('li')
+    let header = document.createElement('a')
     header.classList.add('map__sidebar-menuHeader')
+    header.href = '#'
+    header.rel = 'noopener'
     let title = key.toLowerCase().split(' ').map(each=> each.replace(each[0], each[0].toUpperCase()))
     header.innerText = title
     sidebar.appendChild(header)

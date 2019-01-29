@@ -16,7 +16,7 @@ class Footer{
         let feet = document.createElement('footer')
         feet.className = 'footer__container'
         for (var k in FooterElements){
-            let foot = document.createElement('div')
+            let foot = FooterElements[k].elemName != 'app' ? document.createElement('address') : document.createElement('div')
             foot.className = `footer__${FooterElements[k].elemName}`;
             switch (FooterElements[k].elemName){
                 case 'dvrpc':

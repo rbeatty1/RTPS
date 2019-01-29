@@ -1,7 +1,6 @@
 import { Map } from '../modules/pages/map/map.js'
 import { Accessibility } from '../modules/pages/accessibility/accessibility.js';
 import { Home } from '../modules/pages/home/home.js';
-import { ComingSoon } from '../modules/pages/soon/soon.js';
 import { Frequency } from '../modules/pages/frequency/frequency.js';
 import { Reliability } from '../modules/pages/reliability/reliability.js';
 
