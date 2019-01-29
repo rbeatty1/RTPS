@@ -79,6 +79,13 @@ const BuildMap = pageContent =>{
 
   const BuildPopUps = layers =>{
     const BuildPopUpContent = (layer, props) =>{
+      const FeatureColor = (colors, data)=>{
+        colors.map((value, index)=>{
+          if (typeof value == 'number' && data){
+            
+          }
+        })
+      }
       let colorRef = styles.reliability.layers[layer].paint['line-color'],
         field = colorRef[1][1],
         data = props[field],
@@ -90,6 +97,8 @@ const BuildMap = pageContent =>{
       container.classList.add('reliability__popup-container')
       property.classList.add('reliability__popup-field')
       dataContent.classList.add('reliability__popup-data')
+
+      // FeatureColor(colorRef, data)
 
       title.innerText = (layer == 'score' || layer == 'weighted') ? `Routes ${props.lines}` : `Route ${props.linename}`
       switch(layer){
@@ -300,6 +309,23 @@ const BuildSidebar = (map, data) =>{
         legendSection.appendChild(items)
         element.appendChild(legendSection)
       }
+      const AddTooltip = layer =>{
+        let infoRef = {
+          score: "A high reliability score is indicative of segments that may benefit from targeted improvements to improve transit operations",
+          weighted: "A high score indicates segments with a high potential for reliability issues that impact high ridership surface transit.",
+          speed: "Scheduled speed calculated from General Transit Feed Specification (GTFS) data.",
+          otp: "Percent of time the bus arrives between 0 and 6 minutes after the scheduled time.",
+          tti: "Ratio of peak hour travel time to free flow travel time; high TTI indicates congestion.",
+          septa: "Average daily passenger load calculated from 2017 stop level ridership.",
+          njt: "Route level ridership from 2016-2017"
+        }
+        let tooltip = document.createElement('span')
+        tooltip.classList.add('reliability__tooltip')
+        tooltip.innerText = infoRef[layer]
+        tooltip.setAttribute('role', 'tooltip')
+        tooltip.id = `${layer}-tooltip`
+        return tooltip
+      }
 
       let layers = [
         ['reliability-score', '<span class="reliability__layer-emphasis">Output:</span> Reliability Score'],
@@ -324,15 +350,32 @@ const BuildSidebar = (map, data) =>{
         
         input.setAttribute('type', 'checkbox')
         input.setAttribute('name', layer[0].split('-')[1])
+        input.id = `${input.name}-input`
+        input.setAttribute('aria-describedby', `${input.name}-tooltip`)
         input.classList.add('reliability__layer-input')
   
         label.setAttribute('for', layer[0].split('-')[1])
         label.innerHTML = layer[1]
 
-        input.addEventListener('input', ()=> LayerVisibilityChange(input.name))
+        let tooltip = AddTooltip(input.name)
+
+        label.addEventListener('click', ()=>{
+          input.checked ? input.checked = false : input.checked = true
+          LayerVisibilityChange(input.name)
+        })
+        input.addEventListener('change', ()=> LayerVisibilityChange(input.name))
+        label.addEventListener('mouseover', ()=>{
+          tooltip.style.display = 'block'
+          label.style.cursor = 'pointer'
+        })
+        label.addEventListener('mouseout', ()=>{
+        tooltip.style.display = 'none'
+        label.style.cursor = ''
+      })
 
         checkbox.appendChild(input)
         checkbox.appendChild(label)
+        checkbox.appendChild(tooltip)
 
         option.appendChild(checkbox)
         BuildLegendSection(option, input.name)
@@ -528,6 +571,7 @@ const BuildSidebar = (map, data) =>{
     layerControl.appendChild(filterControl)
     element.appendChild(container)
   }
+
   
   let sidebar = document.querySelector('#reliability__sidebar'),
     content = document.createElement('div'),

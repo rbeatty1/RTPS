@@ -255,3 +255,25 @@ input[type=checkbox]:checked>label{
 .reliability__popup-data{
   color: #aaa
 }
+
+.reliability__tooltip{
+  display: none;
+  background: rgba(100,100,100,.5);
+  margin: 2%;
+  text-align: center;
+  padding: .25rem;
+  color: white;
+  border-radius: 2.5px;
+  font-size: .8rem
+}
+
+/* .reliability__tooltip::before{
+  content: '';
+  position: relative;
+  bottom: 0;
+  left: 50%;
+  border-color: transparent transparent rgba(100,100,100, 0.5) transparent;
+  border-width: 5px;
+  border-style: solid;
+  margin-left: -5px;
+} */
