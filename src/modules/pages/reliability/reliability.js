@@ -3,6 +3,35 @@ import {LoadLayers} from '../../../utils/loadMapLayers';
 import { styles } from '../map/map_styles/reliability.js'
 import { FormatNumber } from '../../../utils/formatNumber';
 
+let layerRef = {
+  purpose: "The goal of the surface transit reliability analysis was to identify corridors where surface transit service is particularly slow or delayed as places where road or transit improvements could increase reliability.",
+  inputs:{
+    speed: {
+      title: "Average Speed by Line",
+      info: "The average speed for bus routes that use a road segment was calcluated using the distance between stop points and the scheduled time for each stop point as provided in the <abbr class='reliability__abbr' title='General Transit Feed Specification'>GTFS</abbr>. If multiple bus routes use a road segment, a weighted average was calculated to ensure that the buses using the segment most throughout the day were considered more heavily."
+    },
+    otp:{
+      title: "On Time Performance (OTP)",
+      info: "<abbr class='reliability__abbr' title='On Time Performance'>OTP</abbr> represents the percent of time the bus route is considered on time. A trip is considered on time when it arrives between 0 and 6 minutes after the scheduled time. Low <abbr class='reliability__abbr' title='On Time Performance'>OTP</abbr> is indicative of reliability issues."
+    },
+    tti: {
+      title: "Travel Time Index (TTI)",
+      info: "<abbr class='reliability__abbr' title='Travel Time Index'>TTI</abbr> is the ratio of peak hour travel time to free flow travel time. The <abbr class='reliability__abbr' title='Travel Time Index'>TTI</abbr> is used in this analysis accounts for all vehicle types, not just transit vehicles. High <abbr class='reliability__abbr' title='Travel Time Index'>TTI</abbr> indicates congestion which negatively impacts surface transit reliability. <abbr class='reliability__abbr' title='Travel Time Index'>TTI</abbr> was available from INRIX on many roads throughout the region. An estimate of <abbr class='reliability__abbr' title='Travel Time Index'>TTI</abbr> from the regional travel model was used to fill gaps in the INRIX data."
+    },
+    septa: {
+      title: "SEPTA Ridership (2017)",
+      info: "2017 Ridership for <abbr class='reliability__abbr' title='Southeastern Pennsylvania Transportation Authority'>SEPTA</abbr> bus routes was available at the stop level."
+    },
+    njt: {
+      title: "NJ Transit Ridership (2016)",
+      info: "2016-2017 ridership for <abbr class='reliability__abbr' title='New Jersey'>NJ</abbr> Transit bus routes was provided at the stop level."
+    }
+  },
+  outputs:{
+    score: "The input layers were combined to calculate the overall measure of reliability. The <span class='reliability__sidebar-emphasis'>Reliability Score</span> layer shows the results of combining <abbr class='reliability__abbr' title='Travel Time Index'>TTI</abbr>, <abbr class='reliability__abbr' title='On Time Performance'>OTP</abbr>, and scheduled speed. A high reliability score is indicative of segments that may benefit from targeted improvements to improve transit operations.",
+    weight: "The results were then weighted by ridership (<span class='reliability__sidebar-emphasis'>Ridership Weighted Reliability Score</span>) to highlight segments that impact high ridership surface transit service an allow for further prioritization of improvements."
+  }
+}
 // function to build overall page structure
 const BuildPage = structure =>{
   let page = document.createElement('div')
@@ -50,6 +79,67 @@ const BuildMap = pageContent =>{
     }
   }
 
+  const BuildPopUps = layers =>{
+    const BuildPopUpContent = (layer, props) =>{
+      let colorRef = styles.reliability.layers[layer].paint['line-color'],
+        field = colorRef[1][1],
+        data = props[field],
+        container = document.createElement('div'),
+        title = document.createElement('h3'),
+        property = document.createElement('p'),
+        dataContent = document.createElement('p')
+      
+      container.classList.add('reliability__popup-container')
+      property.classList.add('reliability__popup-field')
+      dataContent.classList.add('reliability__popup-data')
+
+      title.innerText = (layer == 'score' || layer == 'weighted') ? `Routes ${props.lines}` : `Route ${props.linename}`
+      switch(layer){
+        case 'score':
+          property.innerText = 'Reliabilty Score'
+          break;
+        case 'weighted':
+          property.innerText = 'Ridership Weighted Reliability Score';
+          break;
+        default:
+          property.innerText = layerRef.inputs[layer].title
+          break;
+      }
+      dataContent.innerText = data
+
+      container.appendChild(title)
+      container.appendChild(property)
+      container.appendChild(dataContent)
+
+      return container.outerHTML
+    }
+
+    for (let l in layers){
+      map.on('mouseover', `reliability-${l}`, e=>map.getCanvas().style.cursor = 'pointer')
+      map.on('mouseleave', `reliability-${l}`, e=>map.getCanvas().style.cursor = '')
+      map.on('click', `reliability-${l}`, e=>{
+        let props = e.features[0].properties
+        let content = BuildPopUpContent(l, props)
+        let offsets = {
+          top: [0, 0],
+          "top-left": [0, 0],
+          "top-right": [0, 0],
+          bottom: [0, 0],
+          "bottom-left": [0, 0],
+          "bottom-right": [0, 0],
+          left: [0, 0],
+          right: [0, 0]
+        };
+        new mapboxgl.Popup({
+          offset: offsets,
+        })
+          .setLngLat(e.lngLat)
+          .setHTML(content)
+          .addTo(map)
+      })
+    }
+  }
+
 
 
   let extent = {
@@ -73,10 +163,12 @@ const BuildMap = pageContent =>{
       center: extent.center,
       zoom: extent.zoom
     })
+    let layers = styles.reliability.layers
     // load map layers
     LoadLayers(map, styles)
     // assign data to local state
     LoadData(pageContent.data)
+    BuildPopUps(layers)
     // display correct layers
     for (let layer in styles.reliability.layers) LayerVisibilityCheck(layer)
   })
@@ -87,16 +179,18 @@ const BuildMap = pageContent =>{
 const BuildSidebar = (map, data) =>{
   // function to build sidebar tabs
   const BuildSidebarNav = () =>{
-    let tabs = document.createElement('ul'),
+    let tabs = document.createElement('nav'),
       sections = ['About', 'Layers']
     
     tabs.classList.add('reliability__sidebar-tabs')
     
     sections.map(section=>{
-      let tab = document.createElement('li')
+      let tab = document.createElement('a')
       tab.classList.add('reliability__sidebar-nav')
       tab.innerText = section
       tab.id = `nav-${section.toLowerCase()}`
+      tab.href = "#"
+      tab.rel = "noopener"
       if (section == 'About') tab.classList.add('active')
       // listener to switch sidebar content on tab click
       tab.addEventListener('click', e=>{
@@ -118,60 +212,47 @@ const BuildSidebar = (map, data) =>{
   }
 
   const BuildAboutSection = parent =>{
-    // local content reference to populate about section
-    let content = {
-      purpose: "The goal of the surface transit reliability analysis was to identify corridors where surface transit service is particularly slow or delayed as places where road or transit improvements could increase reliability.",
-      inputs:{
-        speed: {
-          title: "Average Speed by Line",
-          info: "The average speed for bus routes that use a road segment was calcluated using the distance between stop points and the scheduled time for each stop point as provided in the GTFS. If multiple bus routes use a road segment, a weighted average was calculated to ensure that the buses using the segment most throughout the day were considered more heavily."
-        },
-        otp:{
-          title: "On Time Performance (OTP)",
-          info: "OTP represents the percent of time the bus route is considered on time. A trip is considered on time when it arrives between 0 and 6 minutes after the scheduled time. Low OTP is indicative of reliability issues."
-        },
-        tti: {
-          title: 'Travel Time Index (TTI)',
-          info: "TTI is the ratio of peak hour travel time to free flow travel time. The TTI is used in this analysis accounts for all vehicle types, not just transit vehicles. High TTI indicates congestion which negatively impacts surface transit reliability. TTI was available from INRIX on many roads throughout the region. An estimate of TTI from the regional travel model was used to fill gaps in the INRIX data."
-        },
-        septa: {
-          title: 'SEPTA Ridership (2017)',
-          info: '2017 Ridership for SEPTA bus routes was available at the stop level.'
-        },
-        njt: {
-          title: "NJ Transit Ridership (2016)",
-          info: "2016-2017 ridership for NJ Transit bus routes was provided at the stop level."
-        }
-      },
-      score: "The input layers were combined to calculate the overall measure of reliability. The <span class='reliability__sidebar-emphasis'>Reliability Score</span> layer shows the results of combining TTI, OTP, and scheduled speed. A high reliability score is indicative of segments that may benefit from targeted improvements to improve transit operations.",
-      weight: "The results were then weighted by ridership (<span class='reliability__sidebar-emphasis'>Ridership Weighted Reliability Score</span>) to highlight segments that impact high ridership surface transit service an allow for further prioritization of improvements."
-    }
+
 
     let container = document.createElement('div'),
       element = document.createElement('div')
-    container.classList.add('reliability__sidebar-sectionContent')
+    container.classList.add(`reliability__sidebar-sectionContent`)
     container.classList.add('active')
     container.id = 'content-about'
     element.classList.add('reliability__sidebar-control')
     // build about sections and fill with content
-    for (let section in content){
-      let container = document.createElement('div')
+    for (let section in layerRef){
+      let container = document.createElement('section')
+      container.id = `reliability__sidebar-${section}Content`
+      let title = document.createElement('h2')
+      title.classList.add('reliability__sidebar-sectionTitle')
+      title.innerText = section
+      container.appendChild(title)
       // input sections are styled differently to draw attention
-      if (section != 'inputs'){
-        container.innerHTML = content[section]
-        container.classList.add('reliability__sidebar-contentSection')
+      if (section == 'purpose'){
+        let purposeSection = document.createElement('p')
+        purposeSection.innerHTML = layerRef[section]
+        // purposeSection.classList.add('reliability__sidebar-contentSection')
+        container.appendChild(purposeSection)
+      }
+      else if (section == 'outputs'){
+        for (let output in layerRef[section]){
+          let outputSection = document.createElement('p')
+          // outputSection.classList.add('reliability__sidebar-contentSection')
+          outputSection.innerHTML = layerRef[section][output]
+          container.appendChild(outputSection)
+        }
       }
       else{
-        for (let input in content[section]){
-          let inputSection = document.createElement('div'),
-            title = content[section][input].title,
-            info = content[section][input].info
+        for (let input in layerRef[section]){
+          let inputSection = document.createElement('p'),
+            title = layerRef[section][input].title,
+            info = layerRef[section][input].info
           
           inputSection.classList.add('reliability__sidebar-inputSection')
           inputSection.innerHTML = `<span class="reliability__sidebar-inputTitle">${title}:</span> ${info}`
           container.appendChild(inputSection)
         }
-        container.classList.add('reliability__sidebar-contentSection')
       }
       element.appendChild(container)
     }

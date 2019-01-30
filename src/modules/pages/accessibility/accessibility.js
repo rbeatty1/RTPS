@@ -257,11 +257,11 @@ const BuildPage = props =>{
   // build section for each
   for (let section in props.sections){
     let thisSection = props.sections[section]
-    let container = document.createElement('div')
+    let container = document.createElement('section')
     container.classList.add('accessibility-section')
     container.innerHTML = `
-      <div class="accessibility-section-header" id="${thisSection.id}">${thisSection.title}</div>
-      <div class="accessibility-section-content inactive">${thisSection.description}</div>
+      <h1 class="accessibility-section-header" id="${thisSection.id}">${thisSection.title}</h1>
+      <p class="accessibility-section-content inactive">${thisSection.description}</p>
     `
 
     sectionBody.appendChild(container)
@@ -320,27 +320,27 @@ class Accessibility{
         allAccessibility: {
           id: 'AccAll',
           title: 'Destinations Reachable Using All Rail Stations',
-          description: '<p>This map serves as the baseline. It shows the number of destinations reachable via rail from each zone for passengers that can use all rail stations. The darker the color, the more destinations are reachable from that TAZ via rail.</p>'
+          description: 'This map serves as the baseline. It shows the number of destinations reachable via rail from each zone for passengers that can use all rail stations. The darker the color, the more destinations are reachable from that <abbr class="accessibility__abbr" title="Traffic Analysis Zone">TAZ</abbr> via rail.'
         },
         currentAccessibility:{
           id: 'AccCur',
           title: 'Destinations Reachable Using Only Wheelchair Accessible Rail Stations',
-          description: '<p>This map shows the destinations reachable by wheelchair users who can only use wheelchair accessible stations. The darker the color, the more destinations are reachable from that TAZ via rail.</p>'
+          description: 'This map shows the destinations reachable by wheelchair users who can only use wheelchair accessible stations. The darker the color, the more destinations are reachable from that <abbr class="accessibility__abbr" title="Traffic Analysis Zone">TAZ</abbr> via rail.'
         },
         currentDisparity:{
           id: 'DisCur',
           title: 'Destination Disparity For Wheelchair Users in Comparison With All Users',
-          description: '<p>This map highlights the differences between the baseline and wheelchair accessible map. The darker the color, the greater the disparity for wheelchair users in comparison with all users.</p>'
+          description: 'This map highlights the differences between the baseline and wheelchair accessible map. The darker the color, the greater the disparity for wheelchair users in comparison with all users.'
         },
         futureAccessibility:{
           id: 'AccFut',
           title: 'Destinations Reachable Using Stations Currently Wheelchair Accessible or Programmed For Improvement',
-          description: '<p>This map considers which stations are programmed for wheelchair accessibility improvements or have improvements in progress. It includes stations that are currently accessible and those that are programmed for improvement. Again, the darker the color, the more destinations are reachable via rail from that zone.</p>'
+          description: 'This map considers which stations are programmed for wheelchair accessibility improvements or have improvements in progress. It includes stations that are currently accessible and those that are programmed for improvement. Again, the darker the color, the more destinations are reachable via rail from that zone.'
         },
         futureDisparity:{
           id: 'DisFut',
           title: 'Destination Disparity For Wheelchair Users in Comparison With All Users (Programmed Improvements Included)',
-          description: '<p>This map compares the previous map to the baseline map. It shows where the disparity remains. These are the places that should be the focus of the next batch of wheelchair accessibility improvements at rail stations.</p>'
+          description: 'This map compares the previous map to the baseline map. It shows where the disparity remains. These are the places that should be the focus of the next batch of wheelchair accessibility improvements at rail stations.'
         }
       }
     }
@@ -350,19 +350,19 @@ class Accessibility{
   render(){
     this.props.container.innerHTML = `
     <div class="accessibility-page">
-      <div class="accessibility-text">
-        <div class="accessibility-intro">
-          <h2>Introduction</h2>
+      <div class="accessibility-map"></div>
+      <aside class="accessibility-text">
+        <section class="accessibility-intro">
+          <h1>Introduction</h1>
           <p>
             This analysis identifies places where wheelchair users' ability to reach essential services (jobs,
             grocery stores, medical offices, etc.) via transit is most impacted by inaccessible rail stations.
             The goal was to prioritize station improvements, not to determine whether or not the mobility impaired
             can access a stop. Therefore, the assumption was made that wheelchair users can get to and from rail 
-            stations. Since buses in the DVRPC region are generally accessible, they were excluded.
+            stations. Since buses in the <abbr class="accessibility__abbr" title="Delaware Valley Regional Planning Commission">DVRPC</abbr> region are generally accessible, they were excluded.
           </p>
-        </div>
-      </div>
-      <div class="accessibility-map"></div>
+        </section>
+      </aside>
       </div>
   `
     BuildPage(this.props)

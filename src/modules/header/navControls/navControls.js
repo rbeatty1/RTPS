@@ -31,7 +31,7 @@ class NavControl{
 
     render(){
         let header = document.querySelector(".header__container");
-        let listElement = document.createElement('div')
+        let listElement = document.createElement('nav')
         listElement.className = 'header__nav-links'
         listElement.innerHTML = '';
         for (let k in this.list){

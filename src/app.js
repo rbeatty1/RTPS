@@ -5,7 +5,7 @@ import './css/app.css'
 import {LoadMain} from './utils/loadMain';
 
 headerRender(HeaderElements);
-let app = document.createElement('div')
+let app = document.createElement('main')
 app.id = 'main'
 document.querySelector('#app').appendChild(app)
 LoadMain()

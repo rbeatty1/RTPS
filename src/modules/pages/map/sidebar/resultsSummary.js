@@ -22,8 +22,9 @@ const CreateLegend = data =>{
 
 const CreateSummary = data =>{
   let insert;
+  data.direction == ''
   data.type == 'municipality' ? insert = `the selected area — <span class="map__sidebar-legendEmphasis">${document.querySelector(`option[value='${data.location}']`).innerText}</span>` : insert = 'the selected area'
-  return `The results being displayed show the average network gap score for Traffic Analysis Zone (TAZ) connections <span class="map__sidebar-legendEmphasis">${data.direction}</span> ${insert}. Only TAZs with demand <span class="map__sidebar-legendEmphasis">${data.direction} the selected area</span> are being displayed, a total of <span class="map__sidebar-legendEmphasis">${data.count}</span>, with darker colors indicating a higher priority for transit connections in relation to ${insert}.`
+  return `The results being displayed show the average network gap score for <abbr class="map__abbr" title="Traffic Analysis Zone">TAZ</abbr> connections <span class="map__sidebar-legendEmphasis">${data.direction}</span> ${insert}. Only <abbr class="map__abbr" title="Traffic Analysis Zone">TAZ</abbr>s with demand <span class="map__sidebar-legendEmphasis">${data.direction} the selected area</span> are being displayed, a total of <span class="map__sidebar-legendEmphasis">${data.count}</span>, with darker colors indicating a higher priority for transit connections in relation to ${insert}.`
 }
 
 const CreateViz = data =>{
@@ -49,7 +50,7 @@ const BuildSummary = (props) => {
     }
   }
 
-  let summaryContainer = document.querySelector('#summary_dropdownContent')
+  let summaryContainer = document.querySelector('#gap__results-section')
   summaryContainer.innerHTML = ''
   for (let container in content){
     let section = content[container].create

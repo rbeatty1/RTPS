@@ -1,7 +1,7 @@
 import '../../../css/pages/accessibility/legend.css'
 
 const BuildLegend = () =>{
-  let legend = document.createElement('div')
+  let legend = document.createElement('section')
   legend.classList.add('accessibility-legend')
   legend.innerHTML = `
   <h2>Legend</h2>

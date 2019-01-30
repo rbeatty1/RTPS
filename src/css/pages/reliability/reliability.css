@@ -13,7 +13,6 @@
   border-left: 2px solid #06bf9c;
   background: whitesmoke
 }
-
 .reliability__sidebar-tabs{
   width: 100%;
   height: 5%;
@@ -43,8 +42,16 @@
 }
 .reliability__sidebar-content{
   width: 100%;
-  height: 95%;
+  /* height: 100%; */
   overflow-y: hidden;
+}
+
+#reliability__sidebar-purposeContent h2, #reliability__sidebar-inputsContent h2, #reliability__sidebar-outputsContent h2{
+  text-transform: capitalize;
+  font-size: 1.15rem;
+  text-align: center;
+  margin: 1% auto;
+  color: #08506d
 }
 .reliability__sidebar-emphasis{
   font-weight: 700;
@@ -52,22 +59,26 @@
 }
 .reliability__sidebar-inputTitle{
   font-weight: 700;
-  color: #06bf9c;
+  color: #06bf9c!important;
   text-align: center;
   margin-top: 10px;
 }
-.reliability__sidebar-inputSection{
+#reliability__sidebar-inputsContent{
   margin: 5px auto;
   width: 90%;
   color: #08506d
 }
 
-.reliability__sidebar-contentSection{
-  margin: 1rem;
+#reliability__sidebar-purposeContent, #reliability__sidebar-inputsContent, #reliability__sidebar-outputsContent{
   font-size: .9rem;
   color: #999;
 }
-
+#reliability__sidebar-purposeContent p{
+  margin: 1% 3%;
+}
+#reliability__sidebar-outputsContent p{
+  margin: 3%;
+}
 .reliability__sidebar-sectionContent{
   display: none;
   height: 100%;
@@ -236,4 +247,23 @@
 
 input[type=checkbox]:checked>label{
   color: #06bf9c;
+}
+
+.reliability__popup-container{
+  color: #08506d;
+  text-align: center;
+  margin: 1rem;
+}
+
+.reliability__popup-container h3{
+  background: #08506d;
+  color: white;
+  padding: .5rem 0;
+  border-radius: 10px;
+}
+.reliability__popup-container p{
+  margin: 0
+}
+.reliability__popup-data{
+  color: #aaa
 }

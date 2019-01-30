@@ -1,10 +1,10 @@
 .accessibility-page{
-  height:95%;
-  width: 95%;
+  height:100%;
+  width: 100%;
   display: flex;
   flex-flow: row;
   justify-content: space-around;
-  margin: 20px auto;
+  /* margin: 20px auto; */
   font-family: 'Arial Narrow', sans-serif;
   background-color: whitesmoke
 }
@@ -13,8 +13,11 @@
   width: 90%;
   margin: 0 auto;
 }
-.accessibility-intro h2{
+.accessibility-intro h1{
+  font-size: 1.5rem;
   color: #8bb23f;
+  text-align: center;
+  margin: 0;
 }
 .accessibility-intro p{
   font-size: 1rem;
@@ -37,7 +40,11 @@
   text-align: left;
   border-bottom: 2px dotted #8bb23f;
   cursor: pointer;
+  font-weight: 400;
   font-family: 'Arial', sans-serif;
+  font-weight: 400;
+  margin: 0;
+  font-size: 1rem;
 }
 .accessibility-section-header.active{
   font-weight: 700;
@@ -46,7 +53,7 @@
 }
 .accessibility-section-content{
   display: none;
-  font-size: 14px;
+  font-size: 1em;
   color: #6a6a6a;
   padding: 10px;
   margin: 5px auto;
@@ -61,15 +68,8 @@
 }
 
 .accessibility-text{
-  width: 40%;
-<<<<<<< HEAD
+  width: 30%;
   height: 100%;
-=======
-  height: 80%;
-<<<<<<< HEAD
->>>>>>> Update accessibility page styles close #17
-=======
->>>>>>> 3e51f33a5ffc09a55287b25276c5eeb764fc500b
   display: flex;
   flex-flow: column;
   align-items: flex-end;
@@ -90,7 +90,7 @@
 }
 
 .accessibility-map{
-  width: 65%;
+  width: 70%;
   height: 95%;
 }
 

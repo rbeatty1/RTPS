@@ -36,7 +36,7 @@ const HeaderElements = [
                 id : 3,
                 name : 'Select a Direction',
                 elem_id: 'direction',
-                options : ['To Zone', 'From Zone']
+                options : ['To', 'From']
             },
             runQuery : {
                 id : 5,

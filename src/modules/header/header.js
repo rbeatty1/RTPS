@@ -4,14 +4,15 @@ import logo from "../../img/RTPS-logo.png"
 
 function headerRender(elements){
     const appBody = document.querySelector('#app');
-    const header = document.createElement('div')
+    const header = document.createElement('header')
     header.className = 'header__container';
     appBody.appendChild(header);
 
     // logo
     let logoContainer = document.createElement('img')
     logoContainer.className = 'header__project-logo';
-    logoContainer.setAttribute('src', logo);
+    logoContainer.src = logo
+    logoContainer.alt = 'Regional Transit Priority Setting Logo'
     header.appendChild(logoContainer);
     
     // nav controls

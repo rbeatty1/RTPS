@@ -3,12 +3,10 @@
     height: 100%;
     width: 100%;
 }
-
 .map__container{
     width:80%;
     height: 100%;
 }
-
 .map__sidebar{
     display: flex;
     flex-flow: column;
