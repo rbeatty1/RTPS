@@ -3,23 +3,33 @@ import { QueryContainer } from './queryInput/queryInput.js'
 import { HeaderElements } from '../../../header/HeaderElements.js'
 
 const MenuContent = (menu, container, content) =>{
-  let jawn = document.createElement('section')
-  jawn.className = 'map__sidebar-menuContent'
-  jawn.id = `${menu.innerText.toLowerCase()}_dropdownContent`
-  if (menu.innerText.toLowerCase() != 'summary') menu.classList.add('active')
 
-  // function to return proper HTML strings
-  const createContent = menu =>{
-    switch(menu.innerText.toLowerCase()){
-      case 'summary':
-        return content
-        break;
-      default:
-        return ''
-        break;
+  let jawn = document.createElement('div'),
+    title = menu.innerText.toLowerCase()
+  jawn.className = 'map__sidebar-menuContent'
+  jawn.id = `${title}_dropdownContent`
+  if (title != 'summary') {
+    menu.classList.add('active')
+    for (let section in content){
+      if (section == 'inputs'){
+        let queryContainer = new QueryContainer()
+        queryContainer.list = HeaderElements[1].content;
+        let queryList = [];
+        for (var k in queryContainer.list) queryList.push(queryContainer.list[k]);
+      }
+      else{
+        let results = document.createElement('section')
+        results.id = 'gap__results-section'
+        results.innerHTML = content.results
+        jawn.appendChild(results)
+      }
     }
   }
-  jawn.innerHTML =  createContent(menu)
+  else{
+    let summary = document.createElement('section')
+    summary.innerHTML = content
+    jawn.appendChild(summary)
+  }
   container.appendChild(jawn)
 }
 
@@ -59,11 +69,14 @@ class Sidebar{
       container: document.querySelector('#main'),
       elements: {
         analysis: {
-          geography: '',
-          selection: '',
-          direction: ''
+          inputs: {
+            geography: '',
+            selection: '',
+            direction: ''
+          },
+          results: `Please perform an analysis query to populate this area with results.`,
         },
-        summary: `Please perform an analysis query to populate this area with results.`,
+        summary: "This map summarizes the network gap analysis which identifies in demand connections between transit supportive places where transit is either not available or not competitive."
       },
       open: undefined
     }

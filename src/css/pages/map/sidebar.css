@@ -37,6 +37,13 @@
 }
 .map__sidebar-menuContent{
   display: none;
+}
+.map__sidebar-menuContent.active{
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+}
+.map__sidebar-menuContent section{
   width: 60%;
   background: white;
   padding: 15px;
@@ -46,13 +53,9 @@
   color: #08506d;
   border-radius: 5px;
 }
-
-.map__sidebar-menuContent.active{
-  display: flex;
-  flex-flow: column;
-  align-items: center;
+#gap__results-section{
+  order:2;
 }
-
 .map__sidebar-legendCell{
   width: 25px;
   height: 25px;

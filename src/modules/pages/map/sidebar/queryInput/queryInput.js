@@ -68,7 +68,7 @@ class QueryContainer {
   render() {
     let container = document.querySelector("#analysis_dropdownContent");
     if (container) {
-      let listElement = document.createElement("div");
+      let listElement = document.createElement("section");
       listElement.className = "sidebar__input-container";
       listElement.innerHTML =
         '<form class="sidebar__input-dropdowns"></form><div class="sidebar__input-buttons"></div>';

@@ -50,7 +50,7 @@ const BuildSummary = (props) => {
     }
   }
 
-  let summaryContainer = document.querySelector('#summary_dropdownContent')
+  let summaryContainer = document.querySelector('#gap__results-section')
   summaryContainer.innerHTML = ''
   for (let container in content){
     let section = content[container].create

@@ -168,7 +168,7 @@ const ClearQuery = map => {
     })
 
     // clear results summary
-    document.querySelector('#summary_dropdownContent').innerHTML = 'Please perform an analysis query to populate this area with results.'
+    document.querySelector('#gap__results-section').innerHTML = 'Please perform an analysis query to populate this area with results.'
 }
 
 /* AddListeners(map) -- rbeatty
