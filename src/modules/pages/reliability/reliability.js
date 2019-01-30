@@ -8,27 +8,29 @@ let layerRef = {
   inputs:{
     speed: {
       title: "Average Speed by Line",
-      info: "The average speed for bus routes that use a road segment was calcluated using the distance between stop points and the scheduled time for each stop point as provided in the GTFS. If multiple bus routes use a road segment, a weighted average was calculated to ensure that the buses using the segment most throughout the day were considered more heavily."
+      info: "The average speed for bus routes that use a road segment was calcluated using the distance between stop points and the scheduled time for each stop point as provided in the <abbr class='reliability__abbr' title='General Transit Feed Specification'>GTFS</abbr>. If multiple bus routes use a road segment, a weighted average was calculated to ensure that the buses using the segment most throughout the day were considered more heavily."
     },
     otp:{
       title: "On Time Performance (OTP)",
-      info: "OTP represents the percent of time the bus route is considered on time. A trip is considered on time when it arrives between 0 and 6 minutes after the scheduled time. Low OTP is indicative of reliability issues."
+      info: "<abbr class='reliability__abbr' title='On Time Performance'>OTP</abbr> represents the percent of time the bus route is considered on time. A trip is considered on time when it arrives between 0 and 6 minutes after the scheduled time. Low <abbr class='reliability__abbr' title='On Time Performance'>OTP</abbr> is indicative of reliability issues."
     },
     tti: {
-      title: 'Travel Time Index (TTI)',
-      info: "TTI is the ratio of peak hour travel time to free flow travel time. The TTI is used in this analysis accounts for all vehicle types, not just transit vehicles. High TTI indicates congestion which negatively impacts surface transit reliability. TTI was available from INRIX on many roads throughout the region. An estimate of TTI from the regional travel model was used to fill gaps in the INRIX data."
+      title: "Travel Time Index (TTI)",
+      info: "<abbr class='reliability__abbr' title='Travel Time Index'>TTI</abbr> is the ratio of peak hour travel time to free flow travel time. The <abbr class='reliability__abbr' title='Travel Time Index'>TTI</abbr> is used in this analysis accounts for all vehicle types, not just transit vehicles. High <abbr class='reliability__abbr' title='Travel Time Index'>TTI</abbr> indicates congestion which negatively impacts surface transit reliability. <abbr class='reliability__abbr' title='Travel Time Index'>TTI</abbr> was available from INRIX on many roads throughout the region. An estimate of <abbr class='reliability__abbr' title='Travel Time Index'>TTI</abbr> from the regional travel model was used to fill gaps in the INRIX data."
     },
     septa: {
-      title: 'SEPTA Ridership (2017)',
-      info: '2017 Ridership for SEPTA bus routes was available at the stop level.'
+      title: "SEPTA Ridership (2017)",
+      info: "2017 Ridership for <abbr class='reliability__abbr' title='Southeastern Pennsylvania Transportation Authority'>SEPTA</abbr> bus routes was available at the stop level."
     },
     njt: {
       title: "NJ Transit Ridership (2016)",
-      info: "2016-2017 ridership for NJ Transit bus routes was provided at the stop level."
+      info: "2016-2017 ridership for <abbr class='reliability__abbr' title='New Jersey'>NJ</abbr> Transit bus routes was provided at the stop level."
     }
   },
-  score: "The input layers were combined to calculate the overall measure of reliability. The <span class='reliability__sidebar-emphasis'>Reliability Score</span> layer shows the results of combining TTI, OTP, and scheduled speed. A high reliability score is indicative of segments that may benefit from targeted improvements to improve transit operations.",
-  weight: "The results were then weighted by ridership (<span class='reliability__sidebar-emphasis'>Ridership Weighted Reliability Score</span>) to highlight segments that impact high ridership surface transit service an allow for further prioritization of improvements."
+  outputs:{
+    score: "The input layers were combined to calculate the overall measure of reliability. The <span class='reliability__sidebar-emphasis'>Reliability Score</span> layer shows the results of combining <abbr class='reliability__abbr' title='Travel Time Index'>TTI</abbr>, <abbr class='reliability__abbr' title='On Time Performance'>OTP</abbr>, and scheduled speed. A high reliability score is indicative of segments that may benefit from targeted improvements to improve transit operations.",
+    weight: "The results were then weighted by ridership (<span class='reliability__sidebar-emphasis'>Ridership Weighted Reliability Score</span>) to highlight segments that impact high ridership surface transit service an allow for further prioritization of improvements."
+  }
 }
 // function to build overall page structure
 const BuildPage = structure =>{
@@ -177,16 +179,18 @@ const BuildMap = pageContent =>{
 const BuildSidebar = (map, data) =>{
   // function to build sidebar tabs
   const BuildSidebarNav = () =>{
-    let tabs = document.createElement('ul'),
+    let tabs = document.createElement('nav'),
       sections = ['About', 'Layers']
     
     tabs.classList.add('reliability__sidebar-tabs')
     
     sections.map(section=>{
-      let tab = document.createElement('li')
+      let tab = document.createElement('a')
       tab.classList.add('reliability__sidebar-nav')
       tab.innerText = section
       tab.id = `nav-${section.toLowerCase()}`
+      tab.href = "#"
+      tab.rel = "noopener"
       if (section == 'About') tab.classList.add('active')
       // listener to switch sidebar content on tab click
       tab.addEventListener('click', e=>{
@@ -212,21 +216,36 @@ const BuildSidebar = (map, data) =>{
 
     let container = document.createElement('div'),
       element = document.createElement('div')
-    container.classList.add('reliability__sidebar-sectionContent')
+    container.classList.add(`reliability__sidebar-sectionContent`)
     container.classList.add('active')
     container.id = 'content-about'
     element.classList.add('reliability__sidebar-control')
     // build about sections and fill with content
     for (let section in layerRef){
-      let container = document.createElement('div')
+      let container = document.createElement('section')
+      container.id = `reliability__sidebar-${section}Content`
+      let title = document.createElement('h2')
+      title.classList.add('reliability__sidebar-sectionTitle')
+      title.innerText = section
+      container.appendChild(title)
       // input sections are styled differently to draw attention
-      if (section != 'inputs'){
-        container.innerHTML = layerRef[section]
-        container.classList.add('reliability__sidebar-contentSection')
+      if (section == 'purpose'){
+        let purposeSection = document.createElement('p')
+        purposeSection.innerHTML = layerRef[section]
+        // purposeSection.classList.add('reliability__sidebar-contentSection')
+        container.appendChild(purposeSection)
+      }
+      else if (section == 'outputs'){
+        for (let output in layerRef[section]){
+          let outputSection = document.createElement('p')
+          // outputSection.classList.add('reliability__sidebar-contentSection')
+          outputSection.innerHTML = layerRef[section][output]
+          container.appendChild(outputSection)
+        }
       }
       else{
         for (let input in layerRef[section]){
-          let inputSection = document.createElement('div'),
+          let inputSection = document.createElement('p'),
             title = layerRef[section][input].title,
             info = layerRef[section][input].info
           
@@ -234,7 +253,6 @@ const BuildSidebar = (map, data) =>{
           inputSection.innerHTML = `<span class="reliability__sidebar-inputTitle">${title}:</span> ${info}`
           container.appendChild(inputSection)
         }
-        container.classList.add('reliability__sidebar-contentSection')
       }
       element.appendChild(container)
     }

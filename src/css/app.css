@@ -3,10 +3,17 @@ body, #app{
     overflow-y: hidden;
     display: flex;
     flex-flow: column;
+    font-family: 'Arial Narrow'
 }
 
 #main{
     height: 85vh;
     width: 100vw;
     position: relative;
+}
+
+abbr{
+    text-decoration: none;
+    font-weight: 700;
+    text-transform: uppercase;
 }

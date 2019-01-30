@@ -3,11 +3,13 @@
     height: 100%;
     width: 100%;
 }
-
 .map__container{
     width:80%;
     height: 100%;
 }
+.map__abbr{
+    color: #08506d;
+  }
 
 .map__sidebar{
     display: flex;

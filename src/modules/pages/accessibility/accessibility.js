@@ -320,12 +320,12 @@ class Accessibility{
         allAccessibility: {
           id: 'AccAll',
           title: 'Destinations Reachable Using All Rail Stations',
-          description: 'This map serves as the baseline. It shows the number of destinations reachable via rail from each zone for passengers that can use all rail stations. The darker the color, the more destinations are reachable from that TAZ via rail.'
+          description: 'This map serves as the baseline. It shows the number of destinations reachable via rail from each zone for passengers that can use all rail stations. The darker the color, the more destinations are reachable from that <abbr class="accessibility__abbr" title="Traffic Analysis Zone">TAZ</abbr> via rail.'
         },
         currentAccessibility:{
           id: 'AccCur',
           title: 'Destinations Reachable Using Only Wheelchair Accessible Rail Stations',
-          description: 'This map shows the destinations reachable by wheelchair users who can only use wheelchair accessible stations. The darker the color, the more destinations are reachable from that TAZ via rail.'
+          description: 'This map shows the destinations reachable by wheelchair users who can only use wheelchair accessible stations. The darker the color, the more destinations are reachable from that <abbr class="accessibility__abbr" title="Traffic Analysis Zone">TAZ</abbr> via rail.'
         },
         currentDisparity:{
           id: 'DisCur',
@@ -359,7 +359,7 @@ class Accessibility{
             grocery stores, medical offices, etc.) via transit is most impacted by inaccessible rail stations.
             The goal was to prioritize station improvements, not to determine whether or not the mobility impaired
             can access a stop. Therefore, the assumption was made that wheelchair users can get to and from rail 
-            stations. Since buses in the <abbr title="Delaware Valley Regional Planning Commission">DVRPC</abbr> region are generally accessible, they were excluded.
+            stations. Since buses in the <abbr class="accessibility__abbr" title="Delaware Valley Regional Planning Commission">DVRPC</abbr> region are generally accessible, they were excluded.
           </p>
         </section>
       </aside>

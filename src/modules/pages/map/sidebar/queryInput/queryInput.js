@@ -1,4 +1,5 @@
 import "../../../../../css/pages/map/queryInputs/queryInputs.css";
+import { HeaderElements } from "../../../../header/HeaderElements";
 
 // holder for query inputs
 let geography = {
@@ -110,23 +111,26 @@ class QueryContainer {
             node.target.getAttribute("data-direction") != undefined
           ) {
             geography.type = node.target.getAttribute("data-type");
-            if (geography.type == "zone") {
+            let direction = document.querySelector('#direction'),
+              muni = document.querySelector('#muni')
+              if (geography.type) HeaderElements[1].content.inputTwo.options.map((value, index)=> direction[index+1].innerText = `${value} ${geography.type}` )
+              if (geography.type == "zone") {
               geography.selection = new Array();
-              document.querySelector("#direction").style.display =
+              direction.style.display =
                 "inline-block";
-              document.querySelector("#muni").style.display == "inline-block"
-                ? (document.querySelector("#muni").style.display = "")
+              muni.style.display == "inline-block"
+                ? (muni.style.display = "")
                 : null;
             } else if (geography.type == "municipality") {
-              document.querySelector("#muni").style.display = "inline-block";
-              document.querySelector("#direction").style.display ==
+              muni.style.display = "inline-block";
+              direction.style.display ==
               "inline-block"
-                ? (document.querySelector("#direction").style.display = "")
+                ? (direction.style.display = "")
                 : null;
               geography.selection = undefined;
             } else {
-              document.querySelector("#muni").style.display = "";
-              document.querySelector("#direction").style.display = "";
+              muni.style.display = "";
+              direction.style.display = "";
             }
           } else if (
             node.type == "attributes" &&
@@ -135,9 +139,10 @@ class QueryContainer {
           ) {
             geography.selection = node.target.getAttribute("data-selection");
             if (geography.type == "municipality") {
-              document.querySelector("#direction").style.display =
+              let direction = document.querySelector('#direction')
+              direction.style.display =
                 "inline-block";
-            }
+              }
           } else if (
             node.type == "attributes" &&
             node.attributeName == "data-direction" &&

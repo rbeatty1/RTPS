@@ -92,7 +92,7 @@ const contentRef = {
         }
       },
       text:
-        "This change in zonal transit activity map shows traffic analysis zones (TAZs) symbolized using the change in public transit activity in that zone under our doubled frequencies scenario. Transit acivity refers to the average number of passengers entering and leaving the zone via public transit within 24 hours. The darker the color, the greater the increase in transit activity when all frequencies are doubled."
+        "This change in zonal transit activity map shows traffic analysis zones (<abbr class='frequency__abbr' title='Traffic Analysis Zone'>TAZ</abbr>s) symbolized using the change in public transit activity in that zone under our doubled frequencies scenario. Transit acivity refers to the average number of passengers entering and leaving the zone via public transit within 24 hours. The darker the color, the greater the increase in transit activity when all frequencies are doubled."
     }
   },
   autoChange: {
@@ -149,7 +149,7 @@ const contentRef = {
         }
       },
       text:
-        "This change in zonal vehicle activity shows TAZs symbolized using the change in passenger vehicle activity entering and leaving the zone in 24 hours. The darker the color, the greater the decrease in vehicular activity when public transit frequencies are doubled."
+        "This change in zonal vehicle activity shows <abbr class='frequency__abbr' title='Traffic Analysis Zone'>TAZ</abbr>s symbolized using the change in passenger vehicle activity entering and leaving the zone in 24 hours. The darker the color, the greater the decrease in vehicular activity when public transit frequencies are doubled."
     }
   },
   railLineChange: {
@@ -320,9 +320,6 @@ const contentRef = {
     bus: undefined
   }
 };
-
-
-
 
 /*
   ResymbolizeFeatureLayer(map,section)
@@ -708,6 +705,7 @@ const BuildContent = (content, key, component) => {
     - sections => sections reference to iterate through and drive element creation
 */
 const BuildNav = (component, sections) => {
+  // grab container
   const nav = document.querySelector(".frequency__nav-container");
   let cnt = 1;
   for (let i in sections) {
@@ -747,7 +745,6 @@ const BuildNav = (component, sections) => {
       BuildContent(sections[i].content, i, component);
       cnt += 1;
     }
-    document.querySelector(".frequency__content-story");
   }
 };
 
