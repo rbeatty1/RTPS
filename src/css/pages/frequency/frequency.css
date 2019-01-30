@@ -4,10 +4,6 @@
   overflow: hidden;
   background: whitesmoke
 }
-.frequency__abbr{
-  color: #06bf9c;
-}
-
 .frequency__nav-container{
   display: flex;
   justify-content: center;

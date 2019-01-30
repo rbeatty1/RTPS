@@ -11,7 +11,8 @@ function headerRender(elements){
     // logo
     let logoContainer = document.createElement('img')
     logoContainer.className = 'header__project-logo';
-    logoContainer.setAttribute('src', logo);
+    logoContainer.src = logo
+    logoContainer.alt = 'Regional Transit Priority Setting Logo'
     header.appendChild(logoContainer);
     
     // nav controls

@@ -7,10 +7,6 @@
     width:80%;
     height: 100%;
 }
-.map__abbr{
-    color: #08506d;
-  }
-
 .map__sidebar{
     display: flex;
     flex-flow: column;
