@@ -1,23 +1,40 @@
 
 const CreateLegend = data =>{
   let container = document.createElement('div'),
-    label = document.createElement('div'),
-    legend = document.createElement('table'),
-    row = document.createElement('tr')
-  let cnt = 0
-  data.colors.map(color=>{
-    let cell = document.createElement('TD')
-    cell.className = 'map__sidebar-legendCell'
-    cell.style.backgroundColor = color
-    row.appendChild(cell)
+    labels = {
+      container: document.createElement('div'),
+      text : ['Low', 'High', 'Low']
+    },
+    classContainer = document.createElement('div')
+  classContainer.classList.add('map__sidebar-legendClasses')
+  labels.container.classList.add('map__sidebar-legendLabels')
+  for (let group in data.colors){
+    let colors = data.colors[group],
+      section = document.createElement('div'),
+      title = document.createElement('p'),
+      legend = document.createElement('div')
+    legend.classList.add('map__sidebar-legendSection')
+    title.innerText = group
+    title.classList.add('map__sidebar-legendTitle')
+    section.classList.add('map__sidebar-legend')
+    section.appendChild(title)
+    colors.map((value, index)=>{
+      let classification = document.createElement('div')
+      classification.classList.add('map__sidebar-legendCell')
+      classification.style.backgroundColor = value
+      legend.appendChild(classification)
+    })
+    section.appendChild(legend)
+    classContainer.appendChild(section)
+  }
+  labels.text.map(label=>{
+    let text = document.createElement('p')
+    text.innerText = label
+    labels.container.appendChild(text)
   })
-  label.classList.add('map__sidebar-legendLabel')
-  label.innerHTML = '<h4>Transit Improvement Priority</h4>'
-  container.appendChild(label)
-  legend.appendChild(row)
-  container.appendChild(legend)
-  return container.outerHTML
-
+  container.appendChild(classContainer)
+  container.appendChild(labels.container)
+  return container.innerHTML
 }
 
 const CreateSummary = data =>{
@@ -35,7 +52,10 @@ const BuildSummary = (props) => {
   let content= {
     legend: {
       create: document.createElement('div'),
-      colors: ["#fdd0a2","#fdae6b","#fd8d3c","#f16913","#d94801","#a63603", "#7f2704"]
+      colors:{
+        "Not Served": ['#b5dfd1', '#90d1be', '#2cb99a', '#599f8c', '#5d8078', '#4f5c5a'],
+        "Served": [ '#8d7355', '#ba864e', '#e89232', '#eda559', '#f5cea4', '#fae4cd']
+      }
     },
     summary: {
       create: document.createElement('div'),
