@@ -39,7 +39,7 @@ const BuildPage = structure =>{
 
   // create HTML element for each defined page section. 
   for (let section in structure){
-    let sectionElem = document.createElement('div')
+    let sectionElem = section == 'sidebar' ? document.createElement('aside') : document.createElement('div')
     sectionElem.id = 'reliability__'+section
     // append element to page
     page.appendChild(sectionElem)
