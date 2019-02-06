@@ -285,6 +285,7 @@ const BuildPage = props =>{
         legends[i].style.backgroundColor = colors[i]
       }
       let boxes = document.querySelectorAll('.legend__row-label')
+      console.log({boxes})
       if (e.target.id[0] == 'A'){
         document.querySelector(".legend-descriptor").innerText = 'Number of Reachable Destinations'
         boxes[0].innerText = 'Few'

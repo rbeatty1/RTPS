@@ -25,19 +25,13 @@
   display: flex;
   flex-flow: row wrap;
 }
-tbody{
-  display: flex;
-}
 .accessibility__legend-section{
   width: 100%;
 }
 .accessibility__legend-row{
   display: flex;
-  margin: .25rem;
-  height: 1rem;
   align-items: center;
   width: 100%;
-  justify-content: center;
 }
 
 .station-icon{
@@ -70,9 +64,8 @@ tbody{
 }
 
 .legend-label{
-  margin-left: .5rem;
+  margin: 0;
 }
-
 
 #zones{
   text-align: center;
@@ -86,7 +79,10 @@ tbody{
 h4{
   margin: 3px 0;
 }
-
+#zones-row{
+  display: flex;
+  justify-content: center;
+}
 .legend__row-label{
   margin: 0 .5em;
 }

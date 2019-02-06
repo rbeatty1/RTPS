@@ -24,10 +24,12 @@
 
 .header__nav-links{
     order: 2;
-    width: 20%;
-    margin-right: 10px;
+    position: relative;
+    right: 2.5%;
     display: flex;
     flex-flow: row nowrap;
-    justify-content: space-evenly;
+    justify-content: flex-end;
     align-items: center;
+    width: 33%;
+
 }

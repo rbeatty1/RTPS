@@ -1,7 +1,8 @@
-a {
+.header__nav-link {
     text-decoration: none;
     font-family: 'Arial Narrow', Arial, sans-serif;
     color: #08506d;
+    margin: 0 2.5%;
 }
 .header__nav-link.active{
     font-weight: 700;
