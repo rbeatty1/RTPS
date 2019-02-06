@@ -71,30 +71,30 @@ class QueryContainer {
       let listElement = document.createElement("section");
       listElement.className = "sidebar__input-container";
       listElement.innerHTML =
-        '<form class="sidebar__input-dropdowns"></form><div class="sidebar__input-buttons"></div>';
+        '<form class="sidebar__input-dropdowns"></form>';
       container.appendChild(listElement);
       container.classList.add("active");
       for (var k in this.list) {
         let input = this.list[k];
         if (input.id < 5) {
           let li = _createMenu(input, this, this.list);
-          document.querySelector(".sidebar__input-dropdowns").appendChild(li);
+          document.querySelector("form").appendChild(li);
         } else {
-          let dropdownMenu = document.createElement("button");
-          dropdownMenu.innerHTML = `<span class="input__query-name">${
-            input.name
-          }`;
+          let dropdownMenu = document.createElement("input")
+          dropdownMenu.value = input.name
           dropdownMenu.classList.add("input__query-button");
           switch (input.id) {
             case 5:
               dropdownMenu.id = "execute";
+              dropdownMenu.type = 'submit'
               break;
             case 6:
               dropdownMenu.id = "clear";
+              dropdownMenu.type = 'reset'
               break;
           }
           document
-            .querySelector(".sidebar__input-buttons")
+            .querySelector("form")
             .appendChild(dropdownMenu);
         }
       }

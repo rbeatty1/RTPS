@@ -44,7 +44,7 @@ const HeaderElements = [
             },
             clearQuery : {
                 id : 6,
-                name : 'Clear Selection & Results'
+                name : 'Reset'
             }
         }
     },

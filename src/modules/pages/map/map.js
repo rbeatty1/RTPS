@@ -228,7 +228,8 @@ const AddListeners = map => {
 
 
     // perform query
-    document.querySelector('#execute').addEventListener('click', () => {
+    document.querySelector('#execute').addEventListener('click', e => {
+        e.preventDefault()
 
         // if exists, remove
         if (map.getLayer('zones-analysis')) {

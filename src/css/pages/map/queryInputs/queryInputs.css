@@ -13,16 +13,12 @@
 }
 
 .input__query-input{
-    font-size: 16px;
+    font-size: 1rem;
     background-color: #fff;
     color: #08506d;
-    font-weight: 700;
-    text-align: right;
     font-family: 'Arial Narrow', sans-serif;
     border-style: unset;
     list-style: none;
-    padding: .5em;
-    font-variant: all-petite-caps;
     box-shadow: 0 0 1px 1px rgba(8,80,109,0.5);
     margin: 5px 0;
 }
