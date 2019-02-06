@@ -1544,8 +1544,8 @@ export class Frequency {
   render() {
     document.querySelector("#main").innerHTML = `
     <div id="frequency-page">
-      <nav class="frequency__nav-container"></nav>
       <div class="frequency__content-container">
+        <nav class="frequency__nav-container"></nav>
         <div class="frequency__content-map"></div>
         <aside class="frequency__content-story"></aside>
       </div>

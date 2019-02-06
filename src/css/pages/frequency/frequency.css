@@ -6,15 +6,16 @@
 }
 .frequency__nav-container{
   display: flex;
+  flex-flow: column;
   justify-content: center;
   align-items: center;
-  margin: 1% .5% 0;
+  margin: 0 1%;
 }
 .frequency__nav-link{
   padding: .5rem;
   border-radius: 50%;
   background: #d8c72e;
-  margin: 0 20px;
+  margin: 10%;
   width: 20px;
   height: 20px;
   display: flex;
@@ -78,7 +79,7 @@
 
 .frequency__content-container{
   width: 100%;
-  height: 89%;
+  height: 100%;
   display: flex;
   flex-flow: row;
   justify-content: center;
@@ -87,8 +88,7 @@
 }
 
 .frequency__content-container>*{
-  height: 87%;
-  margin: 0 2.5%;
+  height: 100%
 }
 .frequency__content-story{
   width: 30%;
@@ -103,13 +103,13 @@
   width: 70%;
 }
 .frequency__story-section{
-  width: 80%;
+  width: 95%;
   display: flex;
   flex-flow: column;
   padding: 2% 0;
   opacity: .1;
   min-height: 33vh;
-  margin: 5% 0;
+  margin: 10% auto;
   justify-content: center;
 }
 
@@ -131,12 +131,14 @@
   font-weight: 700;
   font-size: 1.75rem;
   color: #06bf9c;
-  margin: 0;
+  margin: 0 5%;
 }
 .frequency__storySection-TitleDivider{
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 75%;
+  margin: auto;
 }
 .frequency__storySection-TitleDivider hr{
   width: 33%;
