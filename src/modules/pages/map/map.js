@@ -32,6 +32,8 @@ const BuildMap = () => {
     return map
 }
 
+
+
 /* zoneSelection(target, output) -- rbeatty
     @desc: Grab the zones based on user interaction (click) that should be passed to API query
     @params:
@@ -325,7 +327,6 @@ class Map {
             // add navigation control 
             new Sidebar();
             map.addControl(new mapboxgl.NavigationControl(), 'top-left');
-
             LoadLayers(map, layers)
             AddListeners(map)
         });

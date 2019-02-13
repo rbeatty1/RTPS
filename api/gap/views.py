@@ -99,10 +99,34 @@ def munQuery(query):
         payload['message'] = 'Invalid query parameters'
         return JsonResponse(payload, safe=False)
 
+def regionalSummary():
+    payload = { 'status' : None }
+    con = psql.connect("dbname='{}' user='{}' host='{}' password='{}'".format(c.DB_NAME, c.DB_USER, c.DB_HOST, c.DB_PASS))
+    cur = con.cursor()
+    try:
+        cur.execute(c.rq)
+        results = cur.fetchall()
+        cargo = {}
+        for r in results:
+            cargo[r[1]] = round(r[0], 2)
+        payload['cargo'] = cargo
+        if not len(payload['cargo']) == 0:
+            payload['status'] = 'success'
+        else:
+            payload['status'] = 'failed'
+            payload['message'] = 'query returned no results'
+    except:
+        payload['status'] = 'failed'
+        payload['message'] = 'invalid query parameters'
+    return JsonResponse(payload, safe=False)
+
 def queryCheck(request):
     check = request.get_full_path().split('?')[1]
+    print(check)
     if check == 'list':
         return munList()
+    elif check == 'summary':
+        return regionalSummary()
     else:
         mo = re.match(r'^(\w+)=.*$', check)
         if mo.group(1) == 'zones':
