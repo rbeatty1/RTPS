@@ -49,8 +49,21 @@ const zoneSelection = (target, output) => {
 const LoadRegionalSummary = map =>{
     const SummaryLayerToggle = event =>{
         let header = event.target,
-            tabName = header.getAttribute('data-type')
-        tabName != 'summary' ? map.setLayoutProperty('zones-summary', 'visibility', 'none') : map.setLayoutProperty('zones-summary', 'visibility', 'visible')
+            tabName = header.getAttribute('data-type'),
+            otherLayers = ['zones-analysis', 'zones-clickFill', 'boundaries-click']
+        
+        if(tabName != 'summary') {
+            otherLayers.map(layer=>{
+                map.setLayoutProperty(layer, 'visibility', 'visible')
+            })
+            map.setLayoutProperty('zones-summary', 'visibility', 'none')
+        }
+        else{
+            otherLayers.map(layer=>{
+                map.setLayoutProperty(layer, 'visibility', 'none')
+            })
+            map.setLayoutProperty('zones-summary', 'visibility', 'visible')
+        }
     }
     let helper = {
         colorScheme: {
@@ -303,12 +316,12 @@ const AddListeners = map => {
             // resymbolize other layers for aesthetics
             if (geography.type == 'zone'){
                 map.setLayoutProperty('zones-hoverFill', 'visibility', 'none')
-                map.setPaintProperty("zones-clickFill", "fill-color", "#06bf9c")
+                map.setPaintProperty("zones-clickFill", "fill-color", "red")
                 map.setFilter("zones-base", ['==', 'no', ''])
             }
             else{
                 map.setLayoutProperty('boundaries-hover', 'visibility', 'none')
-                map.setPaintProperty("boundaries-click", "fill-color", "#06bf9c")
+                map.setPaintProperty("boundaries-click", "fill-color", "red")
                 map.setFilter('boundaries-muni', ['==', 'GEOID', geography.selection])
             }
         })
