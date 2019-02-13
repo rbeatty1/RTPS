@@ -6,6 +6,7 @@ env
 # django junk files
 *.pyc
 lib
+__pycache__
 
 # node file
 package-lock.json
