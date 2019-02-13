@@ -46,6 +46,7 @@ const BuildMenus = content =>{
     header.classList.add('map__sidebar-menuHeader')
     header.href = '#'
     header.rel = 'noopener'
+    header.setAttribute('data-type', key.toLowerCase())
     let title = key.toLowerCase().split(' ').map(each=> each.replace(each[0], each[0].toUpperCase()))
     header.innerText = title
     sidebar.appendChild(header)
@@ -60,6 +61,55 @@ const BuildMenus = content =>{
   }
   container.appendChild(sidebar)
   container.appendChild(sidebarContent)
+
+}
+
+const BuildSummaryLegend = () =>{
+  let legendContent = {
+    create: document.createElement('div'),
+    colors:{
+      "Not Served": ['#b5dfd1', '#90d1be', '#2cb99a', '#599f8c', '#5d8078', '#4f5c5a'],
+      "Served": [ '#8d7355', '#ba864e', '#e89232', '#eda559', '#f5cea4', '#fae4cd']
+    },
+    labels : ['Low', 'High', 'Low']
+  },
+  section = document.getElementById('summary_dropdownContent'),
+  legendSection = document.createElement('section'),
+  labelsContainer = document.createElement('div'),
+  classContainer = document.createElement('div')
+
+  legendSection.id = 'summary-legend'
+  classContainer.classList.add('map__sidebar-legendClasses')
+  
+  for (let service in legendContent.colors){
+    let serviceSection = document.createElement('div'),
+      label = document.createElement('p'),
+      breaksContainer = document.createElement('div')
+    breaksContainer.classList.add('map__sidebar-legendSection')
+    label.innerText = service
+    label.classList.add('map__sidebar-legendTitle')
+    serviceSection.classList.add('map__sidebar-legend')
+    serviceSection.appendChild(label)
+    legendContent.colors[service].map(color=>{
+      let jawn = document.createElement('div')
+      jawn.classList.add('map__sidebar-legendCell')
+      jawn.style.backgroundColor = color
+      breaksContainer.appendChild(jawn)
+    })
+    serviceSection.appendChild(breaksContainer)
+    classContainer.appendChild(serviceSection)
+  }
+
+  labelsContainer.classList.add('map__sidebar-legendLabels')
+  legendContent.labels.map(text=>{
+    let label = document.createElement('p')
+    label.innerText = text
+    labelsContainer.appendChild(label)
+  })
+  legendSection.appendChild(classContainer)
+  legendSection.appendChild(labelsContainer)
+
+  section.appendChild(legendSection)
 
 }
 
@@ -94,6 +144,7 @@ class Sidebar{
             queryList.push(queryContainer.list[k]);
             }
     }
+    BuildSummaryLegend()
 
   }
 }
