@@ -46,6 +46,7 @@ const BuildMenus = content =>{
     header.classList.add('map__sidebar-menuHeader')
     header.href = '#'
     header.rel = 'noopener'
+    header.setAttribute('data-type', key.toLowerCase())
     let title = key.toLowerCase().split(' ').map(each=> each.replace(each[0], each[0].toUpperCase()))
     header.innerText = title
     sidebar.appendChild(header)

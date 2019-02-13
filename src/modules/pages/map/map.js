@@ -46,7 +46,66 @@ const zoneSelection = (target, output) => {
     index != -1 ? selection.splice(index, 1) : selection.push(zone);
     return selection;
 }
-
+const LoadRegionalSummary = map =>{
+    const SummaryLayerToggle = event =>{
+        let header = event.target,
+            tabName = header.getAttribute('data-type')
+        tabName != 'summary' ? map.setLayoutProperty('zones-summary', 'visibility', 'none') : map.setLayoutProperty('zones-summary', 'visibility', 'visible')
+    }
+    let helper = {
+        colorScheme: {
+            1: "rgba(250,228,205, .4)",
+            2: "rgba(245,206,164, .4)",
+            3: "rgba(237,165,89, .4)",
+            4: "rgba(232,146,50, .6)",
+            5: "rgba(186,134,78, .9)",
+            6: "rgba(141,115,85, .9)",
+            7: "rgba(181,223,209, .1)",
+            8: "rgba(144,209,190, .2)",
+            9: "rgba(44,185,154, .3)",
+            10: "rgba(89,159,140, .3)",
+            11: "rgba(93,128,120, .3)",
+            12: "rgba(79,82,90, 1)",
+            13: "rgba(0,0,0,0)"
+        },
+        fillExpression: ["match", ["get", "no"]],
+        check: {},
+        layer: {}
+    }
+    fetch('https://a.michaelruane.com/api/rtps/gap?summary')
+    .then(cargo=> { if (cargo.ok) return cargo.json()})
+    .then(data=>{
+        let layerDef = {
+            id: 'zones-summary',
+            source: 'zones',
+            type: 'fill',
+            'source-layer': 'tim-zones',
+            paint: {
+                'fill-opacity': 1
+            },
+            layout: {
+                visibility: 'none'
+            }
+        }
+        for (let zone in data.cargo){
+            if (!helper.check[zone]){
+                // create fill expression item for zones that don't already have one
+                helper.fillExpression.push(parseInt(zone), helper.colorScheme[data.cargo[zone]])
+                helper.check[zone] = zone
+            }
+        }
+        helper.fillExpression.push("rgba(0,0,0,0)")
+        layerDef.paint['fill-color'] = helper.fillExpression
+        return layerDef
+    })
+    .then(layer=>{
+        map.addLayer(layer, 'zones-base')
+    })
+    let headers = document.querySelectorAll('.map__sidebar-menuHeader')
+    for (let tab of headers){
+        tab.addEventListener('click', e=> SummaryLayerToggle(e))
+    }
+}
 /* ProcessData(data, helper) -- rbeatty
     @desc: Iterate through API query return and create mapbox gl layer definition object that will be used to add and style the analysis layer for display 
     @params: 
@@ -325,7 +384,7 @@ class Map {
             // add navigation control 
             new Sidebar();
             map.addControl(new mapboxgl.NavigationControl(), 'top-left');
-
+            LoadRegionalSummary(map)
             LoadLayers(map, layers)
             AddListeners(map)
         });
