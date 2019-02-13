@@ -54,13 +54,13 @@ const LoadRegionalSummary = map =>{
         
         if(tabName != 'summary') {
             otherLayers.map(layer=>{
-                map.setLayoutProperty(layer, 'visibility', 'visible')
+                if (map.getLayer(layer)) map.setLayoutProperty(layer, 'visibility', 'visible')
             })
             map.setLayoutProperty('zones-summary', 'visibility', 'none')
         }
         else{
             otherLayers.map(layer=>{
-                map.setLayoutProperty(layer, 'visibility', 'none')
+                if (map.getLayer(layer)) map.setLayoutProperty(layer, 'visibility', 'none')
             })
             map.setLayoutProperty('zones-summary', 'visibility', 'visible')
         }
