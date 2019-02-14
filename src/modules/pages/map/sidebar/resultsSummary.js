@@ -1,41 +1,4 @@
-
-const CreateLegend = data =>{
-  let container = document.createElement('div'),
-    labels = {
-      container: document.createElement('div'),
-      text : ['Low', 'High', 'Low']
-    },
-    classContainer = document.createElement('div')
-  classContainer.classList.add('map__sidebar-legendClasses')
-  labels.container.classList.add('map__sidebar-legendLabels')
-  for (let group in data.colors){
-    let colors = data.colors[group],
-      section = document.createElement('div'),
-      title = document.createElement('p'),
-      legend = document.createElement('div')
-    legend.classList.add('map__sidebar-legendSection')
-    title.innerText = group
-    title.classList.add('map__sidebar-legendTitle')
-    section.classList.add('map__sidebar-legend')
-    section.appendChild(title)
-    colors.map((value, index)=>{
-      let classification = document.createElement('div')
-      classification.classList.add('map__sidebar-legendCell')
-      classification.style.backgroundColor = value
-      legend.appendChild(classification)
-    })
-    section.appendChild(legend)
-    classContainer.appendChild(section)
-  }
-  labels.text.map(label=>{
-    let text = document.createElement('p')
-    text.innerText = label
-    labels.container.appendChild(text)
-  })
-  container.appendChild(classContainer)
-  container.appendChild(labels.container)
-  return container.innerHTML
-}
+import { Legend } from "./legend";
 
 const CreateSummary = data =>{
   let insert;
@@ -79,7 +42,7 @@ const BuildSummary = (props) => {
     let insert = ''
     switch(container){
       case 'legend':
-        insert = CreateLegend(content.legend)
+        new Legend(summaryContainer)
         break;
       case 'summary':
         insert = CreateSummary(content.summary)
@@ -89,7 +52,6 @@ const BuildSummary = (props) => {
         break;
       default:
         return 'error'
-        break;
     }
     section.innerHTML = insert
     summaryContainer.appendChild(section)
