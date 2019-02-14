@@ -40,7 +40,7 @@ const contentRef = {
   },
   transitChange: {
     active: false,
-    title: "Changes in Transit Activity",
+    title: "Changes in Transit Ridership",
     scenario: "Doubled Frequency",
     content: {
       map: {
@@ -92,7 +92,7 @@ const contentRef = {
         }
       },
       text:
-        "This change in zonal transit activity map shows traffic analysis zones (<abbr class='frequency__abbr' title='Traffic Analysis Zone'>TAZ</abbr>s) symbolized using the change in public transit activity in that zone under our doubled frequencies scenario. Transit acivity refers to the average number of passengers entering and leaving the zone via public transit within 24 hours. The darker the color, the greater the increase in transit activity when all frequencies are doubled."
+        "This change in zonal transit ridership map shows traffic analysis zones (<abbr class='frequency__abbr' title='Traffic Analysis Zone'>TAZ</abbr>s) symbolized using the change in public transit ridership in that zone under our doubled frequencies scenario. Transit ridership refers to the average number of passengers entering and leaving the zone via public transit within 24 hours. The darker the color, the greater the increase in transit activity when all frequencies are doubled."
     }
   },
   autoChange: {
