@@ -44,33 +44,22 @@
 
 .frequency__nav-linkSection .frequency__nav-linkTooltip{
   visibility: hidden;
-  width: 5rem;
+  white-space: nowrap;
   font-weight: 400;
   background-color: #555;
   color: #fff;
   text-align: center;
-  padding: 5px 0;
+  padding: 5px;
   border-radius: 1%;
   position: absolute;
   z-index: 6;
-  top: 175%;
-  left: 50%;
-  margin-left: -2.5rem;
+  left: 0;
+  margin-left: 2rem;
   font-size: 1rem;
   border-radius: 5px;
 
 }
 
-.frequency__nav-linkSection .frequency__nav-linkTooltip::after{
-  content: '';
-  position: absolute;
-  bottom: 100%;
-  left: 50%;
-  margin-left: -5px;
-  border-width: 5px;
-  border-style: solid; 
-  border-color: transparent transparent #555 transparent
-}
 
 .frequency__nav-linkSection:hover .frequency__nav-linkTooltip{
   visibility: visible;
@@ -109,7 +98,7 @@
   padding: 2% 0;
   opacity: .1;
   min-height: 33vh;
-  margin: 10% auto;
+  margin: 20% auto;
   justify-content: center;
 }
 
@@ -138,7 +127,7 @@
   justify-content: center;
   align-items: center;
   width: 75%;
-  margin: auto;
+  margin: 5px auto;
 }
 .frequency__storySection-TitleDivider hr{
   width: 33%;
@@ -262,7 +251,7 @@
   position: absolute;
   z-index: 1;
   bottom: 125%;
-  left: 50%;
+  /* left: 50%; */
   margin-left: -60px;
   opacity: 0;
   transition: opacity 0.3s;

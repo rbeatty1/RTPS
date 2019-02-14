@@ -567,7 +567,6 @@ const BuildLegend = section => {
       title.classList.add('frequency__legend-title')
       title.classList.add('railChange')
       title.style.color = data.scheme[data.scheme.length -1][1]
-      // title.style.marginTop = '3%'
       breakContainer.classList.add('frequency__legend-breakContainer')
       breakContainer.classList.add('railChange')
       legend.appendChild(title)
@@ -582,7 +581,7 @@ const BuildLegend = section => {
           classification.innerText = '100% <'
         }
         else{
-          classification.innerText = `${classBreak+1}%—${breaks[index+1]}%`
+          classification.innerHTML = `${classBreak+1}%&ndash;${breaks[index+1]}%`
         }
         classification.classList.add('frequency__legend-railPercent')
         classification.style.borderBottom = `${(index+1)*2}px solid #aaa`
@@ -617,7 +616,8 @@ const BuildContent = (content, key, component) => {
     }
     new ScrollMagic.Scene({
       triggerElement: element,
-      duration: element.getBoundingClientRect().height + 20
+      duration: element.getBoundingClientRect().height + 30,
+      offset: 50
     })
       .on("enter", e => {
         // symbolize correct layer and sections
