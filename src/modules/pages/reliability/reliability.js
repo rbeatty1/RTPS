@@ -20,11 +20,11 @@ let layerRef = {
     },
     septa: {
       title: "SEPTA Ridership (2017)",
-      info: "2017 Ridership for <abbr class='reliability__abbr' title='Southeastern Pennsylvania Transportation Authority'>SEPTA</abbr> bus routes was available at the stop level."
+      info: "2017 daily average ridership for <abbr class='reliability__abbr' title='Southeastern Pennsylvania Transportation Authority'>SEPTA</abbr> bus routes was available at the stop level."
     },
     njt: {
       title: "NJ Transit Ridership (2016)",
-      info: "2016-2017 ridership for <abbr class='reliability__abbr' title='New Jersey'>NJ</abbr> Transit bus routes was provided at the stop level."
+      info: "2016-2017 daily average ridership for <abbr class='reliability__abbr' title='New Jersey'>NJ</abbr> Transit bus routes was provided at the stop level."
     }
   },
   outputs:{
@@ -180,7 +180,7 @@ const BuildSidebar = (map, data) =>{
   // function to build sidebar tabs
   const BuildSidebarNav = () =>{
     let tabs = document.createElement('nav'),
-      sections = ['About', 'Layers']
+      sections = ['Layers', 'About']
     
     tabs.classList.add('reliability__sidebar-tabs')
     
@@ -191,7 +191,7 @@ const BuildSidebar = (map, data) =>{
       tab.id = `nav-${section.toLowerCase()}`
       tab.href = "#"
       tab.rel = "noopener"
-      if (section == 'About') tab.classList.add('active')
+      if (section == 'Layers') tab.classList.add('active')
       // listener to switch sidebar content on tab click
       tab.addEventListener('click', e=>{
         let tabs = document.querySelectorAll('.reliability__sidebar-nav')
@@ -217,7 +217,6 @@ const BuildSidebar = (map, data) =>{
     let container = document.createElement('div'),
       element = document.createElement('div')
     container.classList.add(`reliability__sidebar-sectionContent`)
-    container.classList.add('active')
     container.id = 'content-about'
     element.classList.add('reliability__sidebar-control')
     // build about sections and fill with content
@@ -298,18 +297,24 @@ const BuildSidebar = (map, data) =>{
         })
 
         // build legend HTML elements
-          // TTI layer has labels that need to be formatted different because of the small number
+          // TTI & reliability score layers have labels that need to be formatted differently
         colors.map((color, index)=>{
           let test = document.createElement('div')
           test.classList.add('reliability__legend-item')
-          // not last item in colors array and layer is NOT TTI
-          if (labels[index] && layer != 'tti') index == 0 ? test.innerText = `0–${FormatNumber(labels[index])}` : test.innerText = `${FormatNumber(labels[index-1]+1)}–${FormatNumber(labels[index])}`
-          // not last item in colors array and layer IS TTI
-          else if (labels[index] && layer == 'tti') index == 0 ? test.innerText = `0–${labels[index]}` : test.innerText = `${labels[index-1]+.1}–${labels[index]}`
-          // last item in colors array and layer IS TTI
-          else if (!labels[index] && layer == 'tti') test.innerText = `${labels[index-1]+.1} +`
-          // last item in colors array and layer is NOT TTI
-          else test.innerText = `${FormatNumber(labels[index-1])} +`
+          if (layer == 'weighted' || layer == 'score'){
+            if (index == 0) test.innerText = 'More Reliable'
+            else if (index == 4) test.innerText = 'Less Reliable'
+          }
+          else{
+            // not last item in colors array and layer is NOT TTI
+            if (labels[index] && layer != 'tti') index == 0 ? test.innerText = `0–${FormatNumber(labels[index])}` : test.innerText = `${FormatNumber(labels[index-1]+1)}–${FormatNumber(labels[index])}`
+            // not last item in colors array and layer IS TTI
+            else if (labels[index] && layer == 'tti') index == 0 ? test.innerText = `0–${labels[index]}` : test.innerText = `${labels[index-1]+.1}–${labels[index]}`
+            // last item in colors array and layer IS TTI
+            else if (!labels[index] && layer == 'tti') test.innerText = `${labels[index-1]+.1} +`
+            // last item in colors array and layer is NOT TTI
+            else test.innerText = `${FormatNumber(labels[index-1])} +`
+          }
           test.style.borderBottom = `10px solid ${color}`
           test.style.width = `${100/colors.length}%`
           items.appendChild(test)
@@ -321,7 +326,7 @@ const BuildSidebar = (map, data) =>{
 
       let layers = [
         ['reliability-score', '<span class="reliability__layer-emphasis">Output:</span> Reliability Score'],
-        ['reliability-weighted', '<span class="reliability__layer-emphasis">Output:</span> Ridership Weighted Reliability Score'],
+        ['reliability-weighted', '<span class="reliability__layer-emphasis">Output:</span> Ridership Score Weighted by Ridership'],
         ['reliability-speed', '<span class="reliability__layer-emphasis">Input:</span> Average Speed by Line'],
         ['reliability-otp', '<span class="reliability__layer-emphasis">Input:</span> On Time Performance'],
         ['reliability-tti', '<span class="reliability__layer-emphasis">Input:</span> Travel Time Index'],
@@ -490,7 +495,7 @@ const BuildSidebar = (map, data) =>{
       let filterRef = {
         core: ['6', '17', '21', '23', '33', '46', '47', '52', '56', '58', '60', '66', '79', '108', '113', 'R', '18', '26', 'G', '7', '10', '11', '13', '34', '36', 'MFL', 'BSL'],
       }
-      element.classList.add('reliability__sidebar-filter')
+      element.classList.add('reliability__sidebar-control')
 
       let dropdown = document.createElement('div'),
         summary = document.createElement('div')
@@ -536,6 +541,7 @@ const BuildSidebar = (map, data) =>{
       filterControl = document.createElement('div')
 
     container.classList.add('reliability__sidebar-sectionContent')
+    container.classList.add('active')
 
     container.id = 'content-layers'
 
@@ -543,7 +549,7 @@ const BuildSidebar = (map, data) =>{
     BuildFilterControl(filterControl)
 
     container.appendChild(layerControl)
-    layerControl.appendChild(filterControl)
+    container.appendChild(filterControl)
     element.appendChild(container)
   }
   
@@ -553,9 +559,9 @@ const BuildSidebar = (map, data) =>{
   content.classList.add('reliability__sidebar-content')
   sidebar.appendChild(tabs)
   sidebar.appendChild(content)
-  
-  BuildAboutSection(content)
+
   BuildLayerSection(content)
+  BuildAboutSection(content)
   
 
 }
