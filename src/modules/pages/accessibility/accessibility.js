@@ -12,7 +12,7 @@ const zoneRef = {
       7, '#045a8d',
       10, '#023858'
     ],
-    filter: undefined,
+    stationPaint: ['match', ['get', 'accessibility'], 0, '#e89234', 1, '#8bb23f', 2, '#08506d', '#aaa'],
   },
   AccCur: {
     paint: [
@@ -23,7 +23,7 @@ const zoneRef = {
       7, '#045a8d',
       10, '#023858'
     ],
-    filter: ['==', ['get', 'accessibility'], 1],
+    stationPaint: ['match', ['get', 'accessibility'], 1, '#8bb23f', '#aaa'],
   },
   AccFut: {
     paint: [
@@ -34,7 +34,7 @@ const zoneRef = {
       7, '#045a8d',
       10, '#023858'
     ],
-    filter: ['any', ['==', ['get', 'accessibility'], 1], ['==', ['get', 'accessibility'], 2]],
+    stationPaint: ['match', ['get', 'accessibility'], 1, '#8bb23f', 2, '#08506d', '#aaa'],
   },
   DisCur: {
     paint: [
@@ -45,7 +45,7 @@ const zoneRef = {
       8, '#d95f0e',
       12, '#993404',
     ],
-    filter: ['==', ['get', 'accessibility'], 1]
+    stationPaint: ['match', ['get', 'accessibility'], 1, '#8bb23f', '#aaa'],
   },
   DisFut: {
     paint: [
@@ -56,7 +56,7 @@ const zoneRef = {
       8, '#d95f0e',
       12, '#993404',
     ],
-    filter: ['any', ['==', ['get', 'accessibility'], 1], ['==', ['get', 'accessibility'], 2]],
+    stationPaint: ['match', ['get', 'accessibility'], 1, '#8bb23f', 2, '#08506d', '#aaa'],
   }
 }
 const LoadStations = map =>{
@@ -268,7 +268,8 @@ const BuildPage = props =>{
 
     // click functions
     document.querySelector(`#${thisSection.id}`).addEventListener('click', e=>{
-      let sections = document.querySelectorAll('.accessibility-section-header')
+      let sections = document.querySelectorAll('.accessibility-section-header'), // content section names
+        legendPoints = document.querySelectorAll('.station-icon') // station legend icons
 
       // display zone legend
       let legend = document.querySelector('#zones')
@@ -285,7 +286,6 @@ const BuildPage = props =>{
         legends[i].style.backgroundColor = colors[i]
       }
       let boxes = document.querySelectorAll('.legend__row-label')
-      console.log({boxes})
       if (e.target.id[0] == 'A'){
         document.querySelector(".legend-descriptor").innerText = 'Number of Reachable Destinations'
         boxes[0].innerText = 'Few'
@@ -298,12 +298,28 @@ const BuildPage = props =>{
       }
       for (let section of sections){
         if (section.id == e.target.id){
-          let content = section.nextElementSibling
+          let content = section.nextElementSibling,
+            referenceData = zoneRef[e.target.id]
+          
+          // activate
           content.classList.toggle('active')
           section.classList.toggle('active')
-          thisMap.setPaintProperty('zones-analysis', "fill-color", zoneRef[e.target.id].paint)
-          thisMap.setFilter('station-access', zoneRef[e.target.id].filter)
+
+          // set map colors accordingly
+          thisMap.setPaintProperty('zones-analysis', "fill-color", referenceData.paint)
+          thisMap.setPaintProperty('station-access', 'circle-color', referenceData.stationPaint)
+
+          // set all stations in legend to grey
+          for (let node of legendPoints){ node.style.backgroundColor = "#aaa"}
+          
+          // set the color for correct station icons in legend
+          referenceData.stationPaint.map((value, index)=>{
+            let iconCheck = document.querySelector(`.station-icon[data-value="${value}`)
+            if (iconCheck) iconCheck.style.backgroundColor = referenceData.stationPaint[index+1]
+          })
         }
+
+        // deactivate
         else if (section.nextElementSibling.classList.contains('active')){
           section.nextElementSibling.classList.remove('active')
           section.classList.contains('active') ? section.classList.remove('active') : null

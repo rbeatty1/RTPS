@@ -41,13 +41,13 @@
   border: 2.5px solid white;
 }
 
-#station-yes{
+.station-icon[data-value="1"]{
   background-color: #8bb23f;
 }
-#station-no{
+.station-icon[data-value="0"]{
   background-color: #e89234;
 }
-#station-future{
+.station-icon[data-value="2"]{
   background-color: #08506d;
 }
 
