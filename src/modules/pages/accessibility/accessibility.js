@@ -372,11 +372,11 @@ class Accessibility{
         <section class="accessibility-intro">
           <h1>Introduction</h1>
           <p>
-            This analysis identifies places where wheelchair users' ability to reach essential services (jobs,
-            grocery stores, medical offices, etc.) via transit is most impacted by inaccessible rail stations.
-            The goal was to prioritize station improvements, not to determine whether or not the mobility impaired
-            can access a stop. Therefore, the assumption was made that wheelchair users can get to and from rail 
-            stations. Since buses in the <abbr class="accessibility__abbr" title="Delaware Valley Regional Planning Commission">DVRPC</abbr> region are generally accessible, they were excluded.
+          This analysis identifies places where wheelchair users' ability to reach essential services (jobs, grocery stores, medical offices, etc.)
+           via transit is most impacted by inaccessible rail stations. The goal was to prioritize station improvements, not to determine whether or
+            not the mobility impaired can access a stop. Therefore, the assumption was made that wheelchair users can get to and from rail stations. 
+            Since buses in the <abbr class="accessibility_abbr" title="Delaware Valley Regional Planning Commission">DVRPC</abbr> region are generally 
+            accessible, they were excluded.
           </p>
         </section>
       </aside>
