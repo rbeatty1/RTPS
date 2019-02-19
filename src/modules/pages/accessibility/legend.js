@@ -8,13 +8,13 @@ const BuildLegend = () =>{
   <section class="accessibility__legend-content">
     <div class="accessibility__legend-section" id="transit-stations">
       <div class="accessibility__legend-row">
-        <div class="station-icon" id="station-no"></div><p class="legend-label">No Current or Programmed Access</p>
+        <div class="station-icon" data-value="0"></div><p class="legend-label">No Current or Programmed Access</p>
       </div>
       <div class="accessibility__legend-row">
-        <div class="station-icon" id="station-yes"></div><p class="legend-label">Wheelchair Accessible</p>
+        <div class="station-icon" data-value="1"></div><p class="legend-label">Wheelchair Accessible</p>
       </div>
       <div class="accessibility__legend-row">
-        <div  class="station-icon" id="station-future"></div><p class="legend-label">Programmed Improvement</p>
+        <div  class="station-icon" data-value="2"></div><p class="legend-label">Programmed Improvement</p>
       </div>
     </div>
   </section>
