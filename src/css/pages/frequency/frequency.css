@@ -98,7 +98,7 @@
   padding: 2% 0;
   opacity: .1;
   min-height: 33vh;
-  margin: 20% auto;
+  margin: 33% auto;
   justify-content: center;
 }
 
@@ -107,6 +107,14 @@
   border-radius: 10px;
   box-shadow: 2px 2px 3px rgba(0,0,0,0.1);
   background: white;
+}
+.frequency__story-section p{
+  font-size: .95rem;
+  margin: 2.5%;
+  text-align: left;
+  width: 90%;
+  margin: 2% auto;
+  color: #999;
 }
 .frequency__storySection-title{
   text-align: center;
@@ -186,7 +194,7 @@
   text-align: center;
   justify-content: center;
 }
-.frequency__legend-rect, .frequency__legend-railPercent{
+.frequency__legend-rect, .frequency__legend-railPercent, .frequency__legend-railPercent p{
   font-size: .75rem;
   color: #fff;
   padding: 1%;
@@ -196,18 +204,10 @@
   justify-content: center;
   width: 100%;
 }
-.frequency__legend-railPercent{
+.frequency__legend-railPercent {
   color: #777;
   margin: 0;
   white-space: nowrap
-}
-.frequency__story-section p{
-  font-size: .95rem;
-  margin: 2.5%;
-  text-align: left;
-  width: 90%;
-  margin: 2% auto;
-  color: #999;
 }
 .frequency__storySection-table{
   width: 85%;

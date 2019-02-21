@@ -204,7 +204,7 @@ const contentRef = {
   },
   bus: {
     active: false,
-    title: "Absolute Change in Bus Ridership",
+    title: "Changes in Bus Ridership",
     scenario: "Doubled Frequency",
     content: {
       map: {
@@ -370,13 +370,18 @@ const ResymbolizeFeatureLayer = (map, section) => {
 */
 const HideFeatureLayer = (map, section) => {
   let info = section.content.map;
-  map.getLayer(`${info.source}-${info.layer}`)
-    ? map.setLayoutProperty(
-        `${info.source}-${info.layer}`,
-        "visibility",
-        "none"
-      )
-    : null;
+  if (info){
+    info.layer.map(layer=>{
+      map.getLayer(`${info.source}-${layer}`)
+        ? map.setLayoutProperty(
+            `${info.source}-${layer}`,
+            "visibility",
+            "none"
+          )
+        : null;
+    })
+
+  }
 };
 
 /*
@@ -641,7 +646,7 @@ const BuildContent = (content, key, component) => {
     }
     new ScrollMagic.Scene({
       triggerElement: element,
-      duration: element.getBoundingClientRect().height + 30,
+      duration: element.getBoundingClientRect().height + 100,
       offset: 50
     })
       .on("enter", e => {
