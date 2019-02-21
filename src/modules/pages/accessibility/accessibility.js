@@ -23,7 +23,7 @@ const zoneRef = {
       7, '#045a8d',
       10, '#023858'
     ],
-    stationPaint: ['match', ['get', 'accessibility'], 1, '#8bb23f', '#aaa'],
+    stationPaint: ['match', ['get', 'accessibility'], 0, '#999', 1, '#8bb23f', 2, '#666', '#333'],
   },
   AccFut: {
     paint: [
@@ -34,7 +34,7 @@ const zoneRef = {
       7, '#045a8d',
       10, '#023858'
     ],
-    stationPaint: ['match', ['get', 'accessibility'], 1, '#8bb23f', 2, '#08506d', '#aaa'],
+    stationPaint: ['match', ['get', 'accessibility'], 1, '#8bb23f', 2, '#08506d', 0, '#999', '#333'],
   },
   DisCur: {
     paint: [
@@ -45,7 +45,7 @@ const zoneRef = {
       8, '#d95f0e',
       12, '#993404',
     ],
-    stationPaint: ['match', ['get', 'accessibility'], 1, '#8bb23f', '#aaa'],
+    stationPaint: ['match', ['get', 'accessibility'], 0, '#aaa', 1, '#8bb23f', 2, '#666', '#aaa'],
   },
   DisFut: {
     paint: [
@@ -56,7 +56,7 @@ const zoneRef = {
       8, '#d95f0e',
       12, '#993404',
     ],
-    stationPaint: ['match', ['get', 'accessibility'], 1, '#8bb23f', 2, '#08506d', '#aaa'],
+    stationPaint: ['match', ['get', 'accessibility'], 1, '#8bb23f', 2, '#08506d', 0, '#999', '#333'],
   }
 }
 const LoadStations = map =>{
