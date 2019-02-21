@@ -25,17 +25,19 @@ const contentRef = {
     content: {
       map: {
         source: "transit",
-        layer: "overview",
-        legend: {
-          name: "Average Weekday Frequency",
-          units: "Trips/Hour",
-          scheme: [
-            ["0", "#ddd"],
-            ["1", "#aed8ca"],
-            ["2—3", "#74ccb3"],
-            ["4 +", "#06bf9c"]
-          ]
-        }
+        layer: ["overview"],
+        legend: [
+          {
+            name: "Average Weekday Frequency",
+            units: "Trips/Hour",
+            scheme: [
+              ["0", "#ddd"],
+              ["1", "#aed8ca"],
+              ["2—3", "#74ccb3"],
+              ["4 +", "#06bf9c"]
+            ]
+          }
+        ]
       },
       table: false,
       text: `
@@ -53,17 +55,19 @@ const contentRef = {
     content: {
       map: {
         source: "taz",
-        layer: "transit",
-        legend: {
-          name: "Increase in Transit Activity",
-          scheme: [
+        layer: ["transit"],
+        legend: [
+          {
+            name: "Increase in Transit Activity",
+            scheme: [
             ["Very Small", "#faffe2"],
             ["Small", "#e0ebb8"],
             ["Moderate", "#c5d890"],
             ["Great", "#a9c568"],
             ["Greatest", "#8bb23f"]
           ]
-        }
+          }
+        ]
       },
       table: {
         labels: {
@@ -113,8 +117,8 @@ const contentRef = {
     content: {
       map: {
         source: "taz",
-        layer: "vehicles",
-        legend: {
+        layer: ["vehicles"],
+        legend: [{
           name: "Decrease in Automobile Activity",
           scheme: [
             ["Very Small", "#fffae1"],
@@ -123,7 +127,7 @@ const contentRef = {
             ["Great", "#ebaf5c"],
             ["Greatest", "#e89234"]
           ]
-        }
+        }]
       },
       table: {
         labels: {
@@ -175,8 +179,8 @@ const contentRef = {
     content: {
       map: {
         source: "transit",
-        layer: "railLineChange",
-        legend: {
+        layer: ["railLineChange"],
+        legend: [{
           units: "Estimated Passengers per Day",
           name: "Absolute Ridership Change",
           scheme: [
@@ -186,7 +190,7 @@ const contentRef = {
             ["", "#43a2ca"],
             ["High", "#0868ac"]
           ]
-        }
+        }]
       },
       table: false,
       text:`
@@ -198,15 +202,15 @@ const contentRef = {
       `
     }
   },
-  busAbsChange: {
+  bus: {
     active: false,
     title: "Absolute Change in Bus Ridership",
     scenario: "Doubled Frequency",
     content: {
       map: {
         source: "transit",
-        layer: "busAbsChange",
-        legend: {
+        layer: ["busAbsChange","busPercent"],
+        legend: [{
           name: "Absolute Ridership Change",
           units: "Estimated Passengers per Day",
           scheme: [
@@ -216,7 +220,16 @@ const contentRef = {
             ["1,801–2,200", "#e1d665"],
             ["> 2,200", "#d8c72e"]
           ]
-        }
+        },{
+            name: "Percent Change in Ridership",
+            scheme: [
+              ["< 85%", "#ddd"],
+              ["85%–100%", "#aed8ca"],
+              ["101%–130%", "#74ccb3"],
+              ["> 130%", "#06bf9c"]
+            ]
+          }
+        ]
       },
       table: false,
       text:`
@@ -229,29 +242,6 @@ const contentRef = {
       change. Only those bus routes with an estimated base scenario ridership of at least 100 are included. Many of the green routes are in suburban ares where
       base frequencies tend to be lower, while many of the yellow routes are in urban areas where frequency and ridership are already high.</p>
       `}
-  },
-  busPercent: {
-    active: false,
-    title: "Percent Change in Bus Ridership",
-    scenario: "Doubled Frequency",
-    content: {
-      map: {
-        source: "transit",
-        layer: "busPercent",
-        legend: {
-          name: "Percent Change in Ridership",
-          scheme: [
-            ["< 85%", "#ddd"],
-            ["85%–100%", "#aed8ca"],
-            ["101%–130%", "#74ccb3"],
-            ["> 130%", "#06bf9c"]
-          ]
-        }
-      },
-      table: false,
-      text:
-        "This map shows the 25 bus routes with the largest percent increase in daily ridership between the existing and doubled frequency scenarios. It is important to keep in mind that percent change is sometimes deceiving when base ridership is very low, making a small incrase appear as a substantial change. Only those bus routes with an estimated base scenario ridership of at least 100 are included. Many of the routes in this map are in suburban areas where base frequencies tend to be lower. The darker the orange, the greater the percent increase in forecast ridership if frequency is doubled."
-    }
   },
   mapData: {
     existing: {},
@@ -359,13 +349,15 @@ const contentRef = {
 const ResymbolizeFeatureLayer = (map, section) => {
   let info = section.content.map;
   // if section has a map && feature layer already exists
-  if (info && map.getLayer(`${info.source}-${info.layer}`)) {
-    // make visible
-    map.setLayoutProperty(
-      `${info.source}-${info.layer}`,
-      "visibility",
-      "visible"
-    );
+  if (info) {
+    info.layer.map(layer=>{
+      // make visible
+      map.setLayoutProperty(
+        `${info.source}-${layer}`,
+        "visibility",
+        "visible"
+      );
+    })
   }
 };
 
@@ -550,73 +542,78 @@ const BuildLegend = section => {
   // is there a map for this section?
   if (contentRef[section.id].content.map) {
     // set things up
-    let data = contentRef[section.id].content.map.legend,
-      legend = section.querySelector(".frequency__storySection-legend"),
-      title = document.createElement("h3"),
-      breakContainer = document.createElement("div");
-
-    // house keeping
-    title.innerText = data.name;
-    title.classList.add("frequency__legend-title");
-    title.style.color = data.scheme[data.scheme.length - 1][1];
-    breakContainer.classList.add("frequency__legend-breakContainer");
-    legend.appendChild(title);
-
-    // Do you have to specify the map units?
-    if (data.units) {
-      let units = document.createElement("h4");
-      units.classList.add("frequency__legend-units");
-      units.innerText = `(${data.units})`;
-      legend.appendChild(units);
-    }
-    legend.appendChild(breakContainer);
-    let i = 0;
-    // create element for each legend break
-    for (let color of data.scheme) {
-      let container = document.createElement("div"),
-        thisBreak;
-      container.classList.add("frequency__legend-break");
-      breakContainer.style.justifyContent = "";
-      thisBreak = document.createElement("div");
-      thisBreak.classList.add("frequency__legend-rect");
-      thisBreak.style.background = color[1];
-      thisBreak.innerText = color[0];
-      // make sure the first element has enough text contrast by making the text color the darkest value of the color scheme
-      if (i < 2)
-        thisBreak.style.color = data.scheme[data.scheme.length - 1][1];
-      breakContainer.appendChild(thisBreak);
-      i++;
-    }
-    if (section.id == 'railLineChange'){
-      let title = document.createElement('p'),
-        breakContainer = document.createElement('div')
-
-      title.innerText = 'Percent Change in Ridership'
-      title.classList.add('frequency__legend-title')
-      title.classList.add('railChange')
-      title.style.color = data.scheme[data.scheme.length -1][1]
-      breakContainer.classList.add('frequency__legend-breakContainer')
-      breakContainer.classList.add('railChange')
-      legend.appendChild(title)
-
-      let breaks = ['< 0', -1, 30, 50, 80, 100]
-      breaks.map((classBreak, index)=>{
-        let classification = document.createElement('p')
-        if (index == 0){
-          classification.innerText = `${classBreak}%`
-        }
-        else if (index == breaks.length-1){
-          classification.innerText = '100% <'
-        }
-        else{
-          classification.innerHTML = `${classBreak+1}%&ndash;${breaks[index+1]}%`
-        }
-        classification.classList.add('frequency__legend-railPercent')
-        classification.style.borderBottom = `${(index+1)*2}px solid #aaa`
-        breakContainer.appendChild(classification)
-      })
-      legend.appendChild(breakContainer)
-    }
+    let legends = contentRef[section.id].content.map.legend
+    legends.map(data=>{
+      let legend = section.querySelector(".frequency__storySection-legend"),
+        container = document.createElement('div'),
+        title = document.createElement("h3"),
+        breakContainer = document.createElement("div");
+  
+      // house keeping
+      title.innerText = data.name;
+      title.classList.add("frequency__legend-title");
+      title.style.color = data.scheme[data.scheme.length - 1][1];
+      container.classList.add('frequency__storySection-legendContainer')
+      breakContainer.classList.add("frequency__legend-breakContainer");
+      container.appendChild(title);
+  
+      // Do you have to specify the map units?
+      if (data.units) {
+        let units = document.createElement("h4");
+        units.classList.add("frequency__legend-units");
+        units.innerText = `(${data.units})`;
+        container.appendChild(units);
+      }
+      container.appendChild(breakContainer);
+      let i = 0;
+      // create element for each legend break
+      for (let color of data.scheme) {
+        let container = document.createElement("div"),
+          thisBreak;
+        container.classList.add("frequency__legend-break");
+        breakContainer.style.justifyContent = "";
+        thisBreak = document.createElement("div");
+        thisBreak.classList.add("frequency__legend-rect");
+        thisBreak.style.background = color[1];
+        thisBreak.innerText = color[0];
+        // make sure the first element has enough text contrast by making the text color the darkest value of the color scheme
+        if (i < 2)
+          thisBreak.style.color = data.scheme[data.scheme.length - 1][1];
+        breakContainer.appendChild(thisBreak);
+        i++;
+      }
+      if (section.id == 'railLineChange'){
+        let title = document.createElement('p'),
+          breakContainer = document.createElement('div')
+  
+        title.innerText = 'Percent Change in Ridership'
+        title.classList.add('frequency__legend-title')
+        title.classList.add('railChange')
+        title.style.color = data.scheme[data.scheme.length -1][1]
+        breakContainer.classList.add('frequency__legend-breakContainer')
+        breakContainer.classList.add('railChange')
+        container.appendChild(title)
+  
+        let breaks = ['< 0', -1, 30, 50, 80, 100]
+        breaks.map((classBreak, index)=>{
+          let classification = document.createElement('p')
+          if (index == 0){
+            classification.innerText = `${classBreak}%`
+          }
+          else if (index == breaks.length-1){
+            classification.innerText = '100% <'
+          }
+          else{
+            classification.innerHTML = `${classBreak+1}%&ndash;${breaks[index+1]}%`
+          }
+          classification.classList.add('frequency__legend-railPercent')
+          classification.style.borderBottom = `${(index+1)*2}px solid #aaa`
+          breakContainer.appendChild(classification)
+        })
+        container.appendChild(breakContainer)
+      }
+      legend.appendChild(container)
+    })
   }
 };
 
@@ -869,7 +866,7 @@ const LoadExisting = map => {
         - line => linename that will be used to match the appropriate features in 
   */
   const OverviewColor = (data, target, line) => {
-    let colors = contentRef.overview.content.map.legend.scheme; // that's a lot of fucking typing just to get some colors
+    let colors = contentRef.overview.content.map.legend[0].scheme; // that's a lot of fucking typing just to get some colors
     if (data >= 4) target.push(line, colors[3][1]);
     else if (data >= 2 && data < 4) target.push(line, colors[2][1]);
     else if (data >= 1 && data < 2) target.push(line, colors[1][1]);
@@ -1080,8 +1077,8 @@ const LoadTaz = map => {
           map.addSource("taz", sourceDef);
 
           let transitColors =
-              contentRef.transitChange.content.map.legend.scheme,
-            autoColors = contentRef.autoChange.content.map.legend.scheme;
+              contentRef.transitChange.content.map.legend[0].scheme,
+            autoColors = contentRef.autoChange.content.map.legend[0].scheme;
           let layerDefs = [
             {
               id: "taz-transit",
@@ -1216,9 +1213,9 @@ const LoadBus = map => {
     });
     return popupContainer.outerHTML;
   };
-  const StyleLayer = layer => {
+  const StyleLayer = (layer, index) => {
     let data = contentRef.mapData.bus,
-      colors = contentRef[layer.id.split("-")[1]].content.map.legend.scheme,
+      colors = contentRef.bus.content.map.legend[index].scheme,
       sortField = layer.id.split("bus")[1];
     data.sort((a, b) => b[sortField] - a[sortField]);
     data.map((route, index) => {
@@ -1315,11 +1312,9 @@ const LoadBus = map => {
           filter: ['any']
         }
       ];
-      for (let layer of busLayers) {
-        StyleLayer(layer);
+      busLayers.map((layer, index)=>{
+        StyleLayer(layer, index);
         layer.paint["line-color"].push("rgba(255,255,255,0)");
-      }
-      busLayers.map(layer => {
         map.addLayer(layer, "base-muniOutline");
         map.on("click", layer.id, e => {
           bus.cargo.map(route=>{
@@ -1365,7 +1360,7 @@ const LoadBus = map => {
           layer.id,
           () => (map.getCanvas().style.cursor = "")
         );
-      });
+      })
     });
 };
 /*
@@ -1400,7 +1395,7 @@ const LoadRail = map => {
         - name => linename that will be used to match the appropriate features in 
   */
   const LineColor = (data, target, name) => {
-    let colors = contentRef.railLineChange.content.map.legend.scheme;
+    let colors = contentRef.railLineChange.content.map.legend[0].scheme;
     if (data < -100) target.push(name, colors[0][1]);
     else if (data >= -100 && data < 0) target.push(name, colors[1][1]);
     else if (data >= 0 && data < 1000) target.push(name, colors[2][1]);

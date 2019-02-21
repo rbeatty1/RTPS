@@ -150,6 +150,9 @@
   text-align: center;
   flex-flow: column;
 }
+.frequency__storySection-legendContainer{
+  margin: .5rem 0;
+}
 .frequency__legend-title{
   font-weight: 700;
   margin: 0;
@@ -157,6 +160,9 @@
 }
 .frequency__legend-title.railChange{
   margin-top: 5%;
+  text-align: center;
+  font-weight: 700;
+  font-size: 1rem;
 }
 .frequency__legend-units{
   margin: 0;
