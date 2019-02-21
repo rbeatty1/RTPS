@@ -1008,13 +1008,13 @@ const LoadTaz = map => {
                 <div class='frequency__popup-header'>TAZ ${target}</div>
                 <div class='frequency__popup-meat'><span class="frequency__popup-emphasis">Base Scenario</span> ${FormatNumber(
                   Math.floor(feat.tBase)
-                )} <span class="frequency__popup-unit">Passengers / Day</span></div>
+                )} <span class="frequency__popup-unit">Trips per Day</span></div>
                 <div class='frequency__popup-meat'><span class="frequency__popup-emphasis">Doubled Frequency</span> ${FormatNumber(
                   Math.floor(feat.tDouble)
-                )} <span class="frequency__popup-unit">Passengers / Day</span></div>
+                )} <span class="frequency__popup-unit">Trips per Day</span></div>
                 <div class='frequency__popup-meat'><span class="frequency__popup-emphasis">Absolute Change</span> ${FormatNumber(
                   Math.floor(feat.tActual)
-                )} <span class="frequency__popup-unit">Passengers / Day</span></div>
+                )} <span class="frequency__popup-unit">Trips per Day</span></div>
                 <div class='frequency__popup-meat'><span class="frequency__popup-emphasis">Percent Change</span> ${
                   feat.tPercent
                 }<span class="frequency__popup-unit">%</span></div>
@@ -1027,13 +1027,13 @@ const LoadTaz = map => {
                 <div class='frequency__popup-header'>TAZ ${target}</div>
                 <div class='frequency__popup-meat'><span class="frequency__popup-emphasis">Base Scenario</span> ${FormatNumber(
                   Math.floor(feat.vBase)
-                )} <span class="frequency__popup-unit">Passengers / Day</span></div>
+                )} <span class="frequency__popup-unit">Trips per Day</span></div>
                 <div class='frequency__popup-meat'><span class="frequency__popup-emphasis">Doubled Frequency</span> ${FormatNumber(
                   Math.floor(feat.vDouble)
-                )} <span class="frequency__popup-unit">Passengers / Day</span></div>
+                )} <span class="frequency__popup-unit">Trips per Day</span></div>
                 <div class='frequency__popup-meat'><span class="frequency__popup-emphasis">Absolute Change</span> ${FormatNumber(
                   Math.floor(feat.vActual)
-                )} <span class="frequency__popup-unit">Passengers / Day</span></div>
+                )} <span class="frequency__popup-unit">Trips per Day</span></div>
                 <div class='frequency__popup-meat'><span class="frequency__popup-emphasis">Percent Change</span> ${
                   feat.vPercent
                 }<span class="frequency__popup-unit">%</span></div>
