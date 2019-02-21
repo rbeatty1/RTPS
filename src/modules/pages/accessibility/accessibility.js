@@ -335,29 +335,146 @@ class Accessibility{
       container: document.querySelector('#main'),
       sections: {
         allAccessibility: {
-          id: 'AccAll',
           title: 'Destinations Reachable Using All Rail Stations',
-          description: 'This map serves as the baseline. It shows the number of destinations reachable via rail from each zone for passengers that can use all rail stations. The darker the color, the more destinations are reachable from that <abbr class="accessibility__abbr" title="Traffic Analysis Zone">TAZ</abbr> via rail.'
+          content:{
+            text:{
+              id: 'AccAll',
+              description: 'This map serves as the baseline. It shows the number of destinations reachable via rail from each zone for passengers that can use all rail stations. The darker the color, the more destinations are reachable from that <abbr class="accessibility__abbr" title="Traffic Analysis Zone">TAZ</abbr> via rail.'
+            },
+            map:{
+              paint: [
+                'interpolate', ['linear'], ['get', 'AccAll'],
+                1, 'rgba(0,0,0,0.01)',
+                2, '#a6bddb',
+                5, '#3690c0',
+                7, '#045a8d',
+                10, '#023858'
+              ],
+              stationPaint: ['match', ['get', 'accessibility'], 0, '#e89234', 1, '#8bb23f', 2, '#08506d', '#aaa'],
+              legend:{
+                stations: [[0, '#e89234'], [1, '#8bb23f'], [2, '#08506d']],
+                zones: {
+                  header : 'Number of Reachable Destinations',
+                  labels: ['Few', 'Many'],
+                  colors: ['#a6bddb', '#3690c0', '#045a8d', '#023858']
+                }
+              }
+
+            }
+          }
+
         },
         currentAccessibility:{
-          id: 'AccCur',
           title: 'Destinations Reachable Using Only Wheelchair Accessible Rail Stations',
-          description: 'This map shows the destinations reachable by wheelchair users who can only use wheelchair accessible stations. The darker the color, the more destinations are reachable from that <abbr class="accessibility__abbr" title="Traffic Analysis Zone">TAZ</abbr> via rail.'
+          content: {
+            text: {
+              id: 'AccCur',
+              description: 'This map shows the destinations reachable by wheelchair users who can only use wheelchair accessible stations. The darker the color, the more destinations are reachable from that <abbr class="accessibility__abbr" title="Traffic Analysis Zone">TAZ</abbr> via rail.'
+            },
+            map: {
+              paint: [
+                'interpolate', ['linear'], ['get', 'AccCur'],
+                1, 'rgba(0,0,0,0.01)',
+                2, '#a6bddb',
+                5, '#3690c0',
+                7, '#045a8d',
+                10, '#023858'
+              ],
+              stationPaint: ['match', ['get', 'accessibility'], 0, '#999', 1, '#8bb23f', 2, '#666', '#333'],
+              legend:{
+                stations: [[0, '#999'], [1, '#8bb23f'], [2, '#666']],
+                zones: {
+                  header : 'Number of Reachable Destinations',
+                  labels: ['Few', 'Many'],
+                  colors: ['#a6bddb', '#3690c0', '#045a8d', '#023858']
+                }
+              }
+            }
+          }
         },
         currentDisparity:{
-          id: 'DisCur',
           title: 'Destination Disparity For Wheelchair Users in Comparison With All Users',
-          description: 'This map highlights the differences between the baseline and wheelchair accessible map. The darker the color, the greater the disparity for wheelchair users in comparison with all users.'
+          content: {
+            text: {
+              id: 'DisCur',
+              description: 'This map highlights the differences between the baseline and wheelchair accessible map. The darker the color, the greater the disparity for wheelchair users in comparison with all users.'
+            },
+            map: {
+              paint: [
+                'interpolate', ['linear'], ['get', 'DisCur'],
+                1, 'rgba(0,0,0,0.01)',
+                2, '#fed98e',
+                5, '#fe9929',
+                8, '#d95f0e',
+                12, '#993404',
+              ],
+              stationPaint: ['match', ['get', 'accessibility'], 0, '#aaa', 1, '#8bb23f', 2, '#666', '#aaa'],
+              legend: {
+                stations: [[0, '#aaa'], [1, '#8bb23f'], [2, '#666']],
+                zones:{
+                  header: 'Destination Disparity for Wheelchair Users',
+                  labels: ['Less', 'More'],
+                  colors: ['#fed98e', '#fe9929', '#d95f0e', '#9933404']
+                }
+              }
+            } 
+          },
         },
         futureAccessibility:{
-          id: 'AccFut',
           title: 'Destinations Reachable Using Stations Currently Wheelchair Accessible or Programmed For Improvement',
-          description: 'This map considers which stations are programmed for wheelchair accessibility improvements or have improvements in progress. It includes stations that are currently accessible and those that are programmed for improvement. Again, the darker the color, the more destinations are reachable via rail from that zone.'
+          content: {
+            text: {
+              id: 'AccFut',
+              description: 'This map considers which stations are programmed for wheelchair accessibility improvements or have improvements in progress. It includes stations that are currently accessible and those that are programmed for improvement. Again, the darker the color, the more destinations are reachable via rail from that zone.'
+            },
+            map: {
+              paint: [
+                'interpolate', ['linear'], ['get', 'AccFut'],
+                1, 'rgba(0,0,0,0.01)',
+                2, '#a6bddb',
+                5, '#3690c0',
+                7, '#045a8d',
+                10, '#023858'
+              ],
+              stationPaint: ['match', ['get', 'accessibility'], 1, '#8bb23f', 2, '#08506d', 0, '#999', '#333'],
+              legend:{
+                stations: [[0, '#999'], [1, '#8bb23f'], [2, '#08506d']],
+                zones: {
+                  header : 'Number of Reachable Destinations',
+                  labels: ['Few', 'Many'],
+                  colors: ['#a6bddb', '#3690c0', '#045a8d', '#023858']
+                }
+              }
+            }
+          }
         },
         futureDisparity:{
-          id: 'DisFut',
           title: 'Destination Disparity For Wheelchair Users in Comparison With All Users (Programmed Improvements Included)',
-          description: 'This map compares the previous map to the baseline map. It shows where the disparity remains. These are the places that should be the focus of the next batch of wheelchair accessibility improvements at rail stations.'
+          content: {
+            text: {
+              id: 'DisFut',
+              description: 'This map compares the previous map to the baseline map. It shows where the disparity remains. These are the places that should be the focus of the next batch of wheelchair accessibility improvements at rail stations.'
+            },
+            maps: {
+              paint: [
+                'interpolate', ['linear'], ['get', 'DisFut'],
+                1, 'rgba(0,0,0,0.01)',
+                2, '#fed98e',
+                5, '#fe9929',
+                8, '#d95f0e',
+                12, '#993404',
+              ],
+              stationPaint: ['match', ['get', 'accessibility'], 1, '#8bb23f', 2, '#08506d', 0, '#999', '#333'],
+              legend: {
+                stations: [[0, '#999'], [1, '#8bb23f'], [2, '#08506d']],
+                zones: {
+                  header: 'Destination Disparity for Wheelchair Users',
+                  labels: ['Less', 'More'],
+                  colors: ['#fed98e', '#fe9929', '#d95f0e', '#993404']
+                }
+              }
+            }
+          }
         }
       }
     }
