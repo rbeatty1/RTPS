@@ -195,7 +195,7 @@
   margin: 0;
   white-space: nowrap
 }
-.frequency__storySection-text{
+.frequency__story-section p{
   font-size: .95rem;
   margin: 2.5%;
   text-align: left;

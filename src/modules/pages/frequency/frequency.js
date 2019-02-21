@@ -11,7 +11,11 @@ const contentRef = {
     content: {
       map: false,
       table: false,
-      text: "What happens if we double transit service frequency for all lines?<br>How does the doubled service frequency scenario compare to the existing scenario?</br></br>The answers below help us understand where potential latent demand for higher frequency transit exists. Want to know how your neighborhood or favorite routes might respond? Go ahead and scroll down to begin exploring!"
+      text:  `
+      <p>What happens if we double transit service frequency for all lines? How does doubled service frequency scenario compare to the existing scenario?</p>
+      <p>The answers below help us understand where potential latent demand for higher frequency transit exists. Want to know how you neighborhood or favorite
+      routes might respond? Scroll down to begin exploring!</p>
+      `
     }
   },
   overview: {
@@ -34,7 +38,11 @@ const contentRef = {
         }
       },
       table: false,
-      text: "This map depicts the existing weekday transit frequency by average trips/hour. Darker colors represent transit routes that have less frequency service. When clicking the lines on the map, the pop-up shows the peak AM frequency as well as the average weekday trips/hour."
+      text: `
+      <p>This map depicts the existing weekday transit frequency by the average number of trips per hour. 
+      Darker colors represent transit routes that have more frequent service.
+      </p>
+      `
         
     }
   },
@@ -91,8 +99,11 @@ const contentRef = {
           }
         }
       },
-      text:
-        "This change in zonal transit ridership map shows traffic analysis zones (<abbr class='frequency__abbr' title='Traffic Analysis Zone'>TAZ</abbr>s) symbolized using the change in public transit ridership in that zone under our doubled frequencies scenario. Transit ridership refers to the average number of passengers entering and leaving the zone via public transit within 24 hours. The darker the color, the greater the increase in transit activity when all frequencies are doubled."
+      text:`
+      <p>This change in zonal transit ridership map shows traffic analysis zones (<abbr title="Traffic Analysis Zones">TAZ</abbr>)
+      symbolized using the change in public transit ridership in that zone under the doubled frequency scenario. The darker the color,
+      the greater the increase in transit ridership when all frequencies are doubled.
+      </p>`
     }
   },
   autoChange: {
@@ -148,8 +159,13 @@ const contentRef = {
           }
         }
       },
-      text:
-        "This change in zonal vehicle activity shows <abbr class='frequency__abbr' title='Traffic Analysis Zone'>TAZ</abbr>s symbolized using the change in passenger vehicle activity entering and leaving the zone in 24 hours. The darker the color, the greater the decrease in vehicular activity when public transit frequencies are doubled."
+      text:`
+      <p>
+      This map shows <abbr title="Traffic Analysis Zone">TAZ</abbr>s symbolized using the change in car trips entering
+      and leaving the zone in 24 hours. The darker the color, the greater the reduction in car trips when public
+      transit frequencies are doubled.
+      </p>
+      `
     }
   },
   railLineChange: {
@@ -173,8 +189,13 @@ const contentRef = {
         }
       },
       table: false,
-      text:
-        "This map shows passenger rail lines symbolized by the estimated change in ridership if frequencies of all transit lines are doubled. Line color represents the absolute change in ridership, while the line weight represents the percent change. For example, a dark, thin line would imply a line where a large absolute increase in ridership is expected, but the change is relatively small due to high base ridership on the line. Nominal declines in forecasted ridership for a handful of lines reflect cases where passengers may be attracted to other (newly frequent) options, or simply variations in forecast results where percent changes are small."
+      text:`
+      <p>This map shows passenger rail lines symbolized by the estimated change in ridership if frequencies of all transit routes are doubled.
+      Line color represents the absolute change in ridership, while the line weight represents the percent change. For example, a dark, thin
+      line would imply a line where a large absolute increase in ridership is expected, but the percent change is relatively small
+      due to the high existing ridership on the line.
+      </p>
+      `
     }
   },
   busAbsChange: {
@@ -198,9 +219,16 @@ const contentRef = {
         }
       },
       table: false,
-      text:
-        "This map shows the 25 bus routes with the greatest expected absolute increase in daily ridership between the existing and doubled frequency scenarios. Bus ridership refers to the number of passengers using that bus route on an average weekday. The darker the green, the greater the absolute increase in ridership."
-    }
+      text:`
+      <p>This map shows the bus routes with the greatest expected increase in daily ridership when service frequency is doubled. Bus ridership
+      refers to the number of passengers using that bus route on an average weekday. The yellow routes are the top 25 in estimated <strong>absolute</strong>
+      ridership gain. The darker the yellow, the greater the absolute increase in ridership.</p>
+      <p>The green lines show the 25 bus routes with the largest percent increase in daily ridership when service frequency is doubled. The darker the green,
+      the greater the percent increase in forecast ridership.</p>
+      <p>It is important to keep in mind that percent change is sometimes deceiving when base ridership is low, making a small increase appear as a substantial 
+      change. Only those bus routes with an estimated base scenario ridership of at least 100 are included. Many of the green routes are in suburban ares where
+      base frequencies tend to be lower, while many of the yellow routes are in urban areas where frequency and ridership are already high.</p>
+      `}
   },
   busPercent: {
     active: false,
@@ -660,9 +688,7 @@ const BuildContent = (content, key, component) => {
           }</h1><hr class="frequency__storySection-divider">
         </div>
       <div class="frequency__storySection-legend"></div>
-      <p class="frequency__storySection-text">${
-        content.text
-      }</p>
+      ${content.text}
       `;
       break;
     default:
@@ -678,9 +704,7 @@ const BuildContent = (content, key, component) => {
         </div>
       </div>
       <div class="frequency__storySection-legend"></div>
-      <p class="frequency__storySection-text">${
-        content.text
-      }</p>
+      ${content.text}
       `;
       break;
   }
