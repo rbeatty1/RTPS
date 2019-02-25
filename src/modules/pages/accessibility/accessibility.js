@@ -215,11 +215,17 @@ const BuildPage = content =>{
       duration: element.getBoundingClientRect().height + 100,
       offset: 50
     })
-      .on('enter', e=>{ 
+      .on('enter', e=>{
+        let link = document.querySelector(`a[href='#${element.id}'`)
+        link.classList.add('active')
         element.classList.add('active')
         ResymbolizeLayers()
       })
-      .on('leave', e=>{ element.classList.remove('active') })
+      .on('leave', e=>{ 
+        let link = document.querySelector(`a[href='#${element.id}'`)
+        link.classList.remove('active')
+        element.classList.remove('active') 
+      })
       .addTo(content.scroll)
   }
 
@@ -230,12 +236,18 @@ const BuildPage = content =>{
   
   content.map = BuildMap(document.querySelector(".accessibility-map"), content.props)
   // build section for each
+  let i = 1
   for (let section in props.sections){
     let content = props.sections[section].content,
       container = document.createElement('section'),
       title = document.createElement('h1'),
-      text = document.createElement('p')
+      text = document.createElement('p'),
+      link = document.createElement('a')
 
+    link.href = `#${content.text.id}`
+    link.rel = 'noopener'
+    link.innerHTML = i
+    document.getElementById('accessibility-nav').appendChild(link)
     container.classList.add('accessibility-section')
     container.id = content.text.id
 
@@ -250,6 +262,7 @@ const BuildPage = content =>{
     
     if (content.map) new Legend(content)
     BuildScene(container)
+    i++
   }
 }
 
@@ -287,7 +300,7 @@ export class Accessibility{
               legend:{
                 stations: [[0, '#e89234'], [1, '#8bb23f'], [2, '#08506d']],
                 zones: {
-                  header : 'Number of Reachable Destinations',
+                  header : 'Reachable Destinations',
                   labels: ['Few', 'Many'],
                   colors: ['#a6bddb', '#3690c0', '#045a8d', '#023858']
                 }
@@ -317,7 +330,7 @@ export class Accessibility{
               legend:{
                 stations: [[0, '#999'], [1, '#8bb23f'], [2, '#666']],
                 zones: {
-                  header : 'Number of Reachable Destinations',
+                  header : 'Reachable Destinations',
                   labels: ['Few', 'Many'],
                   colors: ['#a6bddb', '#3690c0', '#045a8d', '#023858']
                 }
@@ -373,7 +386,7 @@ export class Accessibility{
               legend:{
                 stations: [[0, '#999'], [1, '#8bb23f'], [2, '#08506d']],
                 zones: {
-                  header : 'Number of Reachable Destinations',
+                  header : 'Reachable Destinations',
                   labels: ['Few', 'Many'],
                   colors: ['#a6bddb', '#3690c0', '#045a8d', '#023858']
                 }
@@ -418,12 +431,15 @@ export class Accessibility{
 
     let page = document.createElement('div'),
       map = document.createElement('div'),
-      sidebar = document.createElement('aside')
+      sidebar = document.createElement('aside'),
+      nav = document.createElement('nav')
     
     page.classList.add('accessibility-page')
     map.classList.add('accessibility-map')
     sidebar.classList.add('accessibility-text')
+    nav.id = 'accessibility-nav'
 
+    page.appendChild(nav)
     page.appendChild(map)
     page.appendChild(sidebar)
     this.props.container.appendChild(page)
