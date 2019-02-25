@@ -55,7 +55,6 @@ const BuildLegend = content =>{
   zones.appendChild(title)
 
   content.map.legend.zones.colors.forEach((color, index)=>{
-    console.log(color, index)
     if (index == 0 || index == (content.map.legend.zones.colors.length - 1)){
       let label = document.createElement('p'),
         box = document.createElement('div')

@@ -2,63 +2,6 @@ import '../../../css/pages/accessibility/accessibility.css'
 import { styles } from '../map/map_styles/accessibility.js'
 import { Legend } from './legend';
 
-const zoneRef = {
-  AccAll: {
-    paint: [
-      'interpolate', ['linear'], ['get', 'AccAll'],
-      1, 'rgba(0,0,0,0.01)',
-      2, '#a6bddb',
-      5, '#3690c0',
-      7, '#045a8d',
-      10, '#023858'
-    ],
-    stationPaint: ['match', ['get', 'accessibility'], 0, '#e89234', 1, '#8bb23f', 2, '#08506d', '#aaa'],
-  },
-  AccCur: {
-    paint: [
-      'interpolate', ['linear'], ['get', 'AccCur'],
-      1, 'rgba(0,0,0,0.01)',
-      2, '#a6bddb',
-      5, '#3690c0',
-      7, '#045a8d',
-      10, '#023858'
-    ],
-    stationPaint: ['match', ['get', 'accessibility'], 0, '#999', 1, '#8bb23f', 2, '#666', '#333'],
-  },
-  AccFut: {
-    paint: [
-      'interpolate', ['linear'], ['get', 'AccFut'],
-      1, 'rgba(0,0,0,0.01)',
-      2, '#a6bddb',
-      5, '#3690c0',
-      7, '#045a8d',
-      10, '#023858'
-    ],
-    stationPaint: ['match', ['get', 'accessibility'], 1, '#8bb23f', 2, '#08506d', 0, '#999', '#333'],
-  },
-  DisCur: {
-    paint: [
-      'interpolate', ['linear'], ['get', 'DisCur'],
-      1, 'rgba(0,0,0,0.01)',
-      2, '#fed98e',
-      5, '#fe9929',
-      8, '#d95f0e',
-      12, '#993404',
-    ],
-    stationPaint: ['match', ['get', 'accessibility'], 0, '#aaa', 1, '#8bb23f', 2, '#666', '#aaa'],
-  },
-  DisFut: {
-    paint: [
-      'interpolate', ['linear'], ['get', 'DisFut'],
-      1, 'rgba(0,0,0,0.01)',
-      2, '#fed98e',
-      5, '#fe9929',
-      8, '#d95f0e',
-      12, '#993404',
-    ],
-    stationPaint: ['match', ['get', 'accessibility'], 1, '#8bb23f', 2, '#08506d', 0, '#999', '#333'],
-  }
-}
 const LoadStations = map =>{
   fetch('https://opendata.arcgis.com/datasets/68b970bf65bc411c8a7f8f7b0bb7908d_0.geojson')
   .then(ago=>{
@@ -249,17 +192,43 @@ const BuildMap = (container, props) =>{
   return map
 
 }
-const BuildPage = props =>{
-  /* TODO: future Robert issue
-    1. Rebuild sidebar using DOM API
-    2. BuildSection() function
-    3. props.sections.map(section => { BuildSection() })
-    4. Dot Navigation
-  */
-  let thisMap = BuildMap(document.querySelector(".accessibility-map"), props)
-  let sectionBody = document.createElement('div')
+const BuildPage = content =>{
+
+  const BuildScene = element =>{
+
+    const ResymbolizeLayers = () =>{
+      let data = content.props.sections[element.id].content.map,
+        map = content.map
+      if (data) {
+        map.setPaintProperty('zones-analysis', 'fill-color', data.paint)
+        map.setPaintProperty('station-access', 'circle-color', data.stationPaint)
+      }
+      else{
+        map.setPaintProperty('zones-analysis', 'fill-color', 'rgba(0,0,0,0)')
+        map.setPaintProperty('station-access', 'circle-color', "['match', ['get', 'accessibility'], 0, '#e89234', 1, '#8bb23f', 2, '#08506d', '#aaa']")
+
+      }
+    }
+
+    new ScrollMagic.Scene({
+      triggerElement: element,
+      duration: element.getBoundingClientRect().height + 100,
+      offset: 50
+    })
+      .on('enter', e=>{ 
+        element.classList.add('active')
+        ResymbolizeLayers()
+      })
+      .on('leave', e=>{ element.classList.remove('active') })
+      .addTo(content.scroll)
+  }
+
+  let props = content.props,
+    sectionBody = document.createElement('div')
   sectionBody.classList.add('accessibility__text-body')
   document.querySelector('.accessibility-text').appendChild(sectionBody)
+  
+  content.map = BuildMap(document.querySelector(".accessibility-map"), content.props)
   // build section for each
   for (let section in props.sections){
     let content = props.sections[section].content,
@@ -278,13 +247,13 @@ const BuildPage = props =>{
 
     
     sectionBody.appendChild(container)
-    console.log({content})
     
     if (content.map) new Legend(content)
+    BuildScene(container)
   }
 }
 
-class Accessibility{
+export class Accessibility{
   constructor(){
     this.props = {
       container: document.querySelector('#main'),
@@ -298,8 +267,8 @@ class Accessibility{
             }
           }
         },
-        allAccessibility: {
-          title: 'Destinations Reachable Using All Rail Stations',
+        AccAll: {
+          title: 'Destinations Currently Reachable by Non-Wheelchair Users',
           content:{
             text:{
               id: 'AccAll',
@@ -328,8 +297,8 @@ class Accessibility{
           }
 
         },
-        currentAccessibility:{
-          title: 'Destinations Reachable Using Only Wheelchair Accessible Rail Stations',
+        AccCur:{
+          title: 'Destinations Currently Reachable by Wheelchair Users',
           content: {
             text: {
               id: 'AccCur',
@@ -356,12 +325,12 @@ class Accessibility{
             }
           }
         },
-        currentDisparity:{
-          title: 'Destination Disparity For Wheelchair Users in Comparison With All Users',
+        DisCur:{
+          title: 'Current Destination Disparity for Wheelchair Users in Comparison with Non-Wheelchair Users',
           content: {
             text: {
               id: 'DisCur',
-              description: 'This map highlights the differences between the baseline and wheelchair accessible map. The darker the color, the greater the disparity for wheelchair users in comparison with all users.'
+              description: 'This map highlights the differences between the baseline map (1) and wheelchair accessible map (2). The darker the color, the greater the disparity for wheelchair users in comparison with all users.'
             },
             map: {
               paint: [
@@ -384,8 +353,8 @@ class Accessibility{
             } 
           },
         },
-        futureAccessibility:{
-          title: 'Destinations Reachable Using Stations Currently Wheelchair Accessible or Programmed For Improvement',
+        AccFut:{
+          title: 'Destinations Reachable in the Future by Wheelchair Users',
           content: {
             text: {
               id: 'AccFut',
@@ -412,12 +381,12 @@ class Accessibility{
             }
           }
         },
-        futureDisparity:{
-          title: 'Destination Disparity For Wheelchair Users in Comparison With All Users (Programmed Improvements Included)',
+        DisFut:{
+          title: 'Remaining Future Destination Disparity for Wheelchair Users in Comparison with Non-Wheelchair Users (Programmed Improvements Included)',
           content: {
             text: {
               id: 'DisFut',
-              description: 'This map compares the previous map to the baseline map. It shows where the disparity remains. These are the places that should be the focus of the next batch of wheelchair accessibility improvements at rail stations.'
+              description: 'This map compares the previous map (4) to the baseline map (1). It shows where the disparity remains. These are the places that should be the focus of the next batch of wheelchair accessibility improvements at rail stations.'
             },
             map: {
               paint: [
@@ -459,10 +428,13 @@ class Accessibility{
     page.appendChild(sidebar)
     this.props.container.appendChild(page)
 
-    BuildPage(this.props)
+    this.scroll = new ScrollMagic.Controller({
+      container: this.props.container,
+      loglevel: 4
+    })
+
+    BuildPage(this)
     
 
   }
 }
-
-export { Accessibility }

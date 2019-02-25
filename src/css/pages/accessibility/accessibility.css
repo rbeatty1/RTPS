@@ -17,7 +17,7 @@
   padding: 2% 0;
   background-color: white;
   border-radius: 10px;
-  /* opacity: .1; */
+  opacity: .1;
   min-height: 25vh;
   margin: 33% auto;
   justify-content: center;
@@ -36,22 +36,9 @@
   width: 90%;
   margin: 2% auto;
 }
-.accessibility-section-header{
-  padding: 5px;
-  color: #08506b;
-  text-align: left;
-  border-bottom: 2px dotted #8bb23f;
-  cursor: pointer;
-  font-weight: 400;
-  font-family: 'Arial', sans-serif;
-  font-weight: 400;
-  margin: 0;
-  font-size: 1rem;
-}
-.accessibility-section-header.active{
-  font-weight: 700;
-  color: #8bb234;
-  border-bottom-color: #08506b;
+
+.accessibility-section.active{
+  opacity: 1;
 }
 .accessibility-section-content{
   display: none;
