@@ -250,82 +250,37 @@ const BuildMap = (container, props) =>{
 
 }
 const BuildPage = props =>{
+  /* TODO: future Robert issue
+    1. Rebuild sidebar using DOM API
+    2. BuildSection() function
+    3. props.sections.map(section => { BuildSection() })
+    4. Dot Navigation
+  */
   let thisMap = BuildMap(document.querySelector(".accessibility-map"), props)
   let sectionBody = document.createElement('div')
   sectionBody.classList.add('accessibility__text-body')
   document.querySelector('.accessibility-text').appendChild(sectionBody)
   // build section for each
   for (let section in props.sections){
-    let thisSection = props.sections[section]
-    let container = document.createElement('section')
+    let content = props.sections[section].content,
+      container = document.createElement('section'),
+      title = document.createElement('h1'),
+      text = document.createElement('p')
+
     container.classList.add('accessibility-section')
-    container.innerHTML = `
-      <h1 class="accessibility-section-header" id="${thisSection.id}">${thisSection.title}</h1>
-      <p class="accessibility-section-content inactive">${thisSection.description}</p>
-    `
+    container.id = content.text.id
 
+    title.innerText = props.sections[section].title
+    text.innerHTML = content.text.description
+
+    container.appendChild(title)
+    container.appendChild(text)
+
+    
     sectionBody.appendChild(container)
-
-    // click functions
-    document.querySelector(`#${thisSection.id}`).addEventListener('click', e=>{
-      let sections = document.querySelectorAll('.accessibility-section-header'), // content section names
-        legendPoints = document.querySelectorAll('.station-icon') // station legend icons
-
-      // display zone legend
-      let legend = document.querySelector('#zones')
-      legend.style.display != 'block' ? legend.style.display = 'block' : null
-      let legends = legend.querySelectorAll('.accessibility__legend-zoneBox')
-
-      // switch zone legend content depending on opened map
-        // having HTML snippets in a reference object?
-      let colors = []
-      zoneRef[e.target.id].paint.forEach(item=>{
-        item[0] != '#' ? null : colors.push(item)
-      })
-      for (let i = 0; i < legends.length; i++){
-        legends[i].style.backgroundColor = colors[i]
-      }
-      let boxes = document.querySelectorAll('.legend__row-label')
-      if (e.target.id[0] == 'A'){
-        document.querySelector(".legend-descriptor").innerText = 'Number of Reachable Destinations'
-        boxes[0].innerText = 'Few'
-        boxes[1].innerText = 'Many'
-      }
-      else{
-        document.querySelector(".legend-descriptor").innerText = 'Destination Disparity for Wheelchair Users'
-        boxes[0].innerText = 'Less'
-        boxes[1].innerText = 'More'
-      }
-      for (let section of sections){
-        if (section.id == e.target.id){
-          let content = section.nextElementSibling,
-            referenceData = zoneRef[e.target.id]
-          
-          // activate
-          content.classList.toggle('active')
-          section.classList.toggle('active')
-
-          // set map colors accordingly
-          thisMap.setPaintProperty('zones-analysis', "fill-color", referenceData.paint)
-          thisMap.setPaintProperty('station-access', 'circle-color', referenceData.stationPaint)
-
-          // set all stations in legend to grey
-          for (let node of legendPoints){ node.style.backgroundColor = "#aaa"}
-          
-          // set the color for correct station icons in legend
-          referenceData.stationPaint.map((value, index)=>{
-            let iconCheck = document.querySelector(`.station-icon[data-value="${value}`)
-            if (iconCheck) iconCheck.style.backgroundColor = referenceData.stationPaint[index+1]
-          })
-        }
-
-        // deactivate
-        else if (section.nextElementSibling.classList.contains('active')){
-          section.nextElementSibling.classList.remove('active')
-          section.classList.contains('active') ? section.classList.remove('active') : null
-        }
-      }
-    })
+    console.log({content})
+    
+    if (content.map) new Legend(content)
   }
 }
 
@@ -334,6 +289,15 @@ class Accessibility{
     this.props = {
       container: document.querySelector('#main'),
       sections: {
+        intro:{
+          title: 'Overview',
+          content: {
+            text: {
+              id: 'intro',
+              description: 'This analysis identifies places where wheelchair users\' ability to reach essential services (jobs, grocery stores, medical offices, etc) via transit is most impacted by wheelchair inaccessible rail stations. These maps can be used to help prioritize rail station improvements.'
+            }
+          }
+        },
         allAccessibility: {
           title: 'Destinations Reachable Using All Rail Stations',
           content:{
@@ -414,7 +378,7 @@ class Accessibility{
                 zones:{
                   header: 'Destination Disparity for Wheelchair Users',
                   labels: ['Less', 'More'],
-                  colors: ['#fed98e', '#fe9929', '#d95f0e', '#9933404']
+                  colors: ['#fed98e', '#fe9929', '#d95f0e', '#933404']
                 }
               }
             } 
@@ -455,7 +419,7 @@ class Accessibility{
               id: 'DisFut',
               description: 'This map compares the previous map to the baseline map. It shows where the disparity remains. These are the places that should be the focus of the next batch of wheelchair accessibility improvements at rail stations.'
             },
-            maps: {
+            map: {
               paint: [
                 'interpolate', ['linear'], ['get', 'DisFut'],
                 1, 'rgba(0,0,0,0.01)',
@@ -482,25 +446,20 @@ class Accessibility{
   }
 
   render(){
-    this.props.container.innerHTML = `
-    <div class="accessibility-page">
-      <div class="accessibility-map"></div>
-      <aside class="accessibility-text">
-        <section class="accessibility-intro">
-          <h1>Introduction</h1>
-          <p>
-          This analysis identifies places where wheelchair users' ability to reach essential services (jobs, grocery stores, medical offices, etc.)
-           via transit is most impacted by inaccessible rail stations. The goal was to prioritize station improvements, not to determine whether or
-            not the mobility impaired can access a stop. Therefore, the assumption was made that wheelchair users can get to and from rail stations. 
-            Since buses in the <abbr class="accessibility_abbr" title="Delaware Valley Regional Planning Commission">DVRPC</abbr> region are generally 
-            accessible, they were excluded.
-          </p>
-        </section>
-      </aside>
-      </div>
-  `
+
+    let page = document.createElement('div'),
+      map = document.createElement('div'),
+      sidebar = document.createElement('aside')
+    
+    page.classList.add('accessibility-page')
+    map.classList.add('accessibility-map')
+    sidebar.classList.add('accessibility-text')
+
+    page.appendChild(map)
+    page.appendChild(sidebar)
+    this.props.container.appendChild(page)
+
     BuildPage(this.props)
-    new Legend(this.props);
     
 
   }

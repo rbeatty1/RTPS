@@ -9,30 +9,32 @@
   background-color: whitesmoke
 }
 
-.accessibility-intro{
-  width: 90%;
-  margin: 5% auto;
-}
-.accessibility-intro h1{
-  font-size: 1.5rem;
-  color: #8bb23f;
-  text-align: center;
-  margin: 0;
-}
-.accessibility-intro p{
-  font-size: .75rem;
-  background-color: #fff;
-  border-radius: 4px;
-  box-shadow: 1px 1px 1px 1px rgba(0,0,0,0.1);
-  padding: 10px;
-  color: #777;
-}
-
 
 .accessibility-section{
+  width: 95%;
   display: flex;
   flex-flow: column;
-  margin: 5px 1.5em;
+  padding: 2% 0;
+  background-color: white;
+  border-radius: 10px;
+  /* opacity: .1; */
+  min-height: 25vh;
+  margin: 33% auto;
+  justify-content: center;
+  box-shadow: 2px 2px 3px rgba(0,0,0,.1)
+}
+
+.accessibility-section h1{
+  text-align: center;
+  color: #8bb234;
+  font-size: 1.75rem;
+}
+
+.accessibility-section>p{
+  color: #999;
+  font-size: .95rem;
+  width: 90%;
+  margin: 2% auto;
 }
 .accessibility-section-header{
   padding: 5px;

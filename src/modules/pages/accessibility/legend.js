@@ -1,49 +1,106 @@
 import '../../../css/pages/accessibility/legend.css'
 
-const BuildLegend = () =>{
-  let legend = document.createElement('section')
+const BuildLegend = content =>{
+
+  let section= document.getElementById(content.text.id),
+    legend = document.createElement('div'),
+    stations = document.createElement('section'),
+    zones = document.createElement('section')
+  
   legend.classList.add('accessibility-legend')
-  legend.innerHTML = `
-  <h2>Legend</h2>
-  <section class="accessibility__legend-content">
-    <div class="accessibility__legend-section" id="transit-stations">
-      <div class="accessibility__legend-row">
-        <div class="station-icon" data-value="0"></div><p class="legend-label">No Current or Programmed Access</p>
-      </div>
-      <div class="accessibility__legend-row">
-        <div class="station-icon" data-value="1"></div><p class="legend-label">Wheelchair Accessible</p>
-      </div>
-      <div class="accessibility__legend-row">
-        <div  class="station-icon" data-value="2"></div><p class="legend-label">Programmed Improvement</p>
-      </div>
-    </div>
-  </section>
-  <section class="accessibility__legend-content" id="zones">
-    <span class="legend-descriptor">Number of Reachable Destinations</span>
-    <div class="accessibility__legend-section">
-      <div class="accessibility__legend-row" id="zones-row">
-        <p class="legend__row-label">Few</p>
-        <div class="accessibility__legend-zoneBox"></div>
-        <div class="accessibility__legend-zoneBox"></div>
-        <div class="accessibility__legend-zoneBox"></div>
-        <div class="accessibility__legend-zoneBox"></div>
-        <p class="legend__row-label">Many</p>
-      </div>
-    </div>
-  </section>
-  `
-  document.querySelector('.accessibility-text').appendChild(legend)
+  stations.classList.add('accessibility__legend-stations')
+  zones.classList.add('accessibility__legend-zones')
+  
+  // build stations legend
+  for (let station of content.map.legend.stations){
+    let row = document.createElement('div'),
+      icon = document.createElement('div'),
+      label = document.createElement('p')
+
+    // set classes
+    row.classList.add('accessibility__legend-row')
+    icon.classList.add('station-icon')
+    label.classList.add('legend-label')
+
+    // icon attributes
+    icon.setAttribute('data-value', station[0])
+    icon.style.backgroundColor = station[1]
+
+    // row labels
+    switch(station[0]){
+      case 0:
+        label.innerText = 'No Current or Programmed Access'
+        break;
+      case 1:
+        label.innerText = 'Wheelchair Accessible'
+        break;
+      case 2:
+        label.innerText = 'Programmed Improvement'
+      default:
+        break;
+    }
+
+    // send it
+    row.appendChild(icon)
+    row.appendChild(label)
+    stations.appendChild(row)
+  }
+
+  // build zones legend
+  let title = document.createElement('h3'),
+      row = document.createElement('div')
+
+  row.classList.add('accessibility__legend-row')
+  title.innerText = content.map.legend.zones.header
+  zones.appendChild(title)
+
+  content.map.legend.zones.colors.forEach((color, index)=>{
+    console.log(color, index)
+    if (index == 0 || index == (content.map.legend.zones.colors.length - 1)){
+      let label = document.createElement('p'),
+        box = document.createElement('div')
+
+      box.classList.add('accessibility__legend-zoneBox')
+      label.classList.add('legend__row-label')
+
+      label.innerText = index == 0 ? content.map.legend.zones.labels[0] : content.map.legend.zones.labels[1]
+      box.style.backgroundColor = color
+
+      if (index == 0){
+        row.appendChild(label)
+        row.appendChild(box)
+      }
+      else{
+        row.appendChild(box)
+        row.appendChild(label)
+      }
+    }
+    else{
+      let box = document.createElement('div')
+      box.classList.add('accessibility__legend-zoneBox')
+      box.style.backgroundColor = color
+      row.appendChild(box)
+    }
+  })
+
+  zones.appendChild(row)
+
+
+  legend.appendChild(stations)
+  legend.appendChild(zones)
+  section.appendChild(legend)
 
   
 }
 
 class Legend{
-  constructor(){
+  constructor(props){
+    this.props = props
     this.render()
   }
 
   render(){
-    BuildLegend()
+    BuildLegend(this.props)
   }
 
 }
