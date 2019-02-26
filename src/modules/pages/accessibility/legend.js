@@ -1,8 +1,7 @@
 import '../../../css/pages/accessibility/legend.css'
 
 const BuildLegend = content =>{
-
-  let section= document.getElementById(content.text.id),
+  let section= content.text.id ? document.getElementById(content.text.id) : document.getElementById('caseStudy-legend'),
     legend = document.createElement('div'),
     stations = document.createElement('section'),
     zones = document.createElement('section')
@@ -10,6 +9,12 @@ const BuildLegend = content =>{
   legend.classList.add('accessibility-legend')
   stations.classList.add('accessibility__legend-stations')
   zones.classList.add('accessibility__legend-zones')
+
+  if (!content.text.id){
+    while(section.firstChild){
+      section.removeChild(section.firstChild)
+    }
+  }
   
   // build stations legend
   for (let station of content.map.legend.stations){

@@ -333,6 +333,40 @@ const BuildMap = (container, props) =>{
 */
 const BuildPage = content =>{
 
+  /*
+    ResymbolizeLayers()
+    @description:
+      Main functionality of scrolling is to set the appropriate map content
+  */
+  const ResymbolizeLayers = data =>{
+    // local reference for map data
+    let map = content.map
+
+    // if there is map actions tied to this element, do them
+    if (data) {
+      map.setPaintProperty('zones-analysis', 'fill-color', data.paint)
+      map.setPaintProperty('station-access', 'circle-color', data.stationPaint)
+    }
+
+    // if not, reset to default map
+    else{
+      map.setPaintProperty('zones-analysis', 'fill-color', 'rgba(0,0,0,0)')
+      map.setPaintProperty('station-access', 'circle-color', ['match', ['get', 'accessibility'], 0, '#e89234', 1, '#8bb23f', 2, '#08506d', '#aaa'])
+    }
+    if(document.getElementById('caseStudy').classList.contains('active')){
+      let extent = {
+        center: [-75.064, 39.914],
+        zoom: 13
+      },
+        map = content.map
+        
+      map.flyTo({
+        center: extent.center,
+        zoom: extent.zoom
+      })
+    }
+  }
+
 /*
   BuildScene(element)
   @description:
@@ -341,31 +375,6 @@ const BuildPage = content =>{
     - element: element to tie functions to
 */
   const BuildScene = element =>{
-
-    /*
-      ResymbolizeLayers()
-      @description:
-        Main functionality of scrolling is to set the appropriate map content
-    */
-    const ResymbolizeLayers = () =>{
-      
-      // local reference for map data
-      let data = content.props.sections[element.id].content.map,
-        map = content.map
-
-      // if there is map actions tied to this element, do them
-      if (data) {
-        map.setPaintProperty('zones-analysis', 'fill-color', data.paint)
-        map.setPaintProperty('station-access', 'circle-color', data.stationPaint)
-      }
-
-      // if not, reset to default map
-      else{
-        map.setPaintProperty('zones-analysis', 'fill-color', 'rgba(0,0,0,0)')
-        map.setPaintProperty('station-access', 'circle-color', "['match', ['get', 'accessibility'], 0, '#e89234', 1, '#8bb23f', 2, '#08506d', '#aaa']")
-
-      }
-    }
 
     // define ScrollMagic Scene
     new ScrollMagic.Scene({
@@ -377,12 +386,14 @@ const BuildPage = content =>{
     })
       .on('enter', e=>{
         // set active classes to section and corresponding dot navigation element
-        let link = document.querySelector(`a[href='#${element.id}'`)
+        let link = document.querySelector(`a[href='#${element.id}'`),
+          data = content.props.sections[element.id].content.map
+        
         link.classList.add('active')
         element.classList.add('active')
 
         // resymbolize layers
-        ResymbolizeLayers()
+        ResymbolizeLayers(data)
       })
 
       // reset to default state
@@ -394,6 +405,18 @@ const BuildPage = content =>{
 
       // add to ScrollMagic Controller
       .addTo(content.scroll)
+  }
+
+  const ChangeCaseStudyContent = data =>{
+    let container = document.getElementById('caseStudy'),
+      subtitle = container.querySelector('h3'),
+      text = container.querySelector('p')
+      
+    subtitle.innerText = data.title
+    text.innerText = data.text
+
+    new Legend(data)
+    ResymbolizeLayers(data.map)
   }
 
   // accessibility content data
@@ -418,42 +441,105 @@ const BuildPage = content =>{
 
   // create content for each section in component data
   for (let section in props.sections){
-
     // local content ref
-    let content = props.sections[section].content,
+    let data = props.sections[section]
 
-    // HTML jawns
-    container = document.createElement('section'),
-    title = document.createElement('h1'),
-    text = document.createElement('p'),
-    link = document.createElement('a')
+    if (data.content.text){
+      let content = data.content
+      // HTML jawns
+      let container = document.createElement('section'),
+      title = document.createElement('h1'),
+      text = document.createElement('p'),
+      link = document.createElement('a')
+  
+      // create dot nav
+      link.href = `#${content.text.id}`
+      link.rel = 'noopener'
+      link.innerText = i
+      document.getElementById('accessibility-nav').appendChild(link)
+  
+      // housekeeping for section container
+      container.classList.add('accessibility-section')
+      container.id = content.text.id
+  
+      // set text
+      title.innerText = props.sections[section].title
+      text.innerHTML = content.text.description
+  
+      // send it
+      container.appendChild(title)
+      container.appendChild(text)
+  
+      // send the whole thing
+      sectionBody.appendChild(container)
+      
+      // if there is a map portion to the section (aka not overview), create the corresponding legend
+      if (content.map) new Legend(content)
+  
+      // Build ScrollMagic Scene
+      BuildScene(container)
+    }
+    else{
+      let content = props.sections[section],
+        container = document.createElement('section'),
+        title = document.createElement('h1'),
+        subtitle = document.createElement('h3'),
+        text = document.createElement('p'),
+        link = document.createElement('a'),
+        tabNav = document.createElement('nav'),
+        legend = document.createElement('div')
 
-    // create dot nav
-    link.href = `#${content.text.id}`
-    link.rel = 'noopener'
-    link.innerHTML = i
-    document.getElementById('accessibility-nav').appendChild(link)
+      // create dot nav
+      link.href = `#${content.content.id}`
+      link.rel = 'noopener'
+      link.innerText = i
+      document.getElementById('accessibility-nav').appendChild(link)
+      
+      // housekeeping
+      container.classList.add('accessibility-section')
+      container.id = content.content.id
+      text.id = `${content.content.id}-p`
+      legend.id ='caseStudy-legend'
+      
+      title.innerText = content.title
+      text.innerText = content.content[0]
 
-    // housekeeping for section container
-    container.classList.add('accessibility-section')
-    container.id = content.text.id
 
-    // set text
-    title.innerText = props.sections[section].title
-    text.innerHTML = content.text.description
+      container.appendChild(title)
+      container.appendChild(tabNav)
+      container.appendChild(subtitle)
+      container.appendChild(text)
+      container.appendChild(legend)
+      sectionBody.appendChild(container)
 
-    // send it
-    container.appendChild(title)
-    container.appendChild(text)
 
-    // send the whole thing
-    sectionBody.appendChild(container)
+      BuildScene(container)
+
+
+      for (let section in content.content){
+        if (section != 0 && section != 'id'){
+          let data = content.content[section],
+            tab = document.createElement('a')
+          
+            tab.innerText = section
+
+            tab.addEventListener('click', e =>{
+              let links = document.querySelectorAll('#caseStudy a')
+              for (let link of links){
+                if (link == e.target) e.target.classList.add('active')
+                else link.classList.remove('active')
+              }
+              ChangeCaseStudyContent(data) 
+            })
+
+            tabNav.appendChild(tab)
+
+        }
+      }
+
+
+    }
     
-    // if there is a map portion to the section (aka not overview), create the corresponding legend
-    if (content.map) new Legend(content)
-
-    // Build ScrollMagic Scene
-    BuildScene(container)
     i++
   }
 }
@@ -604,15 +690,137 @@ export class Accessibility{
                 8, '#d95f0e',
                 12, '#993404',
               ],
-              stationPaint: ['match', ['get', 'accessibility'], 1, '#8bb23f', 2, '#08506d', 0, '#999', '#333'],
-              legend: {
-                stations: [[0, '#999'], [1, '#8bb23f'], [2, '#08506d']],
+              stationPaint: ['match', ['get', 'accessibility'], 1, '#8bb23f', 2, '#08506d', '#aaa'],
+              legend:{
+                stations: [[0, '#aaa'], [1, '#8bb23f'], [2, '#08506d']],
                 zones: {
                   header: 'Destination Disparity for Wheelchair Users',
                   labels: ['Less', 'More'],
                   colors: ['#fed98e', '#fe9929', '#d95f0e', '#993404']
                 }
               }
+            }
+          }
+        },
+        caseStudy: {
+          title: 'Case Study: Collingswood',
+          content: {
+            id: 'caseStudy',
+            0: 'This case study shows how to interpret the maps using Collingswood Station on the PATCO line as an example',
+            1: {
+              title: 'Destinations Reachable by Non-Wheelchair Users',
+              text: 'The dark blue surrounding the Collingswood Station shows that non-wheelchair users can reach a large number of destinations',
+              map: {
+                paint: [
+                  'interpolate', ['linear'], ['get', 'AccAll'],
+                  1, 'rgba(0,0,0,0.01)',
+                  2, '#a6bddb',
+                  5, '#3690c0',
+                  7, '#045a8d',
+                  10, '#023858'
+                ],
+                stationPaint: ['match', ['get', 'accessibility'], 0, '#e89234', 1, '#8bb23f', 2, '#08506d', '#aaa'],
+                legend:{
+                  stations: [[0, '#e89234'], [1, '#8bb23f'], [2, '#08506d']],
+                  zones: {
+                    header : 'Reachable Destinations',
+                    labels: ['Few', 'Many'],
+                    colors: ['#a6bddb', '#3690c0', '#045a8d', '#023858']
+                  }
+                }  
+              }
+            },
+            2: {
+              title: 'Destinations Reachable by Wheelchair Users',
+              text: 'The lack of color surrounding the Collingswood station shows that wheelchair users would not be able to reach any destinations via rail from that station. This is because the station is currently not wheelchair accessible',
+              map: {
+                paint: [
+                  'interpolate', ['linear'], ['get', 'AccCur'],
+                  1, 'rgba(0,0,0,0.01)',
+                  2, '#a6bddb',
+                  5, '#3690c0',
+                  7, '#045a8d',
+                  10, '#023858'
+                ],
+                stationPaint: ['match', ['get', 'accessibility'], 0, '#999', 1, '#8bb23f', 2, '#666', '#333'],
+                legend:{
+                  stations: [[0, '#999'], [1, '#8bb23f'], [2, '#666']],
+                  zones: {
+                    header : 'Reachable Destinations',
+                    labels: ['Few', 'Many'],
+                    colors: ['#a6bddb', '#3690c0', '#045a8d', '#023858']
+                  }
+                }
+              }
+            },
+            3: {
+              title: 'Current Destination Disparity for Wheelchair Users Compared to Non-Wheelchair Users',
+              text: 'The dark orange surrounding the Collingswood station highlights the difference between maps 1 and 2, showing that wheelchair users are able to reach far fewer destinations than non-wheelchair users from this station.',
+              map: {
+                paint: [
+                  'interpolate', ['linear'], ['get', 'DisCur'],
+                  1, 'rgba(0,0,0,0.01)',
+                  2, '#fed98e',
+                  5, '#fe9929',
+                  8, '#d95f0e',
+                  12, '#993404',
+                ],
+                stationPaint: ['match', ['get', 'accessibility'], 0, '#aaa', 1, '#8bb23f', 2, '#666', '#aaa'],
+                legend: {
+                  stations: [[0, '#aaa'], [1, '#8bb23f'], [2, '#666']],
+                  zones:{
+                    header: 'Destination Disparity for Wheelchair Users',
+                    labels: ['Less', 'More'],
+                    colors: ['#fed98e', '#fe9929', '#d95f0e', '#933404']
+                  }
+                }
+              } 
+            },
+            4: {
+              title: 'Destinations Reachable in the Future by Wheelchair Users',
+              text: 'Wheelchair accessibility improvements are currently under construction at the Collingswood station. Therefore, this map accounting for programmed improvements shows darker blue surrounding the station. Wheelchair users are now able to reach many destinations via rail from Collingswood.',
+              map: {
+                paint: [
+                  'interpolate', ['linear'], ['get', 'AccFut'],
+                  1, 'rgba(0,0,0,0.01)',
+                  2, '#a6bddb',
+                  5, '#3690c0',
+                  7, '#045a8d',
+                  10, '#023858'
+                ],
+                stationPaint: ['match', ['get', 'accessibility'], 1, '#8bb23f', 2, '#08506d', 0, '#999', '#333'],
+                legend:{
+                  stations: [[0, '#999'], [1, '#8bb23f'], [2, '#08506d']],
+                  zones: {
+                    header : 'Reachable Destinations',
+                    labels: ['Few', 'Many'],
+                    colors: ['#a6bddb', '#3690c0', '#045a8d', '#023858']
+                  }
+                }
+              }
+            },
+            5: {
+              title: 'Remaining Future Destination Disparity for Wheelchair Users in Comparison with Non-Wheelchair Users (Programmed Improvements Included)',
+              text: 'The light orange surrounding the Collingswood station shows the difference between map 1 and map 4. With the wheelchair accessibility improvement at the station, wheelchair users are now able to reach a similar amount of destinations as non-wheelchair users. Remaining differences would be due to wheelchair inaccessible stations on the destination end.',
+              map: { 
+                paint: [
+                  'interpolate', ['linear'], ['get', 'DisFut'],
+                  1, 'rgba(0,0,0,0.01)',
+                  2, '#fed98e',
+                  5, '#fe9929',
+                  8, '#d95f0e',
+                  12, '#993404',
+                ],
+                stationPaint: ['match', ['get', 'accessibility'], 1, '#8bb23f', 2, '#08506d', '#aaa'],
+                legend:{
+                  stations: [[0, '#aaa'], [1, '#8bb23f'], [2, '#08506d']],
+                  zones: {
+                    header: 'Destination Disparity for Wheelchair Users',
+                    labels: ['Less', 'More'],
+                    colors: ['#fed98e', '#fe9929', '#d95f0e', '#993404']
+                  }
+                }
+              } 
             }
           }
         }

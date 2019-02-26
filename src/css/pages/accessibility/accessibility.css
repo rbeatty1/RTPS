@@ -61,6 +61,7 @@
   text-align: center;
   color: #8bb234;
   font-size: 1.75rem;
+  margin: 2% auto;
 }
 
 .accessibility-section>p{
@@ -68,6 +69,14 @@
   font-size: .95rem;
   width: 90%;
   margin: 2% auto;
+}
+
+.accessibility-section nav{
+  width: 40%;
+  display: flex;
+  margin: 0 auto;
+  justify-content: space-evenly;
+  align-items: center;
 }
 
 .accessibility-section.active{
@@ -88,6 +97,7 @@
   border-radius: 4px;
   box-shadow: 1px 1px 1px 1px rgba(0,0,0,0.1);
 }
+
 
 .accessibility-text{
   width: 30%;
@@ -126,4 +136,31 @@
   color: white;
   font-weight: 700;
   margin: 0;
+}
+
+#caseStudy{
+  margin-bottom: 25%;
+}
+
+#caseStudy a{
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: #999
+}
+
+#caseStudy a:hover{
+  cursor: pointer;
+}
+
+#caseStudy a.active{
+  font-size: 1.5rem;
+  color: #08506d;
+}
+
+#caseStudy h3{
+  text-align: center;
+  font-size: 1.15rem;
+  color: #08506d;
+  width: 80%;
+  margin: 1% auto;
 }
