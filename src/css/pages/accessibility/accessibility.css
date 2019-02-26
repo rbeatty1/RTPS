@@ -52,7 +52,7 @@
   border-radius: 10px;
   opacity: .1;
   min-height: 33vh;
-  margin: 20% auto;
+  margin: 33% auto;
   justify-content: center;
   box-shadow: 2px 2px 3px rgba(0,0,0,.1)
 }
@@ -139,7 +139,7 @@
 }
 
 #caseStudy{
-  margin-bottom: 25%;
+  margin-bottom: 33%;
 }
 
 #caseStudy a{
