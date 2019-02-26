@@ -319,7 +319,7 @@ const BuildMap = (container, props) =>{
     map.getCanvas().style.cursor = ""
     popup.remove()    
   })
-  props.map = map
+
   return map
 
 }
@@ -431,7 +431,6 @@ const BuildPage = content =>{
 
 
   // build map
-    //@WAT: doesn't the BuildMap function already set the state?
   content.map = BuildMap(document.querySelector(".accessibility-map"), content.props)
 
   // build section for each
@@ -448,7 +447,6 @@ const BuildPage = content =>{
       let content = data.content
       // HTML jawns
       let container = document.createElement('section'),
-      title = document.createElement('h1'),
       text = document.createElement('p'),
       link = document.createElement('a')
   
@@ -461,14 +459,40 @@ const BuildPage = content =>{
       // housekeeping for section container
       container.classList.add('accessibility-section')
       container.id = content.text.id
-  
+
+      if (container.id != 'intro'){
+        // title element
+        let main = document.createElement('h1'),
+          title = document.createElement('div'),
+          scenario = document.createElement('h2'),
+          sub = document.createElement('h3')
+          
+        title.classList.add('accessibility__titleDivider')
+        
+        main.innerText = data.title.main
+        scenario.innerText = data.title.scenario
+        sub.innerText =  data.title.sub
+
+        title.appendChild(document.createElement('hr'))
+        title.appendChild(scenario)
+        title.appendChild(document.createElement('hr'))
+    
+        // send it
+        container.appendChild(main)
+        container.appendChild(title)
+        container.appendChild(sub)
+      }
+      else{
+        let title = document.createElement('h1')
+        title.innerText = data.title
+        container.appendChild(title)
+      }
+          
+    
       // set text
-      title.innerText = props.sections[section].title
       text.innerHTML = content.text.description
-  
-      // send it
-      container.appendChild(title)
       container.appendChild(text)
+
   
       // send the whole thing
       sectionBody.appendChild(container)
@@ -561,7 +585,11 @@ export class Accessibility{
           }
         },
         AccAll: {
-          title: 'Destinations Currently Reachable by Non-Wheelchair Users',
+          title: {
+            main: 'Non-Wheelchair Users',
+            scenario: 'Existing',
+            sub: 'Destinations Currently Reachable by Non-Wheelchair Users'
+          },
           content:{
             text:{
               id: 'AccAll',
@@ -591,7 +619,11 @@ export class Accessibility{
 
         },
         AccCur:{
-          title: 'Destinations Currently Reachable by Wheelchair Users',
+          title: {
+            main: 'Wheelchair Users',
+            scenario: 'Existing',
+            sub: 'Destinations Currently Reachable by Wheelchair Users'
+          },
           content: {
             text: {
               id: 'AccCur',
@@ -619,7 +651,11 @@ export class Accessibility{
           }
         },
         DisCur:{
-          title: 'Current Destination Disparity for Wheelchair Users in Comparison with Non-Wheelchair Users',
+          title: {
+            main: 'Difference',
+            scenario: 'Existing',
+            sub: 'Current Destination Disparity for Wheelchair Users in Comparison with Non-Wheelchair Users'
+          },
           content: {
             text: {
               id: 'DisCur',
@@ -647,7 +683,11 @@ export class Accessibility{
           },
         },
         AccFut:{
-          title: 'Destinations Reachable in the Future by Wheelchair Users',
+          title: {
+            main: 'Wheelchair Users',
+            scenario: 'Future',
+            sub: 'Destinations Reachable in the Future by Wheelchair Users'
+          },
           content: {
             text: {
               id: 'AccFut',
@@ -675,7 +715,11 @@ export class Accessibility{
           }
         },
         DisFut:{
-          title: 'Remaining Future Destination Disparity for Wheelchair Users in Comparison with Non-Wheelchair Users (Programmed Improvements Included)',
+          title: {
+            main: 'Difference',
+            scenario: 'Future',
+            sub: 'Remaining Future Destination Disparity for Wheelchair Users in Comparison with Non-wheelchair Users (Programmed Improvements Included)'
+          },
           content: {
             text: {
               id: 'DisFut',
