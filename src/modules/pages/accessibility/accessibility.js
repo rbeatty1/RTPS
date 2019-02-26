@@ -1,6 +1,7 @@
 import '../../../css/pages/accessibility/accessibility.css'
 import { styles } from '../map/map_styles/accessibility.js'
 import { Legend } from './legend';
+import { CreateDvrpcNavControl } from '../../../utils/defaultExtentControl';
 
 
 /*
@@ -278,7 +279,7 @@ const BuildMap = (container, props) =>{
 
       // add navigation control
         //@TODO: add home button from DVRPC's reusable components library
-      map.addControl(new mapboxgl.NavigationControl(), 'top-right')
+      CreateDvrpcNavControl(extent, map)
   })
 
   // add map action to create popups on station hover

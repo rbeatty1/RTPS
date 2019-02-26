@@ -2,6 +2,7 @@ import "../../../css/pages/frequency/frequency.css";
 import { LoadLayers, addRailLayers } from "../../../utils/loadMapLayers";
 import {FormatNumber} from "../../../utils/formatNumber"
 import { styles } from "../map/map_styles/frequency";
+import { CreateDvrpcNavControl } from "../../../utils/defaultExtentControl";
 
 const contentRef = {
   about: {
@@ -1551,8 +1552,8 @@ const BuildMap = container => {
       center: extent.center,
       zoom: extent.zoom
     });
-    // map.scrollZoom.disable();
-    map.addControl(new mapboxgl.NavigationControl(), "top-right");
+
+    CreateDvrpcNavControl(extent, map)
   });
 
   return map;
