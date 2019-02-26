@@ -11,23 +11,7 @@
   font-size: .85rem;
   width: 75%;
 }
-.accessibility-legend h2{
-  color: #8bb23f;
-  text-align: center;
-  margin: 0;
-}
 
-.accessibility__legend-content{
-  margin: 5px 0;
-}
-
-#transit-line{
-  display: flex;
-  flex-flow: row wrap;
-}
-.accessibility__legend-section{
-  width: 100%;
-}
 .accessibility__legend-row{
   display: flex;
   align-items: center;
@@ -35,60 +19,51 @@
 }
 
 .station-icon{
+  height: .5rem;
+  width: .5rem;
   border-radius: 50%;
   padding: 5px;
   margin: 5px;
   border: 2.5px solid white;
 }
 
-.station-icon[data-value="1"]{
-  background-color: #8bb23f;
-}
-.station-icon[data-value="0"]{
-  background-color: #e89234;
-}
-.station-icon[data-value="2"]{
-  background-color: #08506d;
-}
-
-.legend__lines-row{
-  display: flex;
-  align-items: center;
-  width: 50%;
-}
-.legend__lines-row>hr{
-  width: 20%;
-  height: 3px;
-  border: none;
-  margin: 0;
-}
-
 .legend-label{
   margin: 0;
+  color: #888;
+  font-size: .8rem;
 }
 
-#zones{
+
+.accessibility__legend-zones{
   text-align: center;
-  display: none;
-  margin-top: .5rem;
+}
+
+.accessibility__legend-zones .accessibility__legend-row{
+  display: flex;
+  justify-content: center;
+  margin: .25rem;
+}
+
+.accessibility__legend-zones .legend__row-label{
+  margin: 0 .5rem;
+  font-size: .8rem;
+  color: #888
+}
+
+.accessibility__legend-zones h3{
+  margin: .25rem;
+  font-size: .9rem;
+  color: #08506d
 }
 .accessibility__legend-zoneBox{
   height: 20px;
   width: 20px;
 }
-h4{
-  margin: 3px 0;
-}
-#zones-row{
-  display: flex;
-  justify-content: center;
-}
-.legend__row-label{
+
+.legend__row-label p{
   margin: 0 .5em;
+  color: #888
 }
 
-.legend-descriptor{
-  font-weight: 700;
-  color: #08506d
-}
+
 
