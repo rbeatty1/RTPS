@@ -52,19 +52,20 @@ const BuildLabels = (target, data) =>{
 }
 
 const BuildDescription = (target, data) =>{
+
+    // declare local variables
     let section = document.createElement('div'),
         button = document.createElement('button')
         content = document.createElement('div')
 
-    section.classList.add('gap__legend-info')
+    // container housekeeping
+    section.classList.add('gap__sidebar-contentButton')
     
+    // button housekeeping
     button.innerText = 'What do the colors mean?'
-    // button.classList.add('gap__legend-button')
-
     button.onclick = e => e.target.nextElementSibling.classList.toggle('active')
 
-    // content.classList.add('gap__legend-buttonContent')
-
+    // create title/text for each section
     for (let color in data){
         let contents = data[color],
             title = document.createElement('h3'),
@@ -77,8 +78,7 @@ const BuildDescription = (target, data) =>{
         content.appendChild(text)
     }
 
-    console.log({target})
-
+    // send 'em
     section.appendChild(button)
     section.appendChild(content)
     target.appendChild(section)

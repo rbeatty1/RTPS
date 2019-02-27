@@ -5,6 +5,77 @@ import {Legend} from './legend.js'
 
 const MenuContent = (menu, container, content) =>{
 
+  const BuildAnalysisDescription = container =>{
+
+    // reference object for content
+    let text = {
+      summary: `The network gap score was calculated by multiplying the <strong>directness score</strong>
+      and the <strong>density score</strong>. The result was then weighted by the <strong>demand score</strong>
+      ensuring that the <abbr title="Origin-Destination">OD</abbr> pairs identified as a transit gap that also
+      have a high demand for travel are considered a higher priority.`,
+      direct: `For each Origin-Destination (<abbr title="Origin-Destination">OD</abbr>) pair, of <abbr title="Traffic Analysis Zone">TAZ</abbr>
+        in the region, the directness score was determined by the presence of a transit connection, how it compared
+        to driving in terms of time and distrance, the number of transfers required for the trip, and the scheduled wait
+        time for those transfers. A high score means the <abbr title="Origin-Destination">OD</abbr> pair was not served 
+        or not well connected by existing transit service.`,
+      density: `Density is a measure of transit supportiveness using <abbr title="Delaware Valley Regional Planning Commission">DVRPC</abbr>'s
+      2015 TransitScore which is based on the density of population, employment, and zero car households. The transit score for the origin
+      was added to the transit score for the destination to get the density score. The higher the density score, the more transit
+      supportive the <abbr title="Origin/Destination">OD</abbr> pair.`,
+      demand: `Demand is based on the total demand for travel between each <abbr title="Origin/Destination">OD</abbr> pair based on
+      <abbr title="Delaware Valley Regional Planning Commission">DVRPC</abbr>'s regional travel model.`
+      
+    },
+    // declare local variables
+    section = document.createElement('div'),
+      button = document.createElement('button'),
+      content = document.createElement('div')
+
+    // container housekeeping
+    section.classList.add('gap__sidebar-contentButton')
+
+    // button housekeeping
+    button.innerText = 'How was the network gap score calculated?'
+    button.onclick = e => e.target.nextElementSibling.classList.toggle('active')
+
+    // create title/text for each section
+    for (let element in text){
+      if (element == 'summary'){
+        let p = document.createElement('p')
+        p.innerHTML = text[element]
+        content.appendChild(p)
+      }
+      else{
+        let title = document.createElement('h2'),
+          p = document.createElement('p')
+        
+        switch(element){
+          case 'direct':
+            title.innerText = 'Directness Score'
+            break;
+          case 'density':
+            title.innerText = 'Density Score'
+            break;
+          case 'demand':
+            title.innerText = 'Demand Score'
+            break;
+          default:
+            title.innerText = 'error'
+        }
+        p.innerHTML = text[element]
+
+        content.appendChild(title)
+        content.appendChild(p)
+      }
+
+      // send 'em
+      section.appendChild(button)
+      section.appendChild(content)
+      container.appendChild(section)
+    }
+
+  }
+
   let jawn = document.createElement('div'),
     title = menu.innerText.split(' ')[1].toLowerCase()
   jawn.className = 'map__sidebar-menuContent'
@@ -30,6 +101,7 @@ const MenuContent = (menu, container, content) =>{
     menu.classList.add('active')
     jawn.classList.add('active')
     summary.innerHTML = content
+    BuildAnalysisDescription(summary)
     jawn.appendChild(summary)
   }
   container.appendChild(jawn)

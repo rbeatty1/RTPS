@@ -95,11 +95,11 @@
   height: 100%
 }
 
-.gap__legend-info{
+.gap__sidebar-contentButton{
   width: 100%;
 }
 
-.gap__legend-info button{
+.gap__sidebar-contentButton button{
   border: none;
   background: #eda559;
   color: white;
@@ -110,25 +110,25 @@
   width: 100%;
 }
 
-.gap__legend-info button:hover{
+.gap__sidebar-contentButton button:hover{
   cursor: pointer;
 }
 
-.gap__legend-info div {
+.gap__sidebar-contentButton div {
   display: none;
   text-align: center;
   padding: 2%;
   background-color: rgba(250, 228, 205, .5);
   color: rgb(141, 115, 85);
 }
-.gap__legend-info div.active{
+.gap__sidebar-contentButton div.active{
   display: block;
 }
 
-.gap__legend-info div h3{
+.gap__sidebar-contentButton div h3{
   margin: 1% auto;
 }
-.gap__legend-info div p {
+.gap__sidebar-contentButton div p {
   margin: 0 0 1rem;
   
 }
