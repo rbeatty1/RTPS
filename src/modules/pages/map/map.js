@@ -4,6 +4,7 @@ import { layers } from './map_styles/styles.js'
 import { Sidebar } from "./sidebar/sidebar.js"
 import { ResultsSummary } from './sidebar/resultsSummary';
 import { LoadLayers } from '../../../utils/loadMapLayers.js'
+import { CreateDvrpcNavControl } from '../../../utils/defaultExtentControl';
 
 const extent = {
   center: [-75.234, 40.061],
@@ -28,6 +29,10 @@ const BuildMap = () => {
         style: 'mapbox://styles/beattyre1/cjdbtddl12scq2st5zybjm8r6',
         center: extent.center,
         zoom: extent.zoom
+    })
+
+    map.on('load', e=>{
+        CreateDvrpcNavControl(extent, map)
     })
     return map
 }
