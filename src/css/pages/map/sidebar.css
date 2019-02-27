@@ -94,6 +94,10 @@
   width: 100%;
   height: 100%
 }
+.gap-legend-title{
+  text-align: center;
+  margin: 1% 0;
+}
 
 .gap__sidebar-contentButton{
   width: 100%;

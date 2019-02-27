@@ -118,7 +118,12 @@ export class Legend{
     }
 
     render(){
-        let container = this.data.target
+        let container = this.data.target,   
+            title = document.createElement('h2')
+
+        title.classList.add('gap-legend-title')
+        title.innerText = 'Transit Gap Priority'
+        container.appendChild(title)
         BuildClasses(container, this.data.content.colors)
         BuildLabels(container, this.data.content.labels)
         BuildDescription(container, this.data.descriptions)
