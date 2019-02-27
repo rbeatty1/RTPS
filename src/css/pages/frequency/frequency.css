@@ -61,7 +61,7 @@
 }
 
 
-.frequency__nav-linkSection:hover .frequency__nav-linkTooltip{
+.frequency__nav-link:hover .frequency__nav-linkTooltip{
   visibility: visible;
   opacity: .75;
 }
