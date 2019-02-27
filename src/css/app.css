@@ -3,8 +3,8 @@ body, #app{
     overflow-y: hidden;
     display: flex;
     flex-flow: column;
-    font-family: 'Arial Narrow'
-}
+    font-family: Arial, Helvetica, sans-serif
+} 
 
 #main{
     height: 85vh;

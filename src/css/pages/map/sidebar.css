@@ -45,7 +45,7 @@
   align-items: center;
 }
 .map__sidebar-menuContent section{
-  width: 60%;
+  width: 80%;
   background: white;
   padding: 15px;
   margin: 2rem auto;
@@ -93,6 +93,44 @@
 .map__sidebar-legendCell{
   width: 100%;
   height: 100%
+}
+
+.gap__legend-info{
+  width: 100%;
+}
+
+.gap__legend-info button{
+  border: none;
+  background: #eda559;
+  color: white;
+  padding: 5%;
+  margin: .5rem auto;
+  box-shadow: 2px 2px 3px 2px rgba(0,0,0,0.1);
+  border-radius: 5px;
+  width: 100%;
+}
+
+.gap__legend-info button:hover{
+  cursor: pointer;
+}
+
+.gap__legend-info div {
+  display: none;
+  text-align: center;
+  padding: 2%;
+  background-color: rgba(250, 228, 205, .5);
+  color: rgb(141, 115, 85);
+}
+.gap__legend-info div.active{
+  display: block;
+}
+
+.gap__legend-info div h3{
+  margin: 1% auto;
+}
+.gap__legend-info div p {
+  margin: 0 0 1rem;
+  
 }
 
 .sidebar__input-container{

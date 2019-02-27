@@ -51,6 +51,39 @@ const BuildLabels = (target, data) =>{
 
 }
 
+const BuildDescription = (target, data) =>{
+    let section = document.createElement('div'),
+        button = document.createElement('button')
+        content = document.createElement('div')
+
+    section.classList.add('gap__legend-info')
+    
+    button.innerText = 'What do the colors mean?'
+    // button.classList.add('gap__legend-button')
+
+    button.onclick = e => e.target.nextElementSibling.classList.toggle('active')
+
+    // content.classList.add('gap__legend-buttonContent')
+
+    for (let color in data){
+        let contents = data[color],
+            title = document.createElement('h3'),
+            text = document.createElement('p')
+        
+        title.innerText = contents.title
+        text.innerText = contents.text
+
+        content.appendChild(title)
+        content.appendChild(text)
+    }
+
+    console.log({target})
+
+    section.appendChild(button)
+    section.appendChild(content)
+    target.appendChild(section)
+    
+}
 export class Legend{
     constructor(input){
         this.data = {
@@ -61,6 +94,24 @@ export class Legend{
                   "Served": [ '#8d7355', '#ba864e', '#e89232', '#eda559', '#f5cea4', '#fae4cd']
                 },
                 labels : ['Low', 'High', 'Low']
+            },
+            descriptions:{
+                0: {
+                    title: 'Dark Orange',
+                    text: 'Transit service exists between that zone and the selected study area, and has transit supportive densities, but service is relatively indirect in terms of distance and transfer requirements.'
+                },
+                1: {
+                    title: 'Light Orange',
+                    text: 'Transit service exists between that zone and the selected study area, but the transit connection is already direct and/or the origin or destination lack transit supportive densities'
+                },
+                2: {
+                    title: 'Dark Green',
+                    text: 'There is very little to no transit service between that zone and the selected study area. However, it is relatively dense and more than a few trips are regularly made between that zone and the selected study area.'
+                },
+                3: {
+                    title: 'Light Green',
+                    text: 'There is very little to no transit service between that zone and the selected study area. The area lacks transit supportive densities and few trips are made regularly between that zone and the selected study area.'
+                }
             }
         }
         this.render()
@@ -70,5 +121,6 @@ export class Legend{
         let container = this.data.target
         BuildClasses(container, this.data.content.colors)
         BuildLabels(container, this.data.content.labels)
+        BuildDescription(container, this.data.descriptions)
     }
 }
