@@ -25,13 +25,13 @@
     display: flex;
     align-items: center;
     margin: 0 25px;
+    text-align: center;
 }
 
 .map__sidebar-menuHeader.active{
   font-weight: 700;
   font-size: 1.5rem;
   color: #08506d;
-  border-bottom: 2px solid #e89234;
 }
 .map__sidebar-menuHeader:hover{
   cursor: pointer;

@@ -73,7 +73,7 @@ class QueryContainer {
       listElement.innerHTML =
         '<form class="sidebar__input-dropdowns"></form>';
       container.appendChild(listElement);
-      container.classList.add("active");
+      // container.classList.add("active");
       for (var k in this.list) {
         let input = this.list[k];
         if (input.id < 5) {

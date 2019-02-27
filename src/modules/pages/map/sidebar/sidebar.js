@@ -6,11 +6,10 @@ import {Legend} from './legend.js'
 const MenuContent = (menu, container, content) =>{
 
   let jawn = document.createElement('div'),
-    title = menu.innerText.toLowerCase()
+    title = menu.innerText.split(' ')[1].toLowerCase()
   jawn.className = 'map__sidebar-menuContent'
   jawn.id = `${title}_dropdownContent`
   if (title != 'summary') {
-    menu.classList.add('active')
     for (let section in content){
       if (section == 'inputs'){
         let queryContainer = new QueryContainer()
@@ -28,6 +27,8 @@ const MenuContent = (menu, container, content) =>{
   }
   else{
     let summary = document.createElement('section')
+    menu.classList.add('active')
+    jawn.classList.add('active')
     summary.innerHTML = content
     jawn.appendChild(summary)
   }
@@ -48,7 +49,7 @@ const BuildMenus = content =>{
     header.href = '#'
     header.rel = 'noopener'
     header.setAttribute('data-type', key.toLowerCase())
-    let title = key.toLowerCase().split(' ').map(each=> each.replace(each[0], each[0].toUpperCase()))
+    let title = key != "summary" ? "Local Analysis" : "Regional Summary"
     header.innerText = title
     sidebar.appendChild(header)
     MenuContent(header, sidebarContent, content[key])
@@ -56,7 +57,7 @@ const BuildMenus = content =>{
       let sections = document.querySelectorAll('.map__sidebar-menuContent'),
       headers = document.querySelectorAll('.map__sidebar-menuHeader')
       for (let header of headers) header == e.target ? header.classList.add('active') : header.classList.remove('active');
-      for (let section of sections) section.id == `${e.target.innerText.toLowerCase()}_dropdownContent` ? section.classList.add('active') : section.classList.remove('active')
+      for (let section of sections) section.id == `${e.target.innerText.split(' ')[1].toLowerCase()}_dropdownContent` ? section.classList.add('active') : section.classList.remove('active')
     })
     
   }
@@ -71,6 +72,7 @@ class Sidebar{
     this.state = {
       container: document.querySelector('#main'),
       elements: {
+        summary: "This map summarizes the network gap analysis which identifies in demand connections between transit supportive places where transit is either not available or not competitive.",
         analysis: {
           inputs: {
             geography: '',
@@ -79,7 +81,6 @@ class Sidebar{
           },
           results: `Please perform an analysis query to populate this area with results.`,
         },
-        summary: "This map summarizes the network gap analysis which identifies in demand connections between transit supportive places where transit is either not available or not competitive."
       },
       open: undefined
     }
