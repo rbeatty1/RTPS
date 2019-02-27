@@ -99,7 +99,7 @@ const LoadRegionalSummary = map =>{
                 'fill-opacity': 1
             },
             layout: {
-                visibility: 'none'
+                visibility: 'visible'
             }
         }
         for (let zone in data.cargo){

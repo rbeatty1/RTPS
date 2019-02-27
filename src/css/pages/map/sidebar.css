@@ -25,13 +25,13 @@
     display: flex;
     align-items: center;
     margin: 0 25px;
+    text-align: center;
 }
 
 .map__sidebar-menuHeader.active{
   font-weight: 700;
   font-size: 1.5rem;
   color: #08506d;
-  border-bottom: 2px solid #e89234;
 }
 .map__sidebar-menuHeader:hover{
   cursor: pointer;
@@ -45,7 +45,7 @@
   align-items: center;
 }
 .map__sidebar-menuContent section{
-  width: 60%;
+  width: 80%;
   background: white;
   padding: 15px;
   margin: 2rem auto;
@@ -93,6 +93,48 @@
 .map__sidebar-legendCell{
   width: 100%;
   height: 100%
+}
+.gap-legend-title{
+  text-align: center;
+  margin: 1% 0;
+}
+
+.gap__sidebar-contentButton{
+  width: 100%;
+}
+
+.gap__sidebar-contentButton button{
+  border: none;
+  background: #eda559;
+  color: white;
+  padding: 5%;
+  margin: .5rem auto;
+  box-shadow: 2px 2px 3px 2px rgba(0,0,0,0.1);
+  border-radius: 5px;
+  width: 100%;
+}
+
+.gap__sidebar-contentButton button:hover{
+  cursor: pointer;
+}
+
+.gap__sidebar-contentButton div {
+  display: none;
+  text-align: center;
+  padding: 2%;
+  background-color: rgba(250, 228, 205, .5);
+  color: rgb(141, 115, 85);
+}
+.gap__sidebar-contentButton div.active{
+  display: block;
+}
+
+.gap__sidebar-contentButton div h3{
+  margin: 1% auto;
+}
+.gap__sidebar-contentButton div p {
+  margin: 0 0 1rem;
+  
 }
 
 .sidebar__input-container{
