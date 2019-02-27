@@ -368,13 +368,13 @@ const BuildPage = content =>{
     }
   }
 
-/*
-  BuildScene(element)
-  @description:
-    Create ScrollMagic scene and add to ScrollMagic Controller to handle functions when scrolling through content
-  @param:
-    - element: element to tie functions to
-*/
+  /*
+    BuildScene(element)
+    @description:
+      Create ScrollMagic scene and add to ScrollMagic Controller to handle functions when scrolling through content
+    @param:
+      - element: element to tie functions to
+  */
   const BuildScene = element =>{
 
     // define ScrollMagic Scene
@@ -449,12 +449,27 @@ const BuildPage = content =>{
       // HTML jawns
       let container = document.createElement('section'),
       text = document.createElement('p'),
-      link = document.createElement('a')
+      link = document.createElement('a'),
+      linkContent = document.createElement('div'),
+      tooltip = document.createElement('span')
   
-      // create dot nav
+      /* Create Dot Navigation Element*/
+      
+      // link
       link.href = `#${content.text.id}`
       link.rel = 'noopener'
-      link.innerText = i
+      
+      // section #
+      linkContent.innerText = i
+      linkContent.classList.add('accessibility__nav-link')
+      
+      // tooltip
+      tooltip.classList.add('accessibility__nav-tooltip')
+      tooltip.innerText = data.title != 'Overview' ? `${data.title.main}: ${data.title.scenario}` : data.title
+
+      // send 'em
+      linkContent.appendChild(tooltip)
+      link.appendChild(linkContent)
       document.getElementById('accessibility-nav').appendChild(link)
   
       // housekeeping for section container
@@ -511,13 +526,26 @@ const BuildPage = content =>{
         subtitle = document.createElement('h3'),
         text = document.createElement('p'),
         link = document.createElement('a'),
+        linkContent = document.createElement('div'),
+        tooltip = document.createElement('span'),
         tabNav = document.createElement('nav'),
         legend = document.createElement('div')
 
       // create dot nav
       link.href = `#${content.content.id}`
       link.rel = 'noopener'
-      link.innerText = i
+
+      // section #
+      linkContent.classList.add('accessibility__nav-link')
+      linkContent.innerText = i
+
+      // tooltip
+      tooltip.classList.add('accessibility__nav-tooltip')
+      tooltip.innerText = content.title
+
+      // send 'em 
+      linkContent.appendChild(tooltip)
+      link.appendChild(linkContent)
       document.getElementById('accessibility-nav').appendChild(link)
       
       // housekeeping

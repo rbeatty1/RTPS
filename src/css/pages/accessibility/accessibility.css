@@ -33,6 +33,34 @@
   text-decoration: none;
 }
 
+.accessibility__nav-link{
+  position: relative;
+  display: inline-block;
+}
+
+.accessibility__nav-tooltip{
+  visibility: hidden;
+  white-space: nowrap;
+  font-weight: 400;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  padding: 5px;
+  border-radius: 1%;
+  position: absolute;
+  z-index: 6;
+  left: 0;
+  margin-left: 2rem;
+  font-size: 1rem;
+  border-radius: 5px;
+}
+
+
+#accessibility-nav a:hover .accessibility__nav-tooltip{
+  visibility: visible;
+  opacity: .75;
+}
+
 #accessibility-nav a:hover{
   color: #08506d;
   background: rgba(8,80,109,.2)
