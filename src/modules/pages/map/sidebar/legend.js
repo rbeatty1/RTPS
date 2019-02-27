@@ -55,7 +55,7 @@ const BuildDescription = (target, data) =>{
 
     // declare local variables
     let section = document.createElement('div'),
-        button = document.createElement('button')
+        button = document.createElement('button'),
         content = document.createElement('div')
 
     // container housekeeping
