@@ -4,7 +4,6 @@
   display: flex;
   flex-flow: row;
   justify-content: space-around;
-  font-family: 'Arial Narrow', sans-serif;
   background-color: whitesmoke
 }
 

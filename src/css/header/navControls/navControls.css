@@ -1,6 +1,5 @@
 .header__nav-link {
     text-decoration: none;
-    font-family: 'Arial Narrow', Arial, sans-serif;
     color: #08506d;
     margin: 0 2.5%;
 }
@@ -8,6 +7,5 @@
     font-weight: 700;
     color: #8bb23f;
     font-size: 1.5rem;
-    /* border-bottom: 3px solid #e89234; */
     padding-bottom: 1%;
 }
