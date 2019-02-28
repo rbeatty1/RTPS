@@ -37,10 +37,10 @@
 }
 
 #execute.active{
-    background-color: #465920;
+    background-color: #8bb23f;
 }
 #execute.active:hover{
-    background-color: #adc978;
+    background-color: #eee;
 }
 #clear.active{
     background-color: #e89234;

@@ -444,12 +444,12 @@ const LoadBusLayer = map =>{
                 "interpolate",
                 ["linear"],
                 ["zoom"],
-                7,
-                .2,
+                9,
+                .05,
                 12,
-                1
+                3
               ],
-              "line-color" : '#08506d'
+              "line-color" : '#8bb23f'
             },
             layout:{
                 visibility: 'none'
