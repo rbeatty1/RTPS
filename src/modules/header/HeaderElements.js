@@ -40,7 +40,7 @@ const HeaderElements = [
             },
             runQuery : {
                 id : 5,
-                name: 'Run Analysis'
+                name: 'Run'
             },
             clearQuery : {
                 id : 6,

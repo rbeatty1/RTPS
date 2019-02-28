@@ -30,6 +30,13 @@
     margin: -75px 0 0 -75px;
     display: none;
 }
+.map__container .mapboxgl-popup-content {
+    background: #b6ca85;
+}
+
+.map__container .mapboxgl-popup-tip{
+    border-right: 0;
+}
 
 @keyframes spin{
     0% { transform: rotate(0deg); }
