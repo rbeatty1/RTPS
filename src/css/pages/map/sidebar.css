@@ -130,13 +130,10 @@
 
 .gap__sidebar-contentButton div {
   display: none;
-  width: 95%;
   text-align: center;
   padding: 2%;
-  margin: auto;
-  background-color: #adc978;
-  border-radius: 20px
-
+  background-color: rgba(250, 228, 205, .5);
+  color: rgb(141, 115, 85);
 }
 .gap__sidebar-contentButton div.active{
   display: block;
