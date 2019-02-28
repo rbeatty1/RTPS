@@ -3,8 +3,11 @@ body, #app{
     overflow-y: hidden;
     display: flex;
     flex-flow: column;
-    font-family: 'Roboto', 'Arial', sans-serif;
-    height: 100vh;
+    font-family: Arial, Helvetica, sans-serif
+} 
+
+#main{
+    height: 85vh;
     width: 100vw;
 } 
 
