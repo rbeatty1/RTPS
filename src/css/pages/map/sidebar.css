@@ -31,7 +31,6 @@
 .map__sidebar-menuHeader.active{
   font-weight: 700;
   font-size: 1.25rem;
-  color: white;
 }
 .map__sidebar-menuHeader:hover{
   cursor: pointer;
@@ -66,6 +65,9 @@
 }
 #gap__results-section{
   order:2;
+}
+#gap__results-section strong{
+  color: #08506d
 }
 #legend{
   display: flex;
@@ -116,7 +118,7 @@
 .gap__sidebar-contentButton button{
   border: none;
   color: white;
-  background: #adc978;
+  background: #8bb23f;
   padding: 5%;
   margin: .5rem auto;
   box-shadow: 2px 2px 3px 2px rgba(0,0,0,0.1);
@@ -130,10 +132,17 @@
 
 .gap__sidebar-contentButton div {
   display: none;
-  text-align: center;
-  padding: 2%;
-  background-color: rgba(250, 228, 205, .5);
-  color: rgb(141, 115, 85);
+  width: 80%;
+  padding: 5%;
+  margin: auto;
+  background-color: whitesmoke;
+  border-radius: 20px;
+  color: #08506d;
+
+}
+
+.gap__sidebar-contentButton strong{
+  color: #8bb23f;
 }
 .gap__sidebar-contentButton div.active{
   display: block;
