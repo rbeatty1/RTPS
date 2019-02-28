@@ -3,7 +3,7 @@ import { geography } from './sidebar/queryInput/queryInput.js'
 import { layers } from './map_styles/styles.js'
 import { Sidebar } from "./sidebar/sidebar.js"
 import { ResultsSummary } from './sidebar/resultsSummary';
-import { LoadLayers } from '../../../utils/loadMapLayers.js'
+import { LoadLayers, addRailLayers } from '../../../utils/loadMapLayers.js'
 
 const extent = {
   center: [-75.234, 40.061],
@@ -257,10 +257,12 @@ const AddListeners = map => {
 // ZONE LISTENERS
     // hover => green fill
     map.on('mousemove', "zoneReference-base", (e) => {
+        map.getCanvas().style.cursor = 'pointer'
         map.setFilter("zones-hoverFill", ["==", "no", e.features[0].properties.no])
     })
     // leave hover => no fill
     map.on('mouseleave', "zoneReference-base", (e) => {
+        map.getCanvas().style.cursor = ''
         map.setFilter("zones-hoverFill", ["==", "no", ""]);
     })
 
@@ -280,10 +282,12 @@ const AddListeners = map => {
 // MUNI LISTENERS
     // hover => green fill
     map.on('mousemove', "muniReference-base", (e) => {
+        map.getCanvas().style.cursor = 'pointer'
         map.setFilter("boundaries-hover", ["==", "GEOID", e.features[0].properties.GEOID])
     })
     // leave hover => no fill
     map.on('mouseleave', "muniReference-base", (e) => {
+        map.getCanvas().style.cursor = ''
         map.setFilter("boundaries-hover", ["==", "name", ""]);
     })
     // click => yellow fill
@@ -377,6 +381,51 @@ const AddLoadingSpinner = (target) =>{
     target._container.appendChild(container)
 }
 
+const LoadBusLayer = map =>{
+    map.addSource("transit", {
+      type: "vector",
+      url: "https://tiles.dvrpc.org/data/dvrpc-tim-transit.json"
+    });
+    
+    fetch("https://a.michaelruane.com/api/rtps/frequency?bus")
+    .then(
+        response =>
+        response.ok ? response.json() : console.error("error, will robinson")
+    )
+    .then(bus => {
+        let filterExp = ['any']
+        bus.cargo.map(line=>{
+            let exp = ['match', ['get', 'linename'], line.linename, true, false]
+            filterExp.push(exp)
+        })
+        let layerDef = {
+            id : 'bus-lines',
+            source: 'transit',
+            "source-layer": 'transit_lines',
+            type: 'line',
+            filter: filterExp,
+            paint: {
+              "line-width" : [
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                7,
+                .2,
+                12,
+                1
+              ],
+              "line-color" : '#08506d'
+            },
+            layout:{
+                visibility: 'none'
+            }
+          }
+
+          map.addLayer(layerDef, 'admin-2-boundaries')
+    });
+
+}
+
 class Map {
     constructor() {
         this.render()
@@ -396,14 +445,14 @@ class Map {
                 center: extent.center,
                 zoom: extent.zoom
             })
-            // add navigation control 
-            new Sidebar();
-            map.addControl(new mapboxgl.NavigationControl(), 'top-left');
-            LoadRegionalSummary(map)
+            LoadBusLayer(map)
             LoadLayers(map, layers)
+            addRailLayers(map)
+            new Sidebar(this);
+            LoadRegionalSummary(map)
             AddListeners(map)
         });
-
+        this.map = map
     }
 }
 

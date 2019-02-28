@@ -23,7 +23,7 @@ const LoadLayers = (map, styles) =>{
 */
 
 const passengerRail = {
-  passengerRail: {
+  rail: {
     sourceDef: {
       type: 'geojson',
       data: 'https://opendata.arcgis.com/datasets/5af7a3e9c0f34a7f93ac8935cb6cae3b_0.geojson'

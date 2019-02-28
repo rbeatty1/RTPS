@@ -36,6 +36,18 @@
 .map__sidebar-menuHeader:hover{
   cursor: pointer;
 }
+
+.transit-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly
+}
+
+.transit-toggle div{
+  display: flex;
+  align-items: center;
+}
+
 .map__sidebar-menuContent{
   display: none;
 }
@@ -44,11 +56,11 @@
   flex-flow: column;
   align-items: center;
 }
-.map__sidebar-menuContent section{
+.transit-toggle, .map__sidebar-menuContent section{
   width: 80%;
   background: white;
   padding: 15px;
-  margin: 2rem auto;
+  margin: .5rem auto;
   box-shadow: 2px 2px 3px rgba(0,0,0,0.1);
   font-size: .9em;
   color: #08506d;

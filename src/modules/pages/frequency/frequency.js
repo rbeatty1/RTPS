@@ -655,9 +655,9 @@ const BuildContent = (content, key, component) => {
         link.classList.add("active");
         element.classList.add("active");
         if (element.id == 'transitChange' || element.id == 'autoChange') {
-          let transit = component.map.getLayer('passengerRail-lines')
-          transit.visibility == 'none' ? component.map.setLayoutProperty('passengerRail-labels', 'visibility', 'visible') : null
-          transit.visibility == 'none' ? component.map.setLayoutProperty('passengerRail-lines', 'visibility', 'visible') : null
+          let transit = component.map.getLayer('rail-lines')
+          transit.visibility == 'none' ? component.map.setLayoutProperty('rail-labels', 'visibility', 'visible') : null
+          transit.visibility == 'none' ? component.map.setLayoutProperty('rail-lines', 'visibility', 'visible') : null
         }
       })
       .on("leave", e => {
@@ -666,9 +666,9 @@ const BuildContent = (content, key, component) => {
         link.classList.remove("active");
         element.classList.remove("active");
         if (element.id == 'transitChange' || element.id == 'autoChange') {
-          let transit = component.map.getLayer('passengerRail-lines')
-          transit.visibility == 'visible' ? component.map.setLayoutProperty('passengerRail-labels', 'visibility', 'none') : null
-          transit.visibility == 'visible' ? component.map.setLayoutProperty('passengerRail-lines', 'visibility', 'none') : null
+          let transit = component.map.getLayer('rail-lines')
+          transit.visibility == 'visible' ? component.map.setLayoutProperty('rail-labels', 'visibility', 'none') : null
+          transit.visibility == 'visible' ? component.map.setLayoutProperty('rail-lines', 'visibility', 'none') : null
         }
         if (document.querySelector('.mapboxgl-popup')) RemovePopup(document.querySelector('.mapboxgl-popup'))
       })

@@ -13,16 +13,16 @@ const MenuContent = (menu, container, content) =>{
       and the <strong>density score</strong>. The result was then weighted by the <strong>demand score</strong>
       ensuring that the <abbr title="Origin-Destination">OD</abbr> pairs identified as a transit gap that also
       have a high demand for travel are considered a higher priority.`,
-      direct: `For each Origin-Destination (<abbr title="Origin-Destination">OD</abbr>) pair, of <abbr title="Traffic Analysis Zone">TAZ</abbr>
+      direct: `<strong>Directness Score:</strong> For each Origin-Destination (<abbr title="Origin-Destination">OD</abbr>) pair, of <abbr title="Traffic Analysis Zone">TAZ</abbr>
         in the region, the directness score was determined by the presence of a transit connection, how it compared
         to driving in terms of time and distrance, the number of transfers required for the trip, and the scheduled wait
         time for those transfers. A high score means the <abbr title="Origin-Destination">OD</abbr> pair was not served 
         or not well connected by existing transit service.`,
-      density: `Density is a measure of transit supportiveness using <abbr title="Delaware Valley Regional Planning Commission">DVRPC</abbr>'s
+      density: `<strong>Density Score:</strong> Density is a measure of transit supportiveness using <abbr title="Delaware Valley Regional Planning Commission">DVRPC</abbr>'s
       2015 TransitScore which is based on the density of population, employment, and zero car households. The transit score for the origin
       was added to the transit score for the destination to get the density score. The higher the density score, the more transit
       supportive the <abbr title="Origin/Destination">OD</abbr> pair.`,
-      demand: `Demand is based on the total demand for travel between each <abbr title="Origin/Destination">OD</abbr> pair based on
+      demand: `<strong>Demand Score:</strong> Demand is based on the total demand for travel between each <abbr title="Origin/Destination">OD</abbr> pair based on
       <abbr title="Delaware Valley Regional Planning Commission">DVRPC</abbr>'s regional travel model.`
       
     },
@@ -40,33 +40,9 @@ const MenuContent = (menu, container, content) =>{
 
     // create title/text for each section
     for (let element in text){
-      if (element == 'summary'){
-        let p = document.createElement('p')
-        p.innerHTML = text[element]
-        content.appendChild(p)
-      }
-      else{
-        let title = document.createElement('h2'),
-          p = document.createElement('p')
-        
-        switch(element){
-          case 'direct':
-            title.innerText = 'Directness Score'
-            break;
-          case 'density':
-            title.innerText = 'Density Score'
-            break;
-          case 'demand':
-            title.innerText = 'Demand Score'
-            break;
-          default:
-            title.innerText = 'error'
-        }
-        p.innerHTML = text[element]
-
-        content.appendChild(title)
-        content.appendChild(p)
-      }
+      let p = document.createElement('p')
+      p.innerHTML = text[element]
+      content.appendChild(p)
 
       // send 'em
       section.appendChild(button)
@@ -108,14 +84,73 @@ const MenuContent = (menu, container, content) =>{
 }
 
 
+
 const BuildMenus = content =>{
+  const TransitToggle = () =>{
+    let toggleRef = {
+      rail : {
+        box : document.createElement('input'),
+        label : document.createElement('label'),
+      },
+      bus : {
+        box : document.createElement('input'),
+        label : document.createElement('label'),
+        layer : 'transit-bus'
+      }
+    }
+    let sidebar = document.querySelector('aside'),
+      header = document.createElement('div')
+    header.classList.add('transit-toggle')
+    for (let layer in toggleRef){
+      let data = toggleRef[layer],
+        container = document.createElement('div')
+  
+      data.box.type = 'checkbox'
+      data.box.name = `${layer}-lines`
+      data.label.setAttribute('for', data.box.name)
+      data.label.innerText = `Show ${layer} layer`
+
+      data.box.onchange = e =>{
+        let name = e.target.name
+        if (e.target.checked){
+          if (name == 'rail-lines'){
+            content.map.setLayoutProperty(name, 'visibility', 'visible')
+            content.map.setLayoutProperty('rail-labels', 'visibility', 'visible')
+          }
+          else{
+            content.map.setLayoutProperty('bus-lines', 'visibility', 'visible')
+          }
+        }
+        else{
+          if (name == 'rail-lines'){
+            content.map.setLayoutProperty(name, 'visibility', 'none')
+            content.map.setLayoutProperty('rail-labels', 'visibility', 'none')
+          }
+          else{
+            content.map.setLayoutProperty('bus-lines', 'visibility', 'none')
+          }
+        }
+      }
+  
+      container.appendChild(data.box)
+      container.appendChild(data.label)
+      header.appendChild(container)
+    }
+
+
+
+    sidebar.appendChild(header)
+  
+  }
+
+
   let container = document.querySelector('.gap').appendChild(document.createElement('aside'))
   container.classList.add('map__sidebar')
   let sidebar = document.createElement('nav')
   sidebar.classList.add('map__sidebar-menuContainer')
   let sidebarContent = document.createElement('div')
   sidebarContent.classList.add('map__sidebar-content')
-  for (let key in content){
+  for (let key in content.elements){
     let header = document.createElement('a')
     header.classList.add('map__sidebar-menuHeader')
     header.href = '#'
@@ -124,7 +159,7 @@ const BuildMenus = content =>{
     let title = key != "summary" ? "Local Analysis" : "Regional Summary"
     header.innerText = title
     sidebar.appendChild(header)
-    MenuContent(header, sidebarContent, content[key])
+    MenuContent(header, sidebarContent, content.elements[key])
     header.addEventListener('click', e=>{
       let sections = document.querySelectorAll('.map__sidebar-menuContent'),
       headers = document.querySelectorAll('.map__sidebar-menuHeader')
@@ -134,13 +169,14 @@ const BuildMenus = content =>{
     
   }
   container.appendChild(sidebar)
+  TransitToggle()
   container.appendChild(sidebarContent)
 
 }
 
 
 class Sidebar{
-  constructor(){
+  constructor(props){
     this.state = {
       container: document.querySelector('#main'),
       elements: {
@@ -154,13 +190,14 @@ class Sidebar{
           results: `Please perform an analysis query to populate this area with results.`,
         },
       },
-      open: undefined
+      open: undefined,
+      map : props.map
     }
     this.render()
   }
 
   render(){
-    BuildMenus(this.state.elements)
+    BuildMenus(this.state)
     // // query inputs
     if (!document.querySelector('.sidebar__input-container')){
         let queryContainer = new QueryContainer();
