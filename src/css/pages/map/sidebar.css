@@ -20,8 +20,8 @@
 .map__sidebar-menuHeader{
     height: 75%;
     text-decoration: none;
-    color: #7eaad2;
-    font-size: 1.25em;
+    color: white;
+    font-size: .9em;
     display: flex;
     align-items: center;
     margin: 0 25px;
@@ -30,8 +30,8 @@
 
 .map__sidebar-menuHeader.active{
   font-weight: 700;
-  font-size: 1.5rem;
-  color: #08506d;
+  font-size: 1.25rem;
+  color: white;
 }
 .map__sidebar-menuHeader:hover{
   cursor: pointer;
@@ -58,12 +58,10 @@
 }
 .transit-toggle, .map__sidebar-menuContent section{
   width: 80%;
-  background: white;
   padding: 15px;
   margin: .5rem auto;
-  box-shadow: 2px 2px 3px rgba(0,0,0,0.1);
   font-size: .9em;
-  color: #08506d;
+  color: white;
   border-radius: 5px;
 }
 #gap__results-section{
@@ -117,8 +115,8 @@
 
 .gap__sidebar-contentButton button{
   border: none;
-  background: #eda559;
   color: white;
+  background: #adc978;
   padding: 5%;
   margin: .5rem auto;
   box-shadow: 2px 2px 3px 2px rgba(0,0,0,0.1);
@@ -132,10 +130,13 @@
 
 .gap__sidebar-contentButton div {
   display: none;
+  width: 95%;
   text-align: center;
   padding: 2%;
-  background-color: rgba(250, 228, 205, .5);
-  color: rgb(141, 115, 85);
+  margin: auto;
+  background-color: #adc978;
+  border-radius: 20px
+
 }
 .gap__sidebar-contentButton div.active{
   display: block;
