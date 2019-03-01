@@ -1,6 +1,7 @@
 import "../../../css/pages/home/home.css"
 import { ComingSoon } from "../soon/soon";
 import { Map } from "../map/map";
+import { LoadMain } from "../../../utils/loadMain";
 
 const Landing = (props, appContainer) =>{
   const SectionChange = (target, section)=>{
@@ -13,11 +14,28 @@ const Landing = (props, appContainer) =>{
 
       linksContainer.classList.add('content-links')
       linksContainer.style.color = content.color
-      linksContainer.innerText = 'Learn More | Explore'
 
-      textContainer.insertAdjacentHTML('afterbegin', linksContainer.outerHTML)
-      textContainer.insertAdjacentHTML('beforeend', content.description)
+      let docLink = document.createElement('a'),
+        appLink = document.createElement('a')
+
+      docLink.href = '#'
+      docLink.rel = 'noopener'
+      docLink.innerText = 'Learn More'
+
       
+
+      appLink.href = '#'
+      appLink.rel = 'noopener'
+      appLink.innerText = 'Explore'
+      appLink.addEventListener('click', e=>{LoadMain(section)})
+
+      // linksContainer.innerText = '|'
+      linksContainer.appendChild(docLink)
+      linksContainer.appendChild(appLink)
+
+      textContainer.appendChild(linksContainer)
+      textContainer.insertAdjacentHTML('beforeend', content.description)
+
       textContainer.style.background = content.color
       textContainer.classList.add('active')
     }

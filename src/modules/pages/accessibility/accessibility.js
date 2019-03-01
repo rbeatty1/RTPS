@@ -2,6 +2,9 @@ import '../../../css/pages/accessibility/accessibility.css'
 import { styles } from '../map/map_styles/accessibility.js'
 import { Legend } from './legend';
 import { CreateDvrpcNavControl } from '../../../utils/defaultExtentControl';
+import { headerRender } from "../../header/header";
+import { HeaderElements } from "../../header/HeaderElements";
+import { Footer } from "../../footer/footer";
 
 
 /*
@@ -602,7 +605,7 @@ export class Accessibility{
 
     // the important stuff -- reference for all content
     this.props = {
-      container: document.querySelector('#main'),
+      container: document.querySelector('main'),
       sections: {
         intro:{
           title: 'Overview',

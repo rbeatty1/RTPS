@@ -8,17 +8,18 @@ import { Reliability } from '../modules/pages/reliability/reliability.js';
 const LoadMain = target =>{
   let main = document.querySelector('main')
   main.innerHTML = ''
+  console.log(target)
   switch(target){
-    case 'Gap':
+    case 'gap':
       new Map();
       break;
-    case 'Accessibility':
+    case 'accessibility':
       new Accessibility();
       break;
-    case 'Frequency':
+    case 'frequency':
       new Frequency();
       break;
-    case 'Reliability':
+    case 'reliability':
       new Reliability();
       break;
     default: 

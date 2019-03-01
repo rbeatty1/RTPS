@@ -3,6 +3,9 @@ import { LoadLayers, addRailLayers } from "../../../utils/loadMapLayers";
 import {FormatNumber} from "../../../utils/formatNumber"
 import { styles } from "../map/map_styles/frequency";
 import { CreateDvrpcNavControl } from "../../../utils/defaultExtentControl";
+import { headerRender } from "../../header/header";
+import { HeaderElements } from "../../header/HeaderElements";
+import { Footer } from "../../footer/footer";
 
 const contentRef = {
   about: {
@@ -1570,7 +1573,6 @@ export class Frequency {
     let main = document.querySelector('main')
     main.id = 'frequency'
     if (!document.querySelector('header')) headerRender(HeaderElements)
-    if (!document.querySelector('footer')) new Footer();
     document.querySelector("main").innerHTML = `
     <div id="frequency-page">
       <div class="frequency__content-container">
@@ -1586,5 +1588,6 @@ export class Frequency {
     });
     BuildNav(this, contentRef);
     this.map = BuildMap(document.querySelector(".frequency__content-map"));
+    if (!document.querySelector('footer')) new Footer();
   }
 }
