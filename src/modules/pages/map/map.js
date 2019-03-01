@@ -261,31 +261,27 @@ const ClearQuery = map => {
     @returns: NONE
 */
 const AddListeners = map => {
-    let popup;
-    const MuniPopup = (feature, event) =>{
-        let muni = document.querySelector(`.input__input-option[value="${feature.properties.GEOID}"]`).innerText
-        let popup = new mapboxgl.Popup({
-            anchor: 'left',
-            closeButton: false,
-            offset: {
-              'top': [0, 0],
-              'top-left': [0,0],
-              'top-right': [0,0],
-              'bottom': [0, 0],
-              'bottom-left': [0, 0],
-              'bottom-right': [0, 0],
-              'left': [10, 0],
-              'right': [0, 0]
-            }
-        })
+    let popup = new mapboxgl.Popup({
+        anchor: 'bottom',
+        closeButton: false,
+        closeOnClick: true,
+        offset: {
+            'top': [0, 0],
+            'top-left': [0,0],
+            'top-right': [0,0],
+            'bottom': [0, -5],
+            'bottom-left': [0, 0],
+            'bottom-right': [0, 0],
+            'left': [0, 0],
+            'right': [0, 0]
+          }
+    });
 
-        let coords = new mapboxgl.LngLat(event.lngLat.lng, event.lngLat.lat)
-        popup
-            .setLngLat(coords)
-            .setHTML(muni)
-            .addTo(map)
-        
-        return popup
+    const GeneratePopup = (popup, e) =>{
+      let muni = document.querySelector(`.input__input-option[value="${e.features[0].properties.GEOID}"]`).innerText
+      popup.setLngLat(e.lngLat)
+      .setHTML(muni)
+      .addTo(map)
     }
 
 // ZONE LISTENERS
@@ -319,13 +315,12 @@ const AddListeners = map => {
         let feature = e.features[0]
         map.getCanvas().style.cursor = 'pointer'
         map.setFilter("boundaries-hover", ["==", "GEOID", feature.properties.GEOID])
-        popup ? popup.remove() : popup = MuniPopup(feature, e)
-        popup ? popup = MuniPopup(feature, e): popup.remove()
+        GeneratePopup(popup, e)
     })
     // leave hover => no fill
     map.on('mouseleave', "muniReference-base", (e) => {
         map.getCanvas().style.cursor = ''
-        map.setFilter("boundaries-hover", ["==", "name", ""]);
+        map.setFilter("boundaries-hover", ["==", "GEOID", ""])
         popup.remove()
     })
     // click => yellow fill
