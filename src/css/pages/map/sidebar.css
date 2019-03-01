@@ -66,7 +66,7 @@
 #gap__results-section{
   order:2;
 }
-#gap__results-section strong{
+.map__sidebar-summaryContent strong{
   color: #08506d
 }
 #legend{

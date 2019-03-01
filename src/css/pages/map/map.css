@@ -30,11 +30,8 @@
     display: none;
 }
 .map__container .mapboxgl-popup-content {
-    background: #b6ca85;
-}
-
-.map__container .mapboxgl-popup-tip{
-    border-right: 0;
+    color: #08506d;
+    font-weight: 500;
 }
 
 @keyframes spin{
