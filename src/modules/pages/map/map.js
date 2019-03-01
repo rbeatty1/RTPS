@@ -5,6 +5,9 @@ import { Sidebar } from "./sidebar/sidebar.js"
 import { ResultsSummary } from './sidebar/resultsSummary';
 import { LoadLayers, addRailLayers } from '../../../utils/loadMapLayers.js'
 import { CreateDvrpcNavControl } from '../../../utils/defaultExtentControl';
+import { headerRender } from '../../header/header';
+import { HeaderElements } from '../../header/HeaderElements';
+import { Footer } from '../../footer/footer';
 
 const extent = {
   center: [-75.234, 40.061],
@@ -467,8 +470,10 @@ class Map {
     }
 
     render() {
-        let appPage = document.querySelector('#main')
-        appPage.innerHTML = '';
+        if (!document.querySelector('header')) headerRender(HeaderElements)
+        if (!document.querySelector('footer')) new Footer();
+        let appPage = document.querySelector('main')
+        appPage.id = 'gap'
         let gap = document.createElement('div')
         gap.classList = 'gap'
         appPage.appendChild(gap)

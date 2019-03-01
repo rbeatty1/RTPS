@@ -6,7 +6,7 @@ import { Reliability } from '../modules/pages/reliability/reliability.js';
 
 
 const LoadMain = target =>{
-  let main = document.querySelector('#main')
+  let main = document.querySelector('main')
   main.innerHTML = ''
   switch(target){
     case 'Gap':

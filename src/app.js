@@ -4,9 +4,9 @@ import {Footer} from './modules/footer/footer';
 import './css/app.css'
 import {LoadMain} from './utils/loadMain';
 
-headerRender(HeaderElements);
+// headerRender(HeaderElements);
 let app = document.createElement('main')
 app.id = 'main'
 document.querySelector('#app').appendChild(app)
 LoadMain()
-new Footer();
+// new Footer();

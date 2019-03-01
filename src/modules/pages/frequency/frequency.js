@@ -1567,7 +1567,11 @@ export class Frequency {
     this.render();
   }
   render() {
-    document.querySelector("#main").innerHTML = `
+    let main = document.querySelector('main')
+    main.id = 'frequency'
+    if (!document.querySelector('header')) headerRender(HeaderElements)
+    if (!document.querySelector('footer')) new Footer();
+    document.querySelector("main").innerHTML = `
     <div id="frequency-page">
       <div class="frequency__content-container">
         <nav class="frequency__nav-container"></nav>
