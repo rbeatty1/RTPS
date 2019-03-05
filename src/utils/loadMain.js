@@ -15,17 +15,17 @@ const ChangeLogo = section =>{
   }
 
   // does the logo exist?
-  if (!document.querySelector('object').contentDocument.querySelector('.logo-fill')) {
+  if (!document.querySelector('.logo-fill')) {
     // wait for it to load
     document.querySelector('object').onload = e =>{ 
-      let fillElements = document.querySelector('object').contentDocument.querySelectorAll('.logo-fill')
+      let fillElements = document.querySelectorAll('.logo-fill')
       if (colors[section]) for (let elem of fillElements) elem.setAttribute('fill', colors[section])
       else for (let elem of fillElements) elem.setAttribute('fill', '#6d6e71')
     }
   }
   // just go ahead and do it
   else{
-    let fillElements = document.querySelector('object').contentDocument.querySelectorAll('.logo-fill')
+    let fillElements = document.querySelectorAll('.logo-fill')
     if (colors[section]) for (let elem of fillElements) elem.setAttribute('fill', colors[section])
     else for (let elem of fillElements) elem.setAttribute('fill', '#6d6e71')
   }
