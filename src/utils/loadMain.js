@@ -58,7 +58,13 @@ const LoadMain = target =>{
       ChangeLogo(target)
       break;
   }
-  document.querySelector(`[data-tool="${target}"]`).classList.add('active')
+  let link = document.querySelector(`[data-tool="${target}"]`),
+    descriptor = document.getElementById('page-title')
+  
+  link.classList.add('active')
+  descriptor.innerText = link.getAttribute('data-name')
+  link.style.boxShadow = `0 0 10px ${link.style.background}`
+
 }
 
 export {LoadMain, ChangeLogo};
