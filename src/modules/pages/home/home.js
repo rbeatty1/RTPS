@@ -71,7 +71,6 @@ const Landing = (props, appContainer) =>{
         section.id = 'logo-container'
         section.insertAdjacentHTML('afterbegin', require('../../../img/rtpp-full.svg'))
 
-
       }
 
       // build description container and insert landing page text
