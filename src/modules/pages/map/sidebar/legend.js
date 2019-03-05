@@ -55,7 +55,7 @@ const BuildDescription = (target, data) =>{
 
     // declare local variables
     let section = document.createElement('div'),
-        button = document.createElement('button')
+        button = document.createElement('button'),
         content = document.createElement('div')
 
     // container housekeeping
@@ -68,13 +68,10 @@ const BuildDescription = (target, data) =>{
     // create title/text for each section
     for (let color in data){
         let contents = data[color],
-            title = document.createElement('h3'),
             text = document.createElement('p')
-        
-        title.innerText = contents.title
-        text.innerText = contents.text
 
-        content.appendChild(title)
+        text.innerHTML = contents
+
         content.appendChild(text)
     }
 
@@ -96,22 +93,13 @@ export class Legend{
                 labels : ['Low', 'High', 'Low']
             },
             descriptions:{
-                0: {
-                    title: 'Dark Orange',
-                    text: 'Transit service exists between that zone and the selected study area, and has transit supportive densities, but service is relatively indirect in terms of distance and transfer requirements.'
-                },
-                1: {
-                    title: 'Light Orange',
-                    text: 'Transit service exists between that zone and the selected study area, but the transit connection is already direct and/or the origin or destination lack transit supportive densities'
-                },
-                2: {
-                    title: 'Dark Green',
-                    text: 'There is very little to no transit service between that zone and the selected study area. However, it is relatively dense and more than a few trips are regularly made between that zone and the selected study area.'
-                },
-                3: {
-                    title: 'Light Green',
-                    text: 'There is very little to no transit service between that zone and the selected study area. The area lacks transit supportive densities and few trips are made regularly between that zone and the selected study area.'
-                }
+                0: `<strong>Dark orange</strong> means that transit service exists between that zone and the selected study area, and has transit supportive densities, but 
+                service is relatively indirect in terms of distance and transfer requirements.`,
+                1: `<strong>Light orange</strong> means that transit service exists between that zone and the selected study area, but the transit connection is already 
+                direct and/or the origin or destination lack transit supportive densities`,
+                2: `<strong>Dark green</strong> means that there is very little to no transit service between that zone and the selected study area. However, it is relatively
+                dense and more than a few trips are regularly made between that zone and the selected study area.`,
+                3: `<strong>Light green</strong> means that there is very little to no transit service between that zone and the selected study area. The area lacks transit supportive densities and few trips are made regularly between that zone and the selected study area.`
             }
         }
         this.render()

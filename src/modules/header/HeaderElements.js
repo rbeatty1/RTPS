@@ -51,26 +51,26 @@ const HeaderElements = [
     {
         elemName : 'navigation',
         content : {
-            home: {
-                pageId: 1,
-                name: 'Home',
-            },
-            availibility : {
-                pageId : 2,
-                name : 'Accessibility',
-            },
-            frequency : {
-                pageId : 3,
-                name : 'Frequency',
-            },
             gap : {
-                pageId : 4,
-                name : 'Gap',
+                title: 'Transit Network Gap Analyzer',
+                shorthand: 'gap',
+                color: '#8bb23f'
             },
             reliability : {
-                pageId : 5,
-                name : 'Reliability',
+                title: 'Surface Transit Reliability',
+                shorthand: 'reliability',
+                color: '#e89234'
             },
+            frequency : {
+                title: 'Doubled Frequency Scenario',
+                shorthand: 'frequency',
+                color: '#d8c72e'
+            },
+            accessibility : {
+                title: 'Wheelchair Accessibility',
+                shorthand: 'accessibility',
+                color: '#06bf9c'
+            }
         }
     }
 ]

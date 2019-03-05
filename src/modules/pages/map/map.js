@@ -3,8 +3,11 @@ import { geography } from './sidebar/queryInput/queryInput.js'
 import { layers } from './map_styles/styles.js'
 import { Sidebar } from "./sidebar/sidebar.js"
 import { ResultsSummary } from './sidebar/resultsSummary';
-import { LoadLayers } from '../../../utils/loadMapLayers.js'
+import { LoadLayers, addRailLayers } from '../../../utils/loadMapLayers.js'
 import { CreateDvrpcNavControl } from '../../../utils/defaultExtentControl';
+import { headerRender } from '../../header/header';
+import { HeaderElements } from '../../header/HeaderElements';
+import { Footer } from '../../footer/footer';
 
 const extent = {
   center: [-75.234, 40.061],
@@ -258,14 +261,42 @@ const ClearQuery = map => {
     @returns: NONE
 */
 const AddListeners = map => {
+    let popup;
+    const MuniPopup = (feature, event) =>{
+        let muni = document.querySelector(`.input__input-option[value="${feature.properties.GEOID}"]`).innerText
+        let popup = new mapboxgl.Popup({
+            anchor: 'left',
+            closeButton: false,
+            offset: {
+              'top': [0, 0],
+              'top-left': [0,0],
+              'top-right': [0,0],
+              'bottom': [0, 0],
+              'bottom-left': [0, 0],
+              'bottom-right': [0, 0],
+              'left': [10, 0],
+              'right': [0, 0]
+            }
+        })
+
+        let coords = new mapboxgl.LngLat(event.lngLat.lng, event.lngLat.lat)
+        popup
+            .setLngLat(coords)
+            .setHTML(muni)
+            .addTo(map)
+        
+        return popup
+    }
 
 // ZONE LISTENERS
     // hover => green fill
     map.on('mousemove', "zoneReference-base", (e) => {
+        map.getCanvas().style.cursor = 'pointer'
         map.setFilter("zones-hoverFill", ["==", "no", e.features[0].properties.no])
     })
     // leave hover => no fill
     map.on('mouseleave', "zoneReference-base", (e) => {
+        map.getCanvas().style.cursor = ''
         map.setFilter("zones-hoverFill", ["==", "no", ""]);
     })
 
@@ -285,11 +316,17 @@ const AddListeners = map => {
 // MUNI LISTENERS
     // hover => green fill
     map.on('mousemove', "muniReference-base", (e) => {
-        map.setFilter("boundaries-hover", ["==", "GEOID", e.features[0].properties.GEOID])
+        let feature = e.features[0]
+        map.getCanvas().style.cursor = 'pointer'
+        map.setFilter("boundaries-hover", ["==", "GEOID", feature.properties.GEOID])
+        popup ? popup.remove() : popup = MuniPopup(feature, e)
+        popup ? popup = MuniPopup(feature, e): popup.remove()
     })
     // leave hover => no fill
     map.on('mouseleave', "muniReference-base", (e) => {
+        map.getCanvas().style.cursor = ''
         map.setFilter("boundaries-hover", ["==", "name", ""]);
+        popup.remove()
     })
     // click => yellow fill
     map.on('click', "muniReference-base", (e) => {
@@ -382,14 +419,61 @@ const AddLoadingSpinner = (target) =>{
     target._container.appendChild(container)
 }
 
+const LoadBusLayer = map =>{
+    map.addSource("transit", {
+      type: "vector",
+      url: "https://tiles.dvrpc.org/data/dvrpc-tim-transit.json"
+    });
+    
+    fetch("https://a.michaelruane.com/api/rtps/frequency?bus")
+    .then(
+        response =>
+        response.ok ? response.json() : console.error("error, will robinson")
+    )
+    .then(bus => {
+        let filterExp = ['any']
+        bus.cargo.map(line=>{
+            let exp = ['match', ['get', 'linename'], line.linename, true, false]
+            filterExp.push(exp)
+        })
+        let layerDef = {
+            id : 'bus-lines',
+            source: 'transit',
+            "source-layer": 'transit_lines',
+            type: 'line',
+            filter: filterExp,
+            paint: {
+              "line-width" : [
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                7,
+                .2,
+                12,
+                1
+              ],
+              "line-color" : '#08506d'
+            },
+            layout:{
+                visibility: 'none'
+            }
+          }
+
+          map.addLayer(layerDef, 'admin-2-boundaries')
+    });
+
+}
+
 class Map {
     constructor() {
         this.render()
     }
 
     render() {
-        let appPage = document.querySelector('#main')
-        appPage.innerHTML = '';
+        if (!document.querySelector('header')) headerRender(HeaderElements)
+        if (!document.querySelector('footer')) new Footer();
+        let appPage = document.querySelector('main')
+        appPage.id = 'gap'
         let gap = document.createElement('div')
         gap.classList = 'gap'
         appPage.appendChild(gap)
@@ -401,14 +485,14 @@ class Map {
                 center: extent.center,
                 zoom: extent.zoom
             })
-            // add navigation control 
-            new Sidebar();
-            map.addControl(new mapboxgl.NavigationControl(), 'top-left');
-            LoadRegionalSummary(map)
+            LoadBusLayer(map)
             LoadLayers(map, layers)
+            addRailLayers(map)
+            new Sidebar(this);
+            LoadRegionalSummary(map)
             AddListeners(map)
         });
-
+        this.map = map
     }
 }
 

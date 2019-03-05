@@ -1,6 +1,6 @@
 import '../../css/header/header.css'
 import {NavControl} from './navControls/navControls';
-import logo from "../../img/RTPS-logo.png"
+import {ChangeLogo} from '../../utils/loadMain'
 
 function headerRender(elements){
     const appBody = document.querySelector('#app');
@@ -9,9 +9,9 @@ function headerRender(elements){
     appBody.appendChild(header);
 
     // logo
-    let logoContainer = document.createElement('img')
+    let logoContainer = document.createElement('object')
     logoContainer.className = 'header__project-logo';
-    logoContainer.src = logo
+    logoContainer.data = '../../img/rtpp-project.svg'
     logoContainer.alt = 'Regional Transit Priority Setting Logo'
     header.appendChild(logoContainer);
     

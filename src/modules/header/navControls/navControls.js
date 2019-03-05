@@ -1,22 +1,32 @@
 import '../../../css/header/navControls/navControls.css'
-import {LoadMain} from '../../../utils/loadMain.js'
+import {LoadMain, ChangeLogo} from '../../../utils/loadMain.js'
 
 
 function _createNavLink(self, item){
-    let navElement = document.createElement('a');
-    navElement.innerHTML = item;
-    navElement.setAttribute('href', '#');
-    // On load, land on gap analysis page
-    item != 'Home' ? navElement.classList = 'header__nav-link inactive' : navElement.classList = 'header__nav-link active';
+    let link = document.createElement('a')
+    link.href = '#'
+    link.rel = 'noopener'
+    link.setAttribute('data-name', item.title)
+    link.setAttribute('data-tool', item.shorthand)
+    link.style.background = item.color
     // change link styling when navigating to
-    navElement.addEventListener('click', e=>{
-        let siblings = e.target.parentNode.childNodes;
+    link.addEventListener('click', e=>{
+        let siblings = e.target.parentNode.childNodes,
+            descriptor = document.getElementById('page-title')
+            descriptor.innerText = e.target.getAttribute('data-name')
         siblings.forEach(element => {
-            element != e.target ? element.classList = 'header__nav-link inactive' : element.classList = 'header__nav-link active';
+            if (element != e.target){
+                element.classList = 'header__nav-link inactive'
+                element.style.boxShadow = ''
+            } 
+            else{
+                element.classList = 'header__nav-link active';
+                element.style.boxShadow = `0 0 15px ${item.color}`
+            }
         });
-        LoadMain(e.target.text)
+        LoadMain(e.target.getAttribute('data-tool'))
     })
-    return navElement;
+    return link;
 }
 
 class NavControl{
@@ -31,14 +41,23 @@ class NavControl{
 
     render(){
         let header = document.querySelector(".header__container");
-        let listElement = document.createElement('nav')
+        let navContainer = document.createElement('div'),
+            listElement = document.createElement('nav'),
+            navDescriptor = document.createElement('p')
+
+        navContainer.id = 'header__nav-container'
         listElement.className = 'header__nav-links'
         listElement.innerHTML = '';
         for (let k in this.list){
-            let a = _createNavLink(listElement, this.list[k].name);
+            let a = _createNavLink(listElement, this.list[k]);
             listElement.appendChild(a);
         }
-        header.appendChild(listElement)
+        
+        navDescriptor.id = 'page-title'
+
+        navContainer.appendChild(listElement)
+        navContainer.appendChild(navDescriptor)
+        header.appendChild(navContainer)
     }
 }
 
