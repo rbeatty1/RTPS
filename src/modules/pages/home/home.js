@@ -1,7 +1,5 @@
 import "../../../css/pages/home/home.css"
-import { ComingSoon } from "../soon/soon";
-import { Map } from "../map/map";
-import { LoadMain } from "../../../utils/loadMain";
+import { LoadMain, ChangeLogo } from "../../../utils/loadMain";
 
 const Landing = (props, appContainer) =>{
   const SectionChange = (target, section)=>{
@@ -9,37 +7,42 @@ const Landing = (props, appContainer) =>{
       let content = props[section],
         textContainer = document.getElementById('desc-container'),
         linksContainer = document.createElement('div')
-  
+
+      // clear description text
       while(textContainer.firstChild){ textContainer.removeChild(textContainer.firstChild) }
 
       linksContainer.classList.add('content-links')
       linksContainer.style.color = content.color
 
+      // learn more (documentation) & explore (analysis page) links
       let docLink = document.createElement('a'),
         appLink = document.createElement('a')
 
+      // documentation (blank for now)
       docLink.href = '#'
       docLink.rel = 'noopener'
       docLink.innerText = 'Learn More'
 
-      
-
+      // explore (analysis page)
       appLink.href = '#'
       appLink.rel = 'noopener'
       appLink.innerText = 'Explore'
-      appLink.addEventListener('click', e=>{LoadMain(section)})
+      // load analysis page
+      appLink.addEventListener('click', e=>{ LoadMain(section) })
 
-      // linksContainer.innerText = '|'
       linksContainer.appendChild(docLink)
       linksContainer.appendChild(appLink)
 
+      
       textContainer.appendChild(linksContainer)
+      // add appropriate description text (see this.props[section].description)
       textContainer.insertAdjacentHTML('beforeend', content.description)
-
+      // change background color
       textContainer.style.background = content.color
       textContainer.classList.add('active')
     }
 
+    // give appropriate button the active class
     const ActivateButton = ()=>{
       let buttons = document.querySelectorAll('button')
       for (let button of buttons){
@@ -49,19 +52,32 @@ const Landing = (props, appContainer) =>{
 
     }
 
+    // change appropriate elements from logo svg to correct tool primary color (function in src/utils/LoadMain.js) 
+    ChangeLogo(section)
     ChangeText()
     ActivateButton()
 
   }
 
   let i = 0
+  // three HTML elements for landing page...
   while (i < 3){
+    // the second element is the nav links and does different shtuff
     if (i != 1){
       let section = document.createElement('section')
 
+      // build logo container & insert logo svg
       if(i == 0){
         section.id = 'logo-container'
+        let img = document.createElement('object')
+        img.data = '../../../img/rtpp-full.svg'
+        img.id = 'project-logo'
+
+        section.appendChild(img)
+
       }
+
+      // build description container and insert landing page text
       else{
         section.id = 'desc-container'
         section.insertAdjacentHTML(
@@ -79,6 +95,8 @@ const Landing = (props, appContainer) =>{
       
       appContainer.appendChild(section)
     }
+
+    // tool nav links
     else{
       let nav = document.createElement('nav')
       for (let section in props){
@@ -86,12 +104,21 @@ const Landing = (props, appContainer) =>{
           link = document.createElement('button'),
           title = document.createElement('p')
 
+        // set link attributes and set the data-page attribute to shorthand for tool for easy access
         link.setAttribute('data-page', section)
+        // make sure the background is the right color
         link.style.backgroundColor = content.color
-
+        // give it the title
         link.innerText = content.title
 
+        // listener events
+          // SectionChange --> change logo colors, set new description text, build links to tool & documentation, give button active class
         link.onclick = e => SectionChange(e.target, section)
+          // hover events to give it some styling
+        link.onmouseover = e => e.target.style.background = content.secondary
+        link.onmouseleave = e => e.target.style.background = content.color
+        
+        // send it
         nav.appendChild(link)
       }
       appContainer.appendChild(nav)
@@ -99,6 +126,7 @@ const Landing = (props, appContainer) =>{
     i ++
   }
 }
+
 
 class Home{
   constructor(){
@@ -138,6 +166,12 @@ class Home{
   render(){
     let main = document.querySelector('main')
     main.id = 'home'
+    // check if header exists (coming from analysis page)
+    if (document.querySelector('header')){
+      let header = document.querySelector('header')
+      // remove header
+      header.parentNode.removeChild(header)
+    }
     Landing(this.props, main);
   }
 }

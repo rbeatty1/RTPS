@@ -908,9 +908,9 @@ export class Accessibility{
   }
 
   render(){
+    if (!document.querySelector('header')) headerRender(HeaderElements)
     let main = document.querySelector('main')
     main.id = 'accessibility'
-    if (!document.querySelector('header')) headerRender(HeaderElements)
     if (!document.querySelector('footer')) new Footer();
 
     // build base skeleton for page
