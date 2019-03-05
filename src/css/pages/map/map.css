@@ -1,3 +1,8 @@
+#gap{
+    height: 85%;
+    width: 100%;
+    order: 2;
+}
 .gap{
     display: flex;
     height: 100%;
@@ -12,13 +17,12 @@
     flex-flow: column;
     align-items: center;
     width: 20%;
-    background-color: whitesmoke;
-    border-left: 2px solid #e89234;
+    background: #8bb23f;
 }
 
 .map__spinner{
     border: 10px solid rgba(0,0,0,0);
-    border-top: 10px solid #ebb23f;
+    border-top: 10px solid #8bb23f;
     border-radius: 50%;
     z-index: 1;
     width: 60px;
@@ -29,6 +33,13 @@
     top: 50%;
     margin: -75px 0 0 -75px;
     display: none;
+}
+.map__container .mapboxgl-popup-content {
+    background: #b6ca85;
+}
+
+.map__container .mapboxgl-popup-tip{
+    border-right: 0;
 }
 
 @keyframes spin{

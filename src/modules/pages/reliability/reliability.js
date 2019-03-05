@@ -3,6 +3,9 @@ import {LoadLayers} from '../../../utils/loadMapLayers';
 import { styles } from '../map/map_styles/reliability.js'
 import { FormatNumber } from '../../../utils/formatNumber';
 import { CreateDvrpcNavControl } from '../../../utils/defaultExtentControl';
+import { headerRender } from "../../header/header";
+import { HeaderElements } from "../../header/HeaderElements";
+import { Footer } from "../../footer/footer";
 
 let layerRef = {
   purpose: "The goal of the surface transit reliability analysis was to identify corridors where surface transit service is particularly slow or delayed as places where road or transit improvements could increase reliability.",
@@ -48,7 +51,7 @@ const BuildPage = structure =>{
     structure[section] = sectionElem
   }
   // append page to application
-  document.querySelector('#main').appendChild(page)
+  document.querySelector('main').appendChild(page)
 }
 
 // function to build map and all of it's layers
@@ -579,6 +582,10 @@ export class Reliability{
   }
 
   render(){
+    let main = document.querySelector('main')
+    main.id = 'reliability'
+    if (!document.querySelector('header')) headerRender(HeaderElements)
+    if (!document.querySelector('footer')) new Footer();
     BuildPage(this.content)
     let map = BuildMap(this)
     BuildSidebar(map, this.data)

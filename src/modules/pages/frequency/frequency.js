@@ -3,6 +3,9 @@ import { LoadLayers, addRailLayers } from "../../../utils/loadMapLayers";
 import {FormatNumber} from "../../../utils/formatNumber"
 import { styles } from "../map/map_styles/frequency";
 import { CreateDvrpcNavControl } from "../../../utils/defaultExtentControl";
+import { headerRender } from "../../header/header";
+import { HeaderElements } from "../../header/HeaderElements";
+import { Footer } from "../../footer/footer";
 
 const contentRef = {
   about: {
@@ -656,9 +659,9 @@ const BuildContent = (content, key, component) => {
         link.classList.add("active");
         element.classList.add("active");
         if (element.id == 'transitChange' || element.id == 'autoChange') {
-          let transit = component.map.getLayer('passengerRail-lines')
-          transit.visibility == 'none' ? component.map.setLayoutProperty('passengerRail-labels', 'visibility', 'visible') : null
-          transit.visibility == 'none' ? component.map.setLayoutProperty('passengerRail-lines', 'visibility', 'visible') : null
+          let transit = component.map.getLayer('rail-lines')
+          transit.visibility == 'none' ? component.map.setLayoutProperty('rail-labels', 'visibility', 'visible') : null
+          transit.visibility == 'none' ? component.map.setLayoutProperty('rail-lines', 'visibility', 'visible') : null
         }
       })
       .on("leave", e => {
@@ -667,9 +670,9 @@ const BuildContent = (content, key, component) => {
         link.classList.remove("active");
         element.classList.remove("active");
         if (element.id == 'transitChange' || element.id == 'autoChange') {
-          let transit = component.map.getLayer('passengerRail-lines')
-          transit.visibility == 'visible' ? component.map.setLayoutProperty('passengerRail-labels', 'visibility', 'none') : null
-          transit.visibility == 'visible' ? component.map.setLayoutProperty('passengerRail-lines', 'visibility', 'none') : null
+          let transit = component.map.getLayer('rail-lines')
+          transit.visibility == 'visible' ? component.map.setLayoutProperty('rail-labels', 'visibility', 'none') : null
+          transit.visibility == 'visible' ? component.map.setLayoutProperty('rail-lines', 'visibility', 'none') : null
         }
         if (document.querySelector('.mapboxgl-popup')) RemovePopup(document.querySelector('.mapboxgl-popup'))
       })
@@ -1567,7 +1570,10 @@ export class Frequency {
     this.render();
   }
   render() {
-    document.querySelector("#main").innerHTML = `
+    let main = document.querySelector('main')
+    main.id = 'frequency'
+    if (!document.querySelector('header')) headerRender(HeaderElements)
+    document.querySelector("main").innerHTML = `
     <div id="frequency-page">
       <div class="frequency__content-container">
         <nav class="frequency__nav-container"></nav>
@@ -1582,5 +1588,6 @@ export class Frequency {
     });
     BuildNav(this, contentRef);
     this.map = BuildMap(document.querySelector(".frequency__content-map"));
+    if (!document.querySelector('footer')) new Footer();
   }
 }

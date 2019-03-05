@@ -15,20 +15,20 @@
 .input__query-input{
     font-size: 1rem;
     background-color: #fff;
-    color: #08506d;
-    font-family: 'Arial Narrow', sans-serif;
+    color: #777;
     border-style: unset;
     list-style: none;
-    box-shadow: 0 0 1px 1px rgba(8,80,109,0.5);
     margin: 5px 0;
+    padding: .25rem;
+    font-weight: 500;
 }
 
 .input__query-button{
-    padding: 1em;
+    padding: .5em;
+    font-size: 1rem;
     background-color: #ddd;
     text-align: center;
-    font-family: 'Arial Narrow', sans-serif;
-    border-radius: .25em;
+    border-radius: 22px;
     border-style: unset;
     list-style: none;
     color: #fff;
@@ -37,16 +37,16 @@
 }
 
 #execute.active{
-    background-color: #8bb23f;
+    background-color: #465920;
 }
 #execute.active:hover{
-    background-color: #ccdca7;
+    background-color: #adc978;
 }
 #clear.active{
-    background-color: red;
+    background-color: #e89234;
 }
 #clear.active:hover{
-    background-color: #f9aa8f;
+    background-color: #edceab;
 }
 
 .input__input-option{
