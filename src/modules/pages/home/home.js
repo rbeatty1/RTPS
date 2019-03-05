@@ -69,11 +69,7 @@ const Landing = (props, appContainer) =>{
       // build logo container & insert logo svg
       if(i == 0){
         section.id = 'logo-container'
-        let img = document.createElement('object')
-        img.data = '../../../img/rtpp-full.svg'
-        img.id = 'project-logo'
-
-        section.appendChild(img)
+        section.insertAdjacentHTML('afterbegin', require('../../../img/rtpp-full.svg'))
 
       }
 

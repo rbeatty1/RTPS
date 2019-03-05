@@ -1,6 +1,6 @@
 import '../../css/header/header.css'
 import {NavControl} from './navControls/navControls';
-import {ChangeLogo} from '../../utils/loadMain'
+import {LoadMain} from '../../utils/loadMain'
 
 function headerRender(elements){
     const appBody = document.querySelector('#app');
@@ -9,10 +9,13 @@ function headerRender(elements){
     appBody.appendChild(header);
 
     // logo
-    let logoContainer = document.createElement('object')
+    let logoContainer = document.createElement('div')
+    
     logoContainer.className = 'header__project-logo';
-    logoContainer.data = '../../img/rtpp-project.svg'
+    logoContainer.insertAdjacentHTML('afterbegin', require('../../img/rtpp-project.svg'))
     logoContainer.alt = 'Regional Transit Priority Setting Logo'
+
+    logoContainer.firstChild.onclick = e => {LoadMain('home')}
     header.appendChild(logoContainer);
     
     // nav controls

@@ -14,7 +14,7 @@
   top: 0;
 }
 
-#logo-container object{
+#logo-container svg{
   position: relative;
   left: 10%;
   top: 10%;
