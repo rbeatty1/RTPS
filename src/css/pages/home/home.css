@@ -22,6 +22,9 @@
   height: auto;
 }
 
+#logo-container svg:hover, #home nav button:hover{
+  cursor: pointer;
+}
 #desc-container{
   bottom: 0;
   background: #ddd;

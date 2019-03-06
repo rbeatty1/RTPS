@@ -71,6 +71,42 @@ const Landing = (props, appContainer) =>{
         section.id = 'logo-container'
         section.insertAdjacentHTML('afterbegin', require('../../../img/rtpp-full.svg'))
 
+        // reset logo colors
+        section.firstChild.onclick = e =>{
+
+          let activeLink = document.querySelector('nav button.active')
+          // is one of the sections active?
+          if (activeLink){
+            // not anymore!
+            activeLink.classList.remove('active')
+
+            let descriptionContainer = document.getElementById('desc-container'),
+              logoFills = document.querySelectorAll('.logo-fill')
+            
+            // remove all children from description container
+              while (descriptionContainer.firstChild) descriptionContainer.removeChild(descriptionContainer.firstChild)
+            
+            // reset style
+            descriptionContainer.style.background = '#ddd'
+            descriptionContainer.style.color = '#08506d'
+            descriptionContainer.classList.remove('active')
+
+            // reset text
+            descriptionContainer.insertAdjacentHTML(
+              'beforeend',
+              `<p>
+                Where should transit improvement and transit supportive investments be made in the
+                <abbr title="Delaware Valley Regional Planning Commission">DVRPC</abbr> region? 
+                <strong>Use this platform to evaluate service, operational, enforcement, and
+                infrastructure improvement ideas!</strong>
+              </p>
+              `)
+            
+            // reset logo colors
+            for (let path of logoFills){ path.setAttribute('fill', '#6d6e71') }
+          }
+        }
+
       }
 
       // build description container and insert landing page text
