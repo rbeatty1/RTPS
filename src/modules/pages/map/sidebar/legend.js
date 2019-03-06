@@ -1,3 +1,5 @@
+
+
 const BuildClasses = (target, data) =>{
     const BuildLegendBoxes = colors =>{
         let container = document.createElement('div')
@@ -28,8 +30,8 @@ const BuildClasses = (target, data) =>{
         // class boxes
         let boxes = BuildLegendBoxes(data[type])
         
-        typeContainer.appendChild(title)
         typeContainer.appendChild(boxes)
+        typeContainer.appendChild(title)
         container.appendChild(typeContainer)
     }
     // stick it
@@ -82,9 +84,9 @@ const BuildDescription = (target, data) =>{
     
 }
 export class Legend{
-    constructor(input){
+    constructor(container){
         this.data = {
-            target: input,
+            target: container,
             content: {
                 colors:{
                   "Not Served": ['#b5dfd1', '#90d1be', '#2cb99a', '#599f8c', '#5d8078', '#4f5c5a'],
@@ -93,13 +95,13 @@ export class Legend{
                 labels : ['Low', 'High', 'Low']
             },
             descriptions:{
-                0: `<strong>Dark orange</strong> means that transit service exists between that zone and the selected study area, and has transit supportive densities, but 
+                0: `<strong style="color: #8d7355">Dark orange</strong> means that transit service exists between that zone and the selected study area, and has transit supportive densities, but 
                 service is relatively indirect in terms of distance and transfer requirements.`,
-                1: `<strong>Light orange</strong> means that transit service exists between that zone and the selected study area, but the transit connection is already 
+                1: `<strong style="color: #f5cea4">Light orange</strong> means that transit service exists between that zone and the selected study area, but the transit connection is already 
                 direct and/or the origin or destination lack transit supportive densities`,
-                2: `<strong>Dark green</strong> means that there is very little to no transit service between that zone and the selected study area. However, it is relatively
+                2: `<strong style="color: #5d8078">Dark green</strong> means that there is very little to no transit service between that zone and the selected study area. However, it is relatively
                 dense and more than a few trips are regularly made between that zone and the selected study area.`,
-                3: `<strong>Light green</strong> means that there is very little to no transit service between that zone and the selected study area. The area lacks transit supportive densities and few trips are made regularly between that zone and the selected study area.`
+                3: `<strong style="color: #b5dfd1">Light green</strong> means that there is very little to no transit service between that zone and the selected study area. The area lacks transit supportive densities and few trips are made regularly between that zone and the selected study area.`
             }
         }
         this.render()
@@ -112,8 +114,8 @@ export class Legend{
         title.classList.add('gap-legend-title')
         title.innerText = 'Transit Gap Priority'
         container.appendChild(title)
-        BuildClasses(container, this.data.content.colors)
         BuildLabels(container, this.data.content.labels)
+        BuildClasses(container, this.data.content.colors)
         BuildDescription(container, this.data.descriptions)
     }
 }
