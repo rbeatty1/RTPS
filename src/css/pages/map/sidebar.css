@@ -31,7 +31,6 @@
 .map__sidebar-menuHeader.active{
   font-weight: 700;
   font-size: 1.25rem;
-  color: white;
 }
 .map__sidebar-menuHeader:hover{
   cursor: pointer;
@@ -40,7 +39,13 @@
 .transit-toggle {
   display: flex;
   align-items: center;
-  justify-content: space-evenly
+  justify-content: space-evenly;
+  width: 80%;
+  color: #8bb23f;
+  background: whitesmoke;
+  padding: 3% 1%;
+  border-radius: 10px;
+  box-shadow: 2px 2px 3px 2px rgba(0,0,0,0.1);
 }
 
 .transit-toggle div{
@@ -56,16 +61,25 @@
   flex-flow: column;
   align-items: center;
 }
-.transit-toggle, .map__sidebar-menuContent section{
+.map__sidebar-menuContent section{
   width: 80%;
   padding: 15px;
-  margin: .5rem auto;
+  margin: 2rem auto;
   font-size: .9em;
   color: white;
   border-radius: 5px;
 }
 #gap__results-section{
-  order:2;
+  order:3;
+}
+.map__sidebar-summaryContent strong{
+  color: #08506d
+}
+.map__sidebar-summaryContent strong{
+  color: #08506d
+}
+.map__sidebar-summaryContent strong{
+  color: #08506d
 }
 #legend{
   display: flex;
@@ -116,7 +130,7 @@
 .gap__sidebar-contentButton button{
   border: none;
   color: white;
-  background: #adc978;
+  background: #8bb23f;
   padding: 5%;
   margin: .5rem auto;
   box-shadow: 2px 2px 3px 2px rgba(0,0,0,0.1);
@@ -130,13 +144,15 @@
 
 .gap__sidebar-contentButton div {
   display: none;
-  width: 95%;
-  text-align: center;
-  padding: 2%;
+  padding: 5%;
   margin: auto;
-  background-color: #adc978;
-  border-radius: 20px
+  background-color: whitesmoke;
+  border-radius: 20px;
+  color: #08506d;
+}
 
+.gap__sidebar-contentButton strong{
+  color: #8bb23f;
 }
 .gap__sidebar-contentButton div.active{
   display: block;
@@ -148,6 +164,10 @@
 .gap__sidebar-contentButton div p {
   margin: 0 0 1rem;
   
+}
+
+#analysis_dropdownContent .transit-toggle{
+  order: 2;
 }
 
 .sidebar__input-container{

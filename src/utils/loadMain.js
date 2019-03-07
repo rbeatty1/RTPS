@@ -61,9 +61,11 @@ const LoadMain = target =>{
   let link = document.querySelector(`[data-tool="${target}"]`),
     descriptor = document.getElementById('page-title')
   
-  link.classList.add('active')
-  descriptor.innerText = link.getAttribute('data-name')
-  link.style.boxShadow = `0 0 10px ${link.style.background}`
+  if (link){
+    link.classList.add('active')
+    descriptor.innerText = link.getAttribute('data-name')
+    link.style.boxShadow = `0 0 10px ${link.style.background}`
+  }
 
 }
 
