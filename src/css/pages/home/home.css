@@ -22,6 +22,9 @@
   height: auto;
 }
 
+#logo-container svg:hover, #home nav button:hover{
+  cursor: pointer;
+}
 #desc-container{
   bottom: 0;
   background: #ddd;
@@ -29,6 +32,9 @@
   flex-flow: column;
   justify-content: center;
   align-items: center
+}
+#desc-container.active{
+  justify-content: flex-end;
 }
 
 #desc-container p {
@@ -39,6 +45,7 @@
 
 #desc-container.active p {
   color: #fff;
+  margin-bottom: 3%
 }
 
 #desc-container p strong{
@@ -58,8 +65,7 @@
 }
 
 #home nav button{
-  width: 12.5rem;
-  height: 12.5rem;
+  width: 10%;
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -68,10 +74,10 @@
   border: none;
   box-shadow: 3px 3px 3px rgba(0,0,0,0.5);
   text-align: center;
-  font-size: 1.5rem;
+  font-size: 1.25em;
   color: white;
   font-family: 'Roboto', 'Arial', sans-serif;
-  margin: 2%;
+  margin: 10% 2%;
 }
 
 #home nav button.active{

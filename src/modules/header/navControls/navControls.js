@@ -58,6 +58,9 @@ class NavControl{
         navContainer.appendChild(listElement)
         navContainer.appendChild(navDescriptor)
         header.appendChild(navContainer)
+
+        let links = listElement.querySelectorAll('a')
+        for (let a of links) a.style.height = `${a.clientWidth}px`
     }
 }
 
