@@ -5,12 +5,6 @@ import {Legend} from './legend.js'
 
 
 
-
-
-
-
-
-
 const BuildMenus = appContent =>{
   const MenuContent = (menu, container, content) =>{
     const TransitToggle = target =>{

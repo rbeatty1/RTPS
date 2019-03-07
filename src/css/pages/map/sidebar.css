@@ -78,6 +78,9 @@
 .map__sidebar-summaryContent strong{
   color: #08506d
 }
+.map__sidebar-summaryContent strong{
+  color: #08506d
+}
 #legend{
   display: flex;
   flex-flow: column;
