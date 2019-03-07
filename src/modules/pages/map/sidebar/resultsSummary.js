@@ -3,8 +3,8 @@ import { Legend } from "./legend";
 const CreateSummary = data =>{
   let insert;
   data.direction == ''
-  data.type == 'municipality' ? insert = `the selected area — <span class="map__sidebar-legendEmphasis">${document.querySelector(`option[value='${data.location}']`).innerText}</span>` : insert = 'the selected area'
-  return `The resulting map shows the average network gap score for connections <span class="map__sidebar-legendEmphasis">${data.direction}</span> ${insert}. Only <abbr class="map__abbr" title="Traffic Analysis Zone">TAZ</abbr>s with substantial demand <span class="map__sidebar-legendEmphasis">${data.direction} the selected area</span> are being displayed, a total of <span class="map__sidebar-legendEmphasis">${data.count}</span>. The darker colors indicate higher priority transit gaps in relation to ${insert}.`
+  data.type == 'municipality' ? insert = `the selected area — <strong>${document.querySelector(`option[value='${data.location}']`).innerText}</strong>` : insert = 'the selected area'
+  return `The resulting map shows the average network gap score for connections <strong>${data.direction}</strong> ${insert}. Only <abbr class="map__abbr" title="Traffic Analysis Zone">TAZ</abbr>s with substantial demand <strong>${data.direction} the selected area</strong> are being displayed, a total of <strong>${data.count}</strong>. The darker colors indicate higher priority transit gaps in relation to ${insert}.`
 }
 
 const CreateViz = data =>{

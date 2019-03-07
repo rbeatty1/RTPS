@@ -8,6 +8,12 @@ body, #app{
     width: 100vw;
 } 
 
+
+#main{
+    height: 100%;
+    width: 100%;
+} 
+
 abbr{
     text-decoration: none;
     text-transform: uppercase;
