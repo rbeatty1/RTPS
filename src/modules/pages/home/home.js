@@ -106,7 +106,6 @@ const Landing = (props, appContainer) =>{
             for (let path of logoFills){ path.setAttribute('fill', '#6d6e71') }
           }
         }
-
       }
 
       // build description container and insert landing page text
