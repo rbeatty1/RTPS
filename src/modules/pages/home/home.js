@@ -154,6 +154,10 @@ const Landing = (props, appContainer) =>{
         nav.appendChild(link)
       }
       appContainer.appendChild(nav)
+      let buttons = nav.querySelectorAll('button')
+      for (let link of buttons){
+        link.style.height = `${link.clientWidth}px`
+      }
     }
     i ++
   }
