@@ -5,27 +5,31 @@
 }
 
 .accessibility-page{
-  height:100%;
+  height:90%;
   width: 100%;
   display: flex;
   flex-flow: row;
   justify-content: space-around;
-  background-color: whitesmoke
+  position: absolute;
+  top: 10%
 }
 
 #accessibility-nav{
   display: flex;
   flex-flow: column;
-  height: 50%;
+  height: 100%;
   margin: auto 1%;
   justify-content: center;
-  align-items: center
+  align-items: center;
+  position: fixed;
+  left: 0;
+  z-index: 2;
 }
 
 #accessibility-nav a{
   padding: .5rem;
   border-radius: 50%;
-  background: #8bb234;
+  background: #fff;
   margin: 10%;
   width: 20px;
   height: 20px;
@@ -34,8 +38,9 @@
   align-items: center;
   font-size: 20px;
   font-weight: 700;
-  color: #eee;
+  color: #90d1be;
   text-decoration: none;
+  border: 1px solid #90d1be
 }
 
 .accessibility__nav-link{
@@ -67,11 +72,12 @@
 }
 
 #accessibility-nav a:hover{
-  color: #08506d;
-  background: rgba(8,80,109,.2)
+  color: #06bf9c;
+  background: #ddd
 }
 #accessibility-nav a.active{
-  background: #08506d;
+  background: #06bf9c;
+  color: #fff
 }
 #accessibility-nav a.active:hover{
   color: #eee
@@ -81,7 +87,7 @@
   display: flex;
   flex-flow: column;
   padding: 2% 0;
-  background-color: white;
+  background-color: #06bf9c;
   border-radius: 10px;
   opacity: .1;
   min-height: 33vh;
@@ -92,13 +98,13 @@
 
 .accessibility-section h1{
   text-align: center;
-  color: #8bb234;
+  color: #08506d;
   font-size: 1.75rem;
   margin: 2% auto 0;
 }
 
 .accessibility-section>p{
-  color: #999;
+  color: #fff;
   font-size: .95rem;
   width: 90%;
   margin: 2% auto;
@@ -120,7 +126,7 @@
 
 .accessibility__titleDivider h2{
   font-weight: 700;
-  color: #999;
+  color: #d8eee6;
   font-size: 1.25rem;
 }
 
@@ -143,21 +149,6 @@
 .accessibility-section.active{
   opacity: 1;
 }
-.accessibility-section-content{
-  display: none;
-  font-size: 1em;
-  color: #6a6a6a;
-  padding: 10px;
-  margin: 5px auto;
-}
-
-.accessibility-section-content.active{
-  width: 90%;
-  display: block;
-  background-color: #fff;
-  border-radius: 4px;
-  box-shadow: 1px 1px 1px 1px rgba(0,0,0,0.1);
-}
 
 
 .accessibility-text{
@@ -167,7 +158,8 @@
   flex-flow: column;
   align-items: flex-end;
   overflow-y: auto;
-  direction: rtl
+  direction: rtl;
+  background: #d8eee6
 }
 .accessibility-text > * {
   direction: ltr;
@@ -176,14 +168,8 @@
   text-align: center;
   margin: 1em auto;
   color: #08506d;
-  font-family: 'Arial Narrow', sans-serif;
   width: 66%;
   word-wrap: normal;
-}
-.accessibility-text>p{
-  width: 75%;
-  margin: 1em auto;
-  color: #aaa
 }
 
 .accessibility-map{
@@ -200,13 +186,14 @@
 }
 
 #caseStudy{
-  margin-bottom: 33%;
+  margin-bottom: 66%;
 }
 
 #caseStudy a{
   font-weight: 700;
   font-size: 1.25rem;
-  color: #999
+  color: #fff;
+  margin: 1% auto;
 }
 
 #caseStudy a:hover{
