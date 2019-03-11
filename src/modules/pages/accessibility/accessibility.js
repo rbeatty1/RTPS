@@ -451,7 +451,6 @@ const BuildPage = content =>{
       let content = data.content
       // HTML jawns
       let container = document.createElement('section'),
-      text = document.createElement('p'),
       link = document.createElement('a'),
       linkContent = document.createElement('div'),
       tooltip = document.createElement('span')
@@ -502,15 +501,21 @@ const BuildPage = content =>{
         container.appendChild(sub)
       }
       else{
-        let title = document.createElement('h1')
-        title.innerText = data.title
+        let title = document.createElement('div'),
+          main = document.createElement('h1')
+
+        title.classList.add('accessibility__titleDivider')
+        main.innerText = data.title
+        
+        title.appendChild(document.createElement('hr'))
+        title.appendChild(main)
+        title.appendChild(document.createElement('hr'))
         container.appendChild(title)
       }
           
     
       // set text
-      text.innerHTML = content.text.description
-      container.appendChild(text)
+      container.insertAdjacentHTML('beforeend', content.text.description)
 
   
       // send the whole thing
@@ -612,7 +617,9 @@ export class Accessibility{
           content: {
             text: {
               id: 'intro',
-              description: 'This analysis identifies places where wheelchair users\' ability to reach essential services (jobs, grocery stores, medical offices, etc) via transit is most impacted by wheelchair inaccessible rail stations. These maps can be used to help prioritize rail station improvements.'
+              description: `<p><strong>Where can station accessibility improvements have the greatest impact for wheelchair users and persons with mobility assistance needs?</strong></p>
+              <p>This analysis identifies essential services (jobs, grocery stores, medical offices, etc) that can be reached via transit where wheelchair users and
+              persons with mobility impairments are most impacted by wheelchair inaccessible rail stations. These maps can be used to help prioritize rail station improvements.</p>`
             }
           }
         },
@@ -625,7 +632,8 @@ export class Accessibility{
           content:{
             text:{
               id: 'AccAll',
-              description: 'This map serves as the baseline. It shows the number of destinations reachable via rail from each zone for passengers that can use all rail stations. The darker the color, the more destinations are reachable from that <abbr class="accessibility__abbr" title="Traffic Analysis Zone">TAZ</abbr> via rail.'
+              description: `<p>This map serve as the baseline. It shows the number of destinations reachable via rail from each zone for passengers that do not need mobility
+              assistance. The darker the color, the more essential service destinations are reachable from that <abbr title="Traffic Analysis Zone">TAZ</abbr> via rail.</p>`
             },
             map:{
               paint: [
@@ -659,7 +667,8 @@ export class Accessibility{
           content: {
             text: {
               id: 'AccCur',
-              description: 'This map shows the destinations reachable by wheelchair users who can only use wheelchair accessible stations. The darker the color, the more destinations are reachable from that <abbr class="accessibility__abbr" title="Traffic Analysis Zone">TAZ</abbr> via rail.'
+              description: `<p>This map shows the destinations reachable by wheelchair users and persons who can only use wheelchair accessible stations. The darker the color,
+              the more essential service destinations are reachable from that <abbr title="Traffic Analysis Zone">TAZ</abbr> via rail.</p>`
             },
             map: {
               paint: [
@@ -691,7 +700,8 @@ export class Accessibility{
           content: {
             text: {
               id: 'DisCur',
-              description: 'This map highlights the differences between the baseline map (2) and wheelchair accessible map (3). The darker the color, the greater the disparity for wheelchair users in comparison with all users.'
+              description: `<p>This map highlights the differences between the baseline map (2) and the wheelchair accessible map (3). The darker the color, the greater the disparity 
+              for wheelchair users and persons with mobility impairments in comparison with all users.</p>`
             },
             map: {
               paint: [
@@ -723,7 +733,9 @@ export class Accessibility{
           content: {
             text: {
               id: 'AccFut',
-              description: 'This map considers which stations are programmed for wheelchair accessibility improvements or have improvements in progress. It includes stations that are currently accessible and those that are programmed for improvement. Again, the darker the color, the more destinations are reachable via rail from that zone.'
+              description: `<p>This map considers which stations are programmed for wheelchair accessibility and mobility assistance improvements or have improvements in progress. 
+              It includes stations that are currently accessible and those that are programmed for improvement. Again, the darker the color, the more essential service destinations 
+              are reachable via rail from that zone.</p>`
             },
             map: {
               paint: [
@@ -755,7 +767,9 @@ export class Accessibility{
           content: {
             text: {
               id: 'DisFut',
-              description: 'This map compares the previous map (5) to the baseline map (2). It shows where the disparity remains. These are the places that should be the focus of the next batch of wheelchair accessibility improvements at rail stations.'
+              description: `<p>This map compares the previous map (5) to the baseline map (2). It shows where the dispairty remains after the programmed wheelchair accessibility and 
+              mobility assistance improvements. These are the places that should be the focus of the next batch of wheelchair accessibility and mobility assistance improvements at
+              rail stations.</p>`
             },
             map: {
               paint: [
@@ -782,7 +796,7 @@ export class Accessibility{
           title: 'Case Study: Collingswood',
           content: {
             id: 'caseStudy',
-            0: 'This case study shows how to interpret the maps using Collingswood Station on the PATCO line as an example',
+            0: 'This case study shows how to interpret the maps using Collingswood Station on the PATCO line as an example. Click the numbers above to cycle through the maps of the area.',
             1: {
               title: 'Destinations Reachable by Non-Wheelchair Users',
               text: 'The dark blue surrounding the Collingswood Station shows that non-wheelchair users can reach a large number of destinations',

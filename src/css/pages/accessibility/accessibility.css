@@ -103,6 +103,12 @@
   margin: 2% auto 0;
 }
 
+.accessibility-section#intro h1{
+  margin: auto 3%
+}
+.accessibility-section#intro hr{
+  background: #d8eee6;
+}
 .accessibility-section>p{
   color: #fff;
   font-size: .95rem;
