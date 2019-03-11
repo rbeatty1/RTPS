@@ -691,7 +691,7 @@ export class Accessibility{
           content: {
             text: {
               id: 'DisCur',
-              description: 'This map highlights the differences between the baseline map (1) and wheelchair accessible map (2). The darker the color, the greater the disparity for wheelchair users in comparison with all users.'
+              description: 'This map highlights the differences between the baseline map (2) and wheelchair accessible map (3). The darker the color, the greater the disparity for wheelchair users in comparison with all users.'
             },
             map: {
               paint: [
@@ -755,7 +755,7 @@ export class Accessibility{
           content: {
             text: {
               id: 'DisFut',
-              description: 'This map compares the previous map (4) to the baseline map (1). It shows where the disparity remains. These are the places that should be the focus of the next batch of wheelchair accessibility improvements at rail stations.'
+              description: 'This map compares the previous map (5) to the baseline map (2). It shows where the disparity remains. These are the places that should be the focus of the next batch of wheelchair accessibility improvements at rail stations.'
             },
             map: {
               paint: [
