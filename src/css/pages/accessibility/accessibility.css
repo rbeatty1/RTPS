@@ -73,7 +73,8 @@
 
 #accessibility-nav a:hover{
   color: #06bf9c;
-  background: #ddd
+  background: #ddd;
+  box-shadow: 2px 2px 4px rgba(153,153,153,.5);
 }
 #accessibility-nav a.active{
   background: #06bf9c;
@@ -103,6 +104,12 @@
   margin: 2% auto 0;
 }
 
+.accessibility-section#intro h1{
+  margin: auto 3%
+}
+.accessibility-section#intro hr{
+  background: #d8eee6;
+}
 .accessibility-section>p{
   color: #fff;
   font-size: .95rem;
@@ -178,7 +185,6 @@
 }
 
 .mapboxgl-popup-content{
-  padding: 5px;
   font-size: 1.2em;
   color: white;
   font-weight: 700;

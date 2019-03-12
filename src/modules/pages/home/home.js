@@ -192,8 +192,8 @@ class Home{
         title: 'Wheelchair Accessibility',
         color: '#06bf9c',
         secondary: '#a7ddd1',
-        description: `<p><strong>Where can station accessibility improvements have the greatest impact for wheelchair users?</strong> View data 
-        showing destinations reachable via rail by wheelchair users as compared to all users.</p>`
+        description: `<p><strong>Where can station accessibility improvements have the greatest impact for wheelchair users and persons with mobility assistance needs?</strong> 
+        Wiew data showing destinations reachable via rail by wheelchair users and persons with mobility impairments as compared to all users.</p>`
       }
     }
     this.render()
