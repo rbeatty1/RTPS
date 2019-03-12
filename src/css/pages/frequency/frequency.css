@@ -170,9 +170,10 @@
   margin: 0 auto;
   text-align: center;
   flex-flow: column;
-  background: #fff;
+  background: whitesmoke;
   border-radius: 5px;
   padding: 3%;
+  overflow-x: auto;
 }
 .frequency__storySection-legendContainer{
   margin: .5rem 0;
@@ -191,7 +192,6 @@
 .frequency__legend-units{
   margin: 0;
   font-size: 1rem;
-  color: #555;
   font-weight: 400;
 }
 .frequency__legend-breakContainer{
@@ -201,6 +201,7 @@
 }
 .frequency__legend-breakContainer.railChange{
   align-items: center;
+  color: #555
 }
 .frequency__legend-break{
   height: 100%;
@@ -218,12 +219,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
+  width: 90%;
 }
 .frequency__legend-railPercent {
   color: #555;
-  margin: 0;
-  white-space: nowrap
+  margin: 0 2%;
 }
 .frequency__storySection-table{
   width: 85%;
@@ -231,9 +231,13 @@
   font-size: .8rem;
   border-radius: 5px;
   padding: 2%;
-  background: #fff;
+  background: whitesmoke;
   text-align: center;
   color: #08506d;
+}
+
+.frequency__storySection-table, .frequency__storySection-legend{
+  overflow-x: auto;
 }
 
 .frequency__storySection-tableHeader{
