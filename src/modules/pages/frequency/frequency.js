@@ -16,6 +16,7 @@ const contentRef = {
       map: false,
       table: false,
       text:  `
+      <p><strong>Where is there potential latent demand for higher frequency transit service?</strong></p>
       <p>What happens if we double transit service frequency for all lines? How does doubled service frequency scenario compare to the existing scenario?</p>
       <p>The answers below help us understand where potential latent demand for higher frequency transit exists. Want to know how you neighborhood or favorite
       routes might respond? Scroll down to begin exploring!</p>
@@ -188,11 +189,11 @@ const contentRef = {
           units: "Estimated Passengers per Day",
           name: "Absolute Ridership Change",
           scheme: [
-            ["Low", "#f0f9e8"],
-            ["", "#bae4bc"],
-            ["", "#7bccc4"],
-            ["", "#43a2ca"],
-            ["High", "#0868ac"]
+            ["Low", "#fee391"],
+            ["", "#fec44f"],
+            ["", "#fe9929"],
+            ["", "#d95f0e"],
+            ["High", "#993404"]
           ]
         }]
       },
@@ -693,7 +694,6 @@ const BuildContent = (content, key, component) => {
             contentRef[key].title
           }</h1><hr class="frequency__storySection-divider">
         </div>
-      <div class="frequency__storySection-legend"></div>
       ${content.text}
       `;
       break;
@@ -709,8 +709,8 @@ const BuildContent = (content, key, component) => {
           }</h2><hr class="frequency__storySection-divider">
         </div>
       </div>
-      <div class="frequency__storySection-legend"></div>
       ${content.text}
+      <div class="frequency__storySection-legend"></div>
       `;
       break;
   }
@@ -1012,13 +1012,13 @@ const LoadTaz = map => {
                 <div class='frequency__popup-header'>TAZ ${target}</div>
                 <div class='frequency__popup-meat'><span class="frequency__popup-emphasis">Base Scenario</span> ${FormatNumber(
                   Math.floor(feat.tBase)
-                )} <span class="frequency__popup-unit">Trips per Day</span></div>
+                )} <span class="frequency__popup-unit">Transit Trips per Day</span></div>
                 <div class='frequency__popup-meat'><span class="frequency__popup-emphasis">Doubled Frequency</span> ${FormatNumber(
                   Math.floor(feat.tDouble)
-                )} <span class="frequency__popup-unit">Trips per Day</span></div>
+                )} <span class="frequency__popup-unit">Transit Trips per Day</span></div>
                 <div class='frequency__popup-meat'><span class="frequency__popup-emphasis">Absolute Change</span> ${FormatNumber(
                   Math.floor(feat.tActual)
-                )} <span class="frequency__popup-unit">Trips per Day</span></div>
+                )} <span class="frequency__popup-unit">Transit Trips per Day</span></div>
                 <div class='frequency__popup-meat'><span class="frequency__popup-emphasis">Percent Change</span> ${
                   feat.tPercent
                 }<span class="frequency__popup-unit">%</span></div>
@@ -1031,13 +1031,13 @@ const LoadTaz = map => {
                 <div class='frequency__popup-header'>TAZ ${target}</div>
                 <div class='frequency__popup-meat'><span class="frequency__popup-emphasis">Base Scenario</span> ${FormatNumber(
                   Math.floor(feat.vBase)
-                )} <span class="frequency__popup-unit">Trips per Day</span></div>
+                )} <span class="frequency__popup-unit">Car Trips per Day</span></div>
                 <div class='frequency__popup-meat'><span class="frequency__popup-emphasis">Doubled Frequency</span> ${FormatNumber(
                   Math.floor(feat.vDouble)
-                )} <span class="frequency__popup-unit">Trips per Day</span></div>
+                )} <span class="frequency__popup-unit">Car Trips per Day</span></div>
                 <div class='frequency__popup-meat'><span class="frequency__popup-emphasis">Absolute Change</span> ${FormatNumber(
                   Math.floor(feat.vActual)
-                )} <span class="frequency__popup-unit">Trips per Day</span></div>
+                )} <span class="frequency__popup-unit">Car Trips per Day</span></div>
                 <div class='frequency__popup-meat'><span class="frequency__popup-emphasis">Percent Change</span> ${
                   feat.vPercent
                 }<span class="frequency__popup-unit">%</span></div>
@@ -1388,12 +1388,12 @@ const LoadRail = map => {
         - name => linename that will be used to match the appropriate features in 
   */
   const LineWidth = (data, target, name) => {
-    if (data < 0) target.push(name, 0.5);
-    else if (data >= 0 && data < 30) target.push(name, 1);
-    else if (data >= 30 && data < 50) target.push(name, 2);
-    else if (data >= 50 && data < 80) target.push(name, 3);
-    else if (data >= 80 && data < 100) target.push(name, 4);
-    else if (data >= 100) target.push(name, 5);
+    if (data < 0) target.push(name, 1);
+    else if (data >= 0 && data < 30) target.push(name, 2);
+    else if (data >= 30 && data < 50) target.push(name, 3.5);
+    else if (data >= 50 && data < 80) target.push(name, 5);
+    else if (data >= 80 && data < 100) target.push(name, 6);
+    else if (data >= 100) target.push(name, 7);
   };
   /*
     LineColor(data, target, line)
