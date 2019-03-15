@@ -36,8 +36,16 @@ let layerRef = {
     weight: "The results were then weighted by ridership (<span class='reliability__sidebar-emphasis'>Ridership Weighted Reliability Score</span>) to highlight segments that impact high ridership surface transit service an allow for further prioritization of improvements."
   }
 }
-// function to build overall page structure
+
+
+/*
+  BuildPage(structure)
+  @purpose: Build the map and sidebar HTML elements
+  @params
+    structure: component state that outlines what those elements are
+*/
 const BuildPage = structure =>{
+  // build container for entire page
   let page = document.createElement('div')
   page.id = 'reliability__page'
 
@@ -54,12 +62,23 @@ const BuildPage = structure =>{
   document.querySelector('main').appendChild(page)
 }
 
-// function to build map and all of it's layers
+/*
+  BuildMap(pageContent)
+  @purpose: Build mapbox-gl element and populate with map layers
+  @params:
+    pageContent: component state
+*/
 const BuildMap = pageContent =>{
-  // load data for each layer and add to state
+  /*
+    LoadData(data)
+    @purpose: load map layer data
+    @params:
+      data: container to dump retreived data
+  */
   const LoadData = data =>{
     // all API endpoints
     let endpoints = ['score', 'tti', 'speed', 'otp', 'weighted', 'njt', 'septa' ]
+    // hit all end points and retrieve data
     endpoints.map(query=>{
       fetch(`https://a.michaelruane.com/api/rtps/reliability?${query}`)
       .then(response=>{
@@ -73,7 +92,12 @@ const BuildMap = pageContent =>{
   
   }
 
-  // function to update checkbox status and load legend when layer is activated.
+  /* 
+    LayerVisibilityCheck(layerName)
+    @purpose: function to update checkbox status and load legend when layer is activated.
+    @params:
+      layerName: name of layer to check status of appropriate checkbox
+  */
   const LayerVisibilityCheck = layerName =>{
     let layerId = `reliability-${layerName}`,
       checkboxId = `#legend-${layerName}`
@@ -83,8 +107,22 @@ const BuildMap = pageContent =>{
     }
   }
 
+  /*
+    BuildPopUps(layers)
+    @purpose: Build listener events to handle popup creation
+    @params: 
+      layers: collection of layers from mapbox-gl stylesheet 
+  */
   const BuildPopUps = layers =>{
+    /*
+      BuildPopUpContent(layer, props)
+      @purpose: Build popup for clicked layer
+      @params:
+        layer: layer that was clicked
+        props: properties that will drive content creation of clicked layer
+    */
     const BuildPopUpContent = (layer, props) =>{
+      // set variables
       let colorRef = styles.reliability.layers[layer].paint['line-color'],
         field = colorRef[1][1],
         data = props[field],
@@ -92,11 +130,13 @@ const BuildMap = pageContent =>{
         title = document.createElement('h3'),
         property = document.createElement('p'),
         dataContent = document.createElement('p')
-      
+
+      // set classes for popup content
       container.classList.add('reliability__popup-container')
       property.classList.add('reliability__popup-field')
       dataContent.classList.add('reliability__popup-data')
 
+      // grammar (reliability score layers have multiple routes, other layers do not)
       title.innerText = (layer == 'score' || layer == 'weighted') ? `Routes ${props.lines}` : `Route ${props.linename}`
       switch(layer){
         case 'score':
@@ -118,6 +158,7 @@ const BuildMap = pageContent =>{
       return container.outerHTML
     }
 
+    // set events for all layers
     for (let l in layers){
       map.on('mouseover', `reliability-${l}`, e=>map.getCanvas().style.cursor = 'pointer')
       map.on('mouseleave', `reliability-${l}`, e=>map.getCanvas().style.cursor = '')
@@ -182,6 +223,13 @@ const BuildMap = pageContent =>{
   return map
 }
 
+/*
+  BuildSidebar(map, data)
+  @purpose: Build sidebar and all of its pertaining content
+  @params:
+    map: mapbox gl element, needed for layer control actions
+    data: 
+*/
 const BuildSidebar = (map, data) =>{
   // function to build sidebar tabs
   const BuildSidebarNav = () =>{

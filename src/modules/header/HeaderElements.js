@@ -1,10 +1,20 @@
+/*
+    NOTE: A lot of this is relics from the previous page structure when the project first began. It was only the gap page at that time,
+        and the query inputs for that page were located in the header. Now they've moved to the sidebar, but this content reference object
+        still contains them.
+*/
+
+
+// municipality look up for gap page
 const GetGeomNames= x =>{
     let mcds = []
+    // hit muni api
     fetch('https://a.michaelruane.com/api/rtps/gap?list')
     .then(response=>{
         if (response.status ==200) return response.json()
     })
     .then(jawn=>{
+        // create array of mcds
         for (let i in jawn){
             mcds.push(jawn[i])
         }
@@ -17,6 +27,7 @@ const HeaderElements = [
     {
         elemName : 'logo'
     },
+    // this object in the header elements array defines the gap page's query inputs
     {
         elemName: 'queryInputs',
         content: {
@@ -48,6 +59,7 @@ const HeaderElements = [
             }
         }
     },
+    // navigation links for header
     {
         elemName : 'navigation',
         content : {

@@ -1,9 +1,29 @@
 import "../../../css/pages/home/home.css"
 import { LoadMain, ChangeLogo } from "../../../utils/loadMain";
 
+
+/*
+  Landing(props, appContainer)
+  @purpose: Build the landing page for the RTPP application
+  @params:
+    props: properties of the Home class, built in the constructor. Content reference for everything that gets built
+    appContainer: main container of the application
+*/
 const Landing = (props, appContainer) =>{
+  /*
+    SectionChange(target, section)
+    @purpose: Change home page content on nav link click
+    @params: 
+      target: event target
+      section: section to refer to in content reference object to pull correct data
+  */
   const SectionChange = (target, section)=>{
+    /*
+      ChangeText()
+      @purpose: Changes home page text based on active link. Pulls content from parent function (SectionChange)
+    */
     const ChangeText = () =>{
+      // grab appropriate data
       let content = props[section],
         textContainer = document.getElementById('desc-container'),
         linksContainer = document.createElement('div')

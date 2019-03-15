@@ -330,8 +330,10 @@ const AddListeners = map => {
         geography.selection = geoid
         muni ? map.setFilter('boundaries-click', ['==', 'GEOID', geoid]) : null
         let buttons = document.querySelectorAll('.input__query-button')
-        for (let btn of buttons){
-            btn.classList.contains('active') ? null : btn.classList.add('active')
+        if (geography.direction){
+            for (let btn of buttons){
+                btn.classList.contains('active') ? null : btn.classList.add('active')
+            }
         }
         document.querySelector('.sidebar__input-dropdowns').setAttribute('data-selection', geoid)
     })

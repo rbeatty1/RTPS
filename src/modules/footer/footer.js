@@ -1,5 +1,5 @@
 import "../../css/footer/footer.css";
-import { FooterElements } from "./FooterElements";
+import { FooterElements } from "./FooterElements"; // content reference object 
 import logo from "../../img/DVRPC-logo.png"
 import { version } from "../../../package.json"
 
