@@ -234,10 +234,8 @@
   background: whitesmoke;
   text-align: center;
   color: #08506d;
-}
-
-.frequency__storySection-table, .frequency__storySection-legend{
-  overflow-x: auto;
+  display: table;
+  overflow-x: scroll
 }
 
 .frequency__storySection-tableHeader{

@@ -46,8 +46,8 @@ const contentRef = {
       },
       table: false,
       text: `
-      <p>This map depicts the existing weekday transit frequency by the average number of trips per hour. 
-      Darker colors represent transit routes that have more frequent service.
+      <p>This map depicts the existing weekday bus transit frequency by the average number of trips per hour. 
+      Darker colors represent bus routes that have more frequent service.
       </p>
       `
         
@@ -80,7 +80,7 @@ const contentRef = {
             NJ: ["Burlington", "Camden", "Gloucester", "Mercer"],
             PA: ["Bucks", "Chester", "Delaware", "Montgomery", "Philadelphia"]
           },
-          columns: ["Geography", "Base", "2x Freq.", "Difference", "% Diff"]
+          columns: ["Geography", "Base Trips/Day", "2x Freq.", "Difference", "% Diff"]
         },
         datasets: {
           NJ: {
@@ -140,7 +140,7 @@ const contentRef = {
             NJ: ["Burlington", "Camden", "Gloucester", "Mercer"],
             PA: ["Bucks", "Chester", "Delaware", "Montgomery", "Philadelphia"]
           },
-          columns: ["Geography", "Base", "2x Freq.", "Absolute Diff.", "% Diff.", "% Diff VMT"]
+          columns: ["Geography", "Base Trips/Day", "2x Freq.", "Absolute Diff.", "% Diff.", "% Diff VMT"]
         },
         datasets: {
           NJ: {
@@ -1211,7 +1211,7 @@ const LoadBus = map => {
       if ( route.linename == target) {
         popupContainer.querySelector(".frequency__popup-content").innerHTML = `
             <div class="frequency__popup-header">Route ${target}</div>
-            <div class="frequency__popup-meat"><span class="frequency__popup-emphasis">Actual Change</span> ${FormatNumber(
+            <div class="frequency__popup-meat"><span class="frequency__popup-emphasis">Absolute Change</span> ${FormatNumber(
               Math.floor(route.AbsChange)
             )} <span class="frequency__popup-unit">Passengers / Day</span></div>
             <div class="frequency__popup-meat"><span class="frequency__popup-emphasis">Percent Change</span> ${

@@ -35,7 +35,6 @@ const ChangeLogo = section =>{
 const LoadMain = target =>{
   let main = document.querySelector('main')
   main.innerHTML = ''
-  target = target != undefined ? target.toLowerCase() : undefined
   switch(target){
     case 'gap':
       new Map();
@@ -53,7 +52,7 @@ const LoadMain = target =>{
       new Reliability();
       ChangeLogo(target)
       break;
-    default: 
+    default:
       new Home();
       ChangeLogo(target)
       break;

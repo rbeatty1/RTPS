@@ -11,7 +11,7 @@ const CreateSummary = data =>{
   data.direction == ''
   // do da grammar
   let insert = data.type == 'municipality' ? `the selected area — <strong>${document.querySelector(`option[value='${data.location}']`).innerText}</strong>` : 'the selected area'
-  return `The resulting map shows the average network gap score for connections <strong>${data.direction}</strong> ${insert}. Only <abbr class="map__abbr" title="Traffic Analysis Zone">TAZ</abbr>s with substantial demand <strong>${data.direction} the selected area</strong> are being displayed, a total of <strong>${data.count}</strong>. The darker colors indicate higher priority transit gaps in relation to ${insert}.`
+  return `The resulting map shows the average network gap score for connections <strong>${data.direction}</strong> ${insert}. Only <abbr class="map__abbr" title="Traffic Analysis Zone">TAZ</abbr>s with substantial demand <strong>${data.direction} the selected area</strong> are being displayed, a total of <strong>${data.count} <abbr class="map__abbr" title="Traffic Analysis Zone">TAZ</abbr>s</strong>. The darker colors indicate higher priority transit gaps in relation to ${insert}.`
 }
 
 // this might come later idk

@@ -111,8 +111,11 @@ const BuildDescription = (target, data) =>{
     }
 
     // create title/text for each section
-    for (let color in data){
-        let contents = data[color],
+    let activeNode = document.querySelector('.map__sidebar-menuHeader.active'),
+        active = activeNode.getAttribute('data-type')
+
+    for (let color in data[active]){
+        let contents = data[active][color],
             text = document.createElement('p')
 
         text.innerHTML = contents
@@ -127,6 +130,8 @@ const BuildDescription = (target, data) =>{
     section.appendChild(button)
     section.appendChild(content)
     target.appendChild(section)
+
+
     
 }
 export class Legend{
@@ -141,13 +146,26 @@ export class Legend{
                 labels : ['Low', 'High', 'Low']
             },
             descriptions:{
-                0: `<strong style="color: #8d7355">Dark orange</strong> means that transit service exists between that zone and the selected study area, and has transit supportive densities, but 
-                service is relatively indirect in terms of distance and transfer requirements.`,
-                1: `<strong style="color: #f5cea4">Light orange</strong> means that transit service exists between that zone and the selected study area, but the transit connection is already 
-                direct and/or the origin or destination lack transit supportive densities`,
-                2: `<strong style="color: #5d8078">Dark green</strong> means that there is very little to no transit service between that zone and the selected study area. However, it is relatively
-                dense and more than a few trips are regularly made between that zone and the selected study area.`,
-                3: `<strong style="color: #b5dfd1">Light green</strong> means that there is very little to no transit service between that zone and the selected study area. The area lacks transit supportive densities and few trips are made regularly between that zone and the selected study area.`
+                analysis: {
+                    0: `<strong style="color: #8d7355">Dark orange</strong> means that transit service exists between that zone and the selected study area, 
+                    and has transit supportive densities, but service is relatively indirect in terms of distance and transfer requirements.`,
+                    1: `<strong style="color: #f5cea4">Light orange</strong> means that transit service exists between that zone and the selected study area, 
+                    but the transit connection is already direct and/or the origin or destination lack transit supportive densities`,
+                    2: `<strong style="color: #5d8078">Dark green</strong> means that there is very little to no transit service between that zone and the 
+                    selected study area. However, it is relatively dense and more than a few trips are regularly made between that zone and the selected study area.`,
+                    3: `<strong style="color: #b5dfd1">Light green</strong> means that there is very little to no transit service between that zone and 
+                    the selected study area. The area lacks transit supportive densities and few trips are made regularly between that zone and the selected study area.`
+                },
+                summary :{
+                    0: `<strong style="color: #8d7355">Dark orange</strong> means that transit service exists in that zone and on average, the transit service to other in
+                    demand areas with transit supportive densities is relatively indirect in terms of distance and transfer requirements.`,
+                    1: `<strong style="color: #f5cea4">Light orange</strong> means that transit service exists in that zone and on average, the transit connection is already
+                    direct and/or the area lacks transit supportive densities.`,
+                    2: `<strong style="color: #5d8078">Dark green</strong> means that there is very little to no transit service in that zone. However, it is relatively dense
+                    and could potentially support transit.`,
+                    3: `<strong style="color: #b5dfd1">Light green</strong> means that there is very little to no transit service in that zone. The area lacks transit supportive
+                    densities.`
+                }
             }
         }
         this.render()

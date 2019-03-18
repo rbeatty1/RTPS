@@ -168,7 +168,6 @@ const BuildMenus = appContent =>{
       BuildAnalysisDescription(summary)
       jawn.appendChild(summary)
     }
-    console.log({jawn})
     TransitToggle(jawn)
     container.appendChild(jawn)
   }
