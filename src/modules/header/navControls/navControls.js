@@ -1,5 +1,6 @@
 import '../../../css/header/navControls/navControls.css'
 import { LoadMain } from '../../../utils/loadMain.js'
+import { SetNewURL } from '../../../utils/routing';
 
 
 
@@ -15,11 +16,9 @@ import { LoadMain } from '../../../utils/loadMain.js'
 */
 const _createNavLink = item =>{
     // create link
-    let link = document.createElement('a')
+    let link = document.createElement('span')
     
     // set attributes
-    link.href = '#'
-    link.rel = 'noopener'
     link.setAttribute('data-name', item.title)
     link.setAttribute('data-tool', item.shorthand)
     link.style.background = item.color
@@ -39,7 +38,7 @@ const _createNavLink = item =>{
                 element.style.boxShadow = `0 0 15px ${item.color}`
             }
         });
-        LoadMain(e.target.getAttribute('data-tool'))
+        SetNewURL(e.target.getAttribute('data-tool'), 'tool')
     })
     return link;
 }
@@ -84,7 +83,7 @@ class NavControl{
         header.appendChild(navContainer)
 
         // set height = to width for nav links
-        let links = listElement.querySelectorAll('a')
+        let links = listElement.querySelectorAll('span')
         for (let a of links) a.style.height = `${a.clientWidth}px`
     }
 }

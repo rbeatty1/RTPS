@@ -55,6 +55,7 @@ const BuildMenus = appContent =>{
             let name = e.target.name
             if (e.target.checked){
               if (name == 'rail-lines'){
+                  console.log(appContent.map.getLayer(name))
                   appContent.map.setLayoutProperty(name, 'visibility', 'visible')
                   appContent.map.setLayoutProperty('rail-labels', 'visibility', 'visible')
               }
@@ -168,7 +169,6 @@ const BuildMenus = appContent =>{
       BuildAnalysisDescription(summary)
       jawn.appendChild(summary)
     }
-    console.log({jawn})
     TransitToggle(jawn)
     container.appendChild(jawn)
   }
@@ -181,15 +181,18 @@ const BuildMenus = appContent =>{
   let sidebarContent = document.createElement('div')
   sidebarContent.classList.add('map__sidebar-content')
   for (let key in appContent.elements){
-    let header = document.createElement('a')
+    let header = document.createElement('h3')
+
     header.classList.add('map__sidebar-menuHeader')
-    header.href = '#'
-    header.rel = 'noopener'
     header.setAttribute('data-type', key.toLowerCase())
+
     let title = key != "summary" ? "Local Analysis" : "Regional Summary"
     header.innerText = title
+
+
     sidebar.appendChild(header)
     MenuContent(header, sidebarContent, appContent.elements[key])
+    
     header.addEventListener('click', e=>{
       let sections = document.querySelectorAll('.map__sidebar-menuContent'),
       headers = document.querySelectorAll('.map__sidebar-menuHeader')
