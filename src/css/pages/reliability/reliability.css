@@ -16,8 +16,7 @@
 #reliability__sidebar{
   width: 20%;
   height: 100%;
-  border-left: 2px solid #06bf9c;
-  background: whitesmoke;
+  background: #f5cea4;
   overflow-y: auto;
 }
 .reliability__sidebar-tabs{
@@ -32,24 +31,22 @@
   cursor: pointer;
 }
 .reliability__sidebar-nav{
-  text-decoration: none;
   height: 75%;
-  font-size: 1.25rem;
-  color:#7eaad2;
-  font-weight: 400;
+  text-decoration: none;
+  color: white;
+  font-size: .9em;
   display: flex;
   align-items: center;
-  border-bottom: 0 solid #06bf9c;
+  margin: 0 25px;
+  text-align: center;
 } 
 .reliability__sidebar-nav.active{
   font-weight: 700;
-  font-size: 1.5rem;
-  color: #08506d;
-  border-bottom: 2px solid #06bf9c;
+  font-size: 1.25rem;
+  color: #e89234
 }
 .reliability__sidebar-content{
   width: 100%;
-  /* height: 100%; */
   overflow-y: hidden;
 }
 
@@ -58,15 +55,15 @@
   font-size: 1.15rem;
   text-align: center;
   margin: 1% auto;
-  color: #08506d
+  color: #e89234
 }
 .reliability__sidebar-emphasis{
   font-weight: 700;
-  color: #06bf9c;
+  color: #fff;
 }
 .reliability__sidebar-inputTitle{
   font-weight: 700;
-  color: #06bf9c!important;
+  color: #fff;
   text-align: center;
   margin-top: 10px;
 }
@@ -99,20 +96,43 @@
   height: 100%;
 }
 
-.reliability__sidebar-control{
-  height: 40%;
-  margin: 5% 0;
-  background: white;
-  box-shadow: 2px 2px 3px rgba(0,0,0,0.1);
-  border-radius: 10px;
-  overflow-y: auto;
+.reliability__sidebar-sectionContent button{
+  border: none;
+  color: white;
+  background: #e89234;
+  padding: 5%;
+  margin: .5rem auto;
+  box-shadow: 2px 2px 3px 2px rgba(0,0,0,0.1);
+  border-radius: 5px;
   width: 100%;
 }
+
+
+.reliability__sidebar-sectionContent section p{
+  color: #08506d;
+  padding: 3%;
+}
+.reliability__sidebar-control{
+  min-height: 40%;
+  margin: 5% 0;
+  background: whitesmoke;
+  box-shadow: 2px 2px 3px rgba(0,0,0,0.1);
+  border-radius: 10px;
+  width: 100%;
+  display: none;
+}
+
+.reliability__sidebar-control.display{
+  display: block;
+}
+f
+
 #content-about>.reliability__sidebar-control{
   height: 90%;
 }
+
 .reliability__control-title{
-  color: #06bf9c;
+  color: #e89234;
   width: 100;
   text-align: center;
 }
@@ -125,7 +145,7 @@
 }
 .reliability__layer-checkbox{
   margin: .5rem;
-  color: #999;
+  color: #E89234;
   font-size: 1rem;
 }
 .reliability__layer-emphasis{
@@ -134,7 +154,6 @@
 }
 .reliability__legend-section{
   display: none;
-  width: 100%;
   padding: 1rem .5rem;
   font-size: .75rem;
   margin: auto;
