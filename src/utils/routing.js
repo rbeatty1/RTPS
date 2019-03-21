@@ -37,9 +37,8 @@ const UpdateView = ()=>{
             return {page: 'error'}
         }
     }
-
     // is it the home page?
-    let hash = window.location.href.slice(0, -1) == window.location.origin ? {page: 'home'} : GetURL()
+    let hash = window.location.href == window.location.origin+window.location.pathname ? {page: 'home'} : GetURL()
 
     // LoadMain function already takes care of the tool/documentation check, so this could be restructured
     switch(hash.page){

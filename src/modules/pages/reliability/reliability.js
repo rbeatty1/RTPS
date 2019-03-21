@@ -750,8 +750,6 @@ export class Reliability{
   render(){
     let main = document.querySelector('main')
     main.id = 'reliability'
-    if (!document.querySelector('header')) headerRender(HeaderElements)
-    if (!document.querySelector('footer')) new Footer();
     BuildPage(this.content)
     let map = BuildMap(this)
     BuildSidebar(map, this.data)

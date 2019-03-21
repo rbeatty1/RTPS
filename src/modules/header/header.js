@@ -17,7 +17,7 @@ function headerRender(elements){
     logoContainer.alt = 'Regional Transit Priority Setting Logo'
 
     logoContainer.firstChild.onclick = e => {
-        history.pushState({page: 'home', type: 'home'}, document.title, '/')
+        history.pushState({page: 'home', type: 'home'}, document.title, window.location.origin + window.location.pathname)
         SetNewURL()
     }
     header.appendChild(logoContainer);
