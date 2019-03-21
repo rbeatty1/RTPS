@@ -355,7 +355,7 @@ const BuildPage = content =>{
     // if not, reset to default map
     else{
       map.setPaintProperty('zones-analysis', 'fill-color', 'rgba(0,0,0,0)')
-      map.setPaintProperty('station-access', 'circle-color', ['match', ['get', 'accessibility'], 0, '#e89234', 1, '#8bb23f', 2, '#08506d', '#aaa'])
+      map.setPaintProperty('station-access', 'circle-color', ['match', ['get', 'accessibility'], 0, '#e89234', 1, '#8bb23f', 2, '#08506d', '#ccc'])
     }
     if(document.getElementById('caseStudy').classList.contains('active')){
       let extent = {
@@ -521,8 +521,7 @@ const BuildPage = content =>{
       // send the whole thing
       sectionBody.appendChild(container)
       
-      // if there is a map portion to the section (aka not overview), create the corresponding legend
-      if (content.map) new Legend(content)
+      new Legend(content)
   
       // Build ScrollMagic Scene
       BuildScene(container)
@@ -619,7 +618,24 @@ export class Accessibility{
               id: 'intro',
               description: `<p><strong>Where can station accessibility improvements have the greatest impact for wheelchair users and persons with mobility assistance needs?</strong></p>
               <p>This analysis identifies essential services (jobs, grocery stores, medical offices, etc) that can be reached via transit where wheelchair users and
-              persons with mobility impairments are most impacted by wheelchair inaccessible rail stations. These maps can be used to help prioritize rail station improvements.</p>`
+              persons with mobility impairments are most impacted by wheelchair inaccessible rail stations. These maps can be used to help prioritize rail station improvements.</p>
+              <p>This analysis considers programmed accessibility improvements such as adding an elevator. The lists of programmed improvements was obtained from transit agencies
+              in 2018.</p>`
+            },
+            map:{
+              paint: [
+                'interpolate', ['linear'], ['get', 'AccAll'],
+                1, 'rgba(0,0,0,0.01)',
+                2, '#a6bddb',
+                5, '#3690c0',
+                7, '#045a8d',
+                10, '#023858'
+              ],
+              stationPaint: ['match', ['get', 'accessibility'], 0, '#e89234', 1, '#8bb23f', 2, '#08506d', '#ccc'],
+              legend:{
+                stations: [[0, '#e89234'], [1, '#8bb23f'], [2, '#08506d']]
+              }
+
             }
           }
         },
@@ -632,25 +648,25 @@ export class Accessibility{
           content:{
             text:{
               id: 'AccAll',
-              description: `<p>This map serve as the baseline. It shows the number of destinations reachable via rail from each zone for passengers that do not need mobility
+              description: `<p>This map serves as the baseline. It shows the number of destinations reachable via rail from each zone for passengers that do not need mobility
               assistance. The darker the color, the more essential service destinations are reachable from that <abbr title="Traffic Analysis Zone">TAZ</abbr> via rail.</p>`
             },
             map:{
               paint: [
                 'interpolate', ['linear'], ['get', 'AccAll'],
                 1, 'rgba(0,0,0,0.01)',
-                2, '#a6bddb',
-                5, '#3690c0',
-                7, '#045a8d',
-                10, '#023858'
+                2, '#cbc9e2',
+                5, '#9e9ac8',
+                7, '#756bb1',
+                10, '#54278f'
               ],
-              stationPaint: ['match', ['get', 'accessibility'], 0, '#e89234', 1, '#8bb23f', 2, '#08506d', '#aaa'],
+              stationPaint: ['match', ['get', 'accessibility'], 0, '#e89234', 1, '#8bb23f', 2, '#08506d', '#ccc'],
               legend:{
                 stations: [[0, '#e89234'], [1, '#8bb23f'], [2, '#08506d']],
                 zones: {
                   header : 'Reachable Destinations',
                   labels: ['Few', 'Many'],
-                  colors: ['#a6bddb', '#3690c0', '#045a8d', '#023858']
+                  colors: ['#cbc9e2', '#9e9ac8', '#756bb1', '#54278f']
                 }
               }
 
@@ -674,18 +690,18 @@ export class Accessibility{
               paint: [
                 'interpolate', ['linear'], ['get', 'AccCur'],
                 1, 'rgba(0,0,0,0.01)',
-                2, '#a6bddb',
-                5, '#3690c0',
-                7, '#045a8d',
-                10, '#023858'
+                2, '#cbc9e2',
+                5, '#9e9ac8',
+                7, '#756bb1',
+                10, '#54278f'
               ],
-              stationPaint: ['match', ['get', 'accessibility'], 0, '#999', 1, '#8bb23f', 2, '#666', '#333'],
+              stationPaint: ['match', ['get', 'accessibility'], 0, '#ccc', 1, '#8bb23f', 2, '#666', '#666'],
               legend:{
-                stations: [[0, '#999'], [1, '#8bb23f'], [2, '#666']],
+                stations: [[0, '#ccc'], [1, '#8bb23f'], [2, '#666']],
                 zones: {
                   header : 'Reachable Destinations',
                   labels: ['Few', 'Many'],
-                  colors: ['#a6bddb', '#3690c0', '#045a8d', '#023858']
+                  colors: ['#cbc9e2', '#9e9ac8', '#756bb1', '#54278f']
                 }
               }
             }
@@ -712,9 +728,9 @@ export class Accessibility{
                 8, '#d95f0e',
                 12, '#993404',
               ],
-              stationPaint: ['match', ['get', 'accessibility'], 0, '#aaa', 1, '#8bb23f', 2, '#666', '#aaa'],
+              stationPaint: ['match', ['get', 'accessibility'], 0, '#ccc', 1, '#8bb23f', 2, '#666', '#ccc'],
               legend: {
-                stations: [[0, '#aaa'], [1, '#8bb23f'], [2, '#666']],
+                stations: [[0, '#ccc'], [1, '#8bb23f'], [2, '#666']],
                 zones:{
                   header: 'Destination Disparity for Wheelchair Users',
                   labels: ['Less', 'More'],
@@ -741,18 +757,18 @@ export class Accessibility{
               paint: [
                 'interpolate', ['linear'], ['get', 'AccFut'],
                 1, 'rgba(0,0,0,0.01)',
-                2, '#a6bddb',
-                5, '#3690c0',
-                7, '#045a8d',
-                10, '#023858'
+                2, '#cbc9e2',
+                5, '#9e9ac8',
+                7, '#756bb1',
+                10, '#54278f'
               ],
-              stationPaint: ['match', ['get', 'accessibility'], 1, '#8bb23f', 2, '#08506d', 0, '#999', '#333'],
+              stationPaint: ['match', ['get', 'accessibility'], 1, '#8bb23f', 2, '#08506d', 0, '#ccc', '#666'],
               legend:{
-                stations: [[0, '#999'], [1, '#8bb23f'], [2, '#08506d']],
+                stations: [[0, '#ccc'], [1, '#8bb23f'], [2, '#08506d']],
                 zones: {
                   header : 'Reachable Destinations',
                   labels: ['Few', 'Many'],
-                  colors: ['#a6bddb', '#3690c0', '#045a8d', '#023858']
+                  colors: ['#cbc9e2', '#9e9ac8', '#756bb1', '#54278f']
                 }
               }
             }
@@ -762,14 +778,13 @@ export class Accessibility{
           title: {
             main: 'Difference',
             scenario: 'Future',
-            sub: 'Remaining Future Destination Disparity for Wheelchair Users in Comparison with Non-wheelchair Users (Programmed Improvements Included)'
+            sub: 'Remaining Destination Disparity for Wheelchair Users in Comparison with Non-wheelchair Users (including programmed improvements)'
           },
           content: {
             text: {
               id: 'DisFut',
-              description: `<p>This map compares the previous map (5) to the baseline map (2). It shows where the dispairty remains after the programmed wheelchair accessibility and 
-              mobility assistance improvements. These are the places that should be the focus of the next batch of wheelchair accessibility and mobility assistance improvements at
-              rail stations.</p>`
+              description: `<p>This map compares the previous map (5) to the baseline map (2). It shows where the disparity remains after the programmed improvements
+              are completed. These are the places that could be the focus of future improvements at rail stations.</p>`
             },
             map: {
               paint: [
@@ -780,9 +795,9 @@ export class Accessibility{
                 8, '#d95f0e',
                 12, '#993404',
               ],
-              stationPaint: ['match', ['get', 'accessibility'], 1, '#8bb23f', 2, '#08506d', '#aaa'],
+              stationPaint: ['match', ['get', 'accessibility'], 1, '#8bb23f', 2, '#08506d', '#ccc'],
               legend:{
-                stations: [[0, '#aaa'], [1, '#8bb23f'], [2, '#08506d']],
+                stations: [[0, '#ccc'], [1, '#8bb23f'], [2, '#08506d']],
                 zones: {
                   header: 'Destination Disparity for Wheelchair Users',
                   labels: ['Less', 'More'],
@@ -796,26 +811,26 @@ export class Accessibility{
           title: 'Case Study: Collingswood',
           content: {
             id: 'caseStudy',
-            0: 'This case study shows how to interpret the maps using Collingswood Station on the PATCO line as an example. Click the numbers above to cycle through the maps of the area.',
+            0: 'At the time of this analysis, an elevator was under construction at the Collingswood station, scheduled to open in Spring 2019. This case study shows how to interpret the maps using Collingswood Station on the PATCO line as an example. Click the numbers above to cycle through the maps of the area.',
             1: {
               title: 'Destinations Reachable by Non-Wheelchair Users',
-              text: 'The dark blue surrounding the Collingswood Station shows that non-wheelchair users can reach a large number of destinations',
+              text: 'The dark purple surrounding the Collingswood Station shows that non-wheelchair users can reach a large number of destinations',
               map: {
                 paint: [
                   'interpolate', ['linear'], ['get', 'AccAll'],
                   1, 'rgba(0,0,0,0.01)',
-                  2, '#a6bddb',
-                  5, '#3690c0',
-                  7, '#045a8d',
-                  10, '#023858'
+                  2, '#cbc9e2',
+                  5, '#9e9ac8',
+                  7, '#756bb1',
+                  10, '#54278f'
                 ],
-                stationPaint: ['match', ['get', 'accessibility'], 0, '#e89234', 1, '#8bb23f', 2, '#08506d', '#aaa'],
+                stationPaint: ['match', ['get', 'accessibility'], 0, '#e89234', 1, '#8bb23f', 2, '#08506d', '#ccc'],
                 legend:{
                   stations: [[0, '#e89234'], [1, '#8bb23f'], [2, '#08506d']],
                   zones: {
                     header : 'Reachable Destinations',
                     labels: ['Few', 'Many'],
-                    colors: ['#a6bddb', '#3690c0', '#045a8d', '#023858']
+                    colors: ['#cbc9e2', '#9e9ac8', '#756bb1', '#54278f']
                   }
                 }  
               }
@@ -827,18 +842,18 @@ export class Accessibility{
                 paint: [
                   'interpolate', ['linear'], ['get', 'AccCur'],
                   1, 'rgba(0,0,0,0.01)',
-                  2, '#a6bddb',
-                  5, '#3690c0',
-                  7, '#045a8d',
-                  10, '#023858'
+                  2, '#cbc9e2',
+                  5, '#9e9ac8',
+                  7, '#756bb1',
+                  10, '#54278f'
                 ],
-                stationPaint: ['match', ['get', 'accessibility'], 0, '#999', 1, '#8bb23f', 2, '#666', '#333'],
+                stationPaint: ['match', ['get', 'accessibility'], 0, '#ccc', 1, '#8bb23f', 2, '#666', '#666'],
                 legend:{
-                  stations: [[0, '#999'], [1, '#8bb23f'], [2, '#666']],
+                  stations: [[0, '#ccc'], [1, '#8bb23f'], [2, '#666']],
                   zones: {
                     header : 'Reachable Destinations',
                     labels: ['Few', 'Many'],
-                    colors: ['#a6bddb', '#3690c0', '#045a8d', '#023858']
+                    colors: ['#cbc9e2', '#9e9ac8', '#756bb1', '#54278f']
                   }
                 }
               }
@@ -855,9 +870,9 @@ export class Accessibility{
                   8, '#d95f0e',
                   12, '#993404',
                 ],
-                stationPaint: ['match', ['get', 'accessibility'], 0, '#aaa', 1, '#8bb23f', 2, '#666', '#aaa'],
+                stationPaint: ['match', ['get', 'accessibility'], 0, '#ccc', 1, '#8bb23f', 2, '#666', '#ccc'],
                 legend: {
-                  stations: [[0, '#aaa'], [1, '#8bb23f'], [2, '#666']],
+                  stations: [[0, '#ccc'], [1, '#8bb23f'], [2, '#666']],
                   zones:{
                     header: 'Destination Disparity for Wheelchair Users',
                     labels: ['Less', 'More'],
@@ -868,23 +883,23 @@ export class Accessibility{
             },
             4: {
               title: 'Destinations Reachable in the Future by Wheelchair Users',
-              text: 'Wheelchair accessibility improvements are currently under construction at the Collingswood station. Therefore, this map accounting for programmed improvements shows darker blue surrounding the station. Wheelchair users are now able to reach many destinations via rail from Collingswood.',
+              text: 'Wheelchair accessibility improvements are currently under construction at the Collingswood station. Therefore, this map accounting for programmed improvements shows darker purple surrounding the station. Wheelchair users are now able to reach many destinations via rail from Collingswood.',
               map: {
                 paint: [
                   'interpolate', ['linear'], ['get', 'AccFut'],
                   1, 'rgba(0,0,0,0.01)',
-                  2, '#a6bddb',
-                  5, '#3690c0',
-                  7, '#045a8d',
-                  10, '#023858'
+                  2, '#cbc9e2',
+                  5, '#9e9ac8',
+                  7, '#756bb1',
+                  10, '#54278f'
                 ],
-                stationPaint: ['match', ['get', 'accessibility'], 1, '#8bb23f', 2, '#08506d', 0, '#999', '#333'],
+                stationPaint: ['match', ['get', 'accessibility'], 1, '#8bb23f', 2, '#08506d', 0, '#ccc', '#666'],
                 legend:{
-                  stations: [[0, '#999'], [1, '#8bb23f'], [2, '#08506d']],
+                  stations: [[0, '#ccc'], [1, '#8bb23f'], [2, '#08506d']],
                   zones: {
                     header : 'Reachable Destinations',
                     labels: ['Few', 'Many'],
-                    colors: ['#a6bddb', '#3690c0', '#045a8d', '#023858']
+                    colors: ['#cbc9e2', '#9e9ac8', '#756bb1', '#54278f']
                   }
                 }
               }
@@ -901,9 +916,9 @@ export class Accessibility{
                   8, '#d95f0e',
                   12, '#993404',
                 ],
-                stationPaint: ['match', ['get', 'accessibility'], 1, '#8bb23f', 2, '#08506d', '#aaa'],
+                stationPaint: ['match', ['get', 'accessibility'], 1, '#8bb23f', 2, '#08506d', '#ccc'],
                 legend:{
-                  stations: [[0, '#aaa'], [1, '#8bb23f'], [2, '#08506d']],
+                  stations: [[0, '#ccc'], [1, '#8bb23f'], [2, '#08506d']],
                   zones: {
                     header: 'Destination Disparity for Wheelchair Users',
                     labels: ['Less', 'More'],

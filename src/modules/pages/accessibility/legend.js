@@ -61,48 +61,50 @@ const BuildLegend = content =>{
   }
 
   // build zones legend
-  let title = document.createElement('h3'),
-      row = document.createElement('div')
+  if (content.map.legend.zones){
+      let title = document.createElement('h3'),
+        row = document.createElement('div')
 
-  row.classList.add('accessibility__legend-row')
-  title.innerText = content.map.legend.zones.header
-  zones.appendChild(title)
+    row.classList.add('accessibility__legend-row')
+    title.innerText = content.map.legend.zones.header
+    zones.appendChild(title)
 
-  // set the zone item colors and labels
-  content.map.legend.zones.colors.forEach((color, index)=>{
-    // create labels before & after the boxes
-    if (index == 0 || index == (content.map.legend.zones.colors.length - 1)){
-      let label = document.createElement('p'),
-        box = document.createElement('div')
+    // set the zone item colors and labels
+    content.map.legend.zones.colors.forEach((color, index)=>{
+      // create labels before & after the boxes
+      if (index == 0 || index == (content.map.legend.zones.colors.length - 1)){
+        let label = document.createElement('p'),
+          box = document.createElement('div')
 
-      box.classList.add('accessibility__legend-zoneBox')
-      label.classList.add('legend__row-label')
+        box.classList.add('accessibility__legend-zoneBox')
+        label.classList.add('legend__row-label')
 
-      // assign text accordingly (less/more | few/many)
-      label.innerText = index == 0 ? content.map.legend.zones.labels[0] : content.map.legend.zones.labels[1]
-      box.style.backgroundColor = color
+        // assign text accordingly (less/more | few/many)
+        label.innerText = index == 0 ? content.map.legend.zones.labels[0] : content.map.legend.zones.labels[1]
+        box.style.backgroundColor = color
 
-      // assign in correct order
-      if (index == 0){
-        row.appendChild(label)
-        row.appendChild(box)
+        // assign in correct order
+        if (index == 0){
+          row.appendChild(label)
+          row.appendChild(box)
+        }
+        else{
+          row.appendChild(box)
+          row.appendChild(label)
+        }
       }
+      // create box & set color
       else{
+        let box = document.createElement('div')
+        box.classList.add('accessibility__legend-zoneBox')
+        box.style.backgroundColor = color
         row.appendChild(box)
-        row.appendChild(label)
       }
-    }
-    // create box & set color
-    else{
-      let box = document.createElement('div')
-      box.classList.add('accessibility__legend-zoneBox')
-      box.style.backgroundColor = color
-      row.appendChild(box)
-    }
-  })
+    })
 
-  // send 'em
-  zones.appendChild(row)
+    // send 'em
+    zones.appendChild(row)
+  }
   legend.appendChild(stations)
   legend.appendChild(zones)
   section.appendChild(legend)

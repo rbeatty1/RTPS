@@ -33,18 +33,24 @@ const contentRef = {
             name: "Average Weekday Frequency",
             units: "Trips/Hour",
             scheme: [
-              ["0", "#ddd"],
-              ["1", "#aed8ca"],
-              ["2—3", "#74ccb3"],
-              ["4 +", "#06bf9c"]
+              ["0", "#D7F6CC"],
+              ["1", "#7AE487"],
+              ["2—3", "#06BF9C"],
+              ["4 +", "#01859D"]
+            ],
+            style: [
+              `color: #01859D; border: none; border-bottom: .5rem solid #D7F6CC`,
+              `color: #01859D; border: none; border-bottom: .5rem solid #7AE487`,
+              `color: #01859D; border: none; border-bottom: .5rem solid #06BF9C`,
+              `color: #01859D; border: none; border-bottom: .5rem solid #01859D`
             ]
           }
         ]
       },
       table: false,
       text: `
-      <p>This map depicts the existing weekday transit frequency by the average number of trips per hour. 
-      Darker colors represent transit routes that have more frequent service.
+      <p>This map depicts the existing weekday bus transit frequency by the average number of trips per hour. 
+      Darker colors represent bus routes that have more frequent service.
       </p>
       `
         
@@ -62,11 +68,18 @@ const contentRef = {
           {
             name: "Increase in Transit Activity",
             scheme: [
-            ["Very Small", "#faffe2"],
-            ["Small", "#e0ebb8"],
-            ["Moderate", "#c5d890"],
-            ["Great", "#a9c568"],
-            ["Greatest", "#8bb23f"]
+              ["Very Small", "#DACDC9"],
+              ["Small", "#D4C488"],
+              ["Moderate", "#8BB23F"],
+              ["Great", "#42892C"],
+              ["Greatest", "#1C5D28"]
+            ],
+          style: [
+            `color: #1C5D28; border: none; background: #DACDC9`,
+            `color: #1C5D28; border: none; background: #D4C488`,
+            `color: #fff; border: none; background: #8BB23F`,
+            `color: #fff; border: none; background: #42892C`,
+            `color: #fff; border: none; background: #1C5D28`,
           ]
           }
         ]
@@ -77,7 +90,7 @@ const contentRef = {
             NJ: ["Burlington", "Camden", "Gloucester", "Mercer"],
             PA: ["Bucks", "Chester", "Delaware", "Montgomery", "Philadelphia"]
           },
-          columns: ["Geography", "Base", "2x Freq.", "Difference", "% Diff"]
+          columns: ["Geography", "Base Trips/Day", "2x Freq.", "Difference", "% Diff"]
         },
         datasets: {
           NJ: {
@@ -123,11 +136,18 @@ const contentRef = {
         legend: [{
           name: "Decrease in Automobile Activity",
           scheme: [
-            ["Very Small", "#fffae1"],
-            ["Small", "#f5e3b2"],
-            ["Moderate", "#eeca86"],
-            ["Great", "#ebaf5c"],
-            ["Greatest", "#e89234"]
+            ["Very Small", "#FEFABA"],
+            ["Small", "#F6D374"],
+            ["Moderate", "#E89234"],
+            ["Great", "#7F2C2A"],
+            ["Greatest", "#25111A"]
+          ],
+          style: [
+            `color: #25111A; border: none; background: #FEFABA`,
+            `color: #25111A; border: none; background: #F6D374`,
+            `color: #fff; border: none; background: #E89234`,
+            `color: #fff; border: none; background: #7F2C2A`,
+            `color: #fff; border: none; background: #25111A`,
           ]
         }]
       },
@@ -137,7 +157,7 @@ const contentRef = {
             NJ: ["Burlington", "Camden", "Gloucester", "Mercer"],
             PA: ["Bucks", "Chester", "Delaware", "Montgomery", "Philadelphia"]
           },
-          columns: ["Geography", "Base", "2x Freq.", "Absolute Diff.", "% Diff.", "% Diff VMT"]
+          columns: ["Geography", "Base Trips/Day", "2x Freq.", "Absolute Diff.", "% Diff.", "% Diff VMT"]
         },
         datasets: {
           NJ: {
@@ -182,17 +202,47 @@ const contentRef = {
       map: {
         source: "transit",
         layer: ["railLineChange"],
-        legend: [{
+        legend: [
+          {
+            units: "Estimated Passengers per Day",
+            name: "Absolute Ridership Change",
+            scheme: [
+              ["Low", "#fee391"],
+              ["", "#fec44f"],
+              ["", "#fe9929"],
+              ["", "#d95f0e"],
+              ["High", "#993404"]
+            ],
+            style: [
+              `color: #06bf9c; border: none; border-bottom: .5rem solid #fee391`,
+              `color: #06bf9c; border: none; border-bottom: .5rem solid #fec44f`,
+              `color: #06bf9c; border: none; border-bottom: .5rem solid #fe9929`,
+              `color: #06bf9c; border: none; border-bottom: .5rem solid #d95f0e`,
+              `color: #06bf9c; border: none; border-bottom: .5rem solid #993404`,
+            ]
+        },
+        {
           units: "Estimated Passengers per Day",
           name: "Absolute Ridership Change",
           scheme: [
-            ["Low", "#fee391"],
-            ["", "#fec44f"],
-            ["", "#fe9929"],
-            ["", "#d95f0e"],
-            ["High", "#993404"]
+            ["< 0%", "#aaa"],
+            ["0%–30% ", "#aaa"],
+            ["31%–50%", "#aaa"],
+            ["51%–80%", "#aaa"],
+            ["81%–100%", "#aaa"],
+            ["100% <", '#aaa']
+          ],
+          style: [
+            `white-space: nowrap; color: #08506d; border: none; border-bottom: .1rem solid #aaa`,
+            `white-space: nowrap; color: #08506d; border: none; border-bottom: .25rem solid #aaa`,
+            `white-space: nowrap; color: #08506d; border: none; border-bottom: .4rem solid #aaa`,
+            `white-space: nowrap; color: #08506d; border: none; border-bottom: .5rem solid #aaa`,
+            `white-space: nowrap; color: #08506d; border: none; border-bottom: .75rem solid #aaa`,
+            `white-space: nowrap; color: #08506d; border: none; border-bottom: 1rem solid #aaa`
           ]
-        }]
+      }
+      ]
+
       },
       table: false,
       text:`
@@ -216,19 +266,32 @@ const contentRef = {
           name: "Absolute Ridership Change",
           units: "Estimated Passengers per Day",
           scheme: [
-            ["< 1,400", "#ffffec"],
-            ["1,400–1,600", "#f4f2c0"],
-            ["1,601–1,800", "#eae494"],
-            ["1,801–2,200", "#e1d665"],
-            ["> 2,200", "#d8c72e"]
+            ["< 1,400", "#FEFABA"],
+            ["1,400–1,600", "#F6D374"],
+            ["1,601–1,800", "#E89234"],
+            ["1,801–2,200", "#7F2C2A"],
+            ["> 2,200", "#25111A"]
+          ],
+          style: [
+            `color: #25111A; border: none; border-bottom: .5rem solid #FEFABA`,
+            `color: #25111A; border: none; border-bottom: .5rem solid #F6D374`,
+            `color: #25111A; border: none; border-bottom: .5rem solid #E89234`,
+            `color: #25111A; border: none; border-bottom: .5rem solid #7F2C2A`,
+            `color: #25111A; border: none; border-bottom: .5rem solid #25111A`,
           ]
         },{
             name: "Percent Change in Ridership",
             scheme: [
-              ["< 85%", "#ddd"],
-              ["85%–100%", "#aed8ca"],
-              ["101%–130%", "#74ccb3"],
-              ["> 130%", "#06bf9c"]
+              ["< 85%", "#9CBBC0"],
+              ["85%–100%", "#538795"],
+              ["101%–130%", "#08506C"],
+              ["> 130%", "#0F2F40"]
+            ],
+            style: [
+              `color: #0F2F40; border: none; border-bottom: .5rem solid #9CBBC0`,
+              `color: #0F2F40; border: none; border-bottom: .5rem solid #538795`,
+              `color: #0F2F40; border: none; border-bottom: .5rem solid #08506C`,
+              `color: #0F2F40; border: none; border-bottom: .5rem solid #0F2F40`,
             ]
           }
         ]
@@ -550,16 +613,23 @@ const BuildLegend = section => {
   if (contentRef[section.id].content.map) {
     // set things up
     let legends = contentRef[section.id].content.map.legend
-    legends.map(data=>{
+    legends.map((data, index)=>{
       let legend = section.querySelector(".frequency__storySection-legend"),
         container = document.createElement('div'),
         title = document.createElement("h3"),
         breakContainer = document.createElement("div");
-  
+
+      
       // house keeping
       title.innerText = data.name;
+      title.style.color = data.scheme[data.scheme.length-1][1] 
+      if (section.id == 'railLineChange'){
+        if (index != 0){
+          title.style.color = '#08506d'
+          breakContainer.style.alignItems = 'center'
+        }
+      }
       title.classList.add("frequency__legend-title");
-      title.style.color = data.scheme[data.scheme.length - 1][1];
       container.classList.add('frequency__storySection-legendContainer')
       breakContainer.classList.add("frequency__legend-breakContainer");
       container.appendChild(title);
@@ -574,50 +644,16 @@ const BuildLegend = section => {
       container.appendChild(breakContainer);
       let i = 0;
       // create element for each legend break
-      for (let color of data.scheme) {
+      for (let style of data.style) {
         let container = document.createElement("div"),
           thisBreak;
         container.classList.add("frequency__legend-break");
-        breakContainer.style.justifyContent = "";
         thisBreak = document.createElement("div");
         thisBreak.classList.add("frequency__legend-rect");
-        thisBreak.style.background = color[1];
-        thisBreak.innerText = color[0];
-        // make sure the first element has enough text contrast by making the text color the darkest value of the color scheme
-        if (i < 2)
-          thisBreak.style.color = data.scheme[data.scheme.length - 1][1];
+        thisBreak.innerText = data.scheme[i][0];
+        thisBreak.style = style.toString()
         breakContainer.appendChild(thisBreak);
         i++;
-      }
-      if (section.id == 'railLineChange'){
-        let title = document.createElement('p'),
-          breakContainer = document.createElement('div')
-  
-        title.innerText = 'Percent Change in Ridership'
-        title.classList.add('frequency__legend-title')
-        title.classList.add('railChange')
-        title.style.color = data.scheme[data.scheme.length -1][1]
-        breakContainer.classList.add('frequency__legend-breakContainer')
-        breakContainer.classList.add('railChange')
-        container.appendChild(title)
-  
-        let breaks = ['< 0', -1, 30, 50, 80, 100]
-        breaks.map((classBreak, index)=>{
-          let classification = document.createElement('p')
-          if (index == 0){
-            classification.innerText = `${classBreak}%`
-          }
-          else if (index == breaks.length-1){
-            classification.innerText = '100% <'
-          }
-          else{
-            classification.innerHTML = `${classBreak+1}%&ndash;${breaks[index+1]}%`
-          }
-          classification.classList.add('frequency__legend-railPercent')
-          classification.style.borderBottom = `${(index+1)*2}px solid #aaa`
-          breakContainer.appendChild(classification)
-        })
-        container.appendChild(breakContainer)
       }
       legend.appendChild(container)
     })
@@ -1208,7 +1244,7 @@ const LoadBus = map => {
       if ( route.linename == target) {
         popupContainer.querySelector(".frequency__popup-content").innerHTML = `
             <div class="frequency__popup-header">Route ${target}</div>
-            <div class="frequency__popup-meat"><span class="frequency__popup-emphasis">Actual Change</span> ${FormatNumber(
+            <div class="frequency__popup-meat"><span class="frequency__popup-emphasis">Absolute Change</span> ${FormatNumber(
               Math.floor(route.AbsChange)
             )} <span class="frequency__popup-unit">Passengers / Day</span></div>
             <div class="frequency__popup-meat"><span class="frequency__popup-emphasis">Percent Change</span> ${

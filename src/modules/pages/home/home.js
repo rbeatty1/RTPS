@@ -132,10 +132,10 @@ const Landing = (props, appContainer) =>{
         section.insertAdjacentHTML(
           'beforeend', 
           `<p>
-            Where should transit improvement and transit supportive investments be made in the
+            Where could transit improvement and investments that support transit be made in the
             <abbr title="Delaware Valley Regional Planning Commission">DVRPC</abbr> region? 
             <strong>Use this platform to evaluate service, operational, enforcement, and
-            infrastructure improvement ideas!</strong>
+            infrastructure improvement ideas.</strong>
           </p>
           `
           )
