@@ -1,6 +1,7 @@
 import '../../css/header/header.css'
 import {NavControl} from './navControls/navControls';
-import {LoadMain} from '../../utils/loadMain'
+import { SetNewURL } from '../../utils/routing';
+import { HeaderElements } from './HeaderElements';
 
 function headerRender(elements){
     const appBody = document.querySelector('#app');
@@ -15,7 +16,10 @@ function headerRender(elements){
     logoContainer.insertAdjacentHTML('afterbegin', require('../../img/rtpp-project.svg'))
     logoContainer.alt = 'Regional Transit Priority Setting Logo'
 
-    logoContainer.firstChild.onclick = e => {LoadMain('home')}
+    logoContainer.firstChild.onclick = e => {
+        history.pushState({page: 'home', type: 'home'}, document.title, '/')
+        SetNewURL()
+    }
     header.appendChild(logoContainer);
     
     // nav controls
@@ -23,4 +27,11 @@ function headerRender(elements){
     navContainer.list = elements[2].content;
 }
 
-export {headerRender};
+export class Header{
+    constructor(){
+        this.render()
+    }
+    render(){
+        headerRender(HeaderElements)
+    }
+};

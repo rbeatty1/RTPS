@@ -2,6 +2,7 @@
   height: 100%;
   width: 100%;
   font-family: 'Roboto', 'Arial', sans-serif;
+  order: 2;
 }
 
 #home section{
@@ -92,8 +93,16 @@
   font-size: 2rem;
   margin-top: 5%;
   border-radius: 15px;
+  display: inline-block;
 }
 
-.content-links a{
-  margin: 0 1rem
+.content-links span{
+  margin: 0 1rem;
+  color: blue;
+  font-weight: 400;
+  font-size: 2rem;
+}
+
+.content-links span:hover{
+  cursor: pointer;
 }

@@ -1,9 +1,9 @@
-.header__nav-links a {
+.header__nav-links span {
     width: 20%;
     border-radius: 50%;
 }
 
-.header__nav-links a.active{
+.header__nav-links span.active{
     border: 5px solid white;
 }
 
