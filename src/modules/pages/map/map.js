@@ -5,9 +5,6 @@ import { Sidebar } from "./sidebar/sidebar.js"
 import { ResultsSummary } from './sidebar/resultsSummary';
 import { LoadLayers, addRailLayers } from '../../../utils/loadMapLayers.js'
 import { CreateDvrpcNavControl } from '../../../utils/defaultExtentControl';
-import { headerRender } from '../../header/header';
-import { HeaderElements } from '../../header/HeaderElements';
-import { Footer } from '../../footer/footer';
 
 const extent = {
   center: [-75.234, 40.061],
@@ -35,6 +32,14 @@ const BuildMap = () => {
     })
 
     map.on('load', e=>{
+        map.resize();
+        map.flyTo({
+            center: extent.center,
+            zoom: extent.zoom
+        })
+        LoadBusLayer(map)
+        LoadLayers(map, layers)
+        addRailLayers(map)
         CreateDvrpcNavControl(extent, map)
     })
     return map
@@ -61,6 +66,8 @@ const LoadRegionalSummary = map =>{
         let header = event.target,
             tabName = header.getAttribute('data-type'),
             otherLayers = ['zones-analysis', 'zones-clickFill', 'boundaries-click']
+        
+        console.log(tabName)
         
         if(tabName != 'summary') {
             otherLayers.map(layer=>{
@@ -126,7 +133,7 @@ const LoadRegionalSummary = map =>{
     })
     let headers = document.querySelectorAll('.map__sidebar-menuHeader')
     for (let tab of headers){
-        tab.addEventListener('click', e=> SummaryLayerToggle(e))
+        tab.onclick = e=> SummaryLayerToggle(e)
     }
 }
 /* ProcessData(data, helper) -- rbeatty
@@ -467,8 +474,6 @@ class Map {
     }
 
     render() {
-        if (!document.querySelector('header')) headerRender(HeaderElements)
-        if (!document.querySelector('footer')) new Footer();
         let appPage = document.querySelector('main')
         appPage.id = 'gap'
         let gap = document.createElement('div')
@@ -477,17 +482,13 @@ class Map {
         let map = BuildMap()
         AddLoadingSpinner(map)
         map.on('load', _ => {
-            map.resize();
-            map.flyTo({
-                center: extent.center,
-                zoom: extent.zoom
-            })
-            LoadBusLayer(map)
-            LoadLayers(map, layers)
-            addRailLayers(map)
-            new Sidebar(this);
-            LoadRegionalSummary(map)
+            if (!document.querySelector('aside')) new Sidebar(this)
+            else {
+                gap.removeChild(document.querySelector('aside'))
+                new Sidebar(this)
+            }
             AddListeners(map)
+            LoadRegionalSummary(map)
         });
         this.map = map
     }

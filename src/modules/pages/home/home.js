@@ -1,5 +1,6 @@
 import "../../../css/pages/home/home.css"
-import { LoadMain, ChangeLogo } from "../../../utils/loadMain";
+import { ChangeLogo } from "../../../utils/loadMain";
+import { SetNewURL } from "../../../utils/routing";
 
 
 /*
@@ -35,20 +36,17 @@ const Landing = (props, appContainer) =>{
       linksContainer.style.color = content.color
 
       // learn more (documentation) & explore (analysis page) links
-      let docLink = document.createElement('a'),
-        appLink = document.createElement('a')
+      let docLink = document.createElement('span'),
+        appLink = document.createElement('span')
 
       // documentation (blank for now)
-      docLink.href = '#'
-      docLink.rel = 'noopener'
       docLink.innerText = 'Learn More'
+      docLink.onclick = e => SetNewURL(section, 'documentation')
 
       // explore (analysis page)
-      appLink.href = '#'
-      appLink.rel = 'noopener'
       appLink.innerText = 'Explore'
       // load analysis page
-      appLink.addEventListener('click', e=>{ LoadMain(section) })
+      appLink.onclick = e => SetNewURL(section, 'tool')
 
       linksContainer.appendChild(docLink)
       linksContainer.appendChild(appLink)

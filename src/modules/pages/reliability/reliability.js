@@ -103,7 +103,7 @@ const BuildMap = pageContent =>{
       checkboxId = `#legend-${layerName}`
     if (map.getLayoutProperty(layerId, 'visibility') == 'visible') {
       document.querySelector(`input[name=${layerId.split('-')[1]}]`).checked = true
-      document.querySelector(checkboxId).style.display = 'flex'
+      document.querySelector(checkboxId).style.display = 'block'
     }
   }
 
@@ -231,69 +231,439 @@ const BuildMap = pageContent =>{
     data: 
 */
 const BuildSidebar = (map, data) =>{
+  let layers = {
+    regional: {
+      'reliability-score': {
+        title: 'Reliability Score',
+        unit: false
+      },
+      'reliability-weighted': {
+        title: 'Reliability Score Weighted by Ridership',
+        unit: false
+      },
+      'reliability-tti': {
+        title: 'Travel Time Index',
+        unit: false
+      },
+    },
+    input: {
+      'reliability-speed':  {
+        title: 'Average Speed by Line',
+        unit: 'Miles per Hour (MPH)'
+      },
+      'reliability-otp':  {
+        title: 'On Time Performance',
+        unit: 'Percent of On-Time Stops (%)'
+      },
+      'reliability-septa':  {
+        title: 'SEPTA Surface Transit Loads',
+        unit: 'Average Daily Ridership'
+      },
+      'reliability-njt':  {
+        title: 'New Jersey Transit Ridership',
+        unit: 'Average Daily Ridership'
+      }
+    }
+  }
   // function to build sidebar tabs
   const BuildSidebarNav = () =>{
     let tabs = document.createElement('nav'),
-      sections = ['Layers', 'About']
+      sections = {
+        regional: 'Regional Layers',
+        input: 'Route Detail',
+        about: 'About'
+      }
     
     tabs.classList.add('reliability__sidebar-tabs')
-    
-    sections.map(section=>{
-      let tab = document.createElement('a')
-      tab.classList.add('reliability__sidebar-nav')
-      tab.innerText = section
-      tab.id = `nav-${section.toLowerCase()}`
-      tab.href = "#"
-      tab.rel = "noopener"
-      if (section == 'Layers') tab.classList.add('active')
-      // listener to switch sidebar content on tab click
-      tab.addEventListener('click', e=>{
-        let tabs = document.querySelectorAll('.reliability__sidebar-nav')
-        for (let section of tabs){
-          e.target === section ? section.classList.add('active') : section.classList.remove('active')
-        }
-        let sections = document.querySelectorAll('.reliability__sidebar-sectionContent')
-        for (let section of sections){
-          if (e.target.id.split('-')[1] == section.id.split('-')[1]){
-            section.classList.add('active')
+
+    for (let section in sections){
+      let title = document.createElement('h3')
+
+      title.classList.add('reliability__sidebar-nav')
+      if (section == 'regional') title.classList.add('active')
+      title.innerText = sections[section]
+      title.id = `nav-${section}`
+
+      title.onclick = e =>{
+
+        e.preventDefault()
+        e.stopPropagation()
+
+        let target = e.target.id.split('-')[1]
+
+        // style active tab
+        for (let tab of tabs.childNodes) e.target == tab ? tab.classList.add('active') : tab.classList.remove('active')
+
+        // display correct section
+        let contentSections = document.querySelectorAll('.reliability__sidebar-sectionContent')
+
+        for (let section of contentSections) {
+          let sectionId = section.id.split('-')[1]
+
+          // display active section
+          if (target == sectionId) section.classList.add('active')
+          else {
+            // if there are layers associated with former active tab
+            if (layers[sectionId]){
+              // hide layers
+              for (let layer in layers[sectionId]){
+                map.setLayoutProperty(layer, 'visibility', 'none')
+              }
+            }
+
+            // hide inactive section
+            section.classList.remove('active')
           }
-          else { section.classList.remove('active')}
         }
-      })
-      tabs.appendChild(tab)
-    })
+
+        let checked = document.querySelectorAll('input[type="checkbox"]:checked')
+
+        // displayed previously visible layers for newly active tab
+        for (let box of checked){
+          let layer = 'reliability-'+box.name
+
+          if (layers[target] && layers[target][layer]) map.setLayoutProperty(layer, 'visibility', 'visible')
+        }
+      }
+
+      tabs.appendChild(title)
+    }
     return tabs
+  }
+
+  const BuildControlToggle = (parent, text) =>{
+    let toggle = document.createElement('button')
+
+    toggle.innerText = `Show ${text}`
+
+    if (text.toLowerCase() == 'filter'){
+      toggle.onclick = e =>{
+        let modal = document.getElementById('filter-modal')
+        modal.classList.toggle('active')
+      }
+
+    }
+    else{
+      toggle.onclick = e =>{
+        e.preventDefault()
+        let content = e.target.nextElementSibling
+        content.classList.toggle('display')
+      }
+    }
+
+    parent.appendChild(toggle)
+  }
+
+  // build layer control portion of layer section
+  const BuildLayerControl = (element, layers) =>{
+    // function to run when checkbox is changed. Displays correct layer on map and corresponding legend item
+    const LayerVisibilityChange = layer =>{
+      let layerID = `reliability-${layer}`,
+        boxes = document.querySelectorAll('.reliability__layer-input'),
+        visibility = map.getLayoutProperty(layerID, 'visibility'),
+        mapLayer = map.getLayer(layerID)
+
+      for (let refLayer in styles.reliability.layers) if (refLayer == layer) visibility == 'none' ? map.setLayoutProperty(layerID, 'visibility', 'visible') : map.setLayoutProperty(layerID, 'visibility', 'none')
+
+      for (let box of boxes) box.checked ? document.querySelector(`#legend-${box.name}`).style.display = 'block' : document.querySelector(`#legend-${box.name}`).style.display = 'none'
+    }
+
+    // build legends
+    const BuildLegendSection = (element, layer) =>{
+      let legendSection = document.createElement('div'),
+        title = document.createElement('h3'),
+        items = document.createElement('div')
+      
+      legendSection.classList.add('reliability__legend-section')
+      legendSection.id = `legend-${layer}`
+
+      title.innerText = layers[`reliability-${layer}`].title
+      
+      items.classList.add('reliability__legend-items')
+      // get appropriate colors from map styles
+      let colorExpression = styles.reliability.layers[layer].paint['line-color'],
+        colors = new Array(),
+        labels = new Array() ;
+      colorExpression.map(statement=> {
+        // get colors
+        if (statement[0] == '#') colors.push(statement)
+        // get labels
+        else if (typeof statement == 'number') labels.push(statement)
+      })
+
+      // build legend HTML elements
+        // TTI & reliability score layers have labels that need to be formatted differently
+      colors.map((color, index)=>{
+        let test = document.createElement('div')
+        test.classList.add('reliability__legend-item')
+        if (layer == 'weighted' || layer == 'score'){
+          if (index == 0) test.innerText = 'More Reliable'
+          else if (index == 4) test.innerText = 'Less Reliable'
+        }
+        else{
+          // not last item in colors array and layer is NOT TTI
+          if (labels[index] && layer != 'tti') index == 0 ? test.innerText = `0–${FormatNumber(labels[index])}` : test.innerText = `${FormatNumber(labels[index-1]+1)}–${FormatNumber(labels[index])}`
+          // not last item in colors array and layer IS TTI
+          else if (labels[index] && layer == 'tti') index == 0 ? test.innerText = `0–${labels[index]}` : test.innerText = `${labels[index-1]+.1}–${labels[index]}`
+          // last item in colors array and layer IS TTI
+          else if (!labels[index] && layer == 'tti') test.innerText = `${labels[index-1]+.1} +`
+          // last item in colors array and layer is NOT TTI
+          else test.innerText = `${FormatNumber(labels[index-1])} +`
+        }
+        test.style.borderBottom = `10px solid ${color}`
+        test.style.width = `${100/colors.length}%`
+        items.appendChild(test)
+      })
+
+      legendSection.appendChild(title)
+
+      layers[`reliability-${layer}`].unit ? title.insertAdjacentHTML('afterend', `<h4>${layers[`reliability-${layer}`].unit}</h4>`) : null
+
+      legendSection.appendChild(items)
+      element.appendChild(legendSection)
+    }
+
+    let layerSection = document.createElement('div'),
+      legendSection = document.createElement('div')
+
+    layerSection.classList.add('reliability__sidebar-control')
+    legendSection.classList.add('reliability__sidebar-control')
+
+    // build layer check boxes
+    for (let layer in layers){
+      let option = document.createElement('div'),
+        checkbox = document.createElement('div'),
+        input = document.createElement('input'),
+        label = document.createElement('label')
+      
+      option.classList.add('reliability__layer-option')
+      checkbox.classList.add('reliability__layer-checkbox')
+      
+      input.setAttribute('type', 'checkbox')
+      input.setAttribute('name', layer.split('-')[1])
+      input.classList.add('reliability__layer-input')
+
+      label.setAttribute('for', layer.split('-')[1])
+      label.innerHTML = layers[layer].title
+
+      input.addEventListener('input', ()=> LayerVisibilityChange(input.name))
+
+      checkbox.appendChild(input)
+      checkbox.appendChild(label)
+
+      option.appendChild(checkbox)
+      BuildLegendSection(legendSection, input.name)
+      layerSection.appendChild(option)
+    }
+
+
+
+    BuildControlToggle(element, 'Layer Controls')
+    element.appendChild(layerSection)
+    BuildControlToggle(element, 'Legend')
+    element.appendChild(legendSection)
+
+  }
+
+  // function to build filter functionality
+  const BuildFilterControl = element =>{
+    
+    // build filter dropdown
+    const BuildDropdownOption = (container, item) =>{
+      // listener to fire when one of the filter options is selected
+      const CheckboxListeners = list =>{
+        // function to update map filter through all layers
+        const SetMapFilters = filter =>{
+          // grab map layers
+          let layers = styles.reliability.layers
+          for (let layer in layers){
+            // only filter "route detail" routes
+            if (layer == 'speed' || layer == 'otp' || layer == 'njt' || layer == 'septa'){
+              let filterExp = ['any']
+              // build important stuff of filter expression
+              filter.map(route=>{
+                if (route == 'core'){
+                  filterRef[route].map(coreRoute=>{
+                    let statement = ['==', 'linename', coreRoute]
+                    filterExp.push(statement)
+                  })
+                }
+                else{
+                  let statement = ['==', 'linename', route]
+                  filterExp.push(statement)
+                }
+              })
+              // set filter
+              map.setFilter(`reliability-${layer}`, filterExp)
+            }
+
+          }
+        }
+        let filtered = []
+        // grab all of the filter checkboxes
+        let allBoxes = list.querySelectorAll('input[type="checkbox"]')
+        // push all checked options to an array
+        for (let box of allBoxes){
+          box.checked == true && filtered.indexOf(box.value) == -1 ? filtered.push(box.value) : null
+        }
+        let summary = list.previousElementSibling
+        summary.innerHTML = ''
+        // build little element to display each selected filter option
+        filtered.map(route=>{
+          let selected = document.createElement('div')
+          selected.classList.add('reliability__filter-selection')
+          selected.innerHTML = `Route ${route}`
+          summary.appendChild(selected)
+        })
+
+        let remove = document.querySelectorAll('.reliability__filter-selection')
+        for (let x of remove){
+          // listener to remove filtered routes
+          x.addEventListener('click', e=>{
+            let item = e.target.childNodes[0],
+              // we only want the number of the route
+              route = item.textContent.split(' ')[1],
+              // grab specific checkbox
+              box = document.querySelector(`input[type="checkbox"][name="${route}"]`)
+            // delete the jawn
+            e.target.outerHTML = ''
+            // unchecked the jawn
+            box.checked = false
+
+            let index = filtered.indexOf(route)
+            filtered.splice(index, 1)
+            // update the map jawn
+            if (filtered.length > 0) SetMapFilters(filtered)
+            else for (let layer in styles.reliability.layers){ map.setFilter(`reliability-${layer}`, undefined)}
+
+          })
+        }
+
+        if (filtered.length > 0) SetMapFilters(filtered)
+        else for (let layer in styles.reliability.layers){ map.setFilter(`reliability-${layer}`, undefined)}
+      }
+      let listItem = document.createElement('li'),
+        option = document.createElement('input'),
+        label = document.createElement('label')
+
+      listItem.classList.add('reliability__filter-item')
+
+      option.type = 'checkbox'
+      option.id = `filterOption-${item}`
+      option.name = item
+      option.value = item
+      option.onchange = e => CheckboxListeners(e.target.parentNode.parentNode)
+
+      label.setAttribute('for', item)
+      label.innerText = 'Route '+item
+
+      listItem.appendChild(option)
+      listItem.appendChild(label)
+      container.querySelector('.reliability__filter-options').appendChild(listItem)
+      return listItem
+      
+    }
+
+    let filterRef = {
+      core: ['6', '17', '21', '23', '33', '46', '47', '52', '56', '58', '60', '66', '79', '108', '113', 'R', '18', '26', 'G', '7', '10', '11', '13', '34', '36', 'MFL', 'BSL'],
+    }
+
+    let dropdown = document.createElement('div'),
+      summary = document.createElement('div')
+
+    dropdown.id = 'filter-modal'
+  
+
+    element.appendChild(dropdown)
+
+    // get all of the routes to build filter
+    fetch('https://a.michaelruane.com/api/rtps/reliability?filter')
+    .then(response=> response.ok ? response.json() : null)
+    .then(jawn=>{
+      for (let route in jawn.cargo){
+        route.replace(' ', '_')
+        filterRef[route.toString()] = route.toString()
+      }
+      return filterRef
+    })
+    .then(data=>{
+
+      /*
+        TO-DO:
+          - Aria-ify modal opening/dropdown display
+          - Restructure to handle division by operator/mode
+          - Close modal on click event outside of modal content 
+      */
+
+      
+      dropdown.classList.add('reliability__filter-dropdown')
+      summary.classList.add('reliability__filter-summary')
+
+
+      dropdown.innerHTML = `<div id="filter-modal-content"><span id="close-filter-modal">&times;</span><span class="reliability__filter-default">Surface Transit Route Filter</span>${summary.outerHTML}<ul class="reliability__filter-options"></ul></div>`
+      
+      
+      for (let route in data)  BuildDropdownOption(dropdown, route)
+
+
+      let accordian = dropdown.querySelector('.reliability__filter-default'),
+        close = document.getElementById('close-filter-modal')
+
+      accordian.onclick = e =>{
+        let ul = e.target.parentNode.querySelector('ul')
+        if (ul.classList.contains('visible')){
+          ul.classList.remove('visible')
+          accordian.classList.remove('active')
+          accordian.parentNode.parentNode.parentNode.style.height = '40%'
+        }
+        else{
+          ul.classList.add('visible')
+          accordian.classList.add('active')
+          accordian.parentNode.parentNode.parentNode.style.height = '75%'
+        }
+      }
+
+      close.onclick = e =>{
+        e.preventDefault()
+        e.stopPropagation()
+
+        let modal = document.getElementById('filter-modal')
+
+        modal.classList.remove('active')
+      }
+    })
+
   }
 
   const BuildAboutSection = parent =>{
 
 
-    let container = document.createElement('div'),
-      element = document.createElement('div')
+    let container = document.createElement('div')
     container.classList.add(`reliability__sidebar-sectionContent`)
     container.id = 'content-about'
-    element.classList.add('reliability__sidebar-control')
+
+
     // build about sections and fill with content
     for (let section in layerRef){
-      let container = document.createElement('section')
-      container.id = `reliability__sidebar-${section}Content`
+      let item = document.createElement('section')
+      item.id = `reliability__sidebar-${section}Content`
       let title = document.createElement('h2')
       title.classList.add('reliability__sidebar-sectionTitle')
       title.innerText = section
-      container.appendChild(title)
+      item.appendChild(title)
       // input sections are styled differently to draw attention
       if (section == 'purpose'){
         let purposeSection = document.createElement('p')
         purposeSection.innerHTML = layerRef[section]
         // purposeSection.classList.add('reliability__sidebar-contentSection')
-        container.appendChild(purposeSection)
+        item.appendChild(purposeSection)
       }
       else if (section == 'outputs'){
         for (let output in layerRef[section]){
           let outputSection = document.createElement('p')
           // outputSection.classList.add('reliability__sidebar-contentSection')
           outputSection.innerHTML = layerRef[section][output]
-          container.appendChild(outputSection)
+          item.appendChild(outputSection)
         }
       }
       else{
@@ -304,307 +674,54 @@ const BuildSidebar = (map, data) =>{
           
           inputSection.classList.add('reliability__sidebar-inputSection')
           inputSection.innerHTML = `<span class="reliability__sidebar-inputTitle">${title}:</span> ${info}`
-          container.appendChild(inputSection)
+          item.appendChild(inputSection)
         }
       }
-      element.appendChild(container)
+      container.appendChild(item)
     }
-    container.appendChild(element)
     parent.appendChild(container)
   }
 
   // build layer section of sidebar
-  const BuildLayerSection = element =>{
+  const BuildRegionalSection = element =>{
 
-    // build layer control portion of layer section
-    const BuildLayerControl = element =>{
-      // function to run when checkbox is changed. Displays correct layer on map and corresponding legend item
-      const LayerVisibilityChange = layer =>{
-        let layerID = `reliability-${layer}`,
-          boxes = document.querySelectorAll('.reliability__layer-input'),
-          visibility = map.getLayoutProperty(layerID, 'visibility'),
-          mapLayer = map.getLayer(layerID)
-        for (let refLayer in styles.reliability.layers) if (refLayer == layer) visibility == 'none' ? map.setLayoutProperty(layerID, 'visibility', 'visible') : map.setLayoutProperty(layerID, 'visibility', 'none')
+    let container = document.createElement('div'),
+      layerControl = document.createElement('button')
 
-        for (let box of boxes) box.checked ? document.querySelector(`#legend-${box.name}`).style.display = 'flex' : document.querySelector(`#legend-${box.name}`).style.display = 'none'
-      }
+    container.classList.add('reliability__sidebar-sectionContent')
+    container.classList.add('active')
 
-      // build legends
-      const BuildLegendSection = (element, layer) =>{
-        let legendSection = document.createElement('div'),
-          items = document.createElement('div')
-  
-        
-        legendSection.classList.add('reliability__legend-section')
-        legendSection.id = `legend-${layer}`
-        
-        items.classList.add('reliability__legend-items')
-        // get appropriate colors from map styles
-        let colorExpression = styles.reliability.layers[layer].paint['line-color'],
-          colors = new Array(),
-          labels = new Array() ;
-        colorExpression.map(statement=> {
-          // get colors
-          if (statement[0] == '#') colors.push(statement)
-          // get labels
-          else if (typeof statement == 'number') labels.push(statement)
-        })
+    container.id = 'content-regional'
 
-        // build legend HTML elements
-          // TTI & reliability score layers have labels that need to be formatted differently
-        colors.map((color, index)=>{
-          let test = document.createElement('div')
-          test.classList.add('reliability__legend-item')
-          if (layer == 'weighted' || layer == 'score'){
-            if (index == 0) test.innerText = 'More Reliable'
-            else if (index == 4) test.innerText = 'Less Reliable'
-          }
-          else{
-            // not last item in colors array and layer is NOT TTI
-            if (labels[index] && layer != 'tti') index == 0 ? test.innerText = `0–${FormatNumber(labels[index])}` : test.innerText = `${FormatNumber(labels[index-1]+1)}–${FormatNumber(labels[index])}`
-            // not last item in colors array and layer IS TTI
-            else if (labels[index] && layer == 'tti') index == 0 ? test.innerText = `0–${labels[index]}` : test.innerText = `${labels[index-1]+.1}–${labels[index]}`
-            // last item in colors array and layer IS TTI
-            else if (!labels[index] && layer == 'tti') test.innerText = `${labels[index-1]+.1} +`
-            // last item in colors array and layer is NOT TTI
-            else test.innerText = `${FormatNumber(labels[index-1])} +`
-          }
-          test.style.borderBottom = `10px solid ${color}`
-          test.style.width = `${100/colors.length}%`
-          items.appendChild(test)
-        })
-  
-        legendSection.appendChild(items)
-        element.appendChild(legendSection)
-      }
+    layerControl.innerText = 'Show Layer List'
+    element.appendChild(container)
 
-      let layers = [
-        ['reliability-score', '<span class="reliability__layer-emphasis">Output:</span> Reliability Score'],
-        ['reliability-weighted', '<span class="reliability__layer-emphasis">Output:</span> Ridership Score Weighted by Ridership'],
-        ['reliability-speed', '<span class="reliability__layer-emphasis">Input:</span> Average Speed by Line'],
-        ['reliability-otp', '<span class="reliability__layer-emphasis">Input:</span> On Time Performance'],
-        ['reliability-tti', '<span class="reliability__layer-emphasis">Input:</span> Travel Time Index'],
-        ['reliability-septa', '<span class="reliability__layer-emphasis">Input:</span> SEPTA Surface Transit Loads'],
-        ['reliability-njt', '<span class="reliability__layer-emphasis">Input:</span> New Jersey Transit Ridership']
-      ]
+    BuildLayerControl(container, layers.regional)
 
-      element.classList.add('reliability__sidebar-control')
-      // build layer check boxes
-      layers.map(layer=>{
-        let option = document.createElement('div'),
-          checkbox = document.createElement('div'),
-          input = document.createElement('input'),
-          label = document.createElement('label')
-        
-        option.classList.add('reliability__layer-option')
-        checkbox.classList.add('reliability__layer-checkbox')
-        
-        input.setAttribute('type', 'checkbox')
-        input.setAttribute('name', layer[0].split('-')[1])
-        input.classList.add('reliability__layer-input')
-  
-        label.setAttribute('for', layer[0].split('-')[1])
-        label.innerHTML = layer[1]
+    layerControl.onclick = e =>{
+      e.preventDefault()
+      let content = e.target.nextElementSibling
 
-        input.addEventListener('input', ()=> LayerVisibilityChange(input.name))
-
-        checkbox.appendChild(input)
-        checkbox.appendChild(label)
-
-        option.appendChild(checkbox)
-        BuildLegendSection(option, input.name)
-        element.appendChild(option)
-      })
-
+      content.classList.toggle('display')
     }
+  }
 
-    // function to build filter functionality
-    const BuildFilterControl = element =>{
-      // build filter dropdown
-      const BuildDropdownOption = (container, item) =>{
-        // listener to fire when one of the filter options is selected
-        const CheckboxListeners = list =>{
-          // function to update map filter through all layers
-          const SetMapFilters = filter =>{
-            // grab map layers
-            let layers = styles.reliability.layers
-            for (let layer in layers){
-              // speed, otp, njt have single routes per feature
-              if (layer == 'speed' || layer == 'otp' || layer == 'njt' || layer == 'septa'){
-                let filterExp = ['any']
-                // build important stuff of filter expression
-                filter.map(route=>{
-                  if (route == 'core'){
-                    filterRef[route].map(coreRoute=>{
-                      let statement = ['==', 'linename', coreRoute]
-                      filterExp.push(statement)
-                    })
-                  }
-                  else{
-                    let statement = ['==', 'linename', route]
-                    filterExp.push(statement)
-                  }
-                })
-                // set filter
-                map.setFilter(`reliability-${layer}`, filterExp)
-              }
-              // score and weighted layers have multiple routes per feature -.-
-              else if (layer == 'score' || layer == 'weighted'){
-                let filterExp = ['any']
-                filter.map(route=>{
-                  for (let segment in data[layer]){
-                    let feature = data[layer][segment]
-                    if (feature.lines != null){
-                      // grab individual routes from feature
-                      let lines = feature.lines.split(',')
-                      lines.map(line=>{
-                        let statement = ['==', 'gid']
-                        // build filter expression
-                        if (route == 'core'){
-                          filterRef[route].map(coreRoute=>{
-                            if (line == coreRoute){
-                              statement.push(parseInt(segment))
-                              filterExp.push(statement)
-                            }
-                          })
-                        }
-                        else if (line == route){
-                          statement.push(parseInt(segment))
-                          filterExp.push(statement)
-                        }
-                      })
-                    }
-                  }
-                })
-                // set filter
-                map.setFilter(`reliability-${layer}`, filterExp)
-              }
-            }
-          }
-          let filtered = []
-          // grab all of the filter checkboxes
-          let allBoxes = list.querySelectorAll('input[type="checkbox"]')
-          // push all checked options to an array
-          for (let box of allBoxes){
-            box.checked == true && filtered.indexOf(box.value) == -1 ? filtered.push(box.value) : null
-          }
-          let summary = list.previousElementSibling
-          summary.innerHTML = ''
-          // build little element to display each selected filter option
-          filtered.map(route=>{
-            let selected = document.createElement('div')
-            selected.classList.add('reliability__filter-selection')
-            selected.innerHTML = `Route ${route}`
-            summary.appendChild(selected)
-          })
-  
-          let remove = document.querySelectorAll('.reliability__filter-selection')
-          for (let x of remove){
-            // listener to remove filtered routes
-            x.addEventListener('click', e=>{
-              let item = e.target.childNodes[0],
-                // we only want the number of the route
-                route = item.textContent.split(' ')[1],
-                // grab specific checkbox
-                box = document.querySelector(`input[type="checkbox"][name="${route}"]`)
-              // delete the jawn
-              e.target.outerHTML = ''
-              // unchecked the jawn
-              box.checked = false
-  
-              let index = filtered.indexOf(route)
-              filtered.splice(index, 1)
-              // update the map jawn
-              if (filtered.length > 0) SetMapFilters(filtered)
-              else for (let layer in styles.reliability.layers){ map.setFilter(`reliability-${layer}`, undefined)}
-  
-            })
-          }
-  
-          if (filtered.length > 0) SetMapFilters(filtered)
-          else for (let layer in styles.reliability.layers){ map.setFilter(`reliability-${layer}`, undefined)}
-        }
-        let listItem = document.createElement('li'),
-          option = document.createElement('input'),
-          label = document.createElement('label')
-
-        listItem.classList.add('reliability__filter-item')
-
-        option.type = 'checkbox'
-        option.id = `filterOption-${item}`
-        option.name = item
-        option.value = item
-        option.onchange = e => CheckboxListeners(e.target.parentNode.parentNode)
-
-        label.setAttribute('for', item)
-        label.innerText = 'Route '+item
-
-        listItem.appendChild(option)
-        listItem.appendChild(label)
-        container.querySelector('.reliability__filter-options').appendChild(listItem)
-        return listItem
-        
-      }
-
-      let filterRef = {
-        core: ['6', '17', '21', '23', '33', '46', '47', '52', '56', '58', '60', '66', '79', '108', '113', 'R', '18', '26', 'G', '7', '10', '11', '13', '34', '36', 'MFL', 'BSL'],
-      }
-      element.classList.add('reliability__sidebar-control')
-
-      let dropdown = document.createElement('div'),
-        summary = document.createElement('div')
-    
-
-      element.appendChild(dropdown)
-
-      // get all of the routes to build filter
-      fetch('https://a.michaelruane.com/api/rtps/reliability?filter')
-      .then(response=> response.ok ? response.json() : null)
-      .then(jawn=>{
-        for (let route in jawn.cargo){
-          route.replace(' ', '_')
-          filterRef[route.toString()] = route.toString()
-        }
-        return filterRef
-      })
-      .then(data=>{
-        dropdown.classList.add('reliability__filter-dropdown')
-        summary.classList.add('reliability__filter-summary')
-        dropdown.innerHTML = `<span class="reliability__filter-default">Surface Transit Route Filter</span>${summary.outerHTML}<ul class="reliability__filter-options"></ul>`
-        for (let route in data)  BuildDropdownOption(dropdown, route)
-        let accordian = dropdown.querySelector('.reliability__filter-default')
-        accordian.onclick = e =>{
-          let ul = e.target.parentNode.querySelector('ul')
-          if (ul.classList.contains('visible')){
-            ul.classList.remove('visible')
-            accordian.classList.remove('active')
-            accordian.parentNode.parentNode.parentNode.style.height = '40%'
-          }
-          else{
-            ul.classList.add('visible')
-            accordian.classList.add('active')
-            accordian.parentNode.parentNode.parentNode.style.height = '75%'
-          }
-        }
-      })
-
-    }
+  const BuildRouteSection = element =>{
 
     let container = document.createElement('div'),
       layerControl = document.createElement('div'),
       filterControl = document.createElement('div')
 
     container.classList.add('reliability__sidebar-sectionContent')
-    container.classList.add('active')
 
-    container.id = 'content-layers'
+    container.id = 'content-input'
 
-    BuildLayerControl(layerControl)
-    BuildFilterControl(filterControl)
-
-    container.appendChild(layerControl)
+    BuildControlToggle(filterControl, 'Filter')
     container.appendChild(filterControl)
+    container.appendChild(layerControl)
     element.appendChild(container)
+    BuildFilterControl(filterControl)
+    BuildLayerControl(layerControl, layers.input)
   }
   
   let sidebar = document.querySelector('#reliability__sidebar'),
@@ -614,7 +731,8 @@ const BuildSidebar = (map, data) =>{
   sidebar.appendChild(tabs)
   sidebar.appendChild(content)
 
-  BuildLayerSection(content)
+  BuildRegionalSection(content)
+  BuildRouteSection(content)
   BuildAboutSection(content)
   
 
