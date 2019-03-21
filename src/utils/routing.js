@@ -15,6 +15,8 @@ const UpdateView = ()=>{
             let regex = /^\#(?<category>\w*)\/(?<page>\w*)/, // correct hash pattern...
                 hash = window.location.hash, // hash...
                 match = hash.match(regex) ? regex.exec(hash) : /^#(?<page>\w*)/.exec(hash) // exception for `#home` URL
+
+        console.log(hash)
         
         // if there was any match, continue
         if (match){
