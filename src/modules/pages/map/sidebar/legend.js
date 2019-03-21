@@ -1,9 +1,26 @@
 
 
+
+/*
+    BuildClasses(target, data)
+    @purpose: Build legend items for the different class breaks and set fill color appropriately
+    @params:
+        target: container for the legend to be appended to
+        data: color data for gap legend, but also section names (not served | served)
+*/
 const BuildClasses = (target, data) =>{
+    /*
+        BuildLegendBoxes(colors)
+        @purpose: Build actual boxes for legend component
+        @param:
+            colors: fill colors of legend boxes
+    */
     const BuildLegendBoxes = colors =>{
+        // container to append legend boxes to
         let container = document.createElement('div')
         container.classList.add('map__sidebar-legendSection')
+        
+        // iterate through colors array to create each class and set background color 
         colors.map(color=>{
             let box = document.createElement('div')
             box.classList.add('map__sidebar-legendCell')
@@ -38,11 +55,18 @@ const BuildClasses = (target, data) =>{
     target.appendChild(container)
 }
 
+/*
+    BuildLabels(target, data)
+    @purpose: Build low -> high -> low labels for legend
+    @params:
+        target: legend container to append labels to
+        data: label text
+*/
 const BuildLabels = (target, data) =>{
     let container = document.createElement('div')
     container.classList.add('map__sidebar-legendLabels')
 
-    // map through and create labels
+    // iterate through and create labels
     data.map(label=>{
         let text = document.createElement('p')
         text.innerText = label
@@ -52,6 +76,14 @@ const BuildLabels = (target, data) =>{
     target.appendChild(container)
 
 }
+
+/*
+    BuildDescription(target, data)
+    @purpose: Build text description of what the legend depicts
+    @params:
+        target: legend container to append text to
+        data: text content
+*/
 
 const BuildDescription = (target, data) =>{
 
@@ -65,7 +97,18 @@ const BuildDescription = (target, data) =>{
     
     // button housekeeping
     button.innerText = 'What do the colors mean?'
-    button.onclick = e => e.target.nextElementSibling.classList.toggle('active')
+    button.setAttribute('aria-expanded', false)
+
+    // display button content + aria actions
+    button.onclick = e => {
+        let target = e.target,
+            content = e.target.nextElementSibling
+        
+        target.getAttribute('aria-expanded') == 'false' ? target.setAttribute('aria-expanded', true) : target.setAttribute('aria-expanded', false)
+        content.getAttribute('aria-hidden') == 'true' ? content.setAttribute('aria-hidden', false) : content.setAttribute('aria-hidden', true)
+        
+        content.classList.toggle('active')
+    }
 
     // create title/text for each section
     for (let color in data){
@@ -76,6 +119,9 @@ const BuildDescription = (target, data) =>{
 
         content.appendChild(text)
     }
+
+    // content housekeeping
+    content.setAttribute('aria-hidden', true)
 
     // send 'em
     section.appendChild(button)

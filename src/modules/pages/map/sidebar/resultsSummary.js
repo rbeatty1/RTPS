@@ -1,16 +1,34 @@
 import { Legend } from "./legend";
 
+/*
+  CreateSummary(data)
+  @purpose: Build summary text on query return
+  @params:
+    data: Summary data return upon query completion
+  returns HTML string populated with appropriate summary values
+*/
 const CreateSummary = data =>{
-  let insert;
   data.direction == ''
-  data.type == 'municipality' ? insert = `the selected area — <strong>${document.querySelector(`option[value='${data.location}']`).innerText}</strong>` : insert = 'the selected area'
+  // do da grammar
+  let insert = data.type == 'municipality' ? `the selected area — <strong>${document.querySelector(`option[value='${data.location}']`).innerText}</strong>` : 'the selected area'
   return `The resulting map shows the average network gap score for connections <strong>${data.direction}</strong> ${insert}. Only <abbr class="map__abbr" title="Traffic Analysis Zone">TAZ</abbr>s with substantial demand <strong>${data.direction} the selected area</strong> are being displayed, a total of <strong>${data.count}</strong>. The darker colors indicate higher priority transit gaps in relation to ${insert}.`
 }
 
+// this might come later idk
 const CreateViz = data =>{
   return '<p>Some distribution visualizations?</br>Total demand summary?</br>The world is our oyster</p>'
 }
 
+
+/*
+  BuildSummary(props)
+  @purpose: Build summary section 
+  @params:
+    props: return from query.
+
+  NOTE: I don't know a component for this is totally necessary?? the legend has moved out of here, so that's that. Right now there's no data viz element but that could be incorporated
+  later on.
+*/
 const BuildSummary = (props) => {
   let content= {
     legend: {

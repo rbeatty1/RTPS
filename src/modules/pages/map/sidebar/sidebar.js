@@ -4,57 +4,78 @@ import { HeaderElements } from '../../../header/HeaderElements.js'
 import {Legend} from './legend.js'
 
 
-
+/*
+  BuildMenus(appContent)
+  @purpose: build sidebar based on content reference
+  @params:
+    appContent: content reference object for page
+*/
 const BuildMenus = appContent =>{
+  /*
+    MenuContent(menu, container, content)
+    @purpose: build specific tab content
+    @params:
+      menu: header element to identify tab
+      container: element to append all of these jawns to
+      content: content that will drive menu creation
+  */
   const MenuContent = (menu, container, content) =>{
+    /*
+      TransitToggle(target)
+      @purpose: Build a small map toggle to control transit layer visibility
+      @params:
+        target: element in which the toggle will be appended to
+    */
     const TransitToggle = target =>{
       let toggleRef = {
-      rail : {
-          box : document.createElement('input'),
-          label : document.createElement('label'),
-      },
-      bus : {
-          box : document.createElement('input'),
-          label : document.createElement('label'),
-          layer : 'transit-bus'
-      }
+        rail : {
+            box : document.createElement('input'),
+            label : document.createElement('label'),
+        },
+        bus : {
+            box : document.createElement('input'),
+            label : document.createElement('label'),
+            layer : 'transit-bus'
+        }
       }
       let header = document.createElement('div')
       header.classList.add('transit-toggle')
+
+      // iterate through reference object to create the checkboxes/labels/actions
       for (let layer in toggleRef){
-      let data = toggleRef[layer],
-          container = document.createElement('div')
-    
-      data.box.type = 'checkbox'
-      data.box.name = `${layer}-lines`
-      data.label.setAttribute('for', data.box.name)
-      data.label.innerText = `Show ${layer} layer`
-    
-      data.box.onchange = e =>{
-          let name = e.target.name
-          if (e.target.checked){
-            if (name == 'rail-lines'){
-                appContent.map.setLayoutProperty(name, 'visibility', 'visible')
-                appContent.map.setLayoutProperty('rail-labels', 'visibility', 'visible')
+        let data = toggleRef[layer],
+            container = document.createElement('div')
+      
+        data.box.type = 'checkbox'
+        data.box.name = `${layer}-lines`
+        data.label.setAttribute('for', data.box.name)
+        data.label.innerText = `Show ${layer} layer`
+      
+        data.box.onchange = e =>{
+            let name = e.target.name
+            if (e.target.checked){
+              if (name == 'rail-lines'){
+                  appContent.map.setLayoutProperty(name, 'visibility', 'visible')
+                  appContent.map.setLayoutProperty('rail-labels', 'visibility', 'visible')
+              }
+              else{
+                  appContent.map.setLayoutProperty('bus-lines', 'visibility', 'visible')
+              }
             }
             else{
-                appContent.map.setLayoutProperty('bus-lines', 'visibility', 'visible')
+              if (name == 'rail-lines'){
+                  appContent.map.setLayoutProperty(name, 'visibility', 'none')
+                  appContent.map.setLayoutProperty('rail-labels', 'visibility', 'none')
+              }
+              else{
+                  appContent.map.setLayoutProperty('bus-lines', 'visibility', 'none')
+              }
             }
-          }
-          else{
-            if (name == 'rail-lines'){
-                appContent.map.setLayoutProperty(name, 'visibility', 'none')
-                appContent.map.setLayoutProperty('rail-labels', 'visibility', 'none')
-            }
-            else{
-                appContent.map.setLayoutProperty('bus-lines', 'visibility', 'none')
-            }
-          }
-      }
-    
-      container.appendChild(data.box)
-      container.appendChild(data.label)
-      header.appendChild(container)
+        }
+      
+        container.appendChild(data.box)
+        container.appendChild(data.label)
+        header.appendChild(container)
       }
     
     
@@ -62,7 +83,13 @@ const BuildMenus = appContent =>{
       target.appendChild(header)
     
     }
-  
+
+    /*
+      BuildAnalysisDescription(container)
+      @purpose: Build description of analysis
+      @params:
+        container: element to attach description to
+    */
     const BuildAnalysisDescription = container =>{
   
       // reference object for content
@@ -114,6 +141,8 @@ const BuildMenus = appContent =>{
       title = menu.innerText.split(' ')[1].toLowerCase()
     jawn.className = 'map__sidebar-menuContent'
     jawn.id = `${title}_dropdownContent`
+
+    // do local analysis tab stuff
     if (title != 'summary') {
       for (let section in content){
         if (section == 'inputs'){
@@ -130,6 +159,7 @@ const BuildMenus = appContent =>{
         }
       }
     }
+    // do regional analysis tab stuff
     else{
       let summary = document.createElement('section')
       menu.classList.add('active')
@@ -142,6 +172,8 @@ const BuildMenus = appContent =>{
     TransitToggle(jawn)
     container.appendChild(jawn)
   }
+
+
   let container = document.querySelector('.gap').appendChild(document.createElement('aside'))
   container.classList.add('map__sidebar')
   let sidebar = document.createElement('nav')
