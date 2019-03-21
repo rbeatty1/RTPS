@@ -18,8 +18,7 @@ const _createNavLink = item =>{
     // create link
     let link = document.createElement('span')
     
-    // set attributes
-    link.setAttribute('data-name', item.title)
+    // set attributesitle)
     link.setAttribute('data-tool', item.shorthand)
     link.style.background = item.color
 
