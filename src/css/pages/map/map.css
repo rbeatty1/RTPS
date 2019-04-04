@@ -9,14 +9,14 @@
     width: 100%;
 }
 .map__container{
-    width:80%;
+    width:70%;
     height: 100%;
 }
 .map__sidebar{
     display: flex;
     flex-flow: column;
     align-items: center;
-    width: 20%;
+    width: 30%;
     background: #adc978;
 }
 

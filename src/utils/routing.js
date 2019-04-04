@@ -34,7 +34,7 @@ const GetURL = () =>{
 
     // without hash, send the user home if the request is for '/', otherwise error 
     }else {
-        return window.location.pathname === '/' ? {page: 'home'} : {page: 'error'}
+        return window.location.pathname === '/' || '/webmaps/rtps/' ? {page: 'home'} : {page: 'error'}
     }
 }
 

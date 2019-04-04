@@ -3,6 +3,7 @@ import { LoadLayers, addRailLayers } from "../../../utils/loadMapLayers";
 import {FormatNumber} from "../../../utils/formatNumber"
 import { styles } from "../map/map_styles/frequency";
 import { CreateDvrpcNavControl } from "../../../utils/defaultExtentControl";
+import { Footer } from '../../footer/footer.js'
 
 const contentRef = {
   about: {
@@ -758,6 +759,8 @@ const BuildContent = (content, key, component) => {
   masterContainer.appendChild(section);
   BuildScene(section);
   BuildLegend(section);
+  const footer = new Footer()
+  console.log('footer is ', footer)
 };
 
 /*
