@@ -1615,11 +1615,18 @@ export class Frequency {
       </div>
     </div>
     `;
+    
+    let contentStory = document.querySelector(".frequency__content-story")
+
     this.scroll = new ScrollMagic.Controller({
-      container: document.querySelector(".frequency__content-story"),
+      container: contentStory,
       loglevel: 4
     });
+    
     BuildNav(this, contentRef);
     this.map = BuildMap(document.querySelector(".frequency__content-map"));
+
+    const footer = new Footer().footer
+    contentStory.appendChild(footer)
   }
 }
