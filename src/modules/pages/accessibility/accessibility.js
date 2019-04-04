@@ -970,5 +970,8 @@ export class Accessibility{
     // populate the page with content
     BuildPage(this)
 
+    // // add the footer after everything else gets added
+    const footer = new Footer().footer
+    sidebar.appendChild(footer)
   }
 }

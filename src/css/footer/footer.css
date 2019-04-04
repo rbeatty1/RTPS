@@ -5,7 +5,7 @@ footer{
     flex-direction: column;
     padding: 2%;
     font-size: 0.75rem;
-    background: rgba(59,59,59,0.2);
+    background: rgba(59,59,59,0.1);
 }
 .footer-content-wrapper {
     display: flex;

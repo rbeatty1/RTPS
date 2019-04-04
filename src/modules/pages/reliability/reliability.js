@@ -725,7 +725,6 @@ const BuildSidebar = (map, data) =>{
   }
 
   const footer = new Footer().footer
-  
   let sidebar = document.querySelector('#reliability__sidebar'),
     content = document.createElement('div'),
     tabs = BuildSidebarNav()
@@ -737,8 +736,6 @@ const BuildSidebar = (map, data) =>{
   BuildRegionalSection(content)
   BuildRouteSection(content)
   BuildAboutSection(content)
-  
-
 }
 export class Reliability{
   constructor(){
