@@ -2,6 +2,7 @@ import '../../../../css/pages/map/sidebar.css'
 import { QueryContainer } from './queryInput/queryInput.js'
 import { HeaderElements } from '../../../header/HeaderElements.js'
 import {Legend} from './legend.js'
+import { Footer } from '../../../footer/footer';
 
 
 /*
@@ -201,9 +202,11 @@ const BuildMenus = appContent =>{
     })
     
   }
+  const footer = new Footer().footer
+  sidebarContent.appendChild(footer)
+
   container.appendChild(sidebar)
   container.appendChild(sidebarContent)
-
 }
 
 

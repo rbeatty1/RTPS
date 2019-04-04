@@ -759,8 +759,6 @@ const BuildContent = (content, key, component) => {
   masterContainer.appendChild(section);
   BuildScene(section);
   BuildLegend(section);
-  const footer = new Footer()
-  console.log('footer is ', footer)
 };
 
 /*

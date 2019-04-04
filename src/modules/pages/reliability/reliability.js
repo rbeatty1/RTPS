@@ -723,6 +723,8 @@ const BuildSidebar = (map, data) =>{
     BuildFilterControl(filterControl)
     BuildLayerControl(layerControl, layers.input)
   }
+
+  const footer = new Footer().footer
   
   let sidebar = document.querySelector('#reliability__sidebar'),
     content = document.createElement('div'),
@@ -730,6 +732,7 @@ const BuildSidebar = (map, data) =>{
   content.classList.add('reliability__sidebar-content')
   sidebar.appendChild(tabs)
   sidebar.appendChild(content)
+  sidebar.appendChild(footer)
 
   BuildRegionalSection(content)
   BuildRouteSection(content)
