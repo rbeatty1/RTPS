@@ -161,7 +161,6 @@
   height: 100%;
   display: flex;
   flex-flow: column;
-  align-items: flex-end;
   overflow-y: auto;
   direction: rtl;
   background: #d8eee6

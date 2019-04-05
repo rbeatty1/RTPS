@@ -12,13 +12,16 @@ const createFooter = () => {
 
     addressContactWrapper.classList.add('footer-content-wrapper')
     footerLogo.id = 'footer-logo'
+    address.id = 'footer-address'
 
     footerLogo.src = logo
     footerLogo.alt = 'dvrpc logo'
 
-    address.textContent = '190 N. Independence Mall W, 8th Floor \r\n'
-    address.textContent += 'Philadelphia, PA 19147'
-    dvrpcContact.innerHTML = '<strong>Phone</strong>: 215.592.1800 <br /> <strong>Email</strong>: <a href="mailto:public_affairs@dvrpc.org">public_affairs@dvrpc.org</a>'
+    address.textContent = '190 N. Independence Mall W, \r\n 8th Floor \r\n Philadelphia, PA 19106'
+    // address.textContent += '8th Floor \r\n'
+    // address.textContent += 'Philadelphia, PA 19147'
+    dvrpcContact.innerHTML = '<strong>Phone</strong>: (215) - 592 - 1800'
+    //  <br /> <strong>Email</strong>: <a href="mailto:public_affairs@dvrpc.org">public_affairs@dvrpc.org</a>
 
     addressContactWrapper.appendChild(address)
     addressContactWrapper.appendChild(dvrpcContact)
@@ -36,7 +39,7 @@ const createFooter = () => {
     contactName.id = 'footer-contact-name'
 
     contactName.textContent = 'Sarah Moran\r\nTransportation Planner'
-    contactInfo.innerHTML = '<strong>Phone</strong>: 215.238.2875 <br /> <strong>Email</strong>: <a href="mailto:smoran@dvrpc.org">smoran@dvrpc.org</a>'
+    contactInfo.innerHTML = '<strong>Phone</strong>: (215) - 238 - 2875 <br /> <strong>Email</strong>: <a href="mailto:smoran@dvrpc.org">smoran@dvrpc.org</a>'
 
     contactWrapper.appendChild(contactName)
     contactWrapper.appendChild(contactInfo)
