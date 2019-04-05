@@ -41,15 +41,15 @@ const Landing = (props, appContainer) =>{
 
       // documentation (blank for now)
       docLink.innerText = 'Learn More'
-      docLink.onclick = e => SetNewURL(section, 'documentation')
+      docLink.onclick = () => SetNewURL(section, 'documentation')
 
       // explore (analysis page)
       appLink.innerText = 'Explore'
       // load analysis page
-      appLink.onclick = e => SetNewURL(section, 'tool')
+      appLink.onclick = () => SetNewURL(section, 'tool')
 
-      linksContainer.appendChild(docLink)
       linksContainer.appendChild(appLink)
+      linksContainer.appendChild(docLink)
 
       
       textContainer.appendChild(linksContainer)
