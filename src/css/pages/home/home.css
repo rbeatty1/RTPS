@@ -106,3 +106,7 @@
 .content-links span:hover{
   cursor: pointer;
 }
+
+.content-links a{
+  text-decoration: none;
+}

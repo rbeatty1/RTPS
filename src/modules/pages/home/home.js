@@ -1,6 +1,7 @@
 import "../../../css/pages/home/home.css"
 import { ChangeLogo } from "../../../utils/loadMain";
 import { SetNewURL } from "../../../utils/routing";
+import documentationLookup from './documentationLookup.js'
 
 
 /*
@@ -36,12 +37,16 @@ const Landing = (props, appContainer) =>{
       linksContainer.style.color = content.color
 
       // learn more (documentation) & explore (analysis page) links
-      let docLink = document.createElement('span'),
+      let docLink = document.createElement('a'),
         appLink = document.createElement('span')
 
-      // documentation (blank for now)
+      // link to documentation pdf
+      const sectionTitle = content.title
+      const docPDF = documentationLookup[sectionTitle]
+      
       docLink.innerText = 'Learn More'
-      docLink.onclick = () => SetNewURL(section, 'documentation')
+      docLink.href = `/webmaps/rtps/pdf/${docPDF}`
+      docLink.target = '_blank'
 
       // explore (analysis page)
       appLink.innerText = 'Explore'
