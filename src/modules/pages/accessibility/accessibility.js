@@ -238,7 +238,7 @@ const StationPopUp = (marker, map) =>{
     map: Mapbox GL Element
 
 */
-const BuildMap = (container, props) =>{
+const BuildMap = container =>{
 
   // base extent 
   const extent = {
@@ -411,9 +411,28 @@ const BuildPage = content =>{
       .addTo(content.scroll)
   }
 
-  const ChangeCaseStudyContent = data =>{
-    let container = document.getElementById('caseStudy'),
-      subtitle = container.querySelector('h3'),
+  // go back to the default view for the collingswood jawn
+  const caseStudyDefault = (container, defaultState) => {
+    const legend = document.querySelector('#caseStudy-legend')
+
+    const subtitle = container.querySelector('h3')
+    const text = container.querySelector('p')
+
+    subtitle.innerText = ''
+    text.innerText = defaultState
+    legend.innerText = ''
+  }
+
+  const ChangeCaseStudyContent = (data, defaultState) =>{
+    const container = document.getElementById('caseStudy')
+
+    // clicking on an active jawn goes back to the default case
+    if(defaultState) {
+      caseStudyDefault(container, defaultState)
+      return
+    }
+
+    let subtitle = container.querySelector('h3'),
       text = container.querySelector('p')
       
     subtitle.innerText = data.title
@@ -585,21 +604,26 @@ const BuildPage = content =>{
 
             tab.addEventListener('click', e =>{
               let links = document.querySelectorAll('#caseStudy a')
+              let backToDefault = false
               for (let link of links){
-                if (link == e.target) e.target.classList.add('active')
+                if (link == e.target) {
+                  if (link.classList.contains('active')) {
+                    backToDefault = true
+                    link.classList.remove('active')
+                  }else{
+                    e.target.classList.add('active')
+                  }
+                }
                 else link.classList.remove('active')
               }
-              ChangeCaseStudyContent(data) 
+              backToDefault ? ChangeCaseStudyContent(false, props.sections.caseStudy.content[0]) : ChangeCaseStudyContent(data, false) 
             })
 
             tabNav.appendChild(tab)
 
         }
       }
-
-
     }
-    
     i++
   }
 }

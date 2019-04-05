@@ -212,12 +212,12 @@
 #caseStudy a:hover, .accessibility__nav-link:hover{
   cursor: pointer;
   background: #fff;
-  color: #08506d;
+  color: #06bf9c;
 }
 
 #caseStudy a.active{
   background: #fff;
-  color: #08506d;
+  color: #06bf9c;
 }
 
 #caseStudy h3{
