@@ -25,6 +25,9 @@
   left: 0;
   z-index: 2;
 }
+#accessibility-nav a{
+  text-decoration: none;
+}
 
 
 .accessibility__nav-link{
