@@ -2,7 +2,7 @@ import { LoadMain } from "./loadMain";
 
 let routes = {
     category: ['gap', 'reliability', 'frequency', 'accessibility'],
-    pages: ['tool', 'documentation']
+    pages: ['tool']
 }
 
 // sanitize hash fragments by whitelisting alphanumeric characters and '/'
@@ -20,6 +20,11 @@ const GetURL = () =>{
     if (hash){
         hash = sanitizeHash(hash)
         const hashArray = hash.split('/')
+
+        // short out if we don't meet the correct length
+        const length = hashArray.length
+        if(length > 2) return { page: 'error' }
+
         let [ category, page ] = [...hashArray]
 
         const catIndex = routes.category.indexOf(category)
@@ -38,25 +43,10 @@ const GetURL = () =>{
     }
 }
 
+// parse the URL to get the requested path
 const UpdateView = ()=>{
-
-    // parse the URL to get the requested path
     let path = GetURL()
-
-    // LoadMain function already takes care of the tool/documentation check, so this could be restructured
-    switch(path.page){
-        case 'home':
-            LoadMain()
-            break;
-        case 'tool':
-            LoadMain(path.category, path.page)
-            break;
-        case 'documentation':
-            LoadMain(path.category, path.page)
-            break;
-        default:
-            console.log('404')
-    }
+    LoadMain(path.category, path.page)
 }
 
 /*
@@ -64,7 +54,7 @@ const UpdateView = ()=>{
     @purpose: Update URL so it can be parsed whenever a navigation element is clicked
     @params:
         - category: analysis category
-        - type: page type (tool or documentation)
+        - type: page type
 */
 
 const SetNewURL = (category, type) =>{
@@ -74,7 +64,7 @@ const SetNewURL = (category, type) =>{
 }
 
 // listeners
-window.onhashchange = e => UpdateView() // browser navigation
-window.onload = e => UpdateView()// refresh/page load
+window.onhashchange = () => UpdateView() // browser navigation
+window.onload = () => UpdateView()// refresh/page load
 
 export {SetNewURL}
