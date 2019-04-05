@@ -14,11 +14,6 @@ const CreateSummary = data =>{
   return `The resulting map shows the average network gap score for connections <strong>${data.direction}</strong> ${insert}. Only <abbr class="map__abbr" title="Traffic Analysis Zone">TAZ</abbr>s with substantial demand <strong>${data.direction} the selected area</strong> are being displayed, a total of <strong>${data.count} <abbr class="map__abbr" title="Traffic Analysis Zone">TAZ</abbr>s</strong>. The darker colors indicate higher priority transit gaps in relation to ${insert}.`
 }
 
-// this might come later idk
-const CreateViz = data =>{
-  return '<p>Some distribution visualizations?</br>Total demand summary?</br>The world is our oyster</p>'
-}
-
 
 /*
   BuildSummary(props)
@@ -30,6 +25,9 @@ const CreateViz = data =>{
   later on.
 */
 const BuildSummary = (props) => {
+  const count = Object.keys(props.data).length
+  const queryData = props.queryData
+
   let content= {
     legend: {
       create: document.createElement('div'),
@@ -40,14 +38,10 @@ const BuildSummary = (props) => {
     },
     summary: {
       create: document.createElement('div'),
-      direction: props.queryData.direction.split(' ')[0].toLowerCase(),
-      location: props.queryData.selection,
-      count: Object.keys(props.data).length,
-      type: props.queryData.type
-    },
-    results: {
-      create: document.createElement('div'),
-      stuff: []
+      direction: queryData.direction.split(' ')[0].toLowerCase(),
+      location: queryData.selection,
+      count,
+      type: queryData.type
     }
   }
 
@@ -64,9 +58,6 @@ const BuildSummary = (props) => {
         break;
       case 'summary':
         insert = CreateSummary(content.summary)
-        break;
-      case 'results':
-        insert = CreateViz(content.results)
         break;
       default:
         return 'error'
