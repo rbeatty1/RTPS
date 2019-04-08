@@ -38,6 +38,7 @@
   height: 100%;
   width: 33%;
   color: #fff;
+  font-weight: 200;
   font-size: 1.1em;
   display: flex;
   justify-content: center;
@@ -47,7 +48,10 @@
 .reliability__sidebar-nav:last-child{
   border-right: none;
 }
-
+.reliability__sidebar-nav:hover{
+  cursor: pointer;
+  font-weight: 900;
+}
 .reliability__sidebar-nav.active{
   font-weight: 900;
   background: none;
@@ -171,12 +175,14 @@ f
   display: none;
   padding: 1rem .5rem;
   font-size: .75rem;
-  margin: auto;
+  margin-bottom: 3%;
 }
 .reliability__legend-section h3{
+  font-size: 1rem;
   text-align: center;
   color: #e89234;
-  margin: 1%;
+  margin-bottom: 3%;
+  margin-top: 0;
   text-transform: capitalize;
 }
 .reliability__legend-section h4{

@@ -165,7 +165,6 @@
   display: flex;
   flex-flow: column;
   overflow-y: auto;
-  direction: rtl;
   background: #d8eee6
 }
 .accessibility-text > * {

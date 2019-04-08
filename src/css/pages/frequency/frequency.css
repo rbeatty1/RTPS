@@ -112,7 +112,6 @@
   .frequency__content-story{
     width: 30%;
     overflow-y: scroll;
-    direction: rtl
   }
   .frequency__content-map{
     overflow: hidden;

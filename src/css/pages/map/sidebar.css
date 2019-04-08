@@ -15,6 +15,7 @@
   height: 92.5%;
   width: 100%;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .map__sidebar-menuHeader{
