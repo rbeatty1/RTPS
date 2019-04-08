@@ -112,6 +112,10 @@
   .frequency__content-story{
     width: 30%;
     overflow-y: scroll;
+    /* 
+      e9e4ab
+     */
+    background: #e9e4ab;
   }
   .frequency__content-map{
     overflow: hidden;
@@ -137,7 +141,10 @@
       min-height: 33vh;
       margin: 33% auto;
       justify-content: center;
-      background: #e9e4ab
+      /* updating for theme
+        old color: e9e4ab
+      */
+      background: #eedc14
     }
     
     .frequency__story-section p{

@@ -26,10 +26,13 @@
 #logo-container svg:hover, #home nav button:hover{
   cursor: pointer;
 }
+#home nav button:hover{
+  font-weight: 700;
+  box-shadow: 0px 0px 20px rgba(0,0,0,0.5);
+}
 #desc-container{
   bottom: 0;
-  background: #ddd;
-  padding-left: 10%;
+  padding-left: 17%;
 }
 #home-default-text{
   margin-top: 12%
@@ -39,14 +42,14 @@
 }
 
 #desc-container p {
-  width: 85%;
+  width: 70%;
   color: #06506d;
   font-size: 1.75rem;
 }
 
 #desc-container.active p {
   color: #fff;
-  margin-bottom: 3%
+  margin-top: 3%
 }
 
 #desc-container p strong{
@@ -66,7 +69,7 @@
 }
 
 #home nav button{
-  width: 160px;
+  width: 14%;
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -75,7 +78,7 @@
   border: none;
   box-shadow: 3px 3px 3px rgba(0,0,0,0.5);
   text-align: center;
-  font-size: 1.25em;
+  font-size: 1.4em;
   color: white;
   font-family: 'Roboto', 'Arial', sans-serif;
   margin: 10% 2%;
@@ -89,17 +92,17 @@
 .content-links{
   text-align: center;
   background: #eee;
-  padding: 8px 13px;
-  font-size: 2rem;
+  font-weight: 200;
+  padding: 8px 36px;
+  font-size: 1.8em;
   display: inline-block;
   margin-top: 10%;
-  color: #2d383c;
   border-radius: 2px;
 }
 
 .content-links span{
-  padding: 0 0.5rem;
-  margin: 0 0.5rem;
+  padding-right: 1rem;
+  margin-right: 1rem;
   border-right: 2px solid #2d383c;
   color: #2d383c;
 }

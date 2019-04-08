@@ -334,7 +334,7 @@ const BuildSidebar = (map, data) =>{
   const BuildControlToggle = (parent, text) =>{
     let toggle = document.createElement('button')
 
-    toggle.innerText = `Show ${text}`
+    toggle.innerText = `Toggle ${text}`
 
     if (text.toLowerCase() == 'filter'){
       toggle.onclick = e =>{

@@ -62,10 +62,12 @@
 }
 .reliability__descriptive-text{
   color: #fff;
+  padding: 0 15px 15px 15px;
 }
 
 #content-about{
   padding: 2%;
+  margin-top: 3%;
   background: whitesmoke;
   border-radius: 5px;
 }

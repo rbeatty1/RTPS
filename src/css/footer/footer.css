@@ -1,11 +1,11 @@
 footer{
     border-top: 1px solid #fff;
-    margin-top: 30%;
+    margin-top: 35vh;
     display: flex;
     flex-direction: column;
     padding: 5% 2%;
     font-size: 0.75rem;
-    background: #06506D;
+    background: #696969;
     color: #fff;
 }
 .footer-content-wrapper {

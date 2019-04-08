@@ -110,14 +110,14 @@ const Landing = (props, appContainer) =>{
               while (descriptionContainer.firstChild) descriptionContainer.removeChild(descriptionContainer.firstChild)
             
             // reset style
-            descriptionContainer.style.background = '#ddd'
+            descriptionContainer.style.background = '#fff'
             descriptionContainer.style.color = '#08506d'
             descriptionContainer.classList.remove('active')
 
             // reset text
             descriptionContainer.insertAdjacentHTML(
               'beforeend',
-              `<p>
+              `<p id="home-default-text">
                 Where should transit improvement and transit supportive investments be made in the
                 <abbr title="Delaware Valley Regional Planning Commission">DVRPC</abbr> region? 
                 <strong>Use this platform to evaluate service, operational, enforcement, and
@@ -155,8 +155,7 @@ const Landing = (props, appContainer) =>{
       let nav = document.createElement('nav')
       for (let section in props){
         let content = props[section],
-          link = document.createElement('button'),
-          title = document.createElement('p')
+          link = document.createElement('button');
 
         // set link attributes and set the data-page attribute to shorthand for tool for easy access
         link.setAttribute('data-page', section)
@@ -168,9 +167,6 @@ const Landing = (props, appContainer) =>{
         // listener events
           // SectionChange --> change logo colors, set new description text, build links to tool & documentation, give button active class
         link.onclick = e => SectionChange(e.target, section)
-          // hover events to give it some styling
-        link.onmouseover = e => e.target.style.background = content.secondary
-        link.onmouseleave = e => e.target.style.background = content.color
         
         // send it
         nav.appendChild(link)
