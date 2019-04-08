@@ -136,7 +136,7 @@ const Landing = (props, appContainer) =>{
         section.id = 'desc-container'
         section.insertAdjacentHTML(
           'beforeend', 
-          `<p>
+          `<p id="home-default-text">
             Where could transit improvement and investments that support transit be made in the
             <abbr title="Delaware Valley Regional Planning Commission">DVRPC</abbr> region? 
             <strong>Use this platform to evaluate service, operational, enforcement, and
@@ -193,14 +193,14 @@ class Home{
         title : 'Transit Network Gap Analyzer',
         color: '#8bb23f',
         secondary: '#d1e0b2',
-        description: `<p><strong>Where are there gaps in the transit network?</strong> Evaluate in-demand connections between transit 
+        description: `<p><strong>Where are there gaps in the transit network?</strong><br /> Evaluate in-demand connections between transit 
         supportive origins and destinations where transit is not available or not competitive with vehicles using a composite measure.</p>`
       },
       reliability: {
         title: 'Surface Transit Reliability',
         color: '#e89234',
         secondary: '#edceab',
-        description: `<p><strong>Where should efforts to improve transit reliability be focused?</strong> A variety of factors such as 
+        description: `<p><strong>Where should efforts to improve transit reliability be focused?</strong><br /> A variety of factors such as 
         infrastructure, congestion, and enforcement impact surface transit reliability. Find out where reliability issues are likely to
         impact the most passengers.</p>`
       },
@@ -208,14 +208,14 @@ class Home{
         title: 'Doubled Frequency Scenario',
         color: '#d8c72e',
         secondary: '#efe9ab',
-        description: `<p><strong>Where is there potential latent demand for higher frequency transit service?</strong> View results of how
+        description: `<p><strong>Where is there potential latent demand for higher frequency transit service?</strong><br /> View results of how
         a regional travel demand model scenario in which transit frequency is doubled compares to the existing scenario.</p>`
       },
       accessibility: {
         title: 'Wheelchair Accessibility',
         color: '#06bf9c',
         secondary: '#a7ddd1',
-        description: `<p><strong>Where can station accessibility improvements have the greatest impact for wheelchair users and persons with mobility assistance needs?</strong> 
+        description: `<p><strong>Where can station accessibility improvements have the greatest impact for wheelchair users and persons with mobility assistance needs?</strong><br /> 
         Wiew data showing destinations reachable via rail by wheelchair users and persons with mobility impairments as compared to all users.</p>`
       }
     }

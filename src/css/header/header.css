@@ -47,3 +47,6 @@
     align-items: center;
     width: 50%;
 }
+.header__nav-links span:hover{
+    cursor: pointer;
+}

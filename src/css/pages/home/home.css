@@ -6,7 +6,7 @@
 }
 
 #home section{
-  height: 47.5%;
+  height: 49.5%;
   width: 100%;
   position: fixed;
 }
@@ -29,17 +29,17 @@
 #desc-container{
   bottom: 0;
   background: #ddd;
-  display: flex;
-  flex-flow: column;
-  justify-content: center;
-  align-items: center
+  padding-left: 10%;
+}
+#home-default-text{
+  margin-top: 12%
 }
 #desc-container.active{
   justify-content: flex-end;
 }
 
 #desc-container p {
-  width: 60%;
+  width: 85%;
   color: #06506d;
   font-size: 1.75rem;
 }
@@ -54,7 +54,7 @@
 }
 
 #home nav{
-  height: 5%;
+  height: 3%;
   background: #08506d;
   display: flex;
   justify-content: center;
@@ -62,11 +62,11 @@
   z-index: 2;
   position: fixed;
   width: 100%;
-  top: 47.5%
+  top: 49.5%
 }
 
 #home nav button{
-  width: 10%;
+  width: 160px;
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -89,18 +89,19 @@
 .content-links{
   text-align: center;
   background: #eee;
-  padding: 1%;
+  padding: 8px 13px;
   font-size: 2rem;
-  margin-top: 5%;
-  border-radius: 15px;
   display: inline-block;
+  margin-top: 10%;
+  color: #2d383c;
+  border-radius: 2px;
 }
 
 .content-links span{
-  margin: 0 1rem;
-  color: blue;
-  font-weight: 400;
-  font-size: 2rem;
+  padding: 0 0.5rem;
+  margin: 0 0.5rem;
+  border-right: 2px solid #2d383c;
+  color: #2d383c;
 }
 
 .content-links span:hover{
@@ -109,4 +110,5 @@
 
 .content-links a{
   text-decoration: none;
+  color: #2d383c;
 }
