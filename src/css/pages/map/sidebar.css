@@ -5,41 +5,41 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 5%;
+  height: 7.5%;
   width: 100%;
-  margin: 5% 0;
   padding: 0;
+  margin-bottom: 5%;
 }
 
 .map__sidebar-content{
-  height: 90%;
+  height: 92.5%;
   width: 100%;
   overflow-y: auto;
 }
 
 .map__sidebar-menuHeader{
-    height: 75%;
+    background: rgba(0, 0, 0, 0.3);
     text-decoration: none;
-    /* ongoing list of accessible colors:
-      dark grey: 2d383c
-    */
-    color: #2d383c;
-    font-size: 1em;
+    font-weight: 200;
+    color: #fff;
+    font-size: 1.2em;
     display: flex;
     align-items: center;
-    padding: 0 25px;
-    text-align: center;
+    justify-content: center;
+    height: 100%;
+    width: 50%;
 }
 .map__sidebar-menuHeader:first-child{
-  border-right: 2px solid #2d383c;
+  border-right: 2px solid #fff;
 }
 
 .map__sidebar-menuHeader.active{
-  color: #802200;
-  font-weight: 700;
+  font-weight: 900;
+  background: none;
 }
 .map__sidebar-menuHeader:hover{
   cursor: pointer;
+  font-weight: 900;
 }
 
 .transit-toggle {
@@ -50,6 +50,7 @@
   color: #8bb23f;
   background: whitesmoke;
   padding: 3% 1%;
+  margin: 5% 0;
   border-radius: 10px;
   box-shadow: 2px 2px 3px 2px rgba(0,0,0,0.1);
 }
@@ -70,12 +71,11 @@
 .map__sidebar-menuContent section{
   width: 80%;
   padding: 15px;
-  margin: 2rem auto;
-  font-size: .9em;
+  font-size: 1em;
   /* ongoing list of accessible colors:
     dark grey: 2d383c
   */
-  color: #2d383c;
+  color: #fff;
   border-radius: 5px;
 }
 #gap__results-section{
@@ -134,9 +134,11 @@
 
 .gap__sidebar-contentButton{
   width: 100%;
+  margin-top: 3%;
 }
 
 .gap__sidebar-contentButton button{
+  font-size: 1em;
   border: none;
   color: white;
   background: #8bb23f;

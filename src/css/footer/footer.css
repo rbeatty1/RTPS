@@ -1,12 +1,12 @@
 footer{
-    border-top: 1px solid #3b3b3b;
-    margin-top: 5%;
+    border-top: 1px solid #fff;
+    margin-top: 20%;
     display: flex;
     flex-direction: column;
-    padding: 2%;
+    padding: 5% 2%;
     font-size: 0.75rem;
-    background: rgba(59,59,59,0.1);
-    color: #3b3b3b;
+    background: #06506D;
+    color: #fff;
 }
 .footer-content-wrapper {
     width: 90%;
@@ -14,7 +14,6 @@ footer{
     align-items: center;
     justify-content: space-between;
     margin: 0 auto;
-    padding: 2% 0;
     
 }
 #footer-logo{
