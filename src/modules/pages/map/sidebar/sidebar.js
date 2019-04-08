@@ -56,7 +56,6 @@ const BuildMenus = appContent =>{
             let name = e.target.name
             if (e.target.checked){
               if (name == 'rail-lines'){
-                  console.log(appContent.map.getLayer(name))
                   appContent.map.setLayoutProperty(name, 'visibility', 'visible')
                   appContent.map.setLayoutProperty('rail-labels', 'visibility', 'visible')
               }
@@ -247,7 +246,6 @@ class Sidebar{
     
     new Legend(legend)
     summaryContainer.appendChild(legend)
-
   }
 }
 

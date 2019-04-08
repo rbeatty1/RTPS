@@ -20,17 +20,23 @@
 .map__sidebar-menuHeader{
     height: 75%;
     text-decoration: none;
-    color: white;
-    font-size: .9em;
+    /* ongoing list of accessible colors:
+      dark grey: 2d383c
+    */
+    color: #2d383c;
+    font-size: 1em;
     display: flex;
     align-items: center;
-    margin: 0 25px;
+    padding: 0 25px;
     text-align: center;
+}
+.map__sidebar-menuHeader:first-child{
+  border-right: 2px solid #2d383c;
 }
 
 .map__sidebar-menuHeader.active{
+  color: #802200;
   font-weight: 700;
-  font-size: 1.25rem;
 }
 .map__sidebar-menuHeader:hover{
   cursor: pointer;
@@ -66,7 +72,10 @@
   padding: 15px;
   margin: 2rem auto;
   font-size: .9em;
-  color: white;
+  /* ongoing list of accessible colors:
+    dark grey: 2d383c
+  */
+  color: #2d383c;
   border-radius: 5px;
 }
 #gap__results-section{
