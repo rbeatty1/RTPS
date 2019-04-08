@@ -16,12 +16,15 @@
 #reliability__sidebar{
   width: 30%;
   height: 100%;
-  background: #f5cea4;
+  /* darker backgrounds so that white text can be used accessibly:
+    A96623
+  */
+  background: #A96623;
   overflow-y: auto;
 }
 .reliability__sidebar-tabs{
   width: 100%;
-  height: 5%;
+  height: 7.5%;
   display: flex;
   justify-content: space-evenly;
   margin: 5% 0;
@@ -31,17 +34,14 @@
   cursor: pointer;
 }
 .reliability__sidebar-nav{
-  height: 75%;
+  background: rgba(0, 0, 0, 0.3);
+  height: 100%;
+  width: 33%;
   text-decoration: none;
-  /* ongoing list of more accessible colors:
-    slate: 4f5a65
-
-  */
-  color: #4f5a65;
-  font-size: 1em;
+  color: #fff;
+  font-size: 1.2em;
   display: flex;
   align-items: center;
-  padding: 0 25px;
   text-align: center;
   border-right: 2px solid #555555;
 }
@@ -50,18 +50,15 @@
 }
 
 .reliability__sidebar-nav.active{
-  font-weight: 700;
-  /* ongoing list of more accessible colors:
-    orange: 2a002a 
-  */
-  color: #aa2e00
+  font-weight: 900;
+  background: none;
 }
 .reliability__sidebar-content{
   width: 100%;
   overflow-y: hidden;
 }
 .reliability__descriptive-text{
-  color: #4f5a65;
+  color: #fff;
 }
 
 #content-about{

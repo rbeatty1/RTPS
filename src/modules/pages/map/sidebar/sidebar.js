@@ -146,18 +146,28 @@ const BuildMenus = appContent =>{
     // do local analysis tab stuff
     if (title != 'summary') {
       for (let section in content){
-        if (section == 'inputs'){
-          let queryContainer = new QueryContainer()
-          queryContainer.list = HeaderElements[1].content;
-          let queryList = [];
-          for (var k in queryContainer.list) queryList.push(queryContainer.list[k]);
+
+        switch(section) {
+          case ('inputs'):
+            let queryContainer = new QueryContainer()
+            queryContainer.list = HeaderElements[1].content;
+            let queryList = [];
+            for (var k in queryContainer.list) queryList.push(queryContainer.list[k]);
+            break
+          case ('analysisSummary'):
+            const summary = document.createElement('p')
+            summary.id = 'gap__analysis-summary'
+            
+            summary.textContent = content.analysisSummary
+            jawn.appendChild(summary)
+            break
+          default:
+            let results = document.createElement('section')
+            results.id = 'gap__results-section'
+            results.innerHTML = content.results
+            jawn.appendChild(results)
         }
-        else{
-          let results = document.createElement('section')
-          results.id = 'gap__results-section'
-          results.innerHTML = content.results
-          jawn.appendChild(results)
-        }
+
       }
     }
     // do regional analysis tab stuff
@@ -216,6 +226,7 @@ class Sidebar{
       elements: {
         summary: "This regional summary map shows <abbr title='Traffic Analysis Zone'>TAZ</abbr>s symbolized using the average network gap score. The darker the color, the higher the score, indicating a higher priority transit gap. A transit gap is defined as an in-demand connection between transit supportive places where transit is either not available or not competitive.",
         analysis: {
+          analysisSummary: 'This dynamic map allows users to identify and prioritize transit gaps to and from specific areas of interest. Select a municipality or TAZ to see where transit connections can be improved or added.',
           inputs: {
             geography: '',
             selection: '',

@@ -22,7 +22,7 @@
     text-decoration: none;
     font-weight: 200;
     color: #fff;
-    font-size: 1.2em;
+    font-size: 1.1em;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -72,23 +72,20 @@
   width: 80%;
   padding: 15px;
   font-size: 1em;
-  /* ongoing list of accessible colors:
-    dark grey: 2d383c
-  */
   color: #fff;
   border-radius: 5px;
+}
+#gap__analysis-summary{
+  width: 80%;
+  color: #fff;
+  font-size: 1em;
 }
 #gap__results-section{
   order:3;
 }
 .map__sidebar-summaryContent strong{
-  color: #08506d
-}
-.map__sidebar-summaryContent strong{
-  color: #08506d
-}
-.map__sidebar-summaryContent strong{
-  color: #08506d
+  /* change to accessible color given the dark green background. Subject to change pending bg color review */
+  color: #e0ffff
 }
 #legend{
   display: flex;
@@ -184,9 +181,7 @@
 .sidebar__input-container{
   order: 1;
   display: flex;
-  margin-left: 10px;
   align-items: center;
-  margin: auto;
   flex-flow: column;
   justify-content: space-evenly;
 }
