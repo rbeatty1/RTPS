@@ -33,21 +33,35 @@
 .reliability__sidebar-nav{
   height: 75%;
   text-decoration: none;
-  color: white;
-  font-size: .9em;
+  /* ongoing list of more accessible colors:
+    slate: 4f5a65
+
+  */
+  color: #4f5a65;
+  font-size: 1em;
   display: flex;
   align-items: center;
-  margin: 0 25px;
+  padding: 0 25px;
   text-align: center;
-} 
+  border-right: 2px solid #555555;
+}
+.reliability__sidebar-nav:last-child{
+  border-right: none;
+}
+
 .reliability__sidebar-nav.active{
   font-weight: 700;
-  font-size: 1.25rem;
-  color: #e89234
+  /* ongoing list of more accessible colors:
+    orange: 2a002a 
+  */
+  color: #aa2e00
 }
 .reliability__sidebar-content{
   width: 100%;
   overflow-y: hidden;
+}
+.reliability__descriptive-text{
+  color: #4f5a65;
 }
 
 #content-about{
@@ -125,11 +139,11 @@
   box-shadow: 2px 2px 3px rgba(0,0,0,0.1);
   border-radius: 10px;
   width: 100%;
-  display: none;
+  display: block;
 }
 
 .reliability__sidebar-control.display{
-  display: block;
+  display: none;
 }
 f
 

@@ -18,10 +18,7 @@ const createFooter = () => {
     footerLogo.alt = 'dvrpc logo'
 
     address.textContent = '190 N. Independence Mall W, \r\n 8th Floor \r\n Philadelphia, PA 19106'
-    // address.textContent += '8th Floor \r\n'
-    // address.textContent += 'Philadelphia, PA 19147'
     dvrpcContact.innerHTML = '<strong>Phone</strong>: (215) - 592 - 1800'
-    //  <br /> <strong>Email</strong>: <a href="mailto:public_affairs@dvrpc.org">public_affairs@dvrpc.org</a>
 
     addressContactWrapper.appendChild(address)
     addressContactWrapper.appendChild(dvrpcContact)

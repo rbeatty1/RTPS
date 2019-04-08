@@ -684,16 +684,20 @@ const BuildSidebar = (map, data) =>{
 
   // build layer section of sidebar
   const BuildRegionalSection = element =>{
-
     let container = document.createElement('div'),
-      layerControl = document.createElement('button')
+      layerControl = document.createElement('button'),
+      descriptiveText = document.createElement('p')
 
     container.classList.add('reliability__sidebar-sectionContent')
     container.classList.add('active')
+    descriptiveText.classList.add('reliability__descriptive-text')
 
     container.id = 'content-regional'
-
+    
+    descriptiveText.textContent = 'The goal of the surface transit reliability analysis was to identify corridors where surface transit service is particularly slow or delayed as places where road or transit improvements could increase reliability. These regional layers show aggregate measures for all surface transit routes that use a particular road segment.'
     layerControl.innerText = 'Show Layer List'
+    
+    container.appendChild(descriptiveText)
     element.appendChild(container)
 
     BuildLayerControl(container, layers.regional)
@@ -707,14 +711,19 @@ const BuildSidebar = (map, data) =>{
   }
 
   const BuildRouteSection = element =>{
-
     let container = document.createElement('div'),
       layerControl = document.createElement('div'),
-      filterControl = document.createElement('div')
+      filterControl = document.createElement('div'),
+      descriptiveText = document.createElement('p');
 
     container.classList.add('reliability__sidebar-sectionContent')
+    descriptiveText.classList.add('reliability__descriptive-text')
 
     container.id = 'content-input'
+
+    descriptiveText.textContent = 'The layers on this tab are best viewed at the route level. Use the filter to select a surface transit route to examine in detail. When multiple routes are displayed, colors will reflect whichever route is on top.'
+
+    container.appendChild(descriptiveText)
 
     BuildControlToggle(filterControl, 'Filter')
     container.appendChild(filterControl)
