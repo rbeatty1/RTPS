@@ -164,7 +164,6 @@ const BuildMenus = appContent =>{
           default:
             let results = document.createElement('section')
             results.id = 'gap__results-section'
-            results.innerHTML = content.results
             jawn.appendChild(results)
         }
 
@@ -231,8 +230,7 @@ class Sidebar{
             geography: '',
             selection: '',
             direction: ''
-          },
-          results: `Please perform an analysis query to populate this area with results.`,
+          }
         },
       },
       open: undefined,
