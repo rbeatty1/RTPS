@@ -33,7 +33,7 @@
 }
 
 #page-title{
-    margin: 1% 0;
+    margin: 0;
     color: #08506d;
     font-weight: 700;
     text-align: center;
@@ -46,6 +46,9 @@
     justify-content: space-between;
     align-items: center;
     width: 50%;
+    height: 7px;
+    background: #08506d;
+    margin-bottom: 5%;
 }
 .header__nav-links span:hover{
     cursor: pointer;
