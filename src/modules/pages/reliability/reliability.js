@@ -3,8 +3,6 @@ import {LoadLayers} from '../../../utils/loadMapLayers';
 import { styles } from '../map/map_styles/reliability.js'
 import { FormatNumber } from '../../../utils/formatNumber';
 import { CreateDvrpcNavControl } from '../../../utils/defaultExtentControl';
-import { headerRender } from "../../header/header";
-import { HeaderElements } from "../../header/HeaderElements";
 import { Footer } from "../../footer/footer";
 
 let layerRef = {
@@ -69,29 +67,6 @@ const BuildPage = structure =>{
     pageContent: component state
 */
 const BuildMap = pageContent =>{
-  /*
-    LoadData(data)
-    @purpose: load map layer data
-    @params:
-      data: container to dump retreived data
-  */
-  const LoadData = data =>{
-    // all API endpoints
-    let endpoints = ['score', 'tti', 'speed', 'otp', 'weighted', 'njt', 'septa' ]
-    // hit all end points and retrieve data
-    endpoints.map(query=>{
-      fetch(`https://a.michaelruane.com/api/rtps/reliability?${query}`)
-      .then(response=>{
-        if (response.ok) return response.json()
-      })
-      .then(jawn=>{
-        data[query] = jawn.cargo
-        return data[query]
-      })
-    })
-  
-  }
-
   /* 
     LayerVisibilityCheck(layerName)
     @purpose: function to update checkbox status and load legend when layer is activated.
@@ -101,8 +76,13 @@ const BuildMap = pageContent =>{
   const LayerVisibilityCheck = layerName =>{
     let layerId = `reliability-${layerName}`,
       checkboxId = `#legend-${layerName}`
+
+    // @TODO: add a check here to see IF the layer exists (like in the tourism map)
+      // true: run the set visibility jawn
+      // false: fetch and add it to the data object
     if (map.getLayoutProperty(layerId, 'visibility') == 'visible') {
-      document.querySelector(`input[name=${layerId.split('-')[1]}]`).checked = true
+      const name = layerId.split('-')[1]
+      document.querySelector(`input[name=${name}]`).checked = true
       document.querySelector(checkboxId).style.display = 'block'
     }
   }
@@ -211,11 +191,12 @@ const BuildMap = pageContent =>{
 
     CreateDvrpcNavControl(extent, map)
     let layers = styles.reliability.layers
+
     // load map layers
     LoadLayers(map, styles)
-    // assign data to local state
-    LoadData(pageContent.data)
+
     BuildPopUps(layers)
+
     // display correct layers
     for (let layer in styles.reliability.layers) LayerVisibilityCheck(layer)
   })
