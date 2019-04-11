@@ -315,22 +315,14 @@ const BuildSidebar = (map, data) =>{
   const BuildControlToggle = (parent, text) =>{
     let toggle = document.createElement('button')
 
+    toggle.classList.add('reliability__sidebar-sectionContent-button')
+
     toggle.innerText = `Toggle ${text}`
 
-    if (text.toLowerCase() == 'filter'){
-      // HERE is where the modeal gets made
-      toggle.onclick = e =>{
-        let modal = document.getElementById('filter-modal')
-        modal.classList.toggle('active')
-      }
-
-    }
-    else{
-      toggle.onclick = e =>{
-        e.preventDefault()
-        let content = e.target.nextElementSibling
-        content.classList.toggle('display')
-      }
+    toggle.onclick = e =>{
+      e.preventDefault()
+      let content = e.target.nextElementSibling
+      content.classList.toggle('display')
     }
 
     parent.appendChild(toggle)
@@ -451,7 +443,13 @@ const BuildSidebar = (map, data) =>{
   const BuildFilterControl = element =>{
     
     // build filter dropdown @TODO: reincorporate this into the input jawn
+    // pass the wrapper div for each input jawn into here so that the selected filters get appended below their respective input
     const BuildDropdownOption = (container, item) =>{
+      // @TODO: rename container. That is now the input field being passed
+      console.log('called buildropdownoption from ADD button with input as: ', container)
+      const route = container.value
+      console.log('selected route from input value is ', route)
+
       // listener to fire when one of the filter options is selected
       const CheckboxListeners = list =>{
         // function to update map filter through all layers
@@ -481,6 +479,8 @@ const BuildSidebar = (map, data) =>{
 
           }
         }
+
+        // this is the CheckBoxListeners function - probably don't need any of this
         let filtered = []
         // grab all of the filter checkboxes
         let allBoxes = list.querySelectorAll('input[type="checkbox"]')
@@ -578,13 +578,22 @@ const BuildSidebar = (map, data) =>{
     const septaInput = document.createElement('input')
     const njInput = document.createElement('input')
 
+    const addSeptaFilter = document.createElement('button')
+    const addNjFilter = document.createElement('button')
+
     // add classes
     filterWrapper.classList.add('reliability__sidebar-control')
     filterWrapper.classList.add('reliability__route-filter-wrapper')
-    septaWrapper.classList.add('reliability__router-filter-input-wrapper')
-    njWrapper.classList.add('reliability__router-filter-input-wrapper')
+    septaWrapper.classList.add('reliability__route-filter-input-wrapper')
+    njWrapper.classList.add('reliability__route-filter-input-wrapper')
+    septaLabel.classList.add('reliability__filter-label')
+    njLabel.classList.add('reliability__filter-label')
+    septaInput.classList.add('reliability__filter-input')
+    njInput.classList.add('reliability__filter-input')
+    addSeptaFilter.classList.add('reliability__filter-btn')
+    addNjFilter.classList.add('reliability__filter-btn')
 
-    // add info
+    // add element info
     populateDatalist(septaRoutes, 'septa')
     populateDatalist(njRoutes, 'njtransit')
 
@@ -599,14 +608,22 @@ const BuildSidebar = (map, data) =>{
     // add text
     septaLabel.textContent = 'Septa routes: '
     njLabel.textContent = 'NJ Transit routes: '
+    addSeptaFilter.textContent = 'add'
+    addNjFilter.textContent = 'add'
+
+    // add functionality
+    addSeptaFilter.onclick = () => BuildDropdownOption(septaInput)
+    addNjFilter.onclick = () => BuildDropdownOption(njInput)
 
     // add to wrappers
     septaWrapper.appendChild(septaLabel)
     septaWrapper.appendChild(septaInput)
     septaWrapper.appendChild(septaRoutes)
+    septaWrapper.appendChild(addSeptaFilter)
     njWrapper.appendChild(njLabel)
     njWrapper.appendChild(njInput)
     njWrapper.appendChild(njRoutes)
+    njWrapper.appendChild(addNjFilter)
 
     filterWrapper.appendChild(septaWrapper)
     filterWrapper.appendChild(njWrapper)

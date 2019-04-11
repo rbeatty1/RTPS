@@ -114,8 +114,7 @@
   width: 90%;
   height: 100%;
 }
-
-.reliability__sidebar-sectionContent button{
+.reliability__sidebar-sectionContent-button{
   border: none;
   color: white;
   background: #e89234;
@@ -126,8 +125,6 @@
   width: 100%;
   font-size: 1em;
 }
-
-
 .reliability__sidebar-sectionContent section p{
   color: #08506d;
   padding: 3%;
@@ -214,10 +211,30 @@ f
   flex-direction: column;
   justify-content: flex-start;
 }
-.reliability__router-filter-input-wrapper{
+.reliability__route-filter-input-wrapper{
   display: flex;
   justify-content: space-between;
   margin: .5rem;
+  align-items: center;
+}
+.reliability__filter-label{
+  width: 41%;
+}
+.reliability__filter-input{
+  width: 15%;
+}
+.reliability__filter-btn{
+  color: white;
+  background: #e89234;
+  border: none;
+  border-radius: 5px;
+  width: 15%;
+  padding: 2%;
+  font-size: 0.8em;
+  margin: 0;
+}
+.reliability__filter-btn:hover{
+  cursor: pointer;
 }
 .reliability__filter-options{
   display: none;
