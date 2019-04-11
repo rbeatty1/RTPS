@@ -77,9 +77,6 @@ const BuildMap = pageContent =>{
     let layerId = `reliability-${layerName}`,
       checkboxId = `#legend-${layerName}`
 
-    // @TODO: add a check here to see IF the layer exists (like in the tourism map)
-      // true: run the set visibility jawn
-      // false: fetch and add it to the data object
     if (map.getLayoutProperty(layerId, 'visibility') == 'visible') {
       const name = layerId.split('-')[1]
       document.querySelector(`input[name=${name}]`).checked = true
