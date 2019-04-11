@@ -143,8 +143,11 @@
       justify-content: center;
       /* updating for theme
         old color: e9e4ab
+        other yellow: eedc14
+        better yellow: fff25d
+
       */
-      background: #eedc14
+      background: #fff25d
     }
     
     .frequency__story-section p{
@@ -193,7 +196,13 @@
       }
       .frequency__storySection-TitleDivider h2{
         font-weight: 700;
-        color: #06bf9c;
+        /* 
+          color options:
+          old: 06bf9c
+          lighter version of h1: 0D6587
+          or just use the same color as h1
+        */
+        color: #0D6587;
         text-transform: capitalize;
         font-size: 1.25rem;
       }

@@ -224,6 +224,9 @@ const BuildSidebar = (map, data) =>{
         unit: false
       },
     },
+    filter: {
+
+    },
     input: {
       'reliability-speed':  {
         title: 'Average Speed by Line',
@@ -315,6 +318,7 @@ const BuildSidebar = (map, data) =>{
     toggle.innerText = `Toggle ${text}`
 
     if (text.toLowerCase() == 'filter'){
+      // HERE is where the modeal gets made
       toggle.onclick = e =>{
         let modal = document.getElementById('filter-modal')
         modal.classList.toggle('active')
@@ -446,7 +450,7 @@ const BuildSidebar = (map, data) =>{
   // function to build filter functionality
   const BuildFilterControl = element =>{
     
-    // build filter dropdown
+    // build filter dropdown @TODO: reincorporate this into the input jawn
     const BuildDropdownOption = (container, item) =>{
       // listener to fire when one of the filter options is selected
       const CheckboxListeners = list =>{
@@ -542,17 +546,42 @@ const BuildSidebar = (map, data) =>{
       
     }
 
+    // @TODO: replace these w/the one for NJ and one for SEPTA
     let filterRef = {
       core: ['6', '17', '21', '23', '33', '46', '47', '52', '56', '58', '60', '66', '79', '108', '113', 'R', '18', '26', 'G', '7', '10', '11', '13', '34', '36', 'MFL', 'BSL'],
     }
 
-    let dropdown = document.createElement('div'),
-      summary = document.createElement('div')
+    // create the elements
+    const filterWrapper = document.createElement('div')
+    const septaWrapper = document.createElement('div')
+    const njWrapper = document.createElement('div')
 
-    dropdown.id = 'filter-modal'
-  
+    const septaLabel = document.createElement('label')
+    const njLabel = document.createElement('label')
 
-    element.appendChild(dropdown)
+    const septaInput = document.createElement('input')
+    const njInput = document.createElement('input')
+
+    // add classes
+    filterWrapper.classList.add('reliability__sidebar-control')
+    filterWrapper.classList.add('reliability__route-filter-wrapper')
+    septaWrapper.classList.add('reliability__router-filter-input-wrapper')
+    njWrapper.classList.add('reliability__router-filter-input-wrapper')
+
+    // add text
+    septaLabel.textContent = 'Septa route: '
+    njLabel.textContent = 'NJ Transit route: '
+
+    // add to wrappers
+    septaWrapper.appendChild(septaLabel)
+    septaWrapper.appendChild(septaInput)
+    njWrapper.appendChild(njLabel)
+    njWrapper.appendChild(njInput)
+
+    filterWrapper.appendChild(septaWrapper)
+    filterWrapper.appendChild(njWrapper)
+
+    element.appendChild(filterWrapper)
 
     // get all of the routes to build filter
     fetch('https://a.michaelruane.com/api/rtps/reliability?filter')

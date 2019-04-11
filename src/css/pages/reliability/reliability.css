@@ -72,13 +72,14 @@
   border-radius: 5px;
 }
 
-#reliability__sidebar-purposeContent h2, #reliability__sidebar-inputsContent h2, #reliability__sidebar-outputsContent h2{
+/* @TODO: does this do anything? */
+/* #reliability__sidebar-inputsContent h2, #reliability__sidebar-outputsContent h2{
   text-transform: capitalize;
   font-size: 1.15rem;
   text-align: center;
   margin: 1% auto;
   color: #e89234
-}
+} */
 .reliability__sidebar-emphasis{
   font-weight: 700;
   color: #06bf9c;
@@ -137,6 +138,7 @@
   min-height: 40%;
   margin: 3% 1%;
   background: whitesmoke;
+  color: #e89234;
   box-shadow: 2px 2px 3px rgba(0,0,0,0.1);
   border-radius: 10px;
   width: 100%;
@@ -152,11 +154,11 @@ f
   height: 90%;
 }
 
-.reliability__control-title{
+/* .reliability__control-title{
   color: #e89234;
   width: 100;
   text-align: center;
-}
+} */
 
 .reliability__layer-option{
   display: flex;
@@ -166,7 +168,7 @@ f
 }
 .reliability__layer-checkbox{
   margin: .5rem;
-  color: #E89234;
+  /* color: #E89234; */
   font-size: 1rem;
 }
 .reliability__layer-emphasis{
@@ -188,6 +190,7 @@ f
   text-transform: capitalize;
 }
 .reliability__legend-section h4{
+  color: #121212;
   text-align: center;
   margin: 2px auto 10px;
 }
@@ -205,15 +208,28 @@ f
 }
 .reliability__legend-item{
   text-align: center;
-  padding-bottom: 5px
+  padding-bottom: 5px;
+  color: #121212;
 }
 
-.reliability__sidebar-filter{
+/* @TODO: does this do anything? */
+/* .reliability__sidebar-filter{
   height: 60%;
   overflow: hidden;
   width: 100%;
+} */
+.reliability__route-filter-wrapper{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
-.reliability__filter-dropdown{
+.reliability__router-filter-input-wrapper{
+  display: flex;
+  justify-content: space-between;
+  margin: .5rem;
+}
+/* @TODO: delete this */
+/* .reliability__filter-dropdown{
   z-index: 3;
   position: fixed;
   display: none;
@@ -224,9 +240,9 @@ f
   margin: 0 auto;
   overflow: hidden;
   background: rgba(0, 0, 0, 0.5);
-}
+} */
 
-#filter-modal.active{
+/* #filter-modal.active{
   display: block;
 }
 
@@ -254,7 +270,7 @@ f
 #close-filter-modal:hover{
   cursor: pointer;
   color: #ccc;
-}
+} */
 .reliability__filter-default{
   cursor: pointer;
   display: flex;
