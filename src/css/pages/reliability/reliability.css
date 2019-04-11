@@ -71,15 +71,13 @@
   background: whitesmoke;
   border-radius: 5px;
 }
-
-/* @TODO: does this do anything? */
-/* #reliability__sidebar-inputsContent h2, #reliability__sidebar-outputsContent h2{
+.reliability__sidebar-sectionTitle{
   text-transform: capitalize;
   font-size: 1.15rem;
   text-align: center;
   margin: 1% auto;
   color: #e89234
-} */
+}
 .reliability__sidebar-emphasis{
   font-weight: 700;
   color: #06bf9c;
@@ -211,13 +209,6 @@ f
   padding-bottom: 5px;
   color: #121212;
 }
-
-/* @TODO: does this do anything? */
-/* .reliability__sidebar-filter{
-  height: 60%;
-  overflow: hidden;
-  width: 100%;
-} */
 .reliability__route-filter-wrapper{
   display: flex;
   flex-direction: column;
@@ -228,72 +219,6 @@ f
   justify-content: space-between;
   margin: .5rem;
 }
-/* @TODO: delete this */
-/* .reliability__filter-dropdown{
-  z-index: 3;
-  position: fixed;
-  display: none;
-  left: 0%;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  margin: 0 auto;
-  overflow: hidden;
-  background: rgba(0, 0, 0, 0.5);
-} */
-
-/* #filter-modal.active{
-  display: block;
-}
-
-#filter-modal-content{
-  position: relative;
-  margin: 0 auto;
-  background: #e89234;
-  width: 40%;
-  max-height: 50%;
-  margin-top: 10%;
-  padding: 3%;
-  border-radius: 5px;
-  border: none;
-  overflow: auto;
-}
-
-#close-filter-modal{
-  color: #f6efee;
-  position: absolute;
-  right: 2%;
-  top: 1%;
-  font-size: 1.5em;
-}
-
-#close-filter-modal:hover{
-  cursor: pointer;
-  color: #ccc;
-} */
-.reliability__filter-default{
-  cursor: pointer;
-  display: flex;
-  padding: 5px;
-  margin: 0 auto;
-  color: #fff;
-  font-size: 1.33rem;
-  font-weight: 700;
-  width: 75%;
-  justify-content: space-evenly;
-  align-items: center;
-}
-
-.reliability__filter-default:hover{
-  font-size: 1.4rem;
-  color: #eee
-}
-
-.reliability__filter-default.active{
-  font-size: 1.4rem;
-  color: #08506d
-}
-
 .reliability__filter-options{
   display: none;
   flex-flow: row wrap;

@@ -462,7 +462,7 @@ const BuildSidebar = (map, data) =>{
             // only filter "route detail" routes
             if (layer == 'speed' || layer == 'otp' || layer == 'njt' || layer == 'septa'){
               let filterExp = ['any']
-              // build important stuff of filter expression
+              // build important stuff of filter expression @TODO: route has been updated to "septa" and "njtransit" CORE is gone
               filter.map(route=>{
                 if (route == 'core'){
                   filterRef[route].map(coreRoute=>{
@@ -546,15 +546,31 @@ const BuildSidebar = (map, data) =>{
       
     }
 
-    // @TODO: replace these w/the one for NJ and one for SEPTA
     let filterRef = {
-      core: ['6', '17', '21', '23', '33', '46', '47', '52', '56', '58', '60', '66', '79', '108', '113', 'R', '18', '26', 'G', '7', '10', '11', '13', '34', '36', 'MFL', 'BSL'],
+      septa: ['1','12','14','16','17','18','19','2','20','21','22','23','24','25','26','27','28','29','3','30','31','32','33','35','37','38','39','4','40','42','43','44','46','47','48','5','50','52','53','54','55','56','57','58','59','6','60','61','62','64','65','66','67','68','7','70','73','75','77','78','79','8','80','84','88','89','9','BSO','G','H','J','K','L','MFO','R','XH','15B','45','204','205','310','47M','LUCYGO','LUCYGR','124','127','129','130','131','132','133','139','150','201','206','92','93','94','95','96','97','98','99','103','105','106','107','108','113','114','115','117','118','119','123','125','104','112','126','90','109','110','111','128','120','311','91','10','15','13','11','34','36','102','101'],
+      njtransit: ['400','402','406','410','412','414','417','450','451','452','453','455','457','459','463','554','600','601','603','605','606','607','608','609','610','611','612','613','619','624','559','401','403','404','405','407','408','409','413','418','419','551','313','315','317']
+    }
+
+    // create datalists for typeahead functionality on the sept and njtransit input boxes
+    const populateDatalist = (datalist, name) => {
+      const optionFragment = document.createDocumentFragment()
+
+      filterRef[name].forEach(el => {
+        const option = document.createElement('option')
+        option.value = el
+        optionFragment.appendChild(option)
+      })
+
+      datalist.appendChild(optionFragment)
     }
 
     // create the elements
     const filterWrapper = document.createElement('div')
     const septaWrapper = document.createElement('div')
     const njWrapper = document.createElement('div')
+
+    const septaRoutes = document.createElement('datalist')
+    const njRoutes = document.createElement('datalist')
 
     const septaLabel = document.createElement('label')
     const njLabel = document.createElement('label')
@@ -568,83 +584,37 @@ const BuildSidebar = (map, data) =>{
     septaWrapper.classList.add('reliability__router-filter-input-wrapper')
     njWrapper.classList.add('reliability__router-filter-input-wrapper')
 
+    // add info
+    populateDatalist(septaRoutes, 'septa')
+    populateDatalist(njRoutes, 'njtransit')
+
+    septaRoutes.id = 'septa-routes'
+    njRoutes.id ='nj-routes'
+
+    septaInput.type = 'text'
+    septaInput.setAttribute('list', 'septa-routes')
+    njInput.type = 'text'
+    njInput.setAttribute('list', 'nj-routes')
+
     // add text
-    septaLabel.textContent = 'Septa route: '
-    njLabel.textContent = 'NJ Transit route: '
+    septaLabel.textContent = 'Septa routes: '
+    njLabel.textContent = 'NJ Transit routes: '
 
     // add to wrappers
     septaWrapper.appendChild(septaLabel)
     septaWrapper.appendChild(septaInput)
+    septaWrapper.appendChild(septaRoutes)
     njWrapper.appendChild(njLabel)
     njWrapper.appendChild(njInput)
+    njWrapper.appendChild(njRoutes)
 
     filterWrapper.appendChild(septaWrapper)
     filterWrapper.appendChild(njWrapper)
 
     element.appendChild(filterWrapper)
-
-    // get all of the routes to build filter
-    fetch('https://a.michaelruane.com/api/rtps/reliability?filter')
-    .then(response=> response.ok ? response.json() : null)
-    .then(jawn=>{
-      for (let route in jawn.cargo){
-        route.replace(' ', '_')
-        filterRef[route.toString()] = route.toString()
-      }
-      return filterRef
-    })
-    .then(data=>{
-
-      /*
-        TO-DO:
-          - Aria-ify modal opening/dropdown display
-          - Restructure to handle division by operator/mode
-          - Close modal on click event outside of modal content 
-      */
-
-      
-      dropdown.classList.add('reliability__filter-dropdown')
-      summary.classList.add('reliability__filter-summary')
-
-
-      dropdown.innerHTML = `<div id="filter-modal-content"><span id="close-filter-modal">&times;</span><span class="reliability__filter-default">Surface Transit Route Filter</span>${summary.outerHTML}<ul class="reliability__filter-options"></ul></div>`
-      
-      
-      for (let route in data)  BuildDropdownOption(dropdown, route)
-
-
-      let accordian = dropdown.querySelector('.reliability__filter-default'),
-        close = document.getElementById('close-filter-modal')
-
-      accordian.onclick = e =>{
-        let ul = e.target.parentNode.querySelector('ul')
-        if (ul.classList.contains('visible')){
-          ul.classList.remove('visible')
-          accordian.classList.remove('active')
-          accordian.parentNode.parentNode.parentNode.style.height = '40%'
-        }
-        else{
-          ul.classList.add('visible')
-          accordian.classList.add('active')
-          accordian.parentNode.parentNode.parentNode.style.height = '75%'
-        }
-      }
-
-      close.onclick = e =>{
-        e.preventDefault()
-        e.stopPropagation()
-
-        let modal = document.getElementById('filter-modal')
-
-        modal.classList.remove('active')
-      }
-    })
-
   }
 
   const BuildAboutSection = parent =>{
-
-
     let container = document.createElement('div')
     container.classList.add(`reliability__sidebar-sectionContent`)
     container.id = 'content-about'
