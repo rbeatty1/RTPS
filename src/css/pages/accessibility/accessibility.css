@@ -100,19 +100,24 @@
 
 .accessibility-section h1{
   text-align: center;
-  color: #08506d;
+  color: #0A3B4D;
   font-size: 1.75rem;
   margin: 2% auto 0;
 }
 
 .accessibility-section#intro h1{
-  margin: auto 3%
+  margin: auto 3%;
+  padding-bottom: 5%;
 }
 .accessibility-section#intro hr{
   background: #d8eee6;
 }
 .accessibility-section>p{
-  color: #fff;
+  /* color options:
+    grey blue: 2e343b
+    other grey blue: 1c2833
+  */
+  color: #1c2833;
   font-size: .95rem;
   width: 90%;
   margin: 2% auto;
@@ -134,13 +139,13 @@
 
 .accessibility__titleDivider h2{
   font-weight: 700;
-  color: #d8eee6;
+  color: #1c2833;
   font-size: 1.25rem;
 }
 
 .accessibility-section h3{
   text-align: center;
-  color: #08506d;
+  color: #0A3B4D;
   font-size: 1rem;
   margin: 0 auto 2%;
   width: 80%;
