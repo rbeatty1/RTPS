@@ -4,6 +4,7 @@ import {FormatNumber} from "../../../utils/formatNumber"
 import { styles } from "../map/map_styles/frequency";
 import { CreateDvrpcNavControl } from "../../../utils/defaultExtentControl";
 import { Footer } from '../../footer/footer.js'
+import { div } from "gl-matrix/src/gl-matrix/vec2";
 
 const contentRef = {
   about: {
@@ -600,7 +601,15 @@ const CreateTable = (section, data) => {
 
   let dvrpcSummary = CreateRegionSummary(summaries)
   table.appendChild(dvrpcSummary)
-  return table;
+
+  // add the table wrapper to handle overflow
+  const tableWrapper = document.createElement('div')
+
+  tableWrapper.classList.add('frequency__storySection-table-wrapper')
+
+  tableWrapper.appendChild(table)
+
+  return tableWrapper;
 };
 
 /*
@@ -620,7 +629,6 @@ const BuildLegend = section => {
         title = document.createElement("h3"),
         breakContainer = document.createElement("div");
 
-      
       // house keeping
       title.innerText = data.name;
       title.style.color = data.scheme[data.scheme.length-1][1] 
