@@ -480,7 +480,7 @@ const BuildSidebar = (map, data) =>{
           }
         }
 
-        // this is the CheckBoxListeners function - probably don't need any of this
+        // @TODO this is the CheckBoxListeners function - probably don't need any of this
         let filtered = []
         // grab all of the filter checkboxes
         let allBoxes = list.querySelectorAll('input[type="checkbox"]')

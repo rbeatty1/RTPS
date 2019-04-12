@@ -93,7 +93,7 @@
   text-align: center;
   background: #eee;
   font-weight: 200;
-  padding: 8px 36px;
+  padding: 8px 24px;
   font-size: 1.8em;
   display: inline-block;
   margin-top: 10%;
@@ -103,8 +103,9 @@
 .content-links span{
   padding-right: 1rem;
   margin-right: 1rem;
-  border-right: 2px solid #2d383c;
-  color: #2d383c;
+  border-right: 2px solid #06506D;
+  color: #06506D;
+  font-weight: 500;
 }
 
 .content-links span:hover{
@@ -113,5 +114,5 @@
 
 .content-links a{
   text-decoration: none;
-  color: #2d383c;
+  color: #06506D;
 }
