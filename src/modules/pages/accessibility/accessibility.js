@@ -421,6 +421,9 @@ const BuildPage = content =>{
     subtitle.innerText = ''
     text.innerText = defaultState
     legend.innerText = ''
+
+    // reset map state to default
+    ResymbolizeLayers(null)
   }
 
   const ChangeCaseStudyContent = (data, defaultState) =>{
