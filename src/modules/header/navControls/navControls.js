@@ -1,9 +1,21 @@
 import '../../../css/header/navControls/navControls.css'
-import { LoadMain } from '../../../utils/loadMain.js'
 import { SetNewURL } from '../../../utils/routing';
 
 
+const createTooltip = name => {
+    const tooltip = document.createElement('div')
+    const text = document.createElement('span')
+    
+    tooltip.classList.add('header__nav-tooltip')
+    text.classList.add('header__nav-tooltip-text')
+    tooltip.id = name
 
+    text.textContent = name
+
+    tooltip.appendChild(text)
+    
+    return tooltip
+}
 /*
     _createNavLink(self, item)
     @purpose: Create page navigation links in header
@@ -17,6 +29,7 @@ import { SetNewURL } from '../../../utils/routing';
 const _createNavLink = item =>{
     // create link
     let link = document.createElement('span')
+    link.classList.add('header__nav-links-icons')
     
     // set attributes
     link.setAttribute('data-name', item.title)
@@ -30,16 +43,26 @@ const _createNavLink = item =>{
             descriptor.innerText = e.target.getAttribute('data-name')
         siblings.forEach(element => {
             if (element != e.target){
-                element.classList = 'header__nav-link inactive'
+                element.classList.remove('active')
                 element.style.boxShadow = ''
             } 
             else{
-                element.classList = 'header__nav-link active';
+                element.classList.add('active')
                 element.style.boxShadow = `0 0 15px ${item.color}`
             }
         });
         SetNewURL(e.target.getAttribute('data-tool'), 'tool')
     })
+
+    const tooltip = createTooltip(item.title)
+    link.appendChild(tooltip)
+
+    // add a tooltip on hover
+    link.onmouseover = () => tooltip.style.visibility = 'visible'
+
+    // remove the tooltip on hover
+    link.onmouseleave = () => tooltip.style.visibility = 'hidden'
+
     return link;
 }
 
@@ -61,8 +84,6 @@ class NavControl{
             listElement = document.createElement('nav'),
             navDescriptor = document.createElement('p')
 
-
-
         navContainer.id = 'header__nav-container'
         listElement.className = 'header__nav-links'
 
@@ -82,8 +103,8 @@ class NavControl{
         navContainer.appendChild(navDescriptor)
         header.appendChild(navContainer)
 
-        // set height = to width for nav links
-        let links = listElement.querySelectorAll('span')
+        // // set height = to width for nav links
+        let links = listElement.children
         for (let a of links) a.style.height = `${a.clientWidth}px`
     }
 }

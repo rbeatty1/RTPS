@@ -38,8 +38,6 @@
     font-weight: 700;
     text-align: center;
 }
-
-
 .header__nav-links{
     display: flex;
     flex-flow: row nowrap;
@@ -49,7 +47,4 @@
     height: 7px;
     background: #08506d;
     margin-bottom: 5%;
-}
-.header__nav-links span:hover{
-    cursor: pointer;
 }
