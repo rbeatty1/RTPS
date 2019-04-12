@@ -437,15 +437,80 @@ const BuildSidebar = (map, data) =>{
     element.appendChild(legendSection)
   }
 
+  // function to update map filter through all layers
+  const SetMapFilters = filter =>{
+
+    // grab map layers
+    let layers = styles.reliability.layers
+
+    // go back to default if the filter array is empty
+    if(!filter.length) {
+      for(let layer in layers){
+        map.setFilter(`reliability-${layer}`, undefined)
+      }
+      return
+    
+      // otherwise apply the new filter
+    }else{
+      for (let layer in layers){
+        
+        // only filter "route detail" routes
+        if (layer == 'speed' || layer == 'otp' || layer == 'njt' || layer == 'septa'){
+          let filterExp = ['any']
+  
+          // build important stuff of filter expression
+          filter.forEach(route => {
+            let statement = ['==', 'linename', route]
+            filterExp.push(statement)
+          })
+  
+          // set filter
+          map.setFilter(`reliability-${layer}`, filterExp)
+        }
+      }
+    }
+  }
+
+  // adds jawns for selected filter to their correct area
+  const addSelectedFilter = (route, parent) => {
+    parent = document.getElementById(`${parent}-filter-wrapper`)
+
+    const selected = document.createElement('div')
+    selected.classList.add('reliability__filter-selection')
+    selected.textContent = `Route ${route}`
+    
+    parent.appendChild(selected)
+
+    // return selected to add the remove functionality
+    return selected
+  }
+
+  // removes a selected filter from the list of filters
+  const removeFilter = (e, filteredRoutes) => {
+    const routeDiv = e.target
+
+    // extract the routename from the div (format is always Route #)
+    const route = routeDiv.textContent.split(' ')[1].trim()
+
+    // remove the selected route from the DOM
+    routeDiv.remove()
+
+    // update the filteredRoutes array
+    filteredRoutes = filteredRoutes.filter(filteredRoute => filteredRoute !== route)
+
+    // update the map filter
+    SetMapFilters(filteredRoutes)
+
+    // return an updated filterRoutes array
+    return filteredRoutes
+  }
+
   // function to build filter functionality
   const BuildFilterControl = element =>{
     let filteredRoutes = []
     
-    // inputs: value and name of jawn
     const BuildDropdownOption = (container, category) =>{
       const route = container.value
-
-      console.log('route is ', route)
       
       // make sure the inputted text exists in filterRef - if not, notify the user and reset the input value
       if (filterRef[category].indexOf(route) < 0) {
@@ -453,115 +518,24 @@ const BuildSidebar = (map, data) =>{
         container.value = ''
         return
       }
+      
+      // do nothing if the selected route is alredy there
+      if (filteredRoutes.length && filteredRoutes.indexOf(route) > -1) return
 
       // update the routes to be filtered
       filteredRoutes.push(route)
 
-      // STEPS TO REFACTOR:
-        // BuildDropdownOption gets after 'add' is clicked and gets the value of a route name
-        // it adds that route name to it's respective list
-        // it pushes that route name to the filtered routes array
-        // it sets the filter bassed off of the contents of the filtered routes array
-        // for REMOVING routes:
-          // route wrapper jawn on click to:
-            // remove the element from the DOM
-            // remove the value from filteredRoutes and then call SetMapFilter again
-
-      // function to update map filter through all layers
-      const SetMapFilters = filter =>{
-
-        // grab map layers
-        let layers = styles.reliability.layers
-
-        for (let layer in layers){
-          // only filter "route detail" routes
-          if (layer == 'speed' || layer == 'otp' || layer == 'njt' || layer == 'septa'){
-            let filterExp = ['any']
-
-            // build important stuff of filter expression
-            filter.forEach(route => {
-              let statement = ['==', 'linename', route]
-              filterExp.push(statement)
-            })
-
-            // set filter
-            map.setFilter(`reliability-${layer}`, filterExp)
-          }
-        }
-      }
-
-
-      // listener to fire when one of the filter options is selected
-      const CheckboxListeners = list =>{
-
-        // @TODO this is the CheckBoxListeners function - probably don't need any of this
-        // let filtered = []
-        // // grab all of the filter checkboxes
-        // let allBoxes = list.querySelectorAll('input[type="checkbox"]')
-        // // push all checked options to an array
-        // for (let box of allBoxes){
-        //   box.checked == true && filtered.indexOf(box.value) == -1 ? filtered.push(box.value) : null
-        // }
-        // let summary = list.previousElementSibling
-        // summary.innerHTML = ''
-
-        // build little element to display each selected filter option
-        // filtered.map(route=>{
-        //   let selected = document.createElement('div')
-        //   selected.classList.add('reliability__filter-selection')
-        //   selected.innerHTML = `Route ${route}`
-        //   summary.appendChild(selected)
-        // })
-
-        // let remove = document.querySelectorAll('.reliability__filter-selection')
-
-        // for (let x of remove){
-        //   // listener to remove filtered routes
-        //   x.addEventListener('click', e=>{
-        //     let item = e.target.childNodes[0],
-        //       // we only want the number of the route
-        //       route = item.textContent.split(' ')[1],
-        //       // grab specific checkbox
-        //       box = document.querySelector(`input[type="checkbox"][name="${route}"]`)
-        //     // delete the jawn
-        //     e.target.outerHTML = ''
-
-        //     let index = filtered.indexOf(route)
-        //     filtered.splice(index, 1)
-        //     // update the map jawn
-        //     if (filtered.length > 0) SetMapFilters(filtered)
-        //     else for (let layer in styles.reliability.layers){ map.setFilter(`reliability-${layer}`, undefined)}
-
-        //   })
-        // }
-
-        // if (filtered.length > 0) SetMapFilters(filtered)
-        // else for (let layer in styles.reliability.layers){ map.setFilter(`reliability-${layer}`, undefined)}
-      }
-
-      console.log('filtered routes ', filteredRoutes)
-
+      // update the map filter
       SetMapFilters(filteredRoutes)
 
-      // let listItem = document.createElement('li'),
-      //   option = document.createElement('input'),
-      //   label = document.createElement('label')
+      // add a jawn for the selected filter to the sidebar
+      const newFilter = addSelectedFilter(route, category)
 
-      // listItem.classList.add('reliability__filter-item')
+      // let users remove filters + update filteredRoutes with the result
+      newFilter.onclick = e => filteredRoutes = removeFilter(e, filteredRoutes)
 
-      // option.type = 'checkbox'
-      // option.id = `filterOption-${item}`
-      // option.name = item
-      // option.value = item
-      // option.onchange = e => CheckboxListeners(e.target.parentNode.parentNode)
-
-      // label.setAttribute('for', item)
-      // label.innerText = 'Route '+item
-
-      // listItem.appendChild(option)
-      // listItem.appendChild(label)
-      // container.querySelector('.reliability__filter-options').appendChild(listItem)
-      // return listItem
+      // clear the input field so users can add more routes
+      container.value = ''
     }
 
     let filterRef = {

@@ -12,10 +12,15 @@ const populateDatalist = (datalist, name, filterRef) => {
 }
 
 const makeFilter = element => {
-// create the elements
+    // create the elements
+    const septaFragment = document.createDocumentFragment()
+    const njFragment = document.createDocumentFragment()
+
     const filterWrapper = document.createElement('div')
     const septaWrapper = document.createElement('div')
     const njWrapper = document.createElement('div')
+    const selectedSeptaFilters = document.createElement('div')
+    const selectedNJFilters = document.createElement('div')
 
     const septaRoutes = document.createElement('datalist')
     const njRoutes = document.createElement('datalist')
@@ -34,6 +39,8 @@ const makeFilter = element => {
     filterWrapper.classList.add('reliability__route-filter-wrapper')
     septaWrapper.classList.add('reliability__route-filter-input-wrapper')
     njWrapper.classList.add('reliability__route-filter-input-wrapper')
+    selectedSeptaFilters.classList.add('reliability__selected-filters-wrapper')
+    selectedNJFilters.classList.add('reliability__selected-filters-wrapper')
     septaLabel.classList.add('reliability__filter-label')
     njLabel.classList.add('reliability__filter-label')
     septaInput.classList.add('reliability__filter-input')
@@ -41,6 +48,8 @@ const makeFilter = element => {
     addSeptaFilter.classList.add('reliability__filter-btn')
     addNjFilter.classList.add('reliability__filter-btn')
 
+    selectedSeptaFilters.id = 'septa-filter-wrapper'
+    selectedNJFilters.id = 'njtransit-filter-wrapper'
     septaRoutes.id = 'septa-routes'
     njRoutes.id ='nj-routes'
 
@@ -56,17 +65,22 @@ const makeFilter = element => {
     addNjFilter.textContent = 'add'
 
     // add to wrappers
-    septaWrapper.appendChild(septaLabel)
-    septaWrapper.appendChild(septaInput)
-    septaWrapper.appendChild(septaRoutes)
-    septaWrapper.appendChild(addSeptaFilter)
-    njWrapper.appendChild(njLabel)
-    njWrapper.appendChild(njInput)
-    njWrapper.appendChild(njRoutes)
-    njWrapper.appendChild(addNjFilter)
+    septaFragment.appendChild(septaLabel)
+    septaFragment.appendChild(septaInput)
+    septaFragment.appendChild(septaRoutes)
+    septaFragment.appendChild(addSeptaFilter)
+    septaWrapper.appendChild(septaFragment)
+
+    njFragment.appendChild(njLabel)
+    njFragment.appendChild(njInput)
+    njFragment.appendChild(njRoutes)
+    njFragment.appendChild(addNjFilter)
+    njWrapper.appendChild(njFragment)
 
     filterWrapper.appendChild(septaWrapper)
+    filterWrapper.appendChild(selectedSeptaFilters)
     filterWrapper.appendChild(njWrapper)
+    filterWrapper.appendChild(selectedNJFilters)
 
     element.appendChild(filterWrapper)
 
