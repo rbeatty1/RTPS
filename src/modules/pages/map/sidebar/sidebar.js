@@ -230,8 +230,9 @@ class Sidebar{
             geography: '',
             selection: '',
             direction: ''
-          }
-        },
+          },
+          results: ''
+        }
       },
       open: undefined,
       map : props.map

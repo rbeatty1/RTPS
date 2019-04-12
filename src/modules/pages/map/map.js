@@ -67,9 +67,7 @@ const LoadRegionalSummary = map =>{
         let header = event.target,
             tabName = header.getAttribute('data-type'),
             otherLayers = ['zones-analysis', 'zones-clickFill', 'boundaries-click']
-        
-        console.log(tabName)
-        
+                
         if(tabName != 'summary') {
             otherLayers.map(layer=>{
                 if (map.getLayer(layer)) map.setLayoutProperty(layer, 'visibility', 'visible')
