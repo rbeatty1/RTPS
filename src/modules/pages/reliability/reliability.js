@@ -4,6 +4,7 @@ import { styles } from '../map/map_styles/reliability.js'
 import { FormatNumber } from '../../../utils/formatNumber';
 import { CreateDvrpcNavControl } from '../../../utils/defaultExtentControl';
 import { Footer } from "../../footer/footer";
+import { makeFilter, populateDatalist } from './makeFilter.js';
 
 let layerRef = {
   purpose: "The goal of the surface transit reliability analysis was to identify corridors where surface transit service is particularly slow or delayed as places where road or transit improvements could increase reliability.",
@@ -430,120 +431,137 @@ const BuildSidebar = (map, data) =>{
       layerSection.appendChild(option)
     }
 
-
-
     BuildControlToggle(element, 'Layer Controls')
     element.appendChild(layerSection)
     BuildControlToggle(element, 'Legend')
     element.appendChild(legendSection)
-
   }
 
   // function to build filter functionality
   const BuildFilterControl = element =>{
+    let filteredRoutes = []
     
-    // build filter dropdown @TODO: reincorporate this into the input jawn
-    // pass the wrapper div for each input jawn into here so that the selected filters get appended below their respective input
-    const BuildDropdownOption = (container, item) =>{
-      // @TODO: rename container. That is now the input field being passed
-      console.log('called buildropdownoption from ADD button with input as: ', container)
+    // inputs: value and name of jawn
+    const BuildDropdownOption = (container, category) =>{
       const route = container.value
-      console.log('selected route from input value is ', route)
+
+      console.log('route is ', route)
+      
+      // make sure the inputted text exists in filterRef - if not, notify the user and reset the input value
+      if (filterRef[category].indexOf(route) < 0) {
+        alert('invalid route name - please try again')
+        container.value = ''
+        return
+      }
+
+      // update the routes to be filtered
+      filteredRoutes.push(route)
+
+      // STEPS TO REFACTOR:
+        // BuildDropdownOption gets after 'add' is clicked and gets the value of a route name
+        // it adds that route name to it's respective list
+        // it pushes that route name to the filtered routes array
+        // it sets the filter bassed off of the contents of the filtered routes array
+        // for REMOVING routes:
+          // route wrapper jawn on click to:
+            // remove the element from the DOM
+            // remove the value from filteredRoutes and then call SetMapFilter again
+
+      // function to update map filter through all layers
+      const SetMapFilters = filter =>{
+
+        // grab map layers
+        let layers = styles.reliability.layers
+
+        for (let layer in layers){
+          // only filter "route detail" routes
+          if (layer == 'speed' || layer == 'otp' || layer == 'njt' || layer == 'septa'){
+            let filterExp = ['any']
+
+            // build important stuff of filter expression
+            filter.forEach(route => {
+              let statement = ['==', 'linename', route]
+              filterExp.push(statement)
+            })
+
+            // set filter
+            map.setFilter(`reliability-${layer}`, filterExp)
+          }
+        }
+      }
+
 
       // listener to fire when one of the filter options is selected
       const CheckboxListeners = list =>{
-        // function to update map filter through all layers
-        const SetMapFilters = filter =>{
-          // grab map layers
-          let layers = styles.reliability.layers
-          for (let layer in layers){
-            // only filter "route detail" routes
-            if (layer == 'speed' || layer == 'otp' || layer == 'njt' || layer == 'septa'){
-              let filterExp = ['any']
-              // build important stuff of filter expression @TODO: route has been updated to "septa" and "njtransit" CORE is gone
-              filter.map(route=>{
-                if (route == 'core'){
-                  filterRef[route].map(coreRoute=>{
-                    let statement = ['==', 'linename', coreRoute]
-                    filterExp.push(statement)
-                  })
-                }
-                else{
-                  let statement = ['==', 'linename', route]
-                  filterExp.push(statement)
-                }
-              })
-              // set filter
-              map.setFilter(`reliability-${layer}`, filterExp)
-            }
-
-          }
-        }
 
         // @TODO this is the CheckBoxListeners function - probably don't need any of this
-        let filtered = []
-        // grab all of the filter checkboxes
-        let allBoxes = list.querySelectorAll('input[type="checkbox"]')
-        // push all checked options to an array
-        for (let box of allBoxes){
-          box.checked == true && filtered.indexOf(box.value) == -1 ? filtered.push(box.value) : null
-        }
-        let summary = list.previousElementSibling
-        summary.innerHTML = ''
+        // let filtered = []
+        // // grab all of the filter checkboxes
+        // let allBoxes = list.querySelectorAll('input[type="checkbox"]')
+        // // push all checked options to an array
+        // for (let box of allBoxes){
+        //   box.checked == true && filtered.indexOf(box.value) == -1 ? filtered.push(box.value) : null
+        // }
+        // let summary = list.previousElementSibling
+        // summary.innerHTML = ''
+
         // build little element to display each selected filter option
-        filtered.map(route=>{
-          let selected = document.createElement('div')
-          selected.classList.add('reliability__filter-selection')
-          selected.innerHTML = `Route ${route}`
-          summary.appendChild(selected)
-        })
+        // filtered.map(route=>{
+        //   let selected = document.createElement('div')
+        //   selected.classList.add('reliability__filter-selection')
+        //   selected.innerHTML = `Route ${route}`
+        //   summary.appendChild(selected)
+        // })
 
-        let remove = document.querySelectorAll('.reliability__filter-selection')
-        for (let x of remove){
-          // listener to remove filtered routes
-          x.addEventListener('click', e=>{
-            let item = e.target.childNodes[0],
-              // we only want the number of the route
-              route = item.textContent.split(' ')[1],
-              // grab specific checkbox
-              box = document.querySelector(`input[type="checkbox"][name="${route}"]`)
-            // delete the jawn
-            e.target.outerHTML = ''
-            // unchecked the jawn
-            box.checked = false
+        // let remove = document.querySelectorAll('.reliability__filter-selection')
 
-            let index = filtered.indexOf(route)
-            filtered.splice(index, 1)
-            // update the map jawn
-            if (filtered.length > 0) SetMapFilters(filtered)
-            else for (let layer in styles.reliability.layers){ map.setFilter(`reliability-${layer}`, undefined)}
+        // for (let x of remove){
+        //   // listener to remove filtered routes
+        //   x.addEventListener('click', e=>{
+        //     let item = e.target.childNodes[0],
+        //       // we only want the number of the route
+        //       route = item.textContent.split(' ')[1],
+        //       // grab specific checkbox
+        //       box = document.querySelector(`input[type="checkbox"][name="${route}"]`)
+        //     // delete the jawn
+        //     e.target.outerHTML = ''
 
-          })
-        }
+        //     let index = filtered.indexOf(route)
+        //     filtered.splice(index, 1)
+        //     // update the map jawn
+        //     if (filtered.length > 0) SetMapFilters(filtered)
+        //     else for (let layer in styles.reliability.layers){ map.setFilter(`reliability-${layer}`, undefined)}
 
-        if (filtered.length > 0) SetMapFilters(filtered)
-        else for (let layer in styles.reliability.layers){ map.setFilter(`reliability-${layer}`, undefined)}
+        //   })
+        // }
+
+        // if (filtered.length > 0) SetMapFilters(filtered)
+        // else for (let layer in styles.reliability.layers){ map.setFilter(`reliability-${layer}`, undefined)}
       }
-      let listItem = document.createElement('li'),
-        option = document.createElement('input'),
-        label = document.createElement('label')
 
-      listItem.classList.add('reliability__filter-item')
+      console.log('filtered routes ', filteredRoutes)
 
-      option.type = 'checkbox'
-      option.id = `filterOption-${item}`
-      option.name = item
-      option.value = item
-      option.onchange = e => CheckboxListeners(e.target.parentNode.parentNode)
+      SetMapFilters(filteredRoutes)
 
-      label.setAttribute('for', item)
-      label.innerText = 'Route '+item
+      // let listItem = document.createElement('li'),
+      //   option = document.createElement('input'),
+      //   label = document.createElement('label')
 
-      listItem.appendChild(option)
-      listItem.appendChild(label)
-      container.querySelector('.reliability__filter-options').appendChild(listItem)
-      return listItem
-      
+      // listItem.classList.add('reliability__filter-item')
+
+      // option.type = 'checkbox'
+      // option.id = `filterOption-${item}`
+      // option.name = item
+      // option.value = item
+      // option.onchange = e => CheckboxListeners(e.target.parentNode.parentNode)
+
+      // label.setAttribute('for', item)
+      // label.innerText = 'Route '+item
+
+      // listItem.appendChild(option)
+      // listItem.appendChild(label)
+      // container.querySelector('.reliability__filter-options').appendChild(listItem)
+      // return listItem
     }
 
     let filterRef = {
@@ -551,84 +569,14 @@ const BuildSidebar = (map, data) =>{
       njtransit: ['400','402','406','410','412','414','417','450','451','452','453','455','457','459','463','554','600','601','603','605','606','607','608','609','610','611','612','613','619','624','559','401','403','404','405','407','408','409','413','418','419','551','313','315','317']
     }
 
-    // create datalists for typeahead functionality on the sept and njtransit input boxes
-    const populateDatalist = (datalist, name) => {
-      const optionFragment = document.createDocumentFragment()
+    // make the filter and return elements that needed additional functionality
+    let [septaFilter, njFilter] = [...makeFilter(element)]
 
-      filterRef[name].forEach(el => {
-        const option = document.createElement('option')
-        option.value = el
-        optionFragment.appendChild(option)
-      })
+    populateDatalist(septaFilter.septaRoutes, 'septa', filterRef)
+    populateDatalist(njFilter.njRoutes, 'njtransit', filterRef)
 
-      datalist.appendChild(optionFragment)
-    }
-
-    // create the elements
-    const filterWrapper = document.createElement('div')
-    const septaWrapper = document.createElement('div')
-    const njWrapper = document.createElement('div')
-
-    const septaRoutes = document.createElement('datalist')
-    const njRoutes = document.createElement('datalist')
-
-    const septaLabel = document.createElement('label')
-    const njLabel = document.createElement('label')
-
-    const septaInput = document.createElement('input')
-    const njInput = document.createElement('input')
-
-    const addSeptaFilter = document.createElement('button')
-    const addNjFilter = document.createElement('button')
-
-    // add classes
-    filterWrapper.classList.add('reliability__sidebar-control')
-    filterWrapper.classList.add('reliability__route-filter-wrapper')
-    septaWrapper.classList.add('reliability__route-filter-input-wrapper')
-    njWrapper.classList.add('reliability__route-filter-input-wrapper')
-    septaLabel.classList.add('reliability__filter-label')
-    njLabel.classList.add('reliability__filter-label')
-    septaInput.classList.add('reliability__filter-input')
-    njInput.classList.add('reliability__filter-input')
-    addSeptaFilter.classList.add('reliability__filter-btn')
-    addNjFilter.classList.add('reliability__filter-btn')
-
-    // add element info
-    populateDatalist(septaRoutes, 'septa')
-    populateDatalist(njRoutes, 'njtransit')
-
-    septaRoutes.id = 'septa-routes'
-    njRoutes.id ='nj-routes'
-
-    septaInput.type = 'text'
-    septaInput.setAttribute('list', 'septa-routes')
-    njInput.type = 'text'
-    njInput.setAttribute('list', 'nj-routes')
-
-    // add text
-    septaLabel.textContent = 'Septa routes: '
-    njLabel.textContent = 'NJ Transit routes: '
-    addSeptaFilter.textContent = 'add'
-    addNjFilter.textContent = 'add'
-
-    // add functionality
-    addSeptaFilter.onclick = () => BuildDropdownOption(septaInput)
-    addNjFilter.onclick = () => BuildDropdownOption(njInput)
-
-    // add to wrappers
-    septaWrapper.appendChild(septaLabel)
-    septaWrapper.appendChild(septaInput)
-    septaWrapper.appendChild(septaRoutes)
-    septaWrapper.appendChild(addSeptaFilter)
-    njWrapper.appendChild(njLabel)
-    njWrapper.appendChild(njInput)
-    njWrapper.appendChild(njRoutes)
-    njWrapper.appendChild(addNjFilter)
-
-    filterWrapper.appendChild(septaWrapper)
-    filterWrapper.appendChild(njWrapper)
-
-    element.appendChild(filterWrapper)
+    septaFilter.addSeptaFilter.onclick = () => BuildDropdownOption(septaFilter.septaInput, 'septa')
+    njFilter.addNjFilter.onclick = () => BuildDropdownOption(njFilter.njInput, 'njtransit')
   }
 
   const BuildAboutSection = parent =>{
