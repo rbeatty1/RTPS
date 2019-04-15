@@ -220,6 +220,7 @@ f
 .reliability__selected-filters-wrapper{
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
 }
 .reliability__filter-label{
   width: 41%;

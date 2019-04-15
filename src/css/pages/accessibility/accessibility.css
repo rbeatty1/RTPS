@@ -102,15 +102,12 @@
   text-align: center;
   color: #0A3B4D;
   font-size: 1.75rem;
-  margin: 2% auto 0;
-}
-
-.accessibility-section#intro h1{
-  margin: auto 3%;
-  padding-bottom: 5%;
+  margin: 2% 0 3% 0;
+  padding: 0 5%;
 }
 .accessibility-section#intro hr{
   background: #d8eee6;
+  margin-bottom: 0.5rem;
 }
 .accessibility-section>p{
   /* color options:
@@ -127,7 +124,7 @@
   width: 67.5%;
   display: flex;
   align-items: center;
-  margin: 0 auto
+  margin: 0 auto;
 }
 
 .accessibility__titleDivider hr{
@@ -135,12 +132,15 @@
   height: 2px;
   background: #08506d;
   border: none;
+  margin-bottom: 1.25rem;
 }
 
 .accessibility__titleDivider h2{
   font-weight: 700;
   color: #1c2833;
   font-size: 1.25rem;
+  margin: 0 0 5% 0;
+  padding: 0 5%;
 }
 
 .accessibility-section h3{
