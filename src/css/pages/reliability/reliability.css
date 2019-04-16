@@ -80,11 +80,11 @@
 }
 .reliability__sidebar-emphasis{
   font-weight: 700;
-  color: #06bf9c;
+  color: #0A3B4D;
 }
 .reliability__sidebar-inputTitle{
   font-weight: 700;
-  color: #06bf9c;
+  color: #0A3B4D;
   text-align: center;
   margin-top: 10px;
 }
@@ -133,7 +133,7 @@
   min-height: 40%;
   margin: 3% 1%;
   background: whitesmoke;
-  color: #e89234;
+  color: #888;
   box-shadow: 2px 2px 3px rgba(0,0,0,0.1);
   border-radius: 5px;
   width: 100%;
