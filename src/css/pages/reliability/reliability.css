@@ -133,7 +133,7 @@
   min-height: 40%;
   margin: 3% 1%;
   background: whitesmoke;
-  color: #888;
+  color: #696969;
   box-shadow: 2px 2px 3px rgba(0,0,0,0.1);
   border-radius: 5px;
   width: 100%;
@@ -148,13 +148,6 @@ f
 #content-about>.reliability__sidebar-control{
   height: 90%;
 }
-
-/* .reliability__control-title{
-  color: #e89234;
-  width: 100;
-  text-align: center;
-} */
-
 .reliability__layer-option{
   display: flex;
   justify-content: center;
@@ -163,7 +156,6 @@ f
 }
 .reliability__layer-checkbox{
   margin: .5rem;
-  /* color: #E89234; */
   font-size: 1rem;
 }
 .reliability__layer-emphasis{
