@@ -390,7 +390,7 @@ const BuildPage = content =>{
     })
       .on('enter', e=>{
         // set active classes to section and corresponding dot navigation element
-        let link = document.querySelector(`a[href='#${element.id}'`),
+        let link = document.querySelector(`#${element.id}-link`),
           data = content.props.sections[element.id].content.map
         
         link.classList.add('active')
@@ -402,7 +402,7 @@ const BuildPage = content =>{
 
       // reset to default state
       .on('leave', e=>{ 
-        let link = document.querySelector(`a[href='#${element.id}'`)
+        let link = document.querySelector(`#${element.id}-link`)
         link.classList.remove('active')
         element.classList.remove('active') 
       })
@@ -480,8 +480,10 @@ const BuildPage = content =>{
       /* Create Dot Navigation Element*/
       
       // link
-      link.href = `#${content.text.id}`
-      link.rel = 'noopener'
+      link.id = `${content.text.id}-link`
+      link.onclick = e => {
+        console.log('clicked on ', e.target)
+      }
       
       // section #
       linkContent.innerText = i
@@ -560,8 +562,9 @@ const BuildPage = content =>{
         tabNav = document.createElement('nav'),
         legend = document.createElement('div')
 
+
       // create dot nav
-      link.href = `#${content.content.id}`
+      link.id = 'caseStudy-link'
       link.rel = 'noopener'
 
       // section #
@@ -606,7 +609,7 @@ const BuildPage = content =>{
             tab.innerText = section
 
             tab.addEventListener('click', e =>{
-              let links = document.querySelectorAll('#caseStudy a')
+              let links = document.querySelector('#caseStudy-link')
               let backToDefault = false
               for (let link of links){
                 if (link == e.target) {
