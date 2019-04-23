@@ -336,7 +336,6 @@ const BuildMap = container =>{
     - content: page data to use in rendering
 */
 const BuildPage = content =>{
-
   /*
     ResymbolizeLayers()
     @description:
@@ -455,22 +454,19 @@ const BuildPage = content =>{
   // add to page
   document.querySelector('.accessibility-text').appendChild(sectionBody)
 
-
   // build map
   content.map = BuildMap(document.querySelector(".accessibility-map"), content.props)
-
-  // build section for each
-
+  
   // i will be used to populate the dot nav
   let i = 1
-
+  
   // create content for each section in component data
   for (let section in props.sections){
     // local content ref
     let data = props.sections[section]
 
     if (data.content.text){
-      let content = data.content
+      let sectionContent = data.content
       // HTML jawns
       let container = document.createElement('section'),
       link = document.createElement('a'),
@@ -480,9 +476,16 @@ const BuildPage = content =>{
       /* Create Dot Navigation Element*/
       
       // link
-      link.id = `${content.text.id}-link`
-      link.onclick = e => {
-        console.log('clicked on ', e.target)
+      link.id = `${sectionContent.text.id}-link`
+      link.onclick = () => {
+
+        // id of the section
+        const sectionId = `#${sectionContent.text.id}`
+
+        // frequency.js line 885 handles this - calls scrollTo w/ids just like here, but it actually works. so that's cool I guess.
+
+        // scroll to that section
+        content.scroll.scrollTo(sectionId);
       }
       
       // section #
@@ -500,7 +503,7 @@ const BuildPage = content =>{
   
       // housekeeping for section container
       container.classList.add('accessibility-section')
-      container.id = content.text.id
+      container.id = sectionContent.text.id
 
       if (container.id != 'intro'){
         // title element
@@ -539,13 +542,13 @@ const BuildPage = content =>{
           
     
       // set text
-      container.insertAdjacentHTML('beforeend', content.text.description)
+      container.insertAdjacentHTML('beforeend', sectionContent.text.description)
 
   
       // send the whole thing
       sectionBody.appendChild(container)
       
-      new Legend(content)
+      new Legend(sectionContent)
   
       // Build ScrollMagic Scene
       BuildScene(container)
@@ -609,7 +612,7 @@ const BuildPage = content =>{
             tab.innerText = section
 
             tab.addEventListener('click', e =>{
-              let links = document.querySelector('#caseStudy-link')
+              let links = document.querySelectorAll('#caseStudy a')
               let backToDefault = false
               for (let link of links){
                 if (link == e.target) {
