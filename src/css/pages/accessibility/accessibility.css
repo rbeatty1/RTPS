@@ -48,6 +48,11 @@
   text-decoration: none;
   border: 1px solid #90d1be
 }
+.accessibility__nav-link.active{
+  background: #90d1be;
+  color: #fff;
+  font-weight: 700;
+}
 
 .accessibility__nav-tooltip{
   visibility: hidden;

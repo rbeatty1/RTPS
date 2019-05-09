@@ -467,11 +467,13 @@ const BuildPage = content =>{
 
     if (data.content.text){
       let sectionContent = data.content
+
       // HTML jawns
       let container = document.createElement('section'),
       link = document.createElement('a'),
       linkContent = document.createElement('div'),
-      tooltip = document.createElement('span')
+      tooltip = document.createElement('span'),
+      nav = document.getElementById('accessibility-nav')
   
       /* Create Dot Navigation Element*/
       
@@ -479,13 +481,30 @@ const BuildPage = content =>{
       link.id = `${sectionContent.text.id}-link`
       link.onclick = () => {
 
+        // toggle active class + remove any existing active classes
+        const allLinks = nav.children
+        const navLength = allLinks.length
+
+        for(var i = 0; i < navLength; i++) {
+          const linkDiv = allLinks[i].children[0]
+          allLinks[i] === link ? linkDiv.classList.add('active') : linkDiv.classList.remove('active')
+        }
+
+        // scroll magic is configured weird for this component and the scrollTo method used in frequency doesn't work so we're going old school here
         // id of the section
-        const sectionId = `#${sectionContent.text.id}`
+        const sectionId = sectionContent.text.id
+        const section = document.getElementById(sectionId)
+        const textContainer = document.querySelector('.accessibility-text')
 
-        // frequency.js line 885 handles this - calls scrollTo w/ids just like here, but it actually works. so that's cool I guess.
+        // get the offset + a buffer to scroll to
+        const offsetTop = section.offsetTop - 10
 
-        // scroll to that section
-        content.scroll.scrollTo(sectionId);
+        // do the scroll
+        textContainer.scrollTo({
+          top: offsetTop,
+          left: 0,
+          behavior: 'smooth'
+        })
       }
       
       // section #
@@ -499,7 +518,7 @@ const BuildPage = content =>{
       // send 'em
       linkContent.appendChild(tooltip)
       link.appendChild(linkContent)
-      document.getElementById('accessibility-nav').appendChild(link)
+      nav.appendChild(link)
   
       // housekeeping for section container
       container.classList.add('accessibility-section')
