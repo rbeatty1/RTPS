@@ -24,7 +24,7 @@ const LoadStations = map =>{
   .then(agoStations=>{
     
     // hit RTPS API to load stations table from DB
-    fetch('https://a.michaelruane.com/api/rtps/access?stations')
+    fetch('https://alpha.dvrpc.org/api/rtps/access?stations')
     
     // parse json if fetch is successful
     .then(dbReturn=>{ if (dbReturn.status == 200) { return dbReturn.json() } })
@@ -99,7 +99,7 @@ const LoadTAZ = map =>{
   .then(agoZones=>{
     
     // hit RTPS API endpoint for TAZ data
-    fetch('https://a.michaelruane.com/api/rtps/access?zones')
+    fetch('https://alpha.dvrpc.org/api/rtps/access?zones')
    
     // parse DB return if successful
     .then(dbReturn=>{if (dbReturn.status == 200) { return dbReturn.json() } })

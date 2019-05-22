@@ -101,7 +101,7 @@ const LoadRegionalSummary = map =>{
         check: {},
         layer: {}
     }
-    fetch('https://a.michaelruane.com/api/rtps/gap?summary')
+    fetch('https://alpha.dvrpc.org/api/rtps/gap?summary')
     .then(cargo=> { if (cargo.ok) return cargo.json()})
     .then(data=>{
         let layerDef = {
@@ -197,8 +197,8 @@ const PerformQuery = async input => {
     }
     input.direction == 'To' ? input.direction = 'To Zone' : input.direction = 'From Zone'
     let fetchData = input.type === 'zone' && input.direction ?
-        await fetch(`https://a.michaelruane.com/api/rtps/gap?zones=[${input.selection}]&direction=${input.direction}`) :
-        await fetch(`https://a.michaelruane.com/api/rtps/gap?muni=${input.selection}&direction=${input.direction}`)
+        await fetch(`https://alpha.dvrpc.org/api/rtps/gap?zones=[${input.selection}]&direction=${input.direction}`) :
+        await fetch(`https://alpha.dvrpc.org/api/rtps/gap?muni=${input.selection}&direction=${input.direction}`)
 
     if (fetchData.ok) {
         let rawData = await fetchData.json()
@@ -428,7 +428,7 @@ const LoadBusLayer = map =>{
       url: "https://tiles.dvrpc.org/data/dvrpc-tim-transit.json"
     });
     
-    fetch("https://a.michaelruane.com/api/rtps/frequency?bus")
+    fetch("https://alpha.dvrpc.org/api/rtps/frequency?bus")
     .then(
         response =>
         response.ok ? response.json() : console.error("error, will robinson")

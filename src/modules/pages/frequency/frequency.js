@@ -953,7 +953,7 @@ const LoadExisting = map => {
     }
     return popupContainer.outerHTML;
   };
-  fetch("https://a.michaelruane.com/api/rtps/frequency?transit")
+  fetch("https://alpha.dvrpc.org/api/rtps/frequency?transit")
     .then(
       response =>
         response.ok ? response.json() : console.error("error will robinson")
@@ -1104,7 +1104,7 @@ const LoadTaz = map => {
         response.ok ? response.json() : console.error("error will robinson")
     )
     .then(taz => {
-      fetch("https://a.michaelruane.com/api/rtps/frequency?zone")
+      fetch("https://alpha.dvrpc.org/api/rtps/frequency?zone")
         .then(
           response =>
             response.ok ? response.json() : console.error("error will robinson")
@@ -1306,7 +1306,7 @@ const LoadBus = map => {
         }
     });
   };
-  fetch("https://a.michaelruane.com/api/rtps/frequency?bus")
+  fetch("https://alpha.dvrpc.org/api/rtps/frequency?bus")
     .then(
       response =>
         response.ok ? response.json() : console.error("error, will robinson")
@@ -1488,7 +1488,7 @@ const LoadRail = map => {
     }
     return popupContainer.outerHTML;
   };
-  fetch("https://a.michaelruane.com/api/rtps/frequency?rail")
+  fetch("https://alpha.dvrpc.org/api/rtps/frequency?rail")
     .then(
       response =>
         response.ok ? response.json() : console.error("error will robinson")

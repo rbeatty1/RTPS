@@ -329,14 +329,13 @@ const BuildSidebar = (map, data) =>{
     parent.appendChild(toggle)
   }
 
-  // build layer control portion of layer section
+  // build layer control portion of layer section 
   const BuildLayerControl = (element, layers) =>{
     // function to run when checkbox is changed. Displays correct layer on map and corresponding legend item
     const LayerVisibilityChange = layer =>{
       let layerID = `reliability-${layer}`,
         boxes = document.querySelectorAll('.reliability__layer-input'),
-        visibility = map.getLayoutProperty(layerID, 'visibility'),
-        mapLayer = map.getLayer(layerID)
+        visibility = map.getLayoutProperty(layerID, 'visibility')
 
       for (let refLayer in styles.reliability.layers) if (refLayer == layer) visibility == 'none' ? map.setLayoutProperty(layerID, 'visibility', 'visible') : map.setLayoutProperty(layerID, 'visibility', 'none')
 
@@ -453,7 +452,6 @@ const BuildSidebar = (map, data) =>{
       // otherwise apply the new filter
     }else{
       for (let layer in layers){
-        
         // only filter "route detail" routes
         if (layer == 'speed' || layer == 'otp' || layer == 'njt' || layer == 'septa'){
           let filterExp = ['any']
@@ -466,6 +464,8 @@ const BuildSidebar = (map, data) =>{
   
           // set filter
           map.setFilter(`reliability-${layer}`, filterExp)
+
+          const layerPostFilter = map.getLayer(`reliability-${layer}`)
         }
       }
     }

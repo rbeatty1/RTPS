@@ -8,6 +8,9 @@ import { Legend } from "./legend";
   returns HTML string populated with appropriate summary values
 */
 const CreateSummary = data =>{
+
+  console.log('data is ', data)
+  
   data.direction == ''
   // do da grammar
   let insert = data.type == 'municipality' ? `the selected area — <strong>${document.querySelector(`option[value='${data.location}']`).innerText}</strong>` : 'the selected area'

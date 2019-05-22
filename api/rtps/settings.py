@@ -25,7 +25,7 @@ SECRET_KEY = '+t&%+kl51tkdnswmo$v%5j2(*zmdbw6nou^t56!-ylual#5l+8'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['a.michaelruane.com', 'localhost']
+ALLOWED_HOSTS = ['alpha.dvrpc.org', 'localhost']
 
 
 # Application definition
