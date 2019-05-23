@@ -200,8 +200,11 @@ const PerformQuery = async input => {
         await fetch(`https://alpha.dvrpc.org/api/rtps/gap?zones=[${input.selection}]&direction=${input.direction}`) :
         await fetch(`https://alpha.dvrpc.org/api/rtps/gap?muni=${input.selection}&direction=${input.direction}`)
 
+    // ISSUE #33 LOOK HERE
+    // The cargo is just an object with key/value pairs correponding to area/score. As it stands, it does not have the extra field that Sara added.  
     if (fetchData.ok) {
         let rawData = await fetchData.json()
+        console.log('rawData response for gap summary is ', rawData)
         if (rawData.status == 'success'){
             let processed = ProcessData(rawData.cargo, helpers) // process data
             helpers.analysisLayers = processed // return

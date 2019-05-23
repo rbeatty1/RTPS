@@ -338,7 +338,6 @@ const BuildSidebar = (map, data) =>{
         visibility = map.getLayoutProperty(layerID, 'visibility')
 
       for (let refLayer in styles.reliability.layers) if (refLayer == layer) visibility == 'none' ? map.setLayoutProperty(layerID, 'visibility', 'visible') : map.setLayoutProperty(layerID, 'visibility', 'none')
-
       for (let box of boxes) box.checked ? document.querySelector(`#legend-${box.name}`).style.display = 'block' : document.querySelector(`#legend-${box.name}`).style.display = 'none'
     }
 

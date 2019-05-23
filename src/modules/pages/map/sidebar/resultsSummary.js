@@ -9,12 +9,26 @@ import { Legend } from "./legend";
 */
 const CreateSummary = data =>{
 
+  // data already HAS a municipality field. 
   console.log('data is ', data)
   
   data.direction == ''
   // do da grammar
-  let insert = data.type == 'municipality' ? `the selected area — <strong>${document.querySelector(`option[value='${data.location}']`).innerText}</strong>` : 'the selected area'
-  return `The resulting map shows the average network gap score for connections <strong>${data.direction}</strong> ${insert}. Only <abbr class="map__abbr" title="Traffic Analysis Zone">TAZ</abbr>s with substantial demand <strong>${data.direction} the selected area</strong> are being displayed, a total of <strong>${data.count} <abbr class="map__abbr" title="Traffic Analysis Zone">TAZ</abbr>s</strong>. The darker colors indicate higher priority transit gaps in relation to ${insert}.`
+  // already doing a type check here, so it can be handled here but the data needs to get got too
+  // none of the summaryData comes from any back end stuff, so @todo look into when/where the data is loaded and hope it's already there
+  let insert, muniBonus
+
+  if(data.type === 'municipality'){
+    insert = `the selected area — <strong>${document.querySelector(`option[value='${data.location}']`).innerText}</strong>`
+    muniBonus = `<p>Average daily total demand for travel <strong>${data.direction} ${document.querySelector(`option[value='${data.location}']`).innerText}: <em>Number of Trips per Day Goes Here</em></strong></p>` 
+  }else{
+    insert = 'the selected area'
+  }
+  let output = `The resulting map shows the average network gap score for connections <strong>${data.direction}</strong> ${insert}. Only <abbr class="map__abbr" title="Traffic Analysis Zone">TAZ</abbr>s with substantial demand <strong>${data.direction} the selected area</strong> are being displayed, a total of <strong>${data.count} <abbr class="map__abbr" title="Traffic Analysis Zone">TAZ</abbr>s</strong>. The darker colors indicate higher priority transit gaps in relation to ${insert}.`
+  
+  if(muniBonus) output += muniBonus
+
+  return output
 }
 
 
