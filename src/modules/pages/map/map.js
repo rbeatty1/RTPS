@@ -174,6 +174,9 @@ const ProcessData = (data, helper) => {
         *!~ helpers: object that contains layer definition
 */
 const PerformQuery = async input => {
+    
+    console.log('input at perform query ', input)
+
     // move helper to ProcessData() function?
     let helpers = {
         colorScheme: {
@@ -196,7 +199,7 @@ const PerformQuery = async input => {
         analysisLayers: {}
     }
     input.direction == 'To' ? input.direction = 'To Zone' : input.direction = 'From Zone'
-    let fetchData = input.type === 'zone' && input.direction ?
+    let fetchData = input.type === 'zone' ?
         await fetch(`https://alpha.dvrpc.org/api/rtps/gap?zones=[${input.selection}]&direction=${input.direction}`) :
         await fetch(`https://alpha.dvrpc.org/api/rtps/gap?muni=${input.selection}&direction=${input.direction}`)
 
@@ -205,7 +208,20 @@ const PerformQuery = async input => {
     if (fetchData.ok) {
         let rawData = await fetchData.json()
         console.log('rawData response for gap summary is ', rawData)
+        const cargo = rawData.cargo
+        
+        var rawDataSum = 0
+
+        for(var el in cargo) {
+            if( cargo.hasOwnProperty (el)) {
+                rawDataSum += cargo[el]
+            }
+        }
+
+        console.log('sum of rawData is ', rawDataSum)
+
         if (rawData.status == 'success'){
+            // consider updating processData here to just an if(input.type === 'municipality') const sum = sumTheJawns(cargo) and return sum (which resultsSummary.js checks for before adding the bonus sentence)
             let processed = ProcessData(rawData.cargo, helpers) // process data
             helpers.analysisLayers = processed // return
             new ResultsSummary(input, rawData.cargo)

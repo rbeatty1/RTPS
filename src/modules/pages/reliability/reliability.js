@@ -33,6 +33,13 @@ let layerRef = {
   outputs:{
     score: "The input layers were combined to calculate the overall measure of reliability. The <span class='reliability__sidebar-emphasis'>Reliability Score</span> layer shows the results of combining <abbr class='reliability__abbr' title='Travel Time Index'>TTI</abbr>, <abbr class='reliability__abbr' title='On Time Performance'>OTP</abbr>, and scheduled speed. A high reliability score is indicative of segments that may benefit from targeted improvements to improve transit operations.",
     weight: "The results were then weighted by ridership (<span class='reliability__sidebar-emphasis'>Ridership Weighted Reliability Score</span>) to highlight segments that impact high ridership surface transit service an allow for further prioritization of improvements."
+  },
+  sources: {
+    // depending on what the Open Data jawn looks like when it's done, the sources object could have sections that link to specific data sets instead of a "look at all of them" link, as below
+    main: {
+      title: 'Reliability Data',
+      info: '<a href="https://docs.google.com/spreadsheets/d/1cn3EZxMqeQAbt0eRMhi3QJX5MPoRs7DMLkfiWfj1k0E/edit#gid=0">view and download reliability data</a>.'
+    }
   }
 }
 
@@ -566,14 +573,15 @@ const BuildSidebar = (map, data) =>{
       title.classList.add('reliability__sidebar-sectionTitle')
       title.innerText = section
       item.appendChild(title)
+
       // input sections are styled differently to draw attention
-      if (section == 'purpose'){
+      if (section === 'purpose'){
         let purposeSection = document.createElement('p')
         purposeSection.innerHTML = layerRef[section]
         // purposeSection.classList.add('reliability__sidebar-contentSection')
         item.appendChild(purposeSection)
       }
-      else if (section == 'outputs'){
+      else if (section === 'outputs'){
         for (let output in layerRef[section]){
           let outputSection = document.createElement('p')
           // outputSection.classList.add('reliability__sidebar-contentSection')

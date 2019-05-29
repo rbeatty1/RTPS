@@ -10,7 +10,7 @@ import { Legend } from "./legend";
 const CreateSummary = data =>{
 
   // data already HAS a municipality field. 
-  console.log('data is ', data)
+  //console.log('data is ', data)
   
   data.direction == ''
   // do da grammar
@@ -20,7 +20,7 @@ const CreateSummary = data =>{
 
   if(data.type === 'municipality'){
     insert = `the selected area — <strong>${document.querySelector(`option[value='${data.location}']`).innerText}</strong>`
-    muniBonus = `<p>Average daily total demand for travel <strong>${data.direction} ${document.querySelector(`option[value='${data.location}']`).innerText}: <em>Number of Trips per Day Goes Here</em></strong></p>` 
+    muniBonus = `<p>Average daily total demand for travel <strong>${data.direction} ${document.querySelector(`option[value='${data.location}']`).innerText}: <em>Number of Trips per Day Goes Here</em></strong></p><small><em>Source: DVRPC TIM 2.3, base year 2015</em></small>` 
   }else{
     insert = 'the selected area'
   }
