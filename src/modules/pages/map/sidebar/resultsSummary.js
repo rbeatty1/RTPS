@@ -8,14 +8,7 @@ import { Legend } from "./legend";
   returns HTML string populated with appropriate summary values
 */
 const CreateSummary = (data, score) =>{
-
-  // data already HAS a municipality field. 
-  //console.log('data is ', data)
-  
   data.direction == ''
-  // do da grammar
-  // already doing a type check here, so it can be handled here but the data needs to get got too
-  // none of the summaryData comes from any back end stuff, so @todo look into when/where the data is loaded and hope it's already there
   let insert, muniBonus;
 
   if(data.type === 'municipality'){
@@ -44,8 +37,6 @@ const CreateSummary = (data, score) =>{
 const BuildSummary = (props) => {
   const count = Object.keys(props.data).length
   const queryData = props.queryData
-
-  console.log('score is ', props.demandScore)
 
   let content= {
     legend: {
