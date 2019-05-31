@@ -79,13 +79,26 @@ def munQuery(query):
     con = psql.connect("dbname='{}' user='{}' host='{}' password='{}'".format(c.DB_NAME, c.DB_USER, c.DB_HOST, c.DB_PASS))
     cur = con.cursor()
     query = sql.SQL(c.mq.format(direction, oppo, mcd))
+    query2 =  sql.SQL(c.mqScore.format(direction, oppo, mcd))
+
     try:
+        # query for the gap scores
         cur.execute(query)
         rows = cur.fetchall()
+
+        # query for the demand score
+        cur.execute(query2)
+        rows2 = cur.fetchall()
+
         cargo = {}
+        demandScore = rows2[0]
+
         for row in rows:
             cargo[str(row[1])] = row[0]
+
         payload['cargo'] = cargo
+        payload['demandScore'] = demandScore
+
         if not len(payload['cargo']) == 0:
             payload['status'] = 'success'
             return JsonResponse(payload, safe=False)
@@ -94,7 +107,7 @@ def munQuery(query):
             payload['message'] = 'Query returned no results'
             return JsonResponse(payload, safe=False)
     except Exception as e:
-        print(e)
+        print('Failed with error: ', e)
         payload['status'] = 'failed'
         payload['message'] = 'Invalid query parameters'
         return JsonResponse(payload, safe=False)
@@ -133,3 +146,26 @@ def queryCheck(request):
             return zoneQuery(check)
         else:
             return munQuery(check)
+
+
+# WITH tblA AS(
+#     SELECT
+#         "ToZone",
+#         SUM("ConnectionScore"*demandscore)/SUM(demandscore) AS w_avg_con,
+#         SUM("gapscore"*demandscore)/SUM(demandscore) AS w_avg_gap,
+#         AVG("ConnectionScore") AS avgcon,
+#         AVG(gapscore) AS avggap,
+#         SUM("DailyVols") AS sumvol,
+#         togeom
+#     FROM odgaps_ts
+#     WHERE "FromZone" IN(
+#         SELECT
+#             no
+#         FROM zonemcd_join_region
+#         WHERE mun_name = 'Glassboro Borough' )
+#     AND demandscore <> 0
+#     GROUP BY "ToZone", togeom
+#     )
+# SELECT 
+# 	ROUND(SUM(sumvol))
+# FROM tblA

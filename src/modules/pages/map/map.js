@@ -144,15 +144,18 @@ const LoadRegionalSummary = map =>{
         *!~ layerDef: Layer definition object that contains information specified in mapbox gl documentation that will be passed to map.addLayer() to symbolize analysis
 */
 const ProcessData = (data, helper) => {
-    // iterate through json returned by API call
     Object.keys(data).forEach(item => {
         if (!helper.check[item]) {
+            const val = data[item]
+
             // create fill expression item for zones that don't already have one
-            helper.fillExpression.push(parseInt(item), helper.colorScheme[data[item]])
+            helper.fillExpression.push(parseInt(item), helper.colorScheme[val])
             helper.check[item] = item
         }
     })
+
     helper.fillExpression.push("rgba(0,0,0,0)") // default color (nothing)
+
     let layerDef = {
         "id": `zones-analysis`,
         "type": "fill",
@@ -163,6 +166,7 @@ const ProcessData = (data, helper) => {
             "fill-opacity": 0.75
         }
     }
+
     return layerDef
 }
 
@@ -174,10 +178,6 @@ const ProcessData = (data, helper) => {
         *!~ helpers: object that contains layer definition
 */
 const PerformQuery = async input => {
-    
-    console.log('input at perform query ', input)
-
-    // move helper to ProcessData() function?
     let helpers = {
         colorScheme: {
             1: "rgba(250,228,205, .4)",
@@ -203,28 +203,15 @@ const PerformQuery = async input => {
         await fetch(`https://alpha.dvrpc.org/api/rtps/gap?zones=[${input.selection}]&direction=${input.direction}`) :
         await fetch(`https://alpha.dvrpc.org/api/rtps/gap?muni=${input.selection}&direction=${input.direction}`)
 
-    // ISSUE #33 LOOK HERE
-    // The cargo is just an object with key/value pairs correponding to area/score. As it stands, it does not have the extra field that Sara added.  
     if (fetchData.ok) {
         let rawData = await fetchData.json()
-        console.log('rawData response for gap summary is ', rawData)
         const cargo = rawData.cargo
-        
-        var rawDataSum = 0
-
-        for(var el in cargo) {
-            if( cargo.hasOwnProperty (el)) {
-                rawDataSum += cargo[el]
-            }
-        }
-
-        console.log('sum of rawData is ', rawDataSum)
+        const demandScore = rawData.demandScore[0].toLocaleString() // add commas to demand score #
 
         if (rawData.status == 'success'){
-            // consider updating processData here to just an if(input.type === 'municipality') const sum = sumTheJawns(cargo) and return sum (which resultsSummary.js checks for before adding the bonus sentence)
-            let processed = ProcessData(rawData.cargo, helpers) // process data
-            helpers.analysisLayers = processed // return
-            new ResultsSummary(input, rawData.cargo)
+            helpers.analysisLayers= ProcessData(cargo, helpers) // process data
+
+            new ResultsSummary(input, rawData.cargo, demandScore)
         }
         else{
             alert(`Error! ${rawData.message}`)

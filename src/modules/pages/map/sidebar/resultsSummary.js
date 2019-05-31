@@ -7,7 +7,7 @@ import { Legend } from "./legend";
     data: Summary data return upon query completion
   returns HTML string populated with appropriate summary values
 */
-const CreateSummary = data =>{
+const CreateSummary = (data, score) =>{
 
   // data already HAS a municipality field. 
   //console.log('data is ', data)
@@ -16,11 +16,11 @@ const CreateSummary = data =>{
   // do da grammar
   // already doing a type check here, so it can be handled here but the data needs to get got too
   // none of the summaryData comes from any back end stuff, so @todo look into when/where the data is loaded and hope it's already there
-  let insert, muniBonus
+  let insert, muniBonus;
 
   if(data.type === 'municipality'){
     insert = `the selected area — <strong>${document.querySelector(`option[value='${data.location}']`).innerText}</strong>`
-    muniBonus = `<p>Average daily total demand for travel <strong>${data.direction} ${document.querySelector(`option[value='${data.location}']`).innerText}: <em>Number of Trips per Day Goes Here</em></strong></p><small><em>Source: DVRPC TIM 2.3, base year 2015</em></small>` 
+    muniBonus = `<p>Average daily total demand for travel <strong>${data.direction} ${document.querySelector(`option[value='${data.location}']`).innerText}: <em>${score} </em></strong> trips per day.</p><small><em>Source: DVRPC TIM 2.3, base year 2015</em></small>` 
   }else{
     insert = 'the selected area'
   }
@@ -44,6 +44,8 @@ const CreateSummary = data =>{
 const BuildSummary = (props) => {
   const count = Object.keys(props.data).length
   const queryData = props.queryData
+
+  console.log('score is ', props.demandScore)
 
   let content= {
     legend: {
@@ -75,7 +77,7 @@ const BuildSummary = (props) => {
         new Legend(summaryContainer)
         break;
       case 'summary':
-        insert = CreateSummary(content.summary)
+        insert = CreateSummary(content.summary, props.demandScore)
         break;
       default:
         return 'error'
@@ -86,10 +88,11 @@ const BuildSummary = (props) => {
 }
 
 export class ResultsSummary{
-  constructor(input, output){
+  constructor(input, output, totalDemand){
     this.props = {
       queryData: input,
-      data: output
+      data: output,
+      demandScore: totalDemand
     }
     this.render()
   }
