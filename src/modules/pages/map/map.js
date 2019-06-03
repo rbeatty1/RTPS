@@ -206,7 +206,7 @@ const PerformQuery = async input => {
     if (fetchData.ok) {
         let rawData = await fetchData.json()
         const cargo = rawData.cargo
-        const demandScore = rawData.demandScore[0].toLocaleString() // add commas to demand score #
+        const demandScore = rawData.demandScore ? rawData.demandScore[0].toLocaleString() : null
 
         if (rawData.status == 'success'){
             helpers.analysisLayers= ProcessData(cargo, helpers) // process data
