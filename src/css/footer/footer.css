@@ -17,9 +17,10 @@ footer{
     
 }
 #footer-logo{
-    max-width: 20%;
+    width: 93px;
+    height: 31px;
     align-self: center;
-    margin: 3% 0;
+    margin-bottom: 5%;
 }
 #footer-contact-name, #footer-address{
     white-space: pre;
