@@ -204,7 +204,7 @@ const PerformQuery = async input => {
         await fetch(`https://alpha.dvrpc.org/api/rtps/gap?muni=${input.selection}&direction=${input.direction}`)
 
     if (fetchData.ok) {
-        let rawData = await fetchData.json()
+        let rawData = await fetchData.json()    
         const cargo = rawData.cargo
         const demandScore = rawData.demandScore ? rawData.demandScore[0].toLocaleString() : null
 
