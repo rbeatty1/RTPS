@@ -96,17 +96,17 @@ const contentRef = {
         },
         datasets: {
           NJ: {
-            Burlington: [2571, 3932, 1361, 52.94],
-            Camden: [20642, 25346, 4704, 22.79],
-            Gloucester: [2091, 3476, 1385, 66.25],
-            Mercer: [22289, 27509, 5220, 23.42]
+            Burlington: [2571, 3932, 1361, 53],
+            Camden: [20642, 25346, 4704, 23],
+            Gloucester: [2091, 3476, 1385, 66],
+            Mercer: [22289, 27509, 5220, 23]
           },
           PA: {
-            Bucks: [5307, 8287, 2980, 56.15],
-            Chester: [4402, 6998, 2596, 58.98],
-            Delaware: [34871, 42335, 7465, 21.41],
-            Montgomery: [29478, 39023, 9545, 32.38],
-            Philadelphia: [561976, 596792, 34816, 6.2]
+            Bucks: [5307, 8287, 2980, 56],
+            Chester: [4402, 6998, 2596, 59],
+            Delaware: [34871, 42335, 7465, 21],
+            Montgomery: [29478, 39023, 9545, 32],
+            Philadelphia: [561976, 596792, 34816, 6]
           }
         },
         summaries: {
@@ -542,7 +542,13 @@ const CreateTable = (section, data) => {
         else{
           if (index < 2 ) temp[index] = temp[index] + parseFloat(data)
           else if (index == 2)temp[2] = temp[1] - temp[0]
-          else temp[index] = ((temp[2]/temp[0])*100).toFixed(2)
+          else {
+            if(section.id = 'transitChange'){
+              temp[index] = Math.round(((temp[2]/temp[0])*100))
+            }else{
+              temp[index] = ((temp[2]/temp[0])*100).toFixed(2)
+            }
+          }
         } 
       })
     }
@@ -593,9 +599,15 @@ const CreateTable = (section, data) => {
     summaries[state].temp.map(col => {
       summaries[state].final.push(col.reduce((num, value) => num + value, 0));
     });
-    summaries[state].final.push(
-      ((summaries[state].final[2] / summaries[state].final[0]) * 100).toFixed(2)
-    );
+    if(section.id == 'transitChange'){
+      summaries[state].final.push(
+        Math.round(((summaries[state].final[2] / summaries[state].final[0]) * 100))
+      );
+    }else{
+      summaries[state].final.push(
+        ((summaries[state].final[2] / summaries[state].final[0]) * 100).toFixed(2)
+      );
+    }
     table.appendChild(CreateSummaryContent(state, summaries[state].final));
   }
 
