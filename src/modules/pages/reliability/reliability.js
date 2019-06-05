@@ -10,7 +10,7 @@ let layerRef = {
   purpose: "The goal of the surface transit reliability analysis was to identify corridors where surface transit service is particularly slow or delayed as places where road or transit improvements could increase reliability.",
   inputs:{
     speed: {
-      title: "Average Scheduled Speed by Line",
+      title: "Average Scheduled Speed",
       info: "The average scheduled speed for bus routes that use a road segment was calcluated using the distance between stop points and the scheduled time for each stop point as provided in the <abbr class='reliability__abbr' title='General Transit Feed Specification'>GTFS</abbr>. If multiple bus routes use a road segment, a weighted average was calculated to ensure that the buses using the segment most throughout the day were considered more heavily."
     },
     otp:{
@@ -238,7 +238,7 @@ const BuildSidebar = (map, data) =>{
     },
     input: {
       'reliability-speed':  {
-        title: 'Average Scheduled Speed by Line',
+        title: 'Average Scheduled Speed',
         unit: 'Miles per Hour (MPH)'
       },
       'reliability-otp':  {
