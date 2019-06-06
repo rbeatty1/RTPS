@@ -526,7 +526,7 @@ const CreateTable = (section, data) => {
       dataRow.appendChild(dataCell);
     });
     // the VMT data isn't really anywhere except for an excel sheet so this is easier than trying to compute the summaries for each state
-    if (section.id == 'autoChange'){
+    if (section.id === 'autoChange'){
       let dataCell = document.createElement('td')
       dataCell.innerText = state == 'NJ' ? '-0.22%' : '-0.35%'
       dataRow.appendChild(dataCell)
@@ -543,7 +543,7 @@ const CreateTable = (section, data) => {
           if (index < 2 ) temp[index] = temp[index] + parseFloat(data)
           else if (index == 2)temp[2] = temp[1] - temp[0]
           else {
-            if(section.id = 'transitChange'){
+            if(section.id === 'transitChange'){
               temp[index] = Math.round(((temp[2]/temp[0])*100))
             }else{
               temp[index] = ((temp[2]/temp[0])*100).toFixed(2)
@@ -563,7 +563,7 @@ const CreateTable = (section, data) => {
       cell.innerText = FormatNumber(data)
       row.appendChild(cell)
     })
-    if (section.id == 'autoChange'){
+    if (section.id === 'autoChange'){
       let cell = document.createElement('td')
       cell.innerText = '-0.30%'
       row.appendChild(cell)
@@ -599,7 +599,7 @@ const CreateTable = (section, data) => {
     summaries[state].temp.map(col => {
       summaries[state].final.push(col.reduce((num, value) => num + value, 0));
     });
-    if(section.id == 'transitChange'){
+    if(section.id === 'transitChange'){
       summaries[state].final.push(
         Math.round(((summaries[state].final[2] / summaries[state].final[0]) * 100))
       );
@@ -644,7 +644,7 @@ const BuildLegend = section => {
       // house keeping
       title.innerText = data.name;
       title.style.color = data.scheme[data.scheme.length-1][1] 
-      if (section.id == 'railLineChange'){
+      if (section.id === 'railLineChange'){
         if (index != 0){
           title.style.color = '#08506d'
           breakContainer.style.alignItems = 'center'
@@ -713,7 +713,7 @@ const BuildContent = (content, key, component) => {
         ResymbolizeFeatureLayer(component.map, contentRef[element.id]);
         link.classList.add("active");
         element.classList.add("active");
-        if (element.id == 'transitChange' || element.id == 'autoChange') {
+        if (element.id === 'transitChange' || element.id === 'autoChange') {
           let transit = component.map.getLayer('rail-lines')
           transit.visibility == 'none' ? component.map.setLayoutProperty('rail-labels', 'visibility', 'visible') : null
           transit.visibility == 'none' ? component.map.setLayoutProperty('rail-lines', 'visibility', 'visible') : null
@@ -724,7 +724,7 @@ const BuildContent = (content, key, component) => {
         HideFeatureLayer(component.map, contentRef[element.id]);
         link.classList.remove("active");
         element.classList.remove("active");
-        if (element.id == 'transitChange' || element.id == 'autoChange') {
+        if (element.id === 'transitChange' || element.id === 'autoChange') {
           let transit = component.map.getLayer('rail-lines')
           transit.visibility == 'visible' ? component.map.setLayoutProperty('rail-labels', 'visibility', 'none') : null
           transit.visibility == 'visible' ? component.map.setLayoutProperty('rail-lines', 'visibility', 'none') : null
@@ -768,6 +768,7 @@ const BuildContent = (content, key, component) => {
       `;
       break;
   }
+
   section.id = key;
   // create table if needed
   if (content.table) {
@@ -890,7 +891,7 @@ const PaginationListener = (map, link) => {
         Math.floor(data[route].AbsChange)
       )} <span class="frequency__popup-unit">Passengers / Day</span></div>
       <div class="frequency__popup-meat"><span class="frequency__popup-emphasis">Percent Change</span> ${
-        data[route].Percent
+        Math.round(data[route].Percent)
       }<span class="frequency__popup-unit">%</span></div>
   `;
     }
@@ -906,8 +907,8 @@ const PaginationListener = (map, link) => {
             Math.floor(data[route].absolute)
           )} <span class="frequency__popup-unit">Passengers / Day</span></div>
           <div class='frequency__popup-meat'><span class="frequency__popup-emphasis">Percent Change</span> ${
-            data[route].percent
-          }<span class="frequency__popup-unit">%</span></div>
+            Math.round(data[route].percent)
+          } <span class="frequency__popup-unit">%</span></div>
       `;
     }
   });
@@ -1269,7 +1270,7 @@ const LoadBus = map => {
               Math.floor(route.AbsChange)
             )} <span class="frequency__popup-unit">Passengers / Day</span></div>
             <div class="frequency__popup-meat"><span class="frequency__popup-emphasis">Percent Change</span> ${
-              route.Percent
+              Math.round(route.Percent)
             }<span class="frequency__popup-unit">%</span></div>
         `;
       }
@@ -1493,7 +1494,7 @@ const LoadRail = map => {
             Math.floor(feat.absolute)
           )} <span class="frequency__popup-unit">Passengers / Day</span></div>
           <div class='frequency__popup-meat'><span class="frequency__popup-emphasis">Percent Change</span> ${
-            feat.percent
+            Math.round(feat.percent)
           }<span class="frequency__popup-unit">%</span></div>
         </div>
       `;
