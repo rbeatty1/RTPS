@@ -308,7 +308,7 @@ input[type=checkbox]:checked>label{
 .reliability__popup-container h3{
   background: #08506d;
   color: white;
-  padding: .5rem 0;
+  padding: .5rem .6rem;
   border-radius: 10px;
 }
 .reliability__popup-container p{

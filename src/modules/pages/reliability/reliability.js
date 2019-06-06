@@ -108,6 +108,7 @@ const BuildMap = pageContent =>{
         props: properties that will drive content creation of clicked layer
     */
     const BuildPopUpContent = (layer, props) =>{
+
       // set variables
       let colorRef = styles.reliability.layers[layer].paint['line-color'],
         field = colorRef[1][1],
@@ -123,7 +124,15 @@ const BuildMap = pageContent =>{
       dataContent.classList.add('reliability__popup-data')
 
       // grammar (reliability score layers have multiple routes, other layers do not)
-      title.innerText = (layer == 'score' || layer == 'weighted') ? `Routes ${props.lines}` : `Route ${props.linename}`
+      let route;
+      if(props.lines && layer === 'score' || layer === 'weighted') {
+        const lines = props.lines.split(',').join(', ')
+        route = `Routes ${lines}`
+      }else{
+        route = `Route ${props.linename}`
+      }
+      title.innerText = route
+      
       switch(layer){
         case 'score':
           property.innerText = 'Reliabilty Score'
