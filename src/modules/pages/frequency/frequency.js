@@ -228,10 +228,10 @@ const contentRef = {
           name: "Absolute Ridership Change",
           scheme: [
             ["< 0%", "#aaa"],
-            ["0%–30% ", "#aaa"],
-            ["31%–50%", "#aaa"],
-            ["51%–80%", "#aaa"],
-            ["81%–100%", "#aaa"],
+            ["< 30% ", "#aaa"],
+            ["< 50%", "#aaa"],
+            ["< 80%", "#aaa"],
+            ["< 100%", "#aaa"],
             ["100% <", '#aaa']
           ],
           style: [
@@ -267,33 +267,34 @@ const contentRef = {
         legend: [{
           name: "Absolute Ridership Change",
           units: "Estimated Passengers per Day",
+          // @TODO HERE: could we also change the labels? rather than a range just do <
           scheme: [
             ["< 1,400", "#FEFABA"],
-            ["1,400–1,600", "#F6D374"],
-            ["1,601–1,800", "#E89234"],
-            ["1,801–2,200", "#7F2C2A"],
-            ["> 2,200", "#25111A"]
+            ["< 1,600", "#F6D374"],
+            ["< 1,800", "#f2bb05"],
+            ["< 2,200", "#E89234"],
+            ["> 2,200", "#e4572e"]
           ],
           style: [
             `color: #25111A; border: none; border-bottom: .5rem solid #FEFABA`,
             `color: #25111A; border: none; border-bottom: .5rem solid #F6D374`,
+            `color: #25111A; border: none; border-bottom: .5rem solid #f2bb05`,
             `color: #25111A; border: none; border-bottom: .5rem solid #E89234`,
-            `color: #25111A; border: none; border-bottom: .5rem solid #7F2C2A`,
-            `color: #25111A; border: none; border-bottom: .5rem solid #25111A`,
+            `color: #25111A; border: none; border-bottom: .5rem solid #e4572e`,
           ]
         },{
             name: "Percent Change in Ridership",
             scheme: [
               ["< 85%", "#9CBBC0"],
-              ["85%–100%", "#538795"],
-              ["101%–130%", "#08506C"],
-              ["> 130%", "#0F2F40"]
+              ["< 100%", "#538795"],
+              ["< 130%", "#08506C"],
+              ["> 130%", "#252323"]
             ],
             style: [
               `color: #0F2F40; border: none; border-bottom: .5rem solid #9CBBC0`,
               `color: #0F2F40; border: none; border-bottom: .5rem solid #538795`,
               `color: #0F2F40; border: none; border-bottom: .5rem solid #08506C`,
-              `color: #0F2F40; border: none; border-bottom: .5rem solid #0F2F40`,
+              `color: #0F2F40; border: none; border-bottom: .5rem solid #252323`,
             ]
           }
         ]
