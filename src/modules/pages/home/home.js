@@ -60,8 +60,8 @@ const Landing = (props, appContainer) =>{
       textContainer.appendChild(linksContainer)
       // add appropriate description text (see this.props[section].description)
       textContainer.insertAdjacentHTML('beforeend', content.description)
-      // change background color
-      textContainer.style.background = content.color
+      const home = document.getElementById('home')
+      home.style.background = content.color
       textContainer.classList.add('active')
     }
 
