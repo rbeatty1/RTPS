@@ -49,7 +49,7 @@ const Landing = (props, appContainer) =>{
       docLink.target = '_blank'
 
       // explore (analysis page)
-      appLink.innerText = 'Explore'
+      appLink.innerText = 'Access the Data'
       // load analysis page
       appLink.onclick = () => SetNewURL(section, 'tool')
 
