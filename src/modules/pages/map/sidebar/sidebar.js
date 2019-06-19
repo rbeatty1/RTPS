@@ -223,7 +223,7 @@ class Sidebar{
     this.state = {
       container: document.querySelector('#main'),
       elements: {
-        summary: "This regional summary map shows <abbr title='Traffic Analysis Zone'>TAZ</abbr>s symbolized using the average network gap score. The darker the color, the higher the score, indicating a higher priority transit gap. A transit gap is defined as an in-demand connection between transit supportive places where transit is either not available or not competitive.",
+        summary: "This regional summary map shows <abbr title='Traffic Analysis Zone'>TAZ</abbr>s symbolized using the average network gap score. The darker the color, the higher the score, indicating a higher priority transit gap. A transit gap is defined as an in-demand connection between transit supportive places where transit is either not available or not competitive with driving.",
         analysis: {
           analysisSummary: 'This dynamic map allows users to identify and prioritize transit gaps to and from specific areas of interest. Select a municipality or TAZ to see where transit connections can be improved or added.',
           inputs: {
