@@ -109,7 +109,7 @@ const BuildMenus = appContent =>{
         was added to the transit score for the destination to get the density score. The higher the density score, the more transit
         supportive the <abbr title="Origin/Destination">OD</abbr> pair.`,
         demand: `<strong>Demand Score:</strong> Demand is based on the total demand for travel between each <abbr title="Origin/Destination">OD</abbr> pair based on
-        <abbr title="Delaware Valley Regional Planning Commission">DVRPC</abbr>'s regional travel model.`
+        <abbr title="Delaware Valley Regional Planning Commission">DVRPC</abbr>'s regional travel model. This includes transit and non-transit trips.`
         
       },
       // declare local variables
