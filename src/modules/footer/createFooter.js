@@ -35,7 +35,7 @@ const createFooter = () => {
     contactWrapper.classList.add('footer-content-wrapper')
     contactName.id = 'footer-contact-name'
 
-    contactName.textContent = 'Sarah Moran\r\nTransportation Planner'
+    contactName.textContent = 'Sarah Moran\r\nSenior Transportation Planner'
     contactInfo.innerHTML = '<strong>Phone</strong>: (215) - 238 - 2875 <br /> <strong>Email</strong>: <a href="mailto:smoran@dvrpc.org">smoran@dvrpc.org</a>'
 
     contactWrapper.appendChild(contactName)
