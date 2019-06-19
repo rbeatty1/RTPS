@@ -110,7 +110,7 @@ const Landing = (props, appContainer) =>{
               while (descriptionContainer.firstChild) descriptionContainer.removeChild(descriptionContainer.firstChild)
             
             // reset style
-            descriptionContainer.style.background = '#fff'
+            home.style.background = '#fff'
             descriptionContainer.style.color = '#08506d'
             descriptionContainer.classList.remove('active')
 
@@ -118,10 +118,8 @@ const Landing = (props, appContainer) =>{
             descriptionContainer.insertAdjacentHTML(
               'beforeend',
               `<p id="home-default-text">
-                Where should transit improvement and transit supportive investments be made in the
-                <abbr title="Delaware Valley Regional Planning Commission">DVRPC</abbr> region? 
-                <strong>Use this platform to evaluate service, operational, enforcement, and
-                infrastructure improvement ideas!</strong>
+                This platform contains a set of screening tools that shed light on public transit needs and opportunities in the <abbr title="Delaware Valley Regional Planning Commission">DVRPC</abbr> region.
+                <strong>Use it to generate and evaluate ideas for service, operational, enforcement, and capital improvements that could be considered for further study.</strong>
               </p>
               `)
             
@@ -137,10 +135,8 @@ const Landing = (props, appContainer) =>{
         section.insertAdjacentHTML(
           'beforeend', 
           `<p id="home-default-text">
-            Where could transit improvement and investments that support transit be made in the
-            <abbr title="Delaware Valley Regional Planning Commission">DVRPC</abbr> region? 
-            <strong>Use this platform to evaluate service, operational, enforcement, and
-            infrastructure improvement ideas.</strong>
+            This platform contains a set of screening tools that shed light on public transit needs and opportunities in the <abbr title="Delaware Valley Regional Planning Commission">DVRPC</abbr> region.
+            <strong>Use it to generate and evaluate ideas for service, operational, enforcement, and capital improvements that could be considered for further study.</strong>
           </p>
           `
           )
