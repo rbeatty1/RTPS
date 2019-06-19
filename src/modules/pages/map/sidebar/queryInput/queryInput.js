@@ -20,6 +20,17 @@ let geography = {
 */
 const _createMenuLinks = (self, options) => {
   // iterate through options and create a link for each one -- <option value='{i}' class='input__input-option>i</option>
+  
+  /*************************************************************************************************************************************************************/
+  // @TODO: Issue #41: when we meet tomorrow, have PuTTY set up and psql on the gap list table and then ask Sarah to write the SQL statement to update the jawns
+    // SSH into the DO droplet
+    // cd to the rtps folder
+    // sudo -u postgres psql
+    // \l to view the tables, \dt rtps
+    // get table 'zonemcd_join_region_wpnr_trim'
+    // https://www.dvrpc.org/Mapping/Maps/pdf/Philadelphia_Planning_Districts.pdf
+  /*************************************************************************************************************************************************************/
+
   if (self.id == "muni") {
     options.forEach(muni => {
       let optionLink = document.createElement("option");
