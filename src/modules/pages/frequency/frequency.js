@@ -46,7 +46,6 @@ const contentRef = {
       },
       table: false,
       text: `<p>This map depicts the existing weekday bus transit frequency by the average number of trips per hour. Darker colors represent bus routes that have more frequent service.</p>`
-        
     }
   },
   transitChange: {

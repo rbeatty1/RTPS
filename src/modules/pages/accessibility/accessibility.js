@@ -216,11 +216,17 @@ const StationPopUp = (marker, map) =>{
 
   // coordinates to anchor popup
   let coords = new mapboxgl.LngLat(marker.long, marker.lat)
+  let stationName = marker.props.STATION
+  let length = stationName.length
+  const minusStation = length - 7
+
+  // check if the db has a redundant 'Station' string and remove it if so. This is not a good solution, but it's a solution
+  let station = stationName.substring(minusStation, length) != 'Station' ? stationName : stationName.slice(0, minusStation)
   
   // set dynamic popup properties
   popup
     .setLngLat(coords)
-    .setHTML(`${marker.props.STATION} Station`)
+    .setHTML(`${station} Station`)
     .addTo(map)
   return popup
 }
