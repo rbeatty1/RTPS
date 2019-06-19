@@ -74,7 +74,7 @@ const HeaderElements = [
                 color: '#e89234'
             },
             frequency : {
-                title: 'Doubled Frequency Scenario',
+                title: 'Higher Frequency Scenario',
                 shorthand: 'frequency',
                 color: '#d8c72e'
             },

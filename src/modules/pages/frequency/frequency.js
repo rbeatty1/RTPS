@@ -14,12 +14,7 @@ const contentRef = {
     content: {
       map: false,
       table: false,
-      text:  `
-      <p><strong>Where is there potential latent demand for higher frequency transit service?</strong></p>
-      <p>What happens if we double transit service frequency for all lines? How does doubled service frequency scenario compare to the existing scenario?</p>
-      <p>The answers below help us understand where potential latent demand for higher frequency transit exists. Want to know how you neighborhood or favorite
-      routes might respond? Scroll down to begin exploring!</p>
-      `
+      text:  `<p>DVRPC's regional travel demand model was used to conduct a transit frequency experiment. The results of the experiment, outlined below, compare a modeled scenario with existing frequency to one with doubled frequency for all services and routes. In reality, the frequency that it is possible to provide depends on “soft factors” like operating funding and staffing levels, as well as “hard factors” like fleet size and infrastructure carrying capacity. As a result, it would not be possible to double frequencies for all services in all places, and the investments necessary to do so for individual routes would vary. Nevertheless these results  serve as a screening tool to identify which areas and routes might respond the most to higher frequencies as candidates for further study.</p>`
     }
   },
   overview: {
@@ -50,18 +45,14 @@ const contentRef = {
         ]
       },
       table: false,
-      text: `
-      <p>This map depicts the existing weekday bus transit frequency by the average number of trips per hour. 
-      Darker colors represent bus routes that have more frequent service.
-      </p>
-      `
+      text: `<p>This map depicts the existing weekday bus transit frequency by the average number of trips per hour. Darker colors represent bus routes that have more frequent service.</p>`
         
     }
   },
   transitChange: {
     active: false,
     title: "Changes in Transit Ridership",
-    scenario: "Doubled Frequency",
+    scenario: "Higher Frequency Scenario",
     content: {
       map: {
         source: "taz",
@@ -120,17 +111,13 @@ const contentRef = {
           }
         }
       },
-      text:`
-      <p>This change in zonal transit ridership map shows traffic analysis zones (<abbr title="Traffic Analysis Zones">TAZ</abbr>)
-      symbolized using the change in public transit ridership in that zone under the doubled frequency scenario. The darker the color,
-      the greater the increase in transit ridership when all frequencies are doubled.
-      </p>`
+      text:`<p>This map shows the expected change in transit ridership by traffic analysis zones (<abbr title="Traffic Analysis Zones">TAZ</abbr>) if the frequencies of all transit services and routes were doubled. The darker the color, the greater the expected increase in transit ridership when all frequencies are doubled.</p>`
     }
   },
   autoChange: {
     active: false,
     title: "Reductions in Car Trips",
-    scenario: "Doubled Frequency",
+    scenario: "Higher Frequency Scenario",
     content: {
       map: {
         source: "taz",
@@ -187,19 +174,13 @@ const contentRef = {
           }
         }
       },
-      text:`
-      <p>
-      This map shows <abbr title="Traffic Analysis Zone">TAZ</abbr>s symbolized using the change in car trips entering
-      and leaving the zone in 24 hours. The darker the color, the greater the reduction in car trips when public
-      transit frequencies are doubled.
-      </p>
-      `
+      text:`<p>This map shows the expected change in car trips entering or leaving <abbr title="Traffic Analysis Zone">TAZ</abbr>s in 24 hours when service frequency is doubled. The darker the color, the greater the expected reduction in car trips when transit frequencies are doubled.</p>`
     }
   },
   railLineChange: {
     active: false,
     title: "Changes in Rail Ridership",
-    scenario: "Doubled Frequency",
+    scenario: "Higher Frequency Scenario",
     content: {
       map: {
         source: "transit",
@@ -247,19 +228,13 @@ const contentRef = {
 
       },
       table: false,
-      text:`
-      <p>This map shows passenger rail lines symbolized by the estimated change in ridership if frequencies of all transit routes are doubled.
-      Line color represents the absolute change in ridership, while the line weight represents the percent change. For example, a dark, thin
-      line would imply a line where a large absolute increase in ridership is expected, but the percent change is relatively small
-      due to the high existing ridership on the line.
-      </p>
-      `
+      text:`<p>This map shows the expected change in rail ridership when service frequency is doubled. Line color represents the absolute change in ridership, and the line thickness represents the percentage change. For example, a dark, thin line would imply a line where a large absolute increase in ridership is expected, but the percentage change is relatively small because of the high existing ridership on the line.</p>`
     }
   },
   bus: {
     active: false,
     title: "Changes in Bus Ridership",
-    scenario: "Doubled Frequency",
+    scenario: "Higher Frequency Scenario",
     content: {
       map: {
         source: "transit",
@@ -301,14 +276,9 @@ const contentRef = {
       },
       table: false,
       text:`
-      <p>This map shows the bus routes with the greatest expected increase in daily ridership when service frequency is doubled. Bus ridership
-      refers to the number of passengers using that bus route on an average weekday. The yellow routes are the top 25 in estimated <strong>absolute</strong>
-      ridership gain. The darker the yellow, the greater the absolute increase in ridership.</p>
-      <p>The green lines show the 25 bus routes with the largest percent increase in daily ridership when service frequency is doubled. The darker the green,
-      the greater the percent increase in forecast ridership.</p>
-      <p>It is important to keep in mind that percent change is sometimes deceiving when base ridership is low, making a small increase appear as a substantial 
-      change. Only those bus routes with an estimated base scenario ridership of at least 100 are included. Many of the green routes are in suburban ares where
-      base frequencies tend to be lower, while many of the yellow routes are in urban areas where frequency and ridership are already high.</p>
+        <p>This map shows the bus routes with the greatest expected increase in daily ridership when service frequency is doubled. Bus ridership refers to the number of passengers using that bus route on an average weekday. The orange routes are the top 25 in estimated <strong>absolute</strong> ridership gain. The darker the orange, the greater the absolute increase in ridership.</p>
+        <p>The blue lines show the 25 bus routes with the largest percentage increase in daily ridership when service frequency is doubled. The darker the blue , the greater the percentage increase in expected ridership.</p>
+        <p>It is important to keep in mind that percentage change is sometimes deceiving when base ridership is low, making a small increase look like a substantial change. Only those bus routes with an estimated base scenario ridership of at least 100 are included. Many of the blue routes are in suburban areas where base frequencies tend to be lower, while many of the orange routes are in urban areas where frequency and ridership are already high.</p>
       `}
   },
   mapData: {

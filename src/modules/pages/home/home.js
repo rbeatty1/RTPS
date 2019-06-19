@@ -197,11 +197,10 @@ class Home{
         impact the most passengers.</p>`
       },
       frequency: {
-        title: 'Doubled Frequency Scenario',
+        title: 'Higher Frequency Scenario',
         color: '#d8c72e',
         secondary: '#efe9ab',
-        description: `<p><strong>Where is there potential latent demand for higher frequency transit service?</strong><br /> View results of how
-        a regional travel demand model scenario in which transit frequency is doubled compares to the existing scenario.</p>`
+        description: `<p><strong>Where is there potential latent demand for higher-frequency transit service?</strong><br /> View results of a regional travel demand model scenario in which all transit frequency is doubled.</p>`
       },
       accessibility: {
         title: 'Wheelchair Accessibility',
