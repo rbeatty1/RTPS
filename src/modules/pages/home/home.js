@@ -92,7 +92,7 @@ const Landing = (props, appContainer) =>{
       // build logo container & insert logo svg
       if(i == 0){
         section.id = 'logo-container'
-        section.insertAdjacentHTML('afterbegin', require('../../../img/rtpp-full.svg'))
+        section.insertAdjacentHTML('afterbegin', require('../../../img/rtsp-full.svg'))
 
         // reset logo colors
         section.firstChild.onclick = e =>{

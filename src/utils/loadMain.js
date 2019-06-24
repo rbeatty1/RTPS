@@ -20,7 +20,7 @@ const ChangeLogo = section =>{
   // does the logo exist?
   if (!document.querySelector('.logo-fill')) {
     // wait for it to load
-    document.querySelector('object').onload = e =>{ 
+    document.querySelector('svg').onload = e =>{ 
       let fillElements = document.querySelectorAll('.logo-fill')
       if (colors[section]) for (let elem of fillElements) elem.setAttribute('fill', colors[section])
       else for (let elem of fillElements) elem.setAttribute('fill', '#6d6e71')
