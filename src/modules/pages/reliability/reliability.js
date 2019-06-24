@@ -372,8 +372,8 @@ const BuildSidebar = (map, data) =>{
       items.classList.add('reliability__legend-items')
       // get appropriate colors from map styles
       let colorExpression = styles.reliability.layers[layer].paint['line-color'],
-        colors = new Array(),
-        labels = new Array() ;
+        colors = [],
+        labels = [] ;
       colorExpression.map(statement=> {
         // get colors
         if (statement[0] == '#') colors.push(statement)

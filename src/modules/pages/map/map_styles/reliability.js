@@ -171,14 +171,34 @@ const styles = {
           'line-color': [
             'step',
             ['get', 'speed'],
-            '#730000',
-            10, '#e60000',
-            20, '#f07d02',
+            '#762a83',
+            10, '#af8dc3',
+            20, '#e7d4e8',
+            30, '#ffc4ce',
+            40, '#7fbf7b',
+            50, '#38a800',
+            60, '#1b7837'
+          ]
+          /*
+            purple to green with orange/yellow stop in the middle
+            '#762a83',
+            10, '#af8dc3',
+            20, '#e7d4e8',
             30, '#ffcb0d',
             40, '#FF0',
             50, '#AF0',
             60, '#38a800'
-          ]
+          */
+          /*
+            diverging purple to green (currently active option)
+            '#762a83',
+            10, '#af8dc3',
+            20, '#e7d4e8',
+            30, '#ffc4ce',
+            40, '#7fbf7b',
+            50, '#38a800',
+            60, '#1b7837'
+            */
         },
         layout: {
           visibility: 'none'
