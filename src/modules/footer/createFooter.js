@@ -48,7 +48,7 @@ const createFooter = () => {
 
     versionText.id = 'footer-version'
 
-    versionText.textContent = `Regional Transit Priority Setting  |  Version ${version}`
+    versionText.textContent = `Regional Transit Screening Platform  |  Version ${version}`
     versionFragment.appendChild(versionText)
 
     // main fragment to export and append to <footer>
