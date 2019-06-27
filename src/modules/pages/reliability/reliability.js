@@ -39,7 +39,7 @@ let layerRef = {
     // depending on what the Open Data jawn looks like when it's done, the sources object could have sections that link to specific data sets instead of a "look at all of them" link, as below
     main: {
       title: 'Reliability Data',
-      info: '<a href="https://docs.google.com/spreadsheets/d/1cn3EZxMqeQAbt0eRMhi3QJX5MPoRs7DMLkfiWfj1k0E/edit#gid=0">view and download reliability data</a>.'
+      info: '<a href="https://drive.google.com/drive/folders/1aXwLVweE9xqqZgYIgT6ZC3XREJRwgfHB?usp=sharing" target="blank"> View and download reliability data</a>.'
     }
   }
 }
