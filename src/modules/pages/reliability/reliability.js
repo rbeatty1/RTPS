@@ -85,13 +85,11 @@ const BuildMap = pageContent =>{
   const LayerVisibilityCheck = layerName =>{
     let layerId = `reliability-${layerName}`
     // ,radioId = `#legend-${layerName}`
-    console.log('layer name is ', layerName)
 
-    if (map.getLayoutProperty(layerId, 'visibility') == 'visible') {
+    if (map.getLayoutProperty(layerId, 'visibility') === 'visible') {
       //const name = layerId.split('-')[1]
       //document.querySelector(`input[name=${name}]`).checked = true
       const input = document.getElementById(layerName)
-      console.log('input is ', input)
       input.checked = true
      // document.querySelector(radioId).style.display = 'block'
     }
@@ -323,7 +321,7 @@ const BuildSidebar = (map, data) =>{
 
         // displayed previously visible layers for newly active tab
         for (let box of checked){
-          let layer = 'reliability-'+box.name
+          let layer = 'reliability-'+box.id
 
           if (layers[target] && layers[target][layer]) map.setLayoutProperty(layer, 'visibility', 'visible')
         }
@@ -355,11 +353,13 @@ const BuildSidebar = (map, data) =>{
     // function to run when radio is changed. Displays correct layer on map and corresponding legend item
     const LayerVisibilityChange = layer =>{
       let layerID = `reliability-${layer}`,
-        boxes = document.querySelectorAll('.reliability__layer-input'),
+        radios = document.querySelectorAll('.reliability__layer-input'),
         visibility = map.getLayoutProperty(layerID, 'visibility')
 
-      for (let refLayer in styles.reliability.layers) if (refLayer == layer) visibility == 'none' ? map.setLayoutProperty(layerID, 'visibility', 'visible') : map.setLayoutProperty(layerID, 'visibility', 'none')
-      for (let box of boxes) box.checked ? document.querySelector(`#legend-${box.name}`).style.display = 'block' : document.querySelector(`#legend-${box.name}`).style.display = 'none'
+        // #21: just rebuild this entire thing
+
+      //for (let refLayer in styles.reliability.layers) if (refLayer == layer) visibility == 'none' ? map.setLayoutProperty(layerID, 'visibility', 'visible') : map.setLayoutProperty(layerID, 'visibility', 'none')
+      //for (let radio of radios) radio.checked ? document.querySelector(`#legend-${radio.id}`).style.display = 'block' : document.querySelector(`#legend-${radio.id}`).style.display = 'none'
     }
 
     // build legends
@@ -423,32 +423,34 @@ const BuildSidebar = (map, data) =>{
     layerSection.classList.add('reliability__sidebar-control')
     legendSection.classList.add('reliability__sidebar-control')
 
-    // build layer check boxes
+    // build layer check radio
     for (let layer in layers){
+      
+      // #21 rebuild this entire thing - instead of this super nested div situation, make it a form and trigger layer change on form change. 
       let option = document.createElement('div'),
-        radio = document.createElement('div'),
-        input = document.createElement('input'),
+        radioDiv = document.createElement('div'),
+        radio = document.createElement('input'),
         label = document.createElement('label')
       
       option.classList.add('reliability__layer-option')
-      radio.classList.add('reliability__layer-checkbox')
+      radioDiv.classList.add('reliability__layer-checkbox')
       
-      input.setAttribute('type', 'radio')
-      input.id = layer.split('-')[1]
-      //input.setAttribute('name', layer.split('-')[1])
-      input.setAttribute('name', 'reliability-regional-layers')
-      input.classList.add('reliability__layer-input')
+      radio.setAttribute('type', 'radio')
+      radio.id = layer.split('-')[1]
+      //radio.setAttribute('name', layer.split('-')[1])
+      radio.setAttribute('name', 'reliability-regional-layers')
+      radio.classList.add('reliability__layer-input')
 
       label.setAttribute('for', layer.split('-')[1])
       label.innerHTML = layers[layer].title
 
-      input.addEventListener('input', ()=> LayerVisibilityChange(input.id))
+      radio.addEventListener('input', ()=> LayerVisibilityChange(radio.id))
 
-      radio.appendChild(input)
-      radio.appendChild(label)
+      radioDiv.appendChild(radio)
+      radioDiv.appendChild(label)
 
-      option.appendChild(radio)
-      BuildLegendSection(legendSection, input.id)
+      option.appendChild(radioDiv)
+      BuildLegendSection(legendSection, radio.id)
       layerSection.appendChild(option)
     }
 
