@@ -118,7 +118,7 @@ const styles = {
           'line-color': [
             'step',
             ['get', 'ridership'],
-            '#e2e2e2',
+            '#e3b505',
             500, '#f18541',
             1500, '#b02c87',
             2000, '#045099'

@@ -7,8 +7,6 @@ import { Header } from '../modules/header/header.js'
 import { Footer } from '../modules/footer/footer.js'
 import { SetNewURL } from './routing.js';
 
-
-
 const ChangeLogo = section =>{
   const colors = {
     gap : "#8bb234",
