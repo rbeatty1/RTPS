@@ -78,18 +78,22 @@ const BuildPage = structure =>{
 const BuildMap = pageContent =>{
   /* 
     LayerVisibilityCheck(layerName)
-    @purpose: function to update checkbox status and load legend when layer is activated.
+    @purpose: function to update radio status and load legend when layer is activated.
     @params:
-      layerName: name of layer to check status of appropriate checkbox
+      layerName: name of layer to check status of appropriate radio
   */
   const LayerVisibilityCheck = layerName =>{
-    let layerId = `reliability-${layerName}`,
-      checkboxId = `#legend-${layerName}`
+    let layerId = `reliability-${layerName}`
+    // ,radioId = `#legend-${layerName}`
+    console.log('layer name is ', layerName)
 
     if (map.getLayoutProperty(layerId, 'visibility') == 'visible') {
-      const name = layerId.split('-')[1]
-      document.querySelector(`input[name=${name}]`).checked = true
-      document.querySelector(checkboxId).style.display = 'block'
+      //const name = layerId.split('-')[1]
+      //document.querySelector(`input[name=${name}]`).checked = true
+      const input = document.getElementById(layerName)
+      console.log('input is ', input)
+      input.checked = true
+     // document.querySelector(radioId).style.display = 'block'
     }
   }
 
@@ -315,7 +319,7 @@ const BuildSidebar = (map, data) =>{
           }
         }
 
-        let checked = document.querySelectorAll('input[type="checkbox"]:checked')
+        let checked = document.querySelectorAll('input[type="radio"]:checked')
 
         // displayed previously visible layers for newly active tab
         for (let box of checked){
@@ -348,7 +352,7 @@ const BuildSidebar = (map, data) =>{
 
   // build layer control portion of layer section 
   const BuildLayerControl = (element, layers) =>{
-    // function to run when checkbox is changed. Displays correct layer on map and corresponding legend item
+    // function to run when radio is changed. Displays correct layer on map and corresponding legend item
     const LayerVisibilityChange = layer =>{
       let layerID = `reliability-${layer}`,
         boxes = document.querySelectorAll('.reliability__layer-input'),
@@ -422,27 +426,29 @@ const BuildSidebar = (map, data) =>{
     // build layer check boxes
     for (let layer in layers){
       let option = document.createElement('div'),
-        checkbox = document.createElement('div'),
+        radio = document.createElement('div'),
         input = document.createElement('input'),
         label = document.createElement('label')
       
       option.classList.add('reliability__layer-option')
-      checkbox.classList.add('reliability__layer-checkbox')
+      radio.classList.add('reliability__layer-checkbox')
       
-      input.setAttribute('type', 'checkbox')
-      input.setAttribute('name', layer.split('-')[1])
+      input.setAttribute('type', 'radio')
+      input.id = layer.split('-')[1]
+      //input.setAttribute('name', layer.split('-')[1])
+      input.setAttribute('name', 'reliability-regional-layers')
       input.classList.add('reliability__layer-input')
 
       label.setAttribute('for', layer.split('-')[1])
       label.innerHTML = layers[layer].title
 
-      input.addEventListener('input', ()=> LayerVisibilityChange(input.name))
+      input.addEventListener('input', ()=> LayerVisibilityChange(input.id))
 
-      checkbox.appendChild(input)
-      checkbox.appendChild(label)
+      radio.appendChild(input)
+      radio.appendChild(label)
 
-      option.appendChild(checkbox)
-      BuildLegendSection(legendSection, input.name)
+      option.appendChild(radio)
+      BuildLegendSection(legendSection, input.id)
       layerSection.appendChild(option)
     }
 
