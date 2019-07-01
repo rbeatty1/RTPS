@@ -29,6 +29,7 @@
   text-decoration: none;
 }
 
+/* #e0ffff */
 
 .accessibility__nav-link{
   position: relative;
@@ -117,9 +118,9 @@
 .accessibility-section>p{
   /* color options:
     grey blue: 2e343b
-    other grey blue: 1c2833
+    other grey blue: e0ffff
   */
-  color: #1c2833;
+  color: #e0ffff;
   font-size: .95rem;
   width: 90%;
   margin: 2% auto;
@@ -135,14 +136,14 @@
 .accessibility__titleDivider hr{
   width: 33%;
   height: 2px;
-  background: #08506d;
+  background: #e4f1fe;
   border: none;
   margin-bottom: 1.25rem;
 }
 
 .accessibility__titleDivider h2{
   font-weight: 700;
-  color: #1c2833;
+  color: #e4f1fe;
   font-size: 1.25rem;
   margin: 0 0 5% 0;
   padding: 0 5%;
@@ -150,7 +151,7 @@
 
 .accessibility-section h3{
   text-align: center;
-  color: #0A3B4D;
+  color: #e4f1fe;
   font-size: 1rem;
   margin: 0 auto 2%;
   width: 80%;
@@ -183,7 +184,7 @@
 .accessibility-text> h3{
   text-align: center;
   margin: 1em auto;
-  color: #08506d;
+  color: #e4f1fe;
   width: 66%;
   word-wrap: normal;
 }
@@ -232,7 +233,7 @@
 #caseStudy h3{
   text-align: center;
   font-size: 1.15rem;
-  color: #08506d;
+  color: #e4f1fe;
   width: 80%;
   margin: 1% auto;
 }
