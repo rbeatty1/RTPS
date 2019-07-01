@@ -417,8 +417,8 @@ const BuildSidebar = (map, data) =>{
       element.appendChild(legendSection)
     }
 
-    let layerSection = document.createElement('div'),
-      legendSection = document.createElement('div')
+    let layerSection = document.createElement('form'),
+      legendSection = document.createElement('form')
 
     layerSection.classList.add('reliability__sidebar-control')
     legendSection.classList.add('reliability__sidebar-control')
@@ -428,28 +428,24 @@ const BuildSidebar = (map, data) =>{
       
       // #21 rebuild this entire thing - instead of this super nested div situation, make it a form and trigger layer change on form change. 
       let option = document.createElement('div'),
-        radioDiv = document.createElement('div'),
         radio = document.createElement('input'),
         label = document.createElement('label')
       
       option.classList.add('reliability__layer-option')
-      radioDiv.classList.add('reliability__layer-checkbox')
       
       radio.setAttribute('type', 'radio')
       radio.id = layer.split('-')[1]
-      //radio.setAttribute('name', layer.split('-')[1])
       radio.setAttribute('name', 'reliability-regional-layers')
       radio.classList.add('reliability__layer-input')
 
       label.setAttribute('for', layer.split('-')[1])
       label.innerHTML = layers[layer].title
 
+      // @todo #21: delete this once the form.onchange function is set up
       radio.addEventListener('input', ()=> LayerVisibilityChange(radio.id))
 
-      radioDiv.appendChild(radio)
-      radioDiv.appendChild(label)
-
-      option.appendChild(radioDiv)
+      option.appendChild(radio)
+      option.appendChild(label)
       BuildLegendSection(legendSection, radio.id)
       layerSection.appendChild(option)
     }
@@ -488,8 +484,6 @@ const BuildSidebar = (map, data) =>{
   
           // set filter
           map.setFilter(`reliability-${layer}`, filterExp)
-
-          const layerPostFilter = map.getLayer(`reliability-${layer}`)
         }
       }
     }

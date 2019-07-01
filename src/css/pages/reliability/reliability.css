@@ -131,7 +131,6 @@
 }
 .reliability__sidebar-control{
   min-height: 40%;
-  margin: 3% 1%;
   background: whitesmoke;
   color: #696969;
   box-shadow: 2px 2px 3px rgba(0,0,0,0.1);
@@ -150,13 +149,12 @@ f
 }
 .reliability__layer-option{
   display: flex;
-  justify-content: center;
-  flex-flow: column;
+  justify-content: flex-start;
   width: 90%;
+  padding: 0.5rem;
+  font-size: 1rem;
 }
 .reliability__layer-checkbox{
-  margin: .5rem;
-  font-size: 1rem;
 }
 .reliability__layer-emphasis{
   color: #08506d;
