@@ -34,9 +34,7 @@ let layerRef = {
     score: "The input layers were combined to calculate the overall measure of reliability. The <span class='reliability__sidebar-emphasis'>Reliability Score</span> layer shows the results of combining <abbr class='reliability__abbr' title='Travel Time Index'>TTI</abbr>, <abbr class='reliability__abbr' title='On Time Performance'>OTP</abbr>, and scheduled speed. A high reliability score is indicative of segments that may benefit from targeted improvements to improve transit operations.",
     weight: "The results were then weighted by ridership (<span class='reliability__sidebar-emphasis'>Ridership Weighted Reliability Score</span>) to highlight segments that impact high ridership surface transit service an allow for further prioritization of improvements."
   },
-  // ISSUE #26
   sources: {
-    // depending on what the Open Data jawn looks like when it's done, the sources object could have sections that link to specific data sets instead of a "look at all of them" link, as below
     main: {
       title: 'Reliability Data',
       info: '<a href="https://drive.google.com/drive/folders/1aXwLVweE9xqqZgYIgT6ZC3XREJRwgfHB?usp=sharing" target="blank"> View and download reliability data</a>.'
@@ -76,20 +74,6 @@ const BuildPage = structure =>{
     pageContent: component state
 */
 const BuildMap = pageContent =>{
-  /* 
-    LayerVisibilityCheck(layerName)
-    @purpose: function to update radio status and load legend when layer is activated.
-    @params:
-      layerName: name of layer to check status of appropriate radio
-  */
-  const LayerVisibilityCheck = layerName =>{
-    let layerId = `reliability-${layerName}`
-
-    if (map.getLayoutProperty(layerId, 'visibility') === 'visible') {
-      const input = document.getElementById(layerName)
-      input.checked = true
-    }
-  }
 
   /*
     BuildPopUps(layers)
@@ -208,9 +192,6 @@ const BuildMap = pageContent =>{
     LoadLayers(map, styles)
 
     BuildPopUps(layers)
-
-    // display correct layers
-    for (let layer in styles.reliability.layers) LayerVisibilityCheck(layer)
   })
 
   return map
@@ -393,6 +374,9 @@ const BuildSidebar = (map, data) =>{
       legendSection.classList.add('reliability__legend-section')
       legendSection.id = `legend-${layer}`
 
+      // reliability legend on by default
+      if(layer === 'score') legendSection.style.display = 'block'
+
       title.innerText = layers[`reliability-${layer}`].title
       
       items.classList.add('reliability__legend-items')
@@ -459,6 +443,10 @@ const BuildSidebar = (map, data) =>{
       
       radio.setAttribute('type', 'radio')
       radio.id = layer.split('-')[1]
+
+      // default score to checked
+      if(radio.id === 'score') radio.checked = true
+
       radio.setAttribute('name', 'reliability-regional-layers')
         
       radio.classList.add(`reliability__layer-input-${page}`)
