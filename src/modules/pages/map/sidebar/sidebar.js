@@ -54,6 +54,10 @@ const BuildMenus = appContent =>{
       
         data.box.onchange = e =>{
             let name = e.target.name
+
+            // get a handle on both instances of the checkboxes in order to maintain state across views
+            let otherBox = document.querySelectorAll(`input[name=${name}]`)
+
             if (e.target.checked){
               if (name == 'rail-lines'){
                   appContent.map.setLayoutProperty(name, 'visibility', 'visible')
@@ -61,6 +65,11 @@ const BuildMenus = appContent =>{
               }
               else{
                   appContent.map.setLayoutProperty('bus-lines', 'visibility', 'visible')
+              }
+
+              // this is to maintain state across pages - the layers persist and this is to have checkbox state persist too
+              for(var i = 0; i < otherBox.length; i++) {
+                  otherBox[i].checked = true
               }
             }
             else{
@@ -71,6 +80,11 @@ const BuildMenus = appContent =>{
               else{
                   appContent.map.setLayoutProperty('bus-lines', 'visibility', 'none')
               }
+
+              // this is to maintain state across pages - the layers persist and this is to have checkbox state persist too
+              for(var i = 0; i < otherBox.length; i++) {
+                otherBox[i].checked = false
+            }
             }
         }
       
@@ -205,6 +219,7 @@ const BuildMenus = appContent =>{
     header.addEventListener('click', e=>{
       let sections = document.querySelectorAll('.map__sidebar-menuContent'),
       headers = document.querySelectorAll('.map__sidebar-menuHeader')
+
       for (let header of headers) header == e.target ? header.classList.add('active') : header.classList.remove('active');
       for (let section of sections) section.id == `${e.target.innerText.split(' ')[1].toLowerCase()}_dropdownContent` ? section.classList.add('active') : section.classList.remove('active')
     })
@@ -242,7 +257,7 @@ class Sidebar{
 
   render(){
     BuildMenus(this.state)
-    // // query inputs
+    // query inputs
     if (!document.querySelector('.sidebar__input-container')){
         let queryContainer = new QueryContainer();
         queryContainer.list = HeaderElements[1].content;
