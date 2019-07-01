@@ -142,8 +142,6 @@
 .reliability__sidebar-control.display{
   display: none;
 }
-f
-
 #content-about>.reliability__sidebar-control{
   height: 90%;
 }
@@ -153,8 +151,6 @@ f
   width: 90%;
   padding: 0.5rem;
   font-size: 1rem;
-}
-.reliability__layer-checkbox{
 }
 .reliability__layer-emphasis{
   color: #08506d;

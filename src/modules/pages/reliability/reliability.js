@@ -84,14 +84,10 @@ const BuildMap = pageContent =>{
   */
   const LayerVisibilityCheck = layerName =>{
     let layerId = `reliability-${layerName}`
-    // ,radioId = `#legend-${layerName}`
 
     if (map.getLayoutProperty(layerId, 'visibility') === 'visible') {
-      //const name = layerId.split('-')[1]
-      //document.querySelector(`input[name=${name}]`).checked = true
       const input = document.getElementById(layerName)
       input.checked = true
-     // document.querySelector(radioId).style.display = 'block'
     }
   }
 
@@ -183,7 +179,6 @@ const BuildMap = pageContent =>{
   }
 
 
-
   let extent = {
     center: [-75.234, 40.061],
     zoom: 8.4
@@ -233,15 +228,18 @@ const BuildSidebar = (map, data) =>{
     regional: {
       'reliability-score': {
         title: 'Reliability Score',
-        unit: false
+        unit: false,
+        page: 'regional'
       },
       'reliability-weighted': {
         title: 'Reliability Score Weighted by Ridership',
-        unit: false
+        unit: false,
+        page: 'regional'
       },
       'reliability-tti': {
         title: 'Travel Time Index',
-        unit: false
+        unit: false,
+        page: 'regional'
       },
     },
     filter: {
@@ -250,19 +248,23 @@ const BuildSidebar = (map, data) =>{
     input: {
       'reliability-speed':  {
         title: 'Average Scheduled Speed',
-        unit: 'Miles per Hour (MPH)'
+        unit: 'Miles per Hour (MPH)',
+        page: 'detail'
       },
       'reliability-otp':  {
         title: 'On Time Performance',
-        unit: 'Percent of On-Time Stops (%)'
+        unit: 'Percent of On-Time Stops (%)',
+        page: 'detail'
       },
       'reliability-septa':  {
         title: 'SEPTA Surface Transit Loads',
-        unit: 'Average Daily Ridership'
+        unit: 'Average Daily Ridership',
+        page: 'detail'
       },
       'reliability-njt':  {
         title: 'New Jersey Transit Ridership',
-        unit: 'Average Daily Ridership'
+        unit: 'Average Daily Ridership',
+        page: 'detail'
       }
     }
   }
@@ -350,16 +352,36 @@ const BuildSidebar = (map, data) =>{
 
   // build layer control portion of layer section 
   const BuildLayerControl = (element, layers) =>{
+
     // function to run when radio is changed. Displays correct layer on map and corresponding legend item
-    const LayerVisibilityChange = layer =>{
-      let layerID = `reliability-${layer}`,
-        radios = document.querySelectorAll('.reliability__layer-input'),
-        visibility = map.getLayoutProperty(layerID, 'visibility')
+    const LayerVisibilityChange = e =>{
+      e.preventDefault()
 
-        // #21: just rebuild this entire thing
+      // get the layer/legend to be toggled on and the correct set of inputs to loop thru (regional or detail)
+      const target = e.target
+      const layerId = target.id
+      const page = target.classList[0].split('-')[2] // this is so janky
+      let layer = `reliability-${layerId}`
 
-      //for (let refLayer in styles.reliability.layers) if (refLayer == layer) visibility == 'none' ? map.setLayoutProperty(layerID, 'visibility', 'visible') : map.setLayoutProperty(layerID, 'visibility', 'none')
-      //for (let radio of radios) radio.checked ? document.querySelector(`#legend-${radio.id}`).style.display = 'block' : document.querySelector(`#legend-${radio.id}`).style.display = 'none'
+      // get all other form inputs from that particular page (regional or detail)
+      const otherInputs = document.querySelectorAll(`.reliability__layer-input-${page}`)
+      const length = otherInputs.length
+      let i = 0
+
+      // loop thru all the inputs to turn off all but the newly selected one
+      for(i; i < length; i++){
+        const loopedLayerId = otherInputs[i].id
+        const legend = document.getElementById(`legend-${loopedLayerId}`)
+
+        if(loopedLayerId === layerId){
+          map.setLayoutProperty(layer, 'visibility', 'visible')
+          legend.style.display = 'block'
+        }else{
+          const undoLayer = `reliability-${loopedLayerId}`
+          map.setLayoutProperty(undoLayer, 'visibility', 'none')
+          legend.style.display = 'none'
+        }
+      }
     }
 
     // build legends
@@ -426,29 +448,32 @@ const BuildSidebar = (map, data) =>{
     // build layer check radio
     for (let layer in layers){
       
-      // #21 rebuild this entire thing - instead of this super nested div situation, make it a form and trigger layer change on form change. 
       let option = document.createElement('div'),
         radio = document.createElement('input'),
         label = document.createElement('label')
       
+      // use page to determine it's associated layers
+      const page = layers[layer].page
+
       option.classList.add('reliability__layer-option')
       
       radio.setAttribute('type', 'radio')
       radio.id = layer.split('-')[1]
       radio.setAttribute('name', 'reliability-regional-layers')
-      radio.classList.add('reliability__layer-input')
+        
+      radio.classList.add(`reliability__layer-input-${page}`)
 
       label.setAttribute('for', layer.split('-')[1])
       label.innerHTML = layers[layer].title
-
-      // @todo #21: delete this once the form.onchange function is set up
-      radio.addEventListener('input', ()=> LayerVisibilityChange(radio.id))
 
       option.appendChild(radio)
       option.appendChild(label)
       BuildLegendSection(legendSection, radio.id)
       layerSection.appendChild(option)
     }
+
+    // handle layer toggles
+    layerSection.onchange = e => LayerVisibilityChange(e)
 
     BuildControlToggle(element, 'Layer Controls')
     element.appendChild(layerSection)
