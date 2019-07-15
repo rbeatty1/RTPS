@@ -245,12 +245,17 @@ const StationPopUp = (marker, map) =>{
 
 */
 const BuildMap = container =>{
+  // adjust zoom level on mobile
+  let mobileZoom;
+  const windowWidth = window.innerWidth
+  if(windowWidth <= 420) mobileZoom = 7.3
 
   // base extent 
   const extent = {
     center: [-75.247, 40.066],
-    zoom: 8.4
+    zoom: mobileZoom || 8.4
   }
+
   mapboxgl.accessToken = 'pk.eyJ1IjoiYmVhdHR5cmUxIiwiYSI6ImNqOGFpY3o0cTAzcXoycXE4ZTg3d3g5ZGUifQ.VHOvVoTgZ5cRko0NanhtwA';
 
   // base map properties
@@ -259,7 +264,7 @@ const BuildMap = container =>{
     style: 'mapbox://styles/beattyre1/cjky7crbr17og2rldo6g7w5al',
     center: extent.center,
     zoom: extent.zoom,
-    minZoom: 8
+    minZoom: mobileZoom ? null : 8
   })
 
   // needs function scope so it can be altered & destroyed
@@ -394,6 +399,7 @@ const BuildPage = content =>{
       offset: 50
     })
       .on('enter', e=>{
+        console.log('entered the scroll panel ')
         // set active classes to section and corresponding dot navigation element
         let link = document.querySelector(`#${element.id}-link`),
           data = content.props.sections[element.id].content.map
