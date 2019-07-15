@@ -1550,10 +1550,16 @@ const LoadRail = map => {
     @return: mapbox gl map component
 */
 const BuildMap = container => {
+    // adjust zoom level on mobile
+  let mobileZoom;
+  const windowWidth = window.innerWidth
+  if(windowWidth <= 420) mobileZoom = 7.3
+
+
   // base extent
   const extent = {
     center: [-75.247, 40.066],
-    zoom: 8.4
+    zoom: mobileZoom || 8.4
   };
   mapboxgl.accessToken =
     "pk.eyJ1IjoiYmVhdHR5cmUxIiwiYSI6ImNqOGFpY3o0cTAzcXoycXE4ZTg3d3g5ZGUifQ.VHOvVoTgZ5cRko0NanhtwA";
