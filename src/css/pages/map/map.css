@@ -46,3 +46,18 @@
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+@media all and (max-width: 800px) {
+    .map__container {
+        width: 100%;
+        height: 60%;
+      }
+      .mapboxgl-ctrl-group > button {
+          width: 20px;
+          height: 20px;
+      }
+      /* what in tarnation */
+      .mapboxgl-ctrl-icon.mapboxgl-ctrl-compass > .mapboxgl-ctrl-compass-arrow {
+          margin: 0;
+      }
+}

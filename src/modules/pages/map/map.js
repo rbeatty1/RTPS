@@ -6,11 +6,16 @@ import { ResultsSummary } from './sidebar/resultsSummary';
 import { LoadLayers, addRailLayers } from '../../../utils/loadMapLayers.js'
 import { CreateDvrpcNavControl } from '../../../utils/defaultExtentControl';
 
+// adjust zoom level on mobile
+let mobileZoom;
+const windowWidth = window.innerWidth
+if(windowWidth <= 420) mobileZoom = 7.3
 
 const extent = {
   center: [-75.234, 40.061],
-  zoom: 8.4
+  zoom: mobileZoom || 8.4
 }
+
 /* BuildMap() -- rbeatty
     @desc: Build the map that the page lands on
     @params:
