@@ -162,10 +162,14 @@ const BuildMap = pageContent =>{
     }
   }
 
+  // adjust zoom level on mobile
+  let mobileZoom;
+  const windowWidth = window.innerWidth
+  if(windowWidth <= 420) mobileZoom = 7.3
 
   let extent = {
     center: [-75.234, 40.061],
-    zoom: 8.4
+    zoom: mobileZoom || 8.4
   }
   mapboxgl.accessToken = 'pk.eyJ1IjoiYmVhdHR5cmUxIiwiYSI6ImNqOGFpY3o0cTAzcXoycXE4ZTg3d3g5ZGUifQ.VHOvVoTgZ5cRko0NanhtwA';
   let map = new mapboxgl.Map({

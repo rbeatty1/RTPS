@@ -30,3 +30,9 @@ footer{
 #footer-version{
     text-align: center;
 }
+
+@media all and (max-width: 800px ) {
+    footer {
+        margin-top: 10vh;
+    }
+}

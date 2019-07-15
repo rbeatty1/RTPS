@@ -311,3 +311,26 @@ input[type=checkbox]:checked>label{
 .reliability__popup-data{
   color: #aaa
 }
+
+@media all and (max-width: 800px) {
+  #reliability__page {
+    flex-direction: column;
+    font-size: 14px;
+  }
+  #reliability__map {
+    width: 100%;
+    height: 60%;
+  }
+  #reliability__sidebar {
+    width: 100%;
+    height: 40%;
+  }
+  .reliability__sidebar-tabs {
+    height: auto;
+    margin-bottom: 0;
+  }
+  .reliability__sidebar-nav {
+    padding: 5% 0;
+    margin: 0;
+  }
+}
