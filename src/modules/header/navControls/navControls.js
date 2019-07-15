@@ -56,10 +56,9 @@ const _createNavLink = item =>{
 
     // only create tooltip elements on desktop
     const windowWidth = window.innerWidth
-    if(windowWidth > 420) {
-        const tooltip = createTooltip(item.title)
-        link.appendChild(tooltip)
-    }
+    let tooltip
+    if(windowWidth > 420) tooltip = createTooltip(item.title)
+    if(tooltip) link.appendChild(tooltip)
 
     // add a tooltip on hover
     link.onmouseover = () => tooltip.style.visibility = 'visible'

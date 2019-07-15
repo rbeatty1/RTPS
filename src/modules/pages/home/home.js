@@ -220,6 +220,9 @@ class Home{
       let header = document.querySelector('header')
       // remove header
       header.parentNode.removeChild(header)
+
+      // reset bakcround
+      main.style.background = '#fff'
     }
     Landing(this.props, main);
   }

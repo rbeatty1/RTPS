@@ -119,3 +119,33 @@
   text-decoration: none;
   color: #06506D;
 }
+
+@media all and (max-width: 800px) {
+  #logo-container svg{
+    width: 50%;
+  }
+  #home nav button {
+    width: 23%;
+    font-size: 0.8rem;
+  }
+  #home nav button.active {
+    border: 2px solid white;
+  }
+  #desc-container {
+    padding-top: 15%;
+    padding-left: 0;
+  }
+  #desc-container p {
+    font-size: 1rem;
+    width: 95%;
+    margin: 15% auto 0 auto;
+  }
+  #desc-container p strong {
+    font-size: 1.1rem;
+  }
+  .content-links {
+    margin-top: 15%;
+    font-size: 1.1rem;
+    margin-left: 3%;
+  }
+}

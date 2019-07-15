@@ -399,7 +399,6 @@ const BuildPage = content =>{
       offset: 50
     })
       .on('enter', e=>{
-        console.log('entered the scroll panel ')
         // set active classes to section and corresponding dot navigation element
         let link = document.querySelector(`#${element.id}-link`),
           data = content.props.sections[element.id].content.map
