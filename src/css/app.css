@@ -20,3 +20,9 @@ abbr{
     text-decoration: none;
     text-transform: uppercase;
 }
+
+@media all and (max-width: 800px ) {
+    #app {
+        font-size: 14px;
+    }
+}

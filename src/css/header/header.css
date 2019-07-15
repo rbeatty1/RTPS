@@ -48,3 +48,16 @@
     background: #08506d;
     margin-bottom: 5%;
 }
+
+@media all and (max-width: 800px) {
+    #header__nav-container {
+        width: 50%;
+    }
+    .header__nav-links-icons {
+        width: 15px !important;
+        height: 15px !important;
+    }
+    #page-title {
+        font-size: 0.8rem;
+    }
+}

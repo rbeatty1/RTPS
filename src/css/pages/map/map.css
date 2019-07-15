@@ -17,9 +17,6 @@
     flex-flow: column;
     align-items: center;
     width: 30%;
-    /* darker backgrounds that can still be accessible w/white text:
-        63792A
-    */
     background: #63792A;
 }
 

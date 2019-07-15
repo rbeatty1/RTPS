@@ -54,8 +54,12 @@ const _createNavLink = item =>{
         SetNewURL(e.target.getAttribute('data-tool'), 'tool')
     })
 
-    const tooltip = createTooltip(item.title)
-    link.appendChild(tooltip)
+    // only create tooltip elements on desktop
+    const windowWidth = window.innerWidth
+    if(windowWidth > 420) {
+        const tooltip = createTooltip(item.title)
+        link.appendChild(tooltip)
+    }
 
     // add a tooltip on hover
     link.onmouseover = () => tooltip.style.visibility = 'visible'
