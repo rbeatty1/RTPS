@@ -244,9 +244,11 @@ const StationPopUp = (marker, map) =>{
     map: Mapbox GL Element
 
 */
+// putting mobileZoom in the global scope of this file so that buildScene can have access to device information without having to recalculate it. This should be a class property, but the functions aren't class methods so what's the point.
+let mobileZoom;
+
 const BuildMap = container =>{
   // adjust zoom level on mobile
-  let mobileZoom;
   const windowWidth = window.innerWidth
   if(windowWidth <= 420) mobileZoom = 7.3
 
@@ -390,13 +392,16 @@ const BuildPage = content =>{
   */
   const BuildScene = element =>{
 
+    // use the calculated check for mobile to adjust the scrollMagic offset parameters
+    const offset = mobileZoom ? -80 : 50
+
     // define ScrollMagic Scene
     new ScrollMagic.Scene({
       // element to trigger functions on
       triggerElement: element,
       // set scrolling duration
       duration: element.getBoundingClientRect().height + 100,
-      offset: 50
+      offset
     })
       .on('enter', e=>{
         // set active classes to section and corresponding dot navigation element
@@ -507,8 +512,9 @@ const BuildPage = content =>{
         const section = document.getElementById(sectionId)
         const textContainer = document.querySelector('.accessibility-text')
 
-        // get the offset + a buffer to scroll to
-        const offsetTop = section.offsetTop - 10
+        // depending on mobile or desktop, get the offset + a buffer to scroll to
+        let offsetAdjustment = mobileZoom ? 365 : 10
+        const offsetTop = section.offsetTop - offsetAdjustment
 
         // do the scroll
         textContainer.scrollTo({
