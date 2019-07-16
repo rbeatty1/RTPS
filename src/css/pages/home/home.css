@@ -126,6 +126,9 @@
   }
 }
 @media all and (max-width: 800px) {
+  #logo-container {
+    height: 48%;
+  }
   #logo-container svg{
     width: 45%;
     margin-left: 5%;
