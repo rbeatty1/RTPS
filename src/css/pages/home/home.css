@@ -20,7 +20,7 @@
 
 #logo-container svg{
   position: relative;
-  left: 5%;
+  left: 10%;
   top: 10%;
   width: 20%;
   height: auto;
@@ -121,6 +121,7 @@
 @media all and (max-width: 800px) {
   #logo-container svg{
     width: 50%;
+    left: 5%;
   }
   #home nav button {
     width: 23%;
