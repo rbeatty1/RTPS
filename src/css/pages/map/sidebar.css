@@ -215,5 +215,12 @@
   }
   .map__sidebar-menuContainer {
     height: auto;
+    margin-bottom: 0;
   }
+  .map__sidebar-menuHeader {
+    height: auto;
+    margin: 0;
+    padding: 4% 0;
+  } 
+
 }
