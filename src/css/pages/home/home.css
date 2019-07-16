@@ -19,9 +19,7 @@
 }
 
 #logo-container svg{
-  position: relative;
-  left: 10%;
-  top: 10%;
+  margin: 5% 0 0 10%;
   width: 20%;
   height: auto;
 }
@@ -60,7 +58,7 @@
 }
 
 #home nav{
-  height: 3%;
+  height: 30px;
   background: #08506d;
   display: flex;
   justify-content: center;
@@ -117,11 +115,23 @@
   text-decoration: none;
   color: #06506D;
 }
-
+@media all and (min-width: 1800px) {
+  #logo-container svg{
+    margin-top: 2%;
+    margin-left: 11%;
+    width: 15%;
+  }
+  #home nav button {
+    width: 12%;
+  }
+}
 @media all and (max-width: 800px) {
   #logo-container svg{
-    width: 50%;
-    left: 5%;
+    width: 45%;
+    margin-left: 5%;
+  }
+  #home nav {
+    height: 15px;
   }
   #home nav button {
     width: 23%;
@@ -131,7 +141,7 @@
     border: 2px solid white;
   }
   #desc-container {
-    margin: 25% 0 0 0;
+    margin: 23% 0 0 0;
   }
   #desc-container p {
     font-size: 1rem;
