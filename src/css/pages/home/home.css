@@ -132,6 +132,8 @@
   #logo-container svg{
     width: 45%;
     margin-left: 5%;
+    /* margin-bottom to accommodate safari being awful and ignoring height */
+    margin-bottom: 15%
   }
   #home nav {
     height: 15px;
