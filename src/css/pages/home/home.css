@@ -3,23 +3,20 @@
   width: 100%;
   font-family: 'Roboto', 'Arial', sans-serif;
   order: 2;
-  overflow-y: auto;
   overflow-x: hidden;
-
 }
 
 #home section{
   width: 100%;
 }
 
-#logo-container{
-  top: 0;
-  height: 49.5%;
+#logo-container{  
   background: #fff;
+  padding-bottom: 15%;
 }
 
 #logo-container svg{
-  margin: 5% 0 0 10%;
+  margin: 4% 0 0 10%;
   width: 20%;
   height: auto;
 }
@@ -34,7 +31,8 @@
 }
 
 #desc-container{
-  margin: 10% 0 0 17%;
+  width: 100%;
+  margin: 10% 0 25px 17%;
 }
 
 #desc-container.active{
@@ -69,7 +67,8 @@
 }
 
 #home nav button{
-  width: 14%;
+  height: 190px;
+  width: 190px;
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -116,34 +115,36 @@
   color: #06506D;
 }
 @media all and (min-width: 1800px) {
+  #logo-container {
+    padding-bottom: 13%;
+  }
   #logo-container svg{
-    margin-top: 2%;
+    margin-top: 3%;
     margin-left: 11%;
     width: 15%;
   }
   #home nav button {
-    width: 12%;
+    height: 270px;
+    width: 270px;
+  }
+  #desc-container {
+    margin-top: 11%;
   }
 }
-@media all and (max-width: 800px) {
+
+/* split screen */
+@media all and (max-width: 960px ) {
   #logo-container {
-    height: 48%;
+    padding-bottom: 38%;
   }
-  #logo-container svg{
-    width: 45%;
-    margin-left: 5%;
-    /* margin-bottom to accommodate safari being awful and ignoring height */
-    margin-bottom: 15%
-  }
-  #home nav {
-    height: 15px;
+  #logo-container svg {
+    width: 30%;
+    margin-left: 2.5%;
   }
   #home nav button {
-    width: 23%;
-    font-size: 0.8rem;
-  }
-  #home nav button.active {
-    border: 2px solid white;
+    height: 120px;
+    width: 120px;
+    font-size: 1rem;
   }
   #desc-container {
     margin: 23% 0 0 0;
@@ -165,10 +166,33 @@
   }
 }
 
+/* mobile */
+@media all and (max-width: 500px) {
+  #logo-container {
+    padding-bottom: 48%;
+  }
+  #logo-container svg{
+    width: 45%;
+    margin-top: 5%;
+  }
+  #home nav {
+    height: 15px;
+  }
+  #home nav button {
+    height: 80px;
+    width: 80px;
+    font-size: 0.8rem;
+  }
+  #home nav button.active {
+    border: 2px solid white;
+  }
+}
+
 @media all and (max-width: 330px) {
   #home nav button {
-    width: 24%;
-    font-size: 0.7rem;
+    height: 67px;
+    width: 67px;
+    font-size: 0.65rem;
   }
   #desc-container {
     margin: 20% 0 0 0 ;

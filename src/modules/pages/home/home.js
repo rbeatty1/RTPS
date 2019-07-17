@@ -87,7 +87,7 @@ const Landing = (props, appContainer) =>{
   while (i < 3){
     // the second element is the nav links and does different shtuff
     if (i != 1){
-      let section = document.createElement('section')
+      let section = document.createElement('div')
 
       // build logo container & insert logo svg
       if(i == 0){
@@ -168,10 +168,6 @@ const Landing = (props, appContainer) =>{
         nav.appendChild(link)
       }
       appContainer.appendChild(nav)
-      let buttons = nav.querySelectorAll('button')
-      for (let link of buttons){
-        link.style.height = `${link.clientWidth}px`
-      }
     }
     i ++
   }
