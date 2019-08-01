@@ -173,7 +173,7 @@ const contentRef = {
           }
         }
       },
-      text:`<p>This map shows the expected change in car trips entering or leaving <abbr title="Traffic Analysis Zone">TAZ</abbr>s in 24 hours when service frequency is doubled. The darker the color, the greater the expected reduction in car trips when transit frequencies are doubled.</p>`
+      text:`<p>This map shows the expected change in car trips entering or leaving <abbr title="Traffic Analysis Zone">TAZ</abbr>s in 24 hours when service frequency is doubled based on DVRPC's regional travel demand model. The darker the color, the greater the expected reduction in car trips when transit frequencies are doubled.</p>`
     }
   },
   railLineChange: {
@@ -205,7 +205,7 @@ const contentRef = {
         },
         {
           units: "Estimated Passengers per Day",
-          name: "Absolute Ridership Change",
+          name: "Percentage Ridership Change",
           scheme: [
             ["< 0%", "#aaa"],
             ["< 30% ", "#aaa"],
@@ -276,8 +276,8 @@ const contentRef = {
       table: false,
       text:`
         <p>This map shows the bus routes with the greatest expected increase in daily ridership when service frequency is doubled. Bus ridership refers to the number of passengers using that bus route on an average weekday. The orange routes are the top 25 in estimated <strong>absolute</strong> ridership gain. The darker the orange, the greater the absolute increase in ridership.</p>
-        <p>The blue lines show the 25 bus routes with the largest percentage increase in daily ridership when service frequency is doubled. The darker the blue , the greater the percentage increase in expected ridership.</p>
-        <p>It is important to keep in mind that percentage change is sometimes deceiving when base ridership is low, making a small increase look like a substantial change. Only those bus routes with an estimated base scenario ridership of at least 100 are included. Many of the blue routes are in suburban areas where base frequencies tend to be lower, while many of the orange routes are in urban areas where frequency and ridership are already high.</p>
+        <p>The blue lines show the 25 bus routes with the largest <strong>percentage increase</strong> in daily ridership when service frequency is doubled. The darker the blue, the greater the <strong>percentage increase</strong> in expected ridership.</p>
+        <p>It is important to keep in mind that percentage change is sometimes deceiving when base ridership is low, making a small increase look like a substantial change. Only those bus routes with an estimated base scenario ridership of at least 100 are included. Many of the blue routes are in suburban areas where base frequencies tend to be lower, while many of the orange routes are in urban areas where frequency and ridership are already high. There are no bus routes in the top 25 for both absolute and percent change in ridership.</p>
       `}
   },
   mapData: {

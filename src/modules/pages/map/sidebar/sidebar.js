@@ -113,13 +113,13 @@ const BuildMenus = appContent =>{
         and the <strong>density score</strong>. The result was then weighted by the <strong>demand score</strong>
         ensuring that the <abbr title="Origin-Destination">OD</abbr> pairs identified as a transit gap that also
         have a high demand for travel are considered a higher priority.`,
-        direct: `<strong>Directness Score:</strong> For each Origin-Destination (<abbr title="Origin-Destination">OD</abbr>) pair, of <abbr title="Traffic Analysis Zone">TAZ</abbr>
+        direct: `<strong>Directness Score:</strong> For each Origin-Destination (<abbr title="Origin-Destination">OD</abbr>) pair of <abbr title="Traffic Analysis Zone">TAZ</abbr>
           in the region, the directness score was determined by the presence of a transit connection, how it compared
           to driving in terms of time and distrance, the number of transfers required for the trip, and the scheduled wait
           time for those transfers. A high score means the <abbr title="Origin-Destination">OD</abbr> pair was not served 
           or not well connected by existing transit service.`,
         density: `<strong>Density Score:</strong> Density is a measure of transit supportiveness using <abbr title="Delaware Valley Regional Planning Commission">DVRPC</abbr>'s
-        2015 TransitScore which is based on the density of population, employment, and zero car households. The transit score for the origin
+        2015 <a href="/Reports/07005.pdf">Transit Score</a> which is based on the density of population, employment, and zero car households. The transit score for the origin
         was added to the transit score for the destination to get the density score. The higher the density score, the more transit
         supportive the <abbr title="Origin/Destination">OD</abbr> pair.`,
         demand: `<strong>Demand Score:</strong> Demand is based on the total demand for travel between each <abbr title="Origin/Destination">OD</abbr> pair based on
@@ -172,7 +172,7 @@ const BuildMenus = appContent =>{
             const summary = document.createElement('p')
             summary.id = 'gap__analysis-summary'
             
-            summary.textContent = content.analysisSummary
+            summary.innerHTML = content.analysisSummary
             jawn.appendChild(summary)
             break
           default:
@@ -240,7 +240,7 @@ class Sidebar{
       elements: {
         summary: "This regional summary map shows <abbr title='Traffic Analysis Zone'>TAZ</abbr>s symbolized using the average network gap score. The darker the color, the higher the score, indicating a higher priority transit gap. A transit gap is defined as an in-demand connection between transit supportive places where transit is either not available or not competitive with driving.",
         analysis: {
-          analysisSummary: 'This dynamic map allows users to identify and prioritize transit gaps to and from specific areas of interest. Select a municipality or TAZ to see where transit connections can be improved or added.',
+          analysisSummary: `This dynamic map allows users to identify and prioritize transit gaps to and from specific areas of interest. Select a municipality or Transportation Analysis Zone <abbr title="Transportation Analysis Zone">(TAZ)</abbr> to see where transit connections can be improved or added.`,
           inputs: {
             geography: '',
             selection: '',

@@ -1,5 +1,5 @@
 {
-  "name": "rtps",
+  "name": "rtsp",
   "version": "0.0.30",
   "description": "Tool to identify different types of transit gaps to assist in making data-driven decisions to evaluate and prioritize transit improvements throughout the Philadelphia region.",
   "main": "app.js",
@@ -21,7 +21,7 @@
   "license": "CC0-1.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/rbeatty1/RTPS.git"
+    "url": "https://github.com/dvrpc/RTPS.git"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",

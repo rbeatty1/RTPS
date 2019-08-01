@@ -11,7 +11,7 @@ let layerRef = {
   inputs:{
     speed: {
       title: "Average Scheduled Speed",
-      info: "The average scheduled speed for bus routes that use a road segment was calcluated using the distance between stop points and the scheduled time for each stop point as provided in the <abbr class='reliability__abbr' title='General Transit Feed Specification'>GTFS</abbr>. If multiple bus routes use a road segment, a weighted average was calculated to ensure that the buses using the segment most throughout the day were considered more heavily."
+      info: "The average scheduled speed for bus routes that use a road segment was calcluated using the distance between stop points and the scheduled time for each stop point as provided in the General Transit Feed Specification <abbr class='reliability__abbr' title='General Transit Feed Specification'>(GTFS)</abbr>. If multiple bus routes use a road segment, a weighted average was calculated to ensure that the buses using the segment most throughout the day were considered more heavily."
     },
     otp:{
       title: "On Time Performance (OTP)",
@@ -19,19 +19,19 @@ let layerRef = {
     },
     tti: {
       title: "Travel Time Index (TTI)",
-      info: "<abbr class='reliability__abbr' title='Travel Time Index'>TTI</abbr> is the ratio of peak hour travel time to free flow travel time. The <abbr class='reliability__abbr' title='Travel Time Index'>TTI</abbr> is used in this analysis accounts for all vehicle types, not just transit vehicles. High <abbr class='reliability__abbr' title='Travel Time Index'>TTI</abbr> indicates congestion which negatively impacts surface transit reliability. <abbr class='reliability__abbr' title='Travel Time Index'>TTI</abbr> was available from INRIX on many roads throughout the region. An estimate of <abbr class='reliability__abbr' title='Travel Time Index'>TTI</abbr> from the regional travel model was used to fill gaps in the INRIX data."
+      info: "<abbr class='reliability__abbr' title='Travel Time Index'>TTI</abbr> is the ratio of peak hour travel time to free flow travel time. The <abbr class='reliability__abbr' title='Travel Time Index'>TTI</abbr> used in this analysis accounts for all vehicle types, not just transit vehicles. High <abbr class='reliability__abbr' title='Travel Time Index'>TTI</abbr> indicates congestion which negatively impacts surface transit reliability. <abbr class='reliability__abbr' title='Travel Time Index'>TTI</abbr> was available from INRIX on many roads throughout the region. An estimate of <abbr class='reliability__abbr' title='Travel Time Index'>TTI</abbr> from the regional travel model was used to fill gaps in the INRIX data."
     },
     septa: {
-      title: "SEPTA Ridership (2017)",
-      info: "2017 daily average ridership for <abbr class='reliability__abbr' title='Southeastern Pennsylvania Transportation Authority'>SEPTA</abbr> bus routes was available at the stop level."
+      title: "SEPTA Surface Transit Loads (2017)",
+      info: "2017 daily average ridership for SEPTA bus routes was available at the stop level. General Transit Feed Specification <abbr class='reliability__abbr' title='General Transit Feed Specification'>(GTFS)</abbr> was used to convert stop-level ridership to segment-level passenger loads."
     },
     njt: {
-      title: "NJ Transit Ridership (2016)",
+      title: "NJ TRANSIT Ridership (2016)",
       info: "2016-2017 daily average ridership for <abbr class='reliability__abbr' title='New Jersey'>NJ</abbr> Transit bus routes was provided at the stop level."
     }
   },
   outputs:{
-    score: "The input layers were combined to calculate the overall measure of reliability. The <span class='reliability__sidebar-emphasis'>Reliability Score</span> layer shows the results of combining <abbr class='reliability__abbr' title='Travel Time Index'>TTI</abbr>, <abbr class='reliability__abbr' title='On Time Performance'>OTP</abbr>, and scheduled speed. A high reliability score is indicative of segments that may benefit from targeted improvements to improve transit operations.",
+    score: "The input layers were combined to calculate the overall measure of reliability. The <span class='reliability__sidebar-emphasis'>Reliability Score</span> layer shows the results of combining <abbr class='reliability__abbr' title='Travel Time Index'>TTI</abbr>, <abbr class='reliability__abbr' title='On Time Performance'>OTP</abbr>, and scheduled speed. A high reliability score is indicative of segments that may benefit from targeted improvements to transit operations.",
     weight: "The results were then weighted by ridership (<span class='reliability__sidebar-emphasis'>Ridership Weighted Reliability Score</span>) to highlight segments that impact high ridership surface transit service an allow for further prioritization of improvements."
   },
   sources: {
@@ -94,7 +94,7 @@ const BuildMap = pageContent =>{
       // set variables
       let colorRef = styles.reliability.layers[layer].paint['line-color'],
         field = colorRef[1][1],
-        data = props[field],
+        data = props[field].toFixed(2),
         container = document.createElement('div'),
         title = document.createElement('h3'),
         property = document.createElement('p'),
@@ -214,17 +214,20 @@ const BuildSidebar = (map, data) =>{
       'reliability-score': {
         title: 'Reliability Score',
         unit: false,
-        page: 'regional'
+        page: 'regional',
+        description: 'A composite measure of TTI, OTP, and scheduled speed. High reliability score identifies segments that may benefit from targeted improvements to transit operations.'
       },
       'reliability-weighted': {
         title: 'Reliability Score Weighted by Ridership',
         unit: false,
-        page: 'regional'
+        page: 'regional',
+        description: 'Results weighted by ridership to highlight unreliable segments that impact the most passengers.'
       },
       'reliability-tti': {
         title: 'Travel Time Index',
         unit: false,
-        page: 'regional'
+        page: 'regional',
+        description: 'TTI is the ratio of peak hour travel time to free flow travel time.'
       },
     },
     filter: {
@@ -247,7 +250,7 @@ const BuildSidebar = (map, data) =>{
         page: 'detail'
       },
       'reliability-njt':  {
-        title: 'New Jersey Transit Ridership',
+        title: 'NJ TRANSIT Ridership',
         unit: 'Average Daily Ridership',
         page: 'detail'
       }
@@ -259,7 +262,7 @@ const BuildSidebar = (map, data) =>{
       sections = {
         regional: 'Regional Layers',
         input: 'Route Detail',
-        about: 'About'
+        about: 'Glossary'
       }
     
     tabs.classList.add('reliability__sidebar-tabs')
@@ -438,12 +441,14 @@ const BuildSidebar = (map, data) =>{
       
       let option = document.createElement('div'),
         radio = document.createElement('input'),
-        label = document.createElement('label')
+        label = document.createElement('label'),
+        optionBlurb = document.createElement('small')
       
       // use page to determine it's associated layers
       const page = layers[layer].page
 
       option.classList.add('reliability__layer-option')
+      optionBlurb.classList.add('reliability__layer-option-blurb')
       
       radio.setAttribute('type', 'radio')
       radio.id = layer.split('-')[1]
@@ -457,11 +462,15 @@ const BuildSidebar = (map, data) =>{
 
       label.setAttribute('for', layer.split('-')[1])
       label.innerHTML = layers[layer].title
+      optionBlurb.textContent = layers[layer].description
+
+      //
 
       option.appendChild(radio)
       option.appendChild(label)
       BuildLegendSection(legendSection, radio.id)
       layerSection.appendChild(option)
+      layerSection.appendChild(optionBlurb)
     }
 
     // handle layer toggles

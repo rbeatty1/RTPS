@@ -209,10 +209,10 @@
   justify-content: center;
 }
 .reliability__filter-label{
-  width: 41%;
+  width: 48%;
 }
 .reliability__filter-input{
-  width: 35%;
+  width: 25%;
 }
 .reliability__filter-btn{
   color: white;
@@ -238,6 +238,13 @@
   padding: 0;
   justify-content: center; 
   align-items: center;
+}
+.reliability__layer-option-blurb {
+  display: block;
+  width: 90%;
+  margin: 0 auto;
+  padding-bottom: 0.8rem;
+  font-style: italic;
 }
 
 .reliability__filter-options.visible{

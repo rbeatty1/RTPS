@@ -818,9 +818,7 @@ export class Accessibility{
           content: {
             text: {
               id: 'AccFut',
-              description: `<p>This map considers which stations are programmed for wheelchair accessibility and mobility assistance improvements or have improvements in progress. 
-              It includes stations that are currently accessible and those that are programmed for improvement. Again, the darker the color, the more essential service destinations 
-              are reachable via rail from that zone.</p>`
+              description: `<p>This map considers which stations are programmed for wheelchair accessibility and mobility assistance improvements or have improvements in progress. Again, the darker the color, the more essential service destinations are reachable via rail from that zone.</p>`
             },
             map: {
               paint: [
@@ -906,7 +904,7 @@ export class Accessibility{
             },
             2: {
               title: 'Destinations Reachable by Wheelchair Users',
-              text: 'The lack of color surrounding the Collingswood station shows that wheelchair users would not be able to reach any destinations via rail from that station. This is because the station is currently not wheelchair accessible',
+              text: 'The lack of color surrounding the Collingswood station shows that wheelchair users would not be able to reach any destinations via rail from that station. This is because the station is currently not wheelchair accessible.',
               map: {
                 paint: [
                   'interpolate', ['linear'], ['get', 'AccCur'],
