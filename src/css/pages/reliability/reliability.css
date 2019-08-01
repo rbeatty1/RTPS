@@ -239,6 +239,13 @@
   justify-content: center; 
   align-items: center;
 }
+.reliability__layer-option-blurb {
+  display: block;
+  width: 90%;
+  margin: 0 auto;
+  padding-bottom: 0.8rem;
+  font-style: italic;
+}
 
 .reliability__filter-options.visible{
   display: flex;

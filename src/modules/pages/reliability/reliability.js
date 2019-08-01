@@ -214,17 +214,20 @@ const BuildSidebar = (map, data) =>{
       'reliability-score': {
         title: 'Reliability Score',
         unit: false,
-        page: 'regional'
+        page: 'regional',
+        description: 'A composite measure of TTI, OTP, and scheduled speed. High reliability score identifies segments that may benefit from targeted improvements to transit operations.'
       },
       'reliability-weighted': {
         title: 'Reliability Score Weighted by Ridership',
         unit: false,
-        page: 'regional'
+        page: 'regional',
+        description: 'Results weighted by ridership to highlight unreliable segments that impact the most passengers.'
       },
       'reliability-tti': {
         title: 'Travel Time Index',
         unit: false,
-        page: 'regional'
+        page: 'regional',
+        description: 'TTI is the ratio of peak hour travel time to free flow travel time.'
       },
     },
     filter: {
@@ -438,12 +441,14 @@ const BuildSidebar = (map, data) =>{
       
       let option = document.createElement('div'),
         radio = document.createElement('input'),
-        label = document.createElement('label')
+        label = document.createElement('label'),
+        optionBlurb = document.createElement('small')
       
       // use page to determine it's associated layers
       const page = layers[layer].page
 
       option.classList.add('reliability__layer-option')
+      optionBlurb.classList.add('reliability__layer-option-blurb')
       
       radio.setAttribute('type', 'radio')
       radio.id = layer.split('-')[1]
@@ -457,11 +462,15 @@ const BuildSidebar = (map, data) =>{
 
       label.setAttribute('for', layer.split('-')[1])
       label.innerHTML = layers[layer].title
+      optionBlurb.textContent = layers[layer].description
+
+      //
 
       option.appendChild(radio)
       option.appendChild(label)
       BuildLegendSection(legendSection, radio.id)
       layerSection.appendChild(option)
+      layerSection.appendChild(optionBlurb)
     }
 
     // handle layer toggles
