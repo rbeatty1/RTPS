@@ -94,7 +94,7 @@ const BuildMap = pageContent =>{
       // set variables
       let colorRef = styles.reliability.layers[layer].paint['line-color'],
         field = colorRef[1][1],
-        data = props[field],
+        data = props[field].toFixed(2),
         container = document.createElement('div'),
         title = document.createElement('h3'),
         property = document.createElement('p'),
