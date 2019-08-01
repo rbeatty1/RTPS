@@ -13,8 +13,8 @@ function headerRender(elements){
     let logoContainer = document.createElement('div')
     
     logoContainer.className = 'header__project-logo';
-    logoContainer.insertAdjacentHTML('afterbegin', require('../../img/rtpp-project.svg'))
-    logoContainer.alt = 'Regional Transit Priority Setting Logo'
+    logoContainer.insertAdjacentHTML('afterbegin', require('../../img/rtsp-project.svg'))
+    logoContainer.alt = 'Regional Transit Screening Platform Logo'
 
     logoContainer.firstChild.onclick = e => {
         history.pushState({page: 'home', type: 'home'}, document.title, window.location.origin + window.location.pathname)

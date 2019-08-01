@@ -1,6 +1,7 @@
 import "../../../css/pages/home/home.css"
 import { ChangeLogo } from "../../../utils/loadMain";
 import { SetNewURL } from "../../../utils/routing";
+import documentationLookup from './documentationLookup.js'
 
 
 /*
@@ -36,27 +37,31 @@ const Landing = (props, appContainer) =>{
       linksContainer.style.color = content.color
 
       // learn more (documentation) & explore (analysis page) links
-      let docLink = document.createElement('span'),
+      let docLink = document.createElement('a'),
         appLink = document.createElement('span')
 
-      // documentation (blank for now)
+      // link to documentation pdf
+      const sectionTitle = content.title
+      const docPDF = documentationLookup[sectionTitle]
+      
       docLink.innerText = 'Learn More'
-      docLink.onclick = e => SetNewURL(section, 'documentation')
+      docLink.href = `/webmaps/rtps/pdf/${docPDF}`
+      docLink.target = '_blank'
 
       // explore (analysis page)
-      appLink.innerText = 'Explore'
+      appLink.innerText = 'Access the Data'
       // load analysis page
-      appLink.onclick = e => SetNewURL(section, 'tool')
+      appLink.onclick = () => SetNewURL(section, 'tool')
 
-      linksContainer.appendChild(docLink)
       linksContainer.appendChild(appLink)
+      linksContainer.appendChild(docLink)
 
       
       textContainer.appendChild(linksContainer)
       // add appropriate description text (see this.props[section].description)
       textContainer.insertAdjacentHTML('beforeend', content.description)
-      // change background color
-      textContainer.style.background = content.color
+      const home = document.getElementById('home')
+      home.style.background = content.color
       textContainer.classList.add('active')
     }
 
@@ -82,12 +87,12 @@ const Landing = (props, appContainer) =>{
   while (i < 3){
     // the second element is the nav links and does different shtuff
     if (i != 1){
-      let section = document.createElement('section')
+      let section = document.createElement('div')
 
       // build logo container & insert logo svg
       if(i == 0){
         section.id = 'logo-container'
-        section.insertAdjacentHTML('afterbegin', require('../../../img/rtpp-full.svg'))
+        section.insertAdjacentHTML('afterbegin', require('../../../img/rtsp-full.svg'))
 
         // reset logo colors
         section.firstChild.onclick = e =>{
@@ -105,18 +110,16 @@ const Landing = (props, appContainer) =>{
               while (descriptionContainer.firstChild) descriptionContainer.removeChild(descriptionContainer.firstChild)
             
             // reset style
-            descriptionContainer.style.background = '#ddd'
+            home.style.background = '#fff'
             descriptionContainer.style.color = '#08506d'
             descriptionContainer.classList.remove('active')
 
             // reset text
             descriptionContainer.insertAdjacentHTML(
               'beforeend',
-              `<p>
-                Where should transit improvement and transit supportive investments be made in the
-                <abbr title="Delaware Valley Regional Planning Commission">DVRPC</abbr> region? 
-                <strong>Use this platform to evaluate service, operational, enforcement, and
-                infrastructure improvement ideas!</strong>
+              `<p id="home-default-text">
+                This platform contains a set of screening tools that shed light on public transit needs and opportunities in the <abbr title="Delaware Valley Regional Planning Commission">DVRPC</abbr> region.
+                <strong>Use it to generate and evaluate ideas for service, operational, enforcement, and capital improvements that could be considered for further study.</strong>
               </p>
               `)
             
@@ -131,11 +134,9 @@ const Landing = (props, appContainer) =>{
         section.id = 'desc-container'
         section.insertAdjacentHTML(
           'beforeend', 
-          `<p>
-            Where could transit improvement and investments that support transit be made in the
-            <abbr title="Delaware Valley Regional Planning Commission">DVRPC</abbr> region? 
-            <strong>Use this platform to evaluate service, operational, enforcement, and
-            infrastructure improvement ideas.</strong>
+          `<p id="home-default-text">
+            This platform contains a set of screening tools that shed light on public transit needs and opportunities in the <abbr title="Delaware Valley Regional Planning Commission">DVRPC</abbr> region.
+            <strong>Use it to generate and evaluate ideas for service, operational, enforcement, and capital improvements that could be considered for further study.</strong>
           </p>
           `
           )
@@ -150,8 +151,7 @@ const Landing = (props, appContainer) =>{
       let nav = document.createElement('nav')
       for (let section in props){
         let content = props[section],
-          link = document.createElement('button'),
-          title = document.createElement('p')
+          link = document.createElement('button');
 
         // set link attributes and set the data-page attribute to shorthand for tool for easy access
         link.setAttribute('data-page', section)
@@ -163,18 +163,11 @@ const Landing = (props, appContainer) =>{
         // listener events
           // SectionChange --> change logo colors, set new description text, build links to tool & documentation, give button active class
         link.onclick = e => SectionChange(e.target, section)
-          // hover events to give it some styling
-        link.onmouseover = e => e.target.style.background = content.secondary
-        link.onmouseleave = e => e.target.style.background = content.color
         
         // send it
         nav.appendChild(link)
       }
       appContainer.appendChild(nav)
-      let buttons = nav.querySelectorAll('button')
-      for (let link of buttons){
-        link.style.height = `${link.clientWidth}px`
-      }
     }
     i ++
   }
@@ -188,30 +181,29 @@ class Home{
         title : 'Transit Network Gap Analyzer',
         color: '#8bb23f',
         secondary: '#d1e0b2',
-        description: `<p><strong>Where are there gaps in the transit network?</strong> Evaluate in-demand connections between transit 
+        description: `<p><strong>Where are there gaps in the transit network?</strong><br /> Evaluate in-demand connections between transit 
         supportive origins and destinations where transit is not available or not competitive with vehicles using a composite measure.</p>`
       },
       reliability: {
         title: 'Surface Transit Reliability',
         color: '#e89234',
         secondary: '#edceab',
-        description: `<p><strong>Where should efforts to improve transit reliability be focused?</strong> A variety of factors such as 
+        description: `<p><strong>Where should efforts to improve transit reliability be focused?</strong><br /> A variety of factors such as 
         infrastructure, congestion, and enforcement impact surface transit reliability. Find out where reliability issues are likely to
         impact the most passengers.</p>`
       },
       frequency: {
-        title: 'Doubled Frequency Scenario',
+        title: 'Higher Frequency Scenario',
         color: '#d8c72e',
         secondary: '#efe9ab',
-        description: `<p><strong>Where is there potential latent demand for higher frequency transit service?</strong> View results of how
-        a regional travel demand model scenario in which transit frequency is doubled compares to the existing scenario.</p>`
+        description: `<p><strong>Where is there potential latent demand for higher-frequency transit service?</strong><br /> View results of a regional travel demand model scenario in which all transit frequency is doubled.</p>`
       },
       accessibility: {
         title: 'Wheelchair Accessibility',
         color: '#06bf9c',
         secondary: '#a7ddd1',
-        description: `<p><strong>Where can station accessibility improvements have the greatest impact for wheelchair users and persons with mobility assistance needs?</strong> 
-        Wiew data showing destinations reachable via rail by wheelchair users and persons with mobility impairments as compared to all users.</p>`
+        description: `<p><strong>Where can station accessibility improvements have the greatest impact for wheelchair users and persons with mobility assistance needs?</strong><br /> 
+        View data showing destinations reachable via rail by wheelchair users and persons with mobility impairments as compared to all users.</p>`
       }
     }
     this.render()
@@ -224,6 +216,9 @@ class Home{
       let header = document.querySelector('header')
       // remove header
       header.parentNode.removeChild(header)
+
+      // reset bakcround
+      main.style.background = '#fff'
     }
     Landing(this.props, main);
   }

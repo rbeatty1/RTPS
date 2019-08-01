@@ -3,16 +3,15 @@ import {LoadLayers} from '../../../utils/loadMapLayers';
 import { styles } from '../map/map_styles/reliability.js'
 import { FormatNumber } from '../../../utils/formatNumber';
 import { CreateDvrpcNavControl } from '../../../utils/defaultExtentControl';
-import { headerRender } from "../../header/header";
-import { HeaderElements } from "../../header/HeaderElements";
 import { Footer } from "../../footer/footer";
+import { makeFilter, populateDatalist } from './makeFilter.js';
 
 let layerRef = {
   purpose: "The goal of the surface transit reliability analysis was to identify corridors where surface transit service is particularly slow or delayed as places where road or transit improvements could increase reliability.",
   inputs:{
     speed: {
-      title: "Average Speed by Line",
-      info: "The average speed for bus routes that use a road segment was calcluated using the distance between stop points and the scheduled time for each stop point as provided in the <abbr class='reliability__abbr' title='General Transit Feed Specification'>GTFS</abbr>. If multiple bus routes use a road segment, a weighted average was calculated to ensure that the buses using the segment most throughout the day were considered more heavily."
+      title: "Average Scheduled Speed",
+      info: "The average scheduled speed for bus routes that use a road segment was calcluated using the distance between stop points and the scheduled time for each stop point as provided in the General Transit Feed Specification <abbr class='reliability__abbr' title='General Transit Feed Specification'>(GTFS)</abbr>. If multiple bus routes use a road segment, a weighted average was calculated to ensure that the buses using the segment most throughout the day were considered more heavily."
     },
     otp:{
       title: "On Time Performance (OTP)",
@@ -20,20 +19,26 @@ let layerRef = {
     },
     tti: {
       title: "Travel Time Index (TTI)",
-      info: "<abbr class='reliability__abbr' title='Travel Time Index'>TTI</abbr> is the ratio of peak hour travel time to free flow travel time. The <abbr class='reliability__abbr' title='Travel Time Index'>TTI</abbr> is used in this analysis accounts for all vehicle types, not just transit vehicles. High <abbr class='reliability__abbr' title='Travel Time Index'>TTI</abbr> indicates congestion which negatively impacts surface transit reliability. <abbr class='reliability__abbr' title='Travel Time Index'>TTI</abbr> was available from INRIX on many roads throughout the region. An estimate of <abbr class='reliability__abbr' title='Travel Time Index'>TTI</abbr> from the regional travel model was used to fill gaps in the INRIX data."
+      info: "<abbr class='reliability__abbr' title='Travel Time Index'>TTI</abbr> is the ratio of peak hour travel time to free flow travel time. The <abbr class='reliability__abbr' title='Travel Time Index'>TTI</abbr> used in this analysis accounts for all vehicle types, not just transit vehicles. High <abbr class='reliability__abbr' title='Travel Time Index'>TTI</abbr> indicates congestion which negatively impacts surface transit reliability. <abbr class='reliability__abbr' title='Travel Time Index'>TTI</abbr> was available from INRIX on many roads throughout the region. An estimate of <abbr class='reliability__abbr' title='Travel Time Index'>TTI</abbr> from the regional travel model was used to fill gaps in the INRIX data."
     },
     septa: {
-      title: "SEPTA Ridership (2017)",
-      info: "2017 daily average ridership for <abbr class='reliability__abbr' title='Southeastern Pennsylvania Transportation Authority'>SEPTA</abbr> bus routes was available at the stop level."
+      title: "SEPTA Surface Transit Loads (2017)",
+      info: "2017 daily average ridership for SEPTA bus routes was available at the stop level. General Transit Feed Specification <abbr class='reliability__abbr' title='General Transit Feed Specification'>(GTFS)</abbr> was used to convert stop-level ridership to segment-level passenger loads."
     },
     njt: {
-      title: "NJ Transit Ridership (2016)",
+      title: "NJ TRANSIT Ridership (2016)",
       info: "2016-2017 daily average ridership for <abbr class='reliability__abbr' title='New Jersey'>NJ</abbr> Transit bus routes was provided at the stop level."
     }
   },
   outputs:{
-    score: "The input layers were combined to calculate the overall measure of reliability. The <span class='reliability__sidebar-emphasis'>Reliability Score</span> layer shows the results of combining <abbr class='reliability__abbr' title='Travel Time Index'>TTI</abbr>, <abbr class='reliability__abbr' title='On Time Performance'>OTP</abbr>, and scheduled speed. A high reliability score is indicative of segments that may benefit from targeted improvements to improve transit operations.",
+    score: "The input layers were combined to calculate the overall measure of reliability. The <span class='reliability__sidebar-emphasis'>Reliability Score</span> layer shows the results of combining <abbr class='reliability__abbr' title='Travel Time Index'>TTI</abbr>, <abbr class='reliability__abbr' title='On Time Performance'>OTP</abbr>, and scheduled speed. A high reliability score is indicative of segments that may benefit from targeted improvements to transit operations.",
     weight: "The results were then weighted by ridership (<span class='reliability__sidebar-emphasis'>Ridership Weighted Reliability Score</span>) to highlight segments that impact high ridership surface transit service an allow for further prioritization of improvements."
+  },
+  sources: {
+    main: {
+      title: 'Reliability Data',
+      info: '<a href="https://drive.google.com/drive/folders/1aXwLVweE9xqqZgYIgT6ZC3XREJRwgfHB?usp=sharing" target="blank"> View and download reliability data</a>.'
+    }
   }
 }
 
@@ -69,43 +74,6 @@ const BuildPage = structure =>{
     pageContent: component state
 */
 const BuildMap = pageContent =>{
-  /*
-    LoadData(data)
-    @purpose: load map layer data
-    @params:
-      data: container to dump retreived data
-  */
-  const LoadData = data =>{
-    // all API endpoints
-    let endpoints = ['score', 'tti', 'speed', 'otp', 'weighted', 'njt', 'septa' ]
-    // hit all end points and retrieve data
-    endpoints.map(query=>{
-      fetch(`https://a.michaelruane.com/api/rtps/reliability?${query}`)
-      .then(response=>{
-        if (response.ok) return response.json()
-      })
-      .then(jawn=>{
-        data[query] = jawn.cargo
-        return data[query]
-      })
-    })
-  
-  }
-
-  /* 
-    LayerVisibilityCheck(layerName)
-    @purpose: function to update checkbox status and load legend when layer is activated.
-    @params:
-      layerName: name of layer to check status of appropriate checkbox
-  */
-  const LayerVisibilityCheck = layerName =>{
-    let layerId = `reliability-${layerName}`,
-      checkboxId = `#legend-${layerName}`
-    if (map.getLayoutProperty(layerId, 'visibility') == 'visible') {
-      document.querySelector(`input[name=${layerId.split('-')[1]}]`).checked = true
-      document.querySelector(checkboxId).style.display = 'block'
-    }
-  }
 
   /*
     BuildPopUps(layers)
@@ -122,10 +90,11 @@ const BuildMap = pageContent =>{
         props: properties that will drive content creation of clicked layer
     */
     const BuildPopUpContent = (layer, props) =>{
+
       // set variables
       let colorRef = styles.reliability.layers[layer].paint['line-color'],
         field = colorRef[1][1],
-        data = props[field],
+        data = props[field].toFixed(2),
         container = document.createElement('div'),
         title = document.createElement('h3'),
         property = document.createElement('p'),
@@ -137,7 +106,15 @@ const BuildMap = pageContent =>{
       dataContent.classList.add('reliability__popup-data')
 
       // grammar (reliability score layers have multiple routes, other layers do not)
-      title.innerText = (layer == 'score' || layer == 'weighted') ? `Routes ${props.lines}` : `Route ${props.linename}`
+      let route;
+      if(props.lines && layer === 'score' || layer === 'weighted') {
+        const lines = props.lines.split(',').join(', ')
+        route = `Routes ${lines}`
+      }else{
+        route = `Route ${props.linename}`
+      }
+      title.innerText = route
+      
       switch(layer){
         case 'score':
           property.innerText = 'Reliabilty Score'
@@ -185,11 +162,14 @@ const BuildMap = pageContent =>{
     }
   }
 
-
+  // adjust zoom level on mobile
+  let mobileZoom;
+  const windowWidth = window.innerWidth
+  if(windowWidth <= 420) mobileZoom = 7.3
 
   let extent = {
     center: [-75.234, 40.061],
-    zoom: 8.4
+    zoom: mobileZoom || 8.4
   }
   mapboxgl.accessToken = 'pk.eyJ1IjoiYmVhdHR5cmUxIiwiYSI6ImNqOGFpY3o0cTAzcXoycXE4ZTg3d3g5ZGUifQ.VHOvVoTgZ5cRko0NanhtwA';
   let map = new mapboxgl.Map({
@@ -211,13 +191,11 @@ const BuildMap = pageContent =>{
 
     CreateDvrpcNavControl(extent, map)
     let layers = styles.reliability.layers
+
     // load map layers
     LoadLayers(map, styles)
-    // assign data to local state
-    LoadData(pageContent.data)
+
     BuildPopUps(layers)
-    // display correct layers
-    for (let layer in styles.reliability.layers) LayerVisibilityCheck(layer)
   })
 
   return map
@@ -235,33 +213,46 @@ const BuildSidebar = (map, data) =>{
     regional: {
       'reliability-score': {
         title: 'Reliability Score',
-        unit: false
+        unit: false,
+        page: 'regional',
+        description: 'A composite measure of TTI, OTP, and scheduled speed. High reliability score identifies segments that may benefit from targeted improvements to transit operations.'
       },
       'reliability-weighted': {
         title: 'Reliability Score Weighted by Ridership',
-        unit: false
+        unit: false,
+        page: 'regional',
+        description: 'Results weighted by ridership to highlight unreliable segments that impact the most passengers.'
       },
       'reliability-tti': {
         title: 'Travel Time Index',
-        unit: false
+        unit: false,
+        page: 'regional',
+        description: 'TTI is the ratio of peak hour travel time to free flow travel time.'
       },
+    },
+    filter: {
+
     },
     input: {
       'reliability-speed':  {
-        title: 'Average Speed by Line',
-        unit: 'Miles per Hour (MPH)'
+        title: 'Average Scheduled Speed',
+        unit: 'Miles per Hour (MPH)',
+        page: 'detail'
       },
       'reliability-otp':  {
         title: 'On Time Performance',
-        unit: 'Percent of On-Time Stops (%)'
+        unit: 'Percent of On-Time Stops (%)',
+        page: 'detail'
       },
       'reliability-septa':  {
         title: 'SEPTA Surface Transit Loads',
-        unit: 'Average Daily Ridership'
+        unit: 'Average Daily Ridership',
+        page: 'detail'
       },
       'reliability-njt':  {
-        title: 'New Jersey Transit Ridership',
-        unit: 'Average Daily Ridership'
+        title: 'NJ TRANSIT Ridership',
+        unit: 'Average Daily Ridership',
+        page: 'detail'
       }
     }
   }
@@ -271,7 +262,7 @@ const BuildSidebar = (map, data) =>{
       sections = {
         regional: 'Regional Layers',
         input: 'Route Detail',
-        about: 'About'
+        about: 'Glossary'
       }
     
     tabs.classList.add('reliability__sidebar-tabs')
@@ -316,11 +307,11 @@ const BuildSidebar = (map, data) =>{
           }
         }
 
-        let checked = document.querySelectorAll('input[type="checkbox"]:checked')
+        let checked = document.querySelectorAll('input[type="radio"]:checked')
 
         // displayed previously visible layers for newly active tab
         for (let box of checked){
-          let layer = 'reliability-'+box.name
+          let layer = 'reliability-'+box.id
 
           if (layers[target] && layers[target][layer]) map.setLayoutProperty(layer, 'visibility', 'visible')
         }
@@ -334,38 +325,51 @@ const BuildSidebar = (map, data) =>{
   const BuildControlToggle = (parent, text) =>{
     let toggle = document.createElement('button')
 
-    toggle.innerText = `Show ${text}`
+    toggle.classList.add('reliability__sidebar-sectionContent-button')
 
-    if (text.toLowerCase() == 'filter'){
-      toggle.onclick = e =>{
-        let modal = document.getElementById('filter-modal')
-        modal.classList.toggle('active')
-      }
+    toggle.innerText = `Toggle ${text}`
 
-    }
-    else{
-      toggle.onclick = e =>{
-        e.preventDefault()
-        let content = e.target.nextElementSibling
-        content.classList.toggle('display')
-      }
+    toggle.onclick = e =>{
+      e.preventDefault()
+      let content = e.target.nextElementSibling
+      content.classList.toggle('display')
     }
 
     parent.appendChild(toggle)
   }
 
-  // build layer control portion of layer section
+  // build layer control portion of layer section 
   const BuildLayerControl = (element, layers) =>{
-    // function to run when checkbox is changed. Displays correct layer on map and corresponding legend item
-    const LayerVisibilityChange = layer =>{
-      let layerID = `reliability-${layer}`,
-        boxes = document.querySelectorAll('.reliability__layer-input'),
-        visibility = map.getLayoutProperty(layerID, 'visibility'),
-        mapLayer = map.getLayer(layerID)
 
-      for (let refLayer in styles.reliability.layers) if (refLayer == layer) visibility == 'none' ? map.setLayoutProperty(layerID, 'visibility', 'visible') : map.setLayoutProperty(layerID, 'visibility', 'none')
+    // function to run when radio is changed. Displays correct layer on map and corresponding legend item
+    const LayerVisibilityChange = e =>{
+      e.preventDefault()
 
-      for (let box of boxes) box.checked ? document.querySelector(`#legend-${box.name}`).style.display = 'block' : document.querySelector(`#legend-${box.name}`).style.display = 'none'
+      // get the layer/legend to be toggled on and the correct set of inputs to loop thru (regional or detail)
+      const target = e.target
+      const layerId = target.id
+      const page = target.classList[0].split('-')[2] // this is so janky
+      let layer = `reliability-${layerId}`
+
+      // get all other form inputs from that particular page (regional or detail)
+      const otherInputs = document.querySelectorAll(`.reliability__layer-input-${page}`)
+      const length = otherInputs.length
+      let i = 0
+
+      // loop thru all the inputs to turn off all but the newly selected one
+      for(i; i < length; i++){
+        const loopedLayerId = otherInputs[i].id
+        const legend = document.getElementById(`legend-${loopedLayerId}`)
+
+        if(loopedLayerId === layerId){
+          map.setLayoutProperty(layer, 'visibility', 'visible')
+          legend.style.display = 'block'
+        }else{
+          const undoLayer = `reliability-${loopedLayerId}`
+          map.setLayoutProperty(undoLayer, 'visibility', 'none')
+          legend.style.display = 'none'
+        }
+      }
     }
 
     // build legends
@@ -377,13 +381,16 @@ const BuildSidebar = (map, data) =>{
       legendSection.classList.add('reliability__legend-section')
       legendSection.id = `legend-${layer}`
 
+      // reliability legend on by default
+      if(layer === 'score') legendSection.style.display = 'block'
+
       title.innerText = layers[`reliability-${layer}`].title
       
       items.classList.add('reliability__legend-items')
       // get appropriate colors from map styles
       let colorExpression = styles.reliability.layers[layer].paint['line-color'],
-        colors = new Array(),
-        labels = new Array() ;
+        colors = [],
+        labels = [] ;
       colorExpression.map(statement=> {
         // get colors
         if (statement[0] == '#') colors.push(statement)
@@ -423,221 +430,174 @@ const BuildSidebar = (map, data) =>{
       element.appendChild(legendSection)
     }
 
-    let layerSection = document.createElement('div'),
-      legendSection = document.createElement('div')
+    let layerSection = document.createElement('form'),
+      legendSection = document.createElement('form')
 
     layerSection.classList.add('reliability__sidebar-control')
     legendSection.classList.add('reliability__sidebar-control')
 
-    // build layer check boxes
+    // build layer check radio
     for (let layer in layers){
+      
       let option = document.createElement('div'),
-        checkbox = document.createElement('div'),
-        input = document.createElement('input'),
-        label = document.createElement('label')
+        radio = document.createElement('input'),
+        label = document.createElement('label'),
+        optionBlurb = document.createElement('small')
       
+      // use page to determine it's associated layers
+      const page = layers[layer].page
+
       option.classList.add('reliability__layer-option')
-      checkbox.classList.add('reliability__layer-checkbox')
+      optionBlurb.classList.add('reliability__layer-option-blurb')
       
-      input.setAttribute('type', 'checkbox')
-      input.setAttribute('name', layer.split('-')[1])
-      input.classList.add('reliability__layer-input')
+      radio.setAttribute('type', 'radio')
+      radio.id = layer.split('-')[1]
+
+      // default score to checked
+      if(radio.id === 'score') radio.checked = true
+
+      radio.setAttribute('name', 'reliability-regional-layers')
+        
+      radio.classList.add(`reliability__layer-input-${page}`)
 
       label.setAttribute('for', layer.split('-')[1])
       label.innerHTML = layers[layer].title
+      optionBlurb.textContent = layers[layer].description
 
-      input.addEventListener('input', ()=> LayerVisibilityChange(input.name))
+      //
 
-      checkbox.appendChild(input)
-      checkbox.appendChild(label)
-
-      option.appendChild(checkbox)
-      BuildLegendSection(legendSection, input.name)
+      option.appendChild(radio)
+      option.appendChild(label)
+      BuildLegendSection(legendSection, radio.id)
       layerSection.appendChild(option)
+      layerSection.appendChild(optionBlurb)
     }
 
-
+    // handle layer toggles
+    layerSection.onchange = e => LayerVisibilityChange(e)
 
     BuildControlToggle(element, 'Layer Controls')
     element.appendChild(layerSection)
     BuildControlToggle(element, 'Legend')
     element.appendChild(legendSection)
+  }
 
+  // function to update map filter through all layers
+  const SetMapFilters = filter =>{
+
+    // grab map layers
+    let layers = styles.reliability.layers
+
+    // go back to default if the filter array is empty
+    if(!filter.length) {
+      for(let layer in layers){
+        map.setFilter(`reliability-${layer}`, undefined)
+      }
+      return
+    
+      // otherwise apply the new filter
+    }else{
+      for (let layer in layers){
+        // only filter "route detail" routes
+        if (layer == 'speed' || layer == 'otp' || layer == 'njt' || layer == 'septa'){
+          let filterExp = ['any']
+  
+          // build important stuff of filter expression
+          filter.forEach(route => {
+            let statement = ['==', 'linename', route]
+            filterExp.push(statement)
+          })
+  
+          // set filter
+          map.setFilter(`reliability-${layer}`, filterExp)
+        }
+      }
+    }
+  }
+
+  // adds jawns for selected filter to their correct area
+  const addSelectedFilter = (route, parent) => {
+    parent = document.getElementById(`${parent}-filter-wrapper`)
+
+    const selected = document.createElement('div')
+    selected.classList.add('reliability__filter-selection')
+    selected.textContent = `Route ${route}`
+    
+    parent.appendChild(selected)
+
+    // return selected to add the remove functionality
+    return selected
+  }
+
+  // removes a selected filter from the list of filters
+  const removeFilter = (e, filteredRoutes) => {
+    const routeDiv = e.target
+
+    // extract the routename from the div (format is always Route #)
+    const route = routeDiv.textContent.split(' ')[1].trim()
+
+    // remove the selected route from the DOM
+    routeDiv.remove()
+
+    // update the filteredRoutes array
+    filteredRoutes = filteredRoutes.filter(filteredRoute => filteredRoute !== route)
+
+    // update the map filter
+    SetMapFilters(filteredRoutes)
+
+    // return an updated filterRoutes array
+    return filteredRoutes
   }
 
   // function to build filter functionality
   const BuildFilterControl = element =>{
+    let filteredRoutes = []
     
-    // build filter dropdown
-    const BuildDropdownOption = (container, item) =>{
-      // listener to fire when one of the filter options is selected
-      const CheckboxListeners = list =>{
-        // function to update map filter through all layers
-        const SetMapFilters = filter =>{
-          // grab map layers
-          let layers = styles.reliability.layers
-          for (let layer in layers){
-            // only filter "route detail" routes
-            if (layer == 'speed' || layer == 'otp' || layer == 'njt' || layer == 'septa'){
-              let filterExp = ['any']
-              // build important stuff of filter expression
-              filter.map(route=>{
-                if (route == 'core'){
-                  filterRef[route].map(coreRoute=>{
-                    let statement = ['==', 'linename', coreRoute]
-                    filterExp.push(statement)
-                  })
-                }
-                else{
-                  let statement = ['==', 'linename', route]
-                  filterExp.push(statement)
-                }
-              })
-              // set filter
-              map.setFilter(`reliability-${layer}`, filterExp)
-            }
-
-          }
-        }
-        let filtered = []
-        // grab all of the filter checkboxes
-        let allBoxes = list.querySelectorAll('input[type="checkbox"]')
-        // push all checked options to an array
-        for (let box of allBoxes){
-          box.checked == true && filtered.indexOf(box.value) == -1 ? filtered.push(box.value) : null
-        }
-        let summary = list.previousElementSibling
-        summary.innerHTML = ''
-        // build little element to display each selected filter option
-        filtered.map(route=>{
-          let selected = document.createElement('div')
-          selected.classList.add('reliability__filter-selection')
-          selected.innerHTML = `Route ${route}`
-          summary.appendChild(selected)
-        })
-
-        let remove = document.querySelectorAll('.reliability__filter-selection')
-        for (let x of remove){
-          // listener to remove filtered routes
-          x.addEventListener('click', e=>{
-            let item = e.target.childNodes[0],
-              // we only want the number of the route
-              route = item.textContent.split(' ')[1],
-              // grab specific checkbox
-              box = document.querySelector(`input[type="checkbox"][name="${route}"]`)
-            // delete the jawn
-            e.target.outerHTML = ''
-            // unchecked the jawn
-            box.checked = false
-
-            let index = filtered.indexOf(route)
-            filtered.splice(index, 1)
-            // update the map jawn
-            if (filtered.length > 0) SetMapFilters(filtered)
-            else for (let layer in styles.reliability.layers){ map.setFilter(`reliability-${layer}`, undefined)}
-
-          })
-        }
-
-        if (filtered.length > 0) SetMapFilters(filtered)
-        else for (let layer in styles.reliability.layers){ map.setFilter(`reliability-${layer}`, undefined)}
-      }
-      let listItem = document.createElement('li'),
-        option = document.createElement('input'),
-        label = document.createElement('label')
-
-      listItem.classList.add('reliability__filter-item')
-
-      option.type = 'checkbox'
-      option.id = `filterOption-${item}`
-      option.name = item
-      option.value = item
-      option.onchange = e => CheckboxListeners(e.target.parentNode.parentNode)
-
-      label.setAttribute('for', item)
-      label.innerText = 'Route '+item
-
-      listItem.appendChild(option)
-      listItem.appendChild(label)
-      container.querySelector('.reliability__filter-options').appendChild(listItem)
-      return listItem
+    const BuildDropdownOption = (container, category) =>{
+      const route = container.value
       
+      // make sure the inputted text exists in filterRef - if not, notify the user and reset the input value
+      if (filterRef[category].indexOf(route) < 0) {
+        alert('invalid route name - please try again')
+        container.value = ''
+        return
+      }
+      
+      // do nothing if the selected route is alredy there
+      if (filteredRoutes.length && filteredRoutes.indexOf(route) > -1) return
+
+      // update the routes to be filtered
+      filteredRoutes.push(route)
+
+      // update the map filter
+      SetMapFilters(filteredRoutes)
+
+      // add a jawn for the selected filter to the sidebar
+      const newFilter = addSelectedFilter(route, category)
+
+      // let users remove filters + update filteredRoutes with the result
+      newFilter.onclick = e => filteredRoutes = removeFilter(e, filteredRoutes)
+
+      // clear the input field so users can add more routes
+      container.value = ''
     }
 
     let filterRef = {
-      core: ['6', '17', '21', '23', '33', '46', '47', '52', '56', '58', '60', '66', '79', '108', '113', 'R', '18', '26', 'G', '7', '10', '11', '13', '34', '36', 'MFL', 'BSL'],
+      septa: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','42','43','44','46','47','48','50','52','53','54','55','56','57','58','59','60','61','62','64','65','66','67','68','70','73','75','77','78','79','80','84','88','89','45','90','91','92','93','94','95','96','97','98','99','101','102','103','104','105','106','107','108','109','110','111','112','113','114','115','117','118','119','120','123','124','125','126','127','128','129','130','131','132','133','139','150','201','204','205','206','310','311','BSO','G','H','J','K','L','LUCYGO','LUCYGR','MFO','R','XH'],
+      njtransit: ['313','315','317','400','401','402','403','404','405','406','407','408','409','410','412','413','414','417','418','419','450','451','452','453','455','457','459','463','551','554','559','600','601','603','605','606','607','608','609','610','611','612','613','619','624']
     }
 
-    let dropdown = document.createElement('div'),
-      summary = document.createElement('div')
+    // make the filter and return elements that needed additional functionality
+    let [septaFilter, njFilter] = [...makeFilter(element)]
 
-    dropdown.id = 'filter-modal'
-  
+    populateDatalist(septaFilter.septaRoutes, 'septa', filterRef)
+    populateDatalist(njFilter.njRoutes, 'njtransit', filterRef)
 
-    element.appendChild(dropdown)
-
-    // get all of the routes to build filter
-    fetch('https://a.michaelruane.com/api/rtps/reliability?filter')
-    .then(response=> response.ok ? response.json() : null)
-    .then(jawn=>{
-      for (let route in jawn.cargo){
-        route.replace(' ', '_')
-        filterRef[route.toString()] = route.toString()
-      }
-      return filterRef
-    })
-    .then(data=>{
-
-      /*
-        TO-DO:
-          - Aria-ify modal opening/dropdown display
-          - Restructure to handle division by operator/mode
-          - Close modal on click event outside of modal content 
-      */
-
-      
-      dropdown.classList.add('reliability__filter-dropdown')
-      summary.classList.add('reliability__filter-summary')
-
-
-      dropdown.innerHTML = `<div id="filter-modal-content"><span id="close-filter-modal">&times;</span><span class="reliability__filter-default">Surface Transit Route Filter</span>${summary.outerHTML}<ul class="reliability__filter-options"></ul></div>`
-      
-      
-      for (let route in data)  BuildDropdownOption(dropdown, route)
-
-
-      let accordian = dropdown.querySelector('.reliability__filter-default'),
-        close = document.getElementById('close-filter-modal')
-
-      accordian.onclick = e =>{
-        let ul = e.target.parentNode.querySelector('ul')
-        if (ul.classList.contains('visible')){
-          ul.classList.remove('visible')
-          accordian.classList.remove('active')
-          accordian.parentNode.parentNode.parentNode.style.height = '40%'
-        }
-        else{
-          ul.classList.add('visible')
-          accordian.classList.add('active')
-          accordian.parentNode.parentNode.parentNode.style.height = '75%'
-        }
-      }
-
-      close.onclick = e =>{
-        e.preventDefault()
-        e.stopPropagation()
-
-        let modal = document.getElementById('filter-modal')
-
-        modal.classList.remove('active')
-      }
-    })
-
+    septaFilter.addSeptaFilter.onclick = () => BuildDropdownOption(septaFilter.septaInput, 'septa')
+    njFilter.addNjFilter.onclick = () => BuildDropdownOption(njFilter.njInput, 'njtransit')
   }
 
   const BuildAboutSection = parent =>{
-
-
     let container = document.createElement('div')
     container.classList.add(`reliability__sidebar-sectionContent`)
     container.id = 'content-about'
@@ -651,14 +611,15 @@ const BuildSidebar = (map, data) =>{
       title.classList.add('reliability__sidebar-sectionTitle')
       title.innerText = section
       item.appendChild(title)
+
       // input sections are styled differently to draw attention
-      if (section == 'purpose'){
+      if (section === 'purpose'){
         let purposeSection = document.createElement('p')
         purposeSection.innerHTML = layerRef[section]
         // purposeSection.classList.add('reliability__sidebar-contentSection')
         item.appendChild(purposeSection)
       }
-      else if (section == 'outputs'){
+      else if (section === 'outputs'){
         for (let output in layerRef[section]){
           let outputSection = document.createElement('p')
           // outputSection.classList.add('reliability__sidebar-contentSection')
@@ -684,16 +645,20 @@ const BuildSidebar = (map, data) =>{
 
   // build layer section of sidebar
   const BuildRegionalSection = element =>{
-
     let container = document.createElement('div'),
-      layerControl = document.createElement('button')
+      layerControl = document.createElement('button'),
+      descriptiveText = document.createElement('p')
 
     container.classList.add('reliability__sidebar-sectionContent')
     container.classList.add('active')
+    descriptiveText.classList.add('reliability__descriptive-text')
 
     container.id = 'content-regional'
-
+    
+    descriptiveText.textContent = 'The goal of the surface transit reliability analysis was to identify corridors where surface transit service is particularly slow or delayed as places where road or transit improvements could increase reliability. These regional layers show aggregate measures for all surface transit routes that use a particular road segment.'
     layerControl.innerText = 'Show Layer List'
+    
+    container.appendChild(descriptiveText)
     element.appendChild(container)
 
     BuildLayerControl(container, layers.regional)
@@ -707,14 +672,19 @@ const BuildSidebar = (map, data) =>{
   }
 
   const BuildRouteSection = element =>{
-
     let container = document.createElement('div'),
       layerControl = document.createElement('div'),
-      filterControl = document.createElement('div')
+      filterControl = document.createElement('div'),
+      descriptiveText = document.createElement('p');
 
     container.classList.add('reliability__sidebar-sectionContent')
+    descriptiveText.classList.add('reliability__descriptive-text')
 
     container.id = 'content-input'
+
+    descriptiveText.textContent = 'The layers on this tab are best viewed at the route level. Use the filter to select a surface transit route to examine in detail. When multiple routes are displayed, colors will reflect whichever route is on top.'
+
+    container.appendChild(descriptiveText)
 
     BuildControlToggle(filterControl, 'Filter')
     container.appendChild(filterControl)
@@ -723,19 +693,19 @@ const BuildSidebar = (map, data) =>{
     BuildFilterControl(filterControl)
     BuildLayerControl(layerControl, layers.input)
   }
-  
+
+  const footer = new Footer().footer
   let sidebar = document.querySelector('#reliability__sidebar'),
     content = document.createElement('div'),
     tabs = BuildSidebarNav()
   content.classList.add('reliability__sidebar-content')
   sidebar.appendChild(tabs)
   sidebar.appendChild(content)
+  sidebar.appendChild(footer)
 
   BuildRegionalSection(content)
   BuildRouteSection(content)
   BuildAboutSection(content)
-  
-
 }
 export class Reliability{
   constructor(){

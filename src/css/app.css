@@ -1,6 +1,8 @@
 body, #app{
+    font-size: 16px;
     margin: 0;
     overflow-y: hidden;
+    overflow-x: hidden;
     display: flex;
     flex-flow: column;
     font-family: 'Roboto', 'Arial', sans-serif;
@@ -17,4 +19,10 @@ body, #app{
 abbr{
     text-decoration: none;
     text-transform: uppercase;
+}
+
+@media all and (max-width: 800px ) {
+    #app {
+        font-size: 14px;
+    }
 }

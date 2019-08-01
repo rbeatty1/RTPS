@@ -1,24 +1,22 @@
 #home{
-  height: 100%;
+  min-height: 100%;
   width: 100%;
   font-family: 'Roboto', 'Arial', sans-serif;
   order: 2;
+  overflow-x: hidden;
 }
 
 #home section{
-  height: 47.5%;
   width: 100%;
-  position: fixed;
 }
 
-#logo-container{
-  top: 0;
+#logo-container{  
+  background: #fff;
+  padding-bottom: 15%;
 }
 
 #logo-container svg{
-  position: relative;
-  left: 10%;
-  top: 10%;
+  margin: 4% 0 0 10%;
   width: 20%;
   height: auto;
 }
@@ -26,27 +24,31 @@
 #logo-container svg:hover, #home nav button:hover{
   cursor: pointer;
 }
-#desc-container{
-  bottom: 0;
-  background: #ddd;
-  display: flex;
-  flex-flow: column;
-  justify-content: center;
-  align-items: center
+
+#home nav button:hover{
+  font-weight: 700;
+  box-shadow: 0px 0px 20px rgba(0,0,0,0.5);
 }
+
+#desc-container{
+  width: 100%;
+  margin: 10% 0 25px 17%;
+}
+
 #desc-container.active{
   justify-content: flex-end;
 }
 
 #desc-container p {
-  width: 60%;
+  width: 70%;
   color: #06506d;
   font-size: 1.75rem;
 }
 
 #desc-container.active p {
   color: #fff;
-  margin-bottom: 3%
+  margin-top: 2%;
+  margin-bottom: 0;
 }
 
 #desc-container p strong{
@@ -54,19 +56,19 @@
 }
 
 #home nav{
-  height: 5%;
+  height: 30px;
   background: #08506d;
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 2;
-  position: fixed;
   width: 100%;
-  top: 47.5%
+  top: 49.5%
 }
 
 #home nav button{
-  width: 10%;
+  height: 190px;
+  width: 190px;
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -75,10 +77,10 @@
   border: none;
   box-shadow: 3px 3px 3px rgba(0,0,0,0.5);
   text-align: center;
-  font-size: 1.25em;
+  font-size: 1.4em;
   color: white;
   font-family: 'Roboto', 'Arial', sans-serif;
-  margin: 10% 2%;
+  margin: 0 2%;
 }
 
 #home nav button.active{
@@ -89,20 +91,116 @@
 .content-links{
   text-align: center;
   background: #eee;
-  padding: 1%;
-  font-size: 2rem;
-  margin-top: 5%;
-  border-radius: 15px;
+  font-weight: 200;
+  padding: 8px 24px;
+  font-size: 1.8em;
   display: inline-block;
+  border-radius: 2px;
 }
 
 .content-links span{
-  margin: 0 1rem;
-  color: blue;
-  font-weight: 400;
-  font-size: 2rem;
+  padding-right: 1rem;
+  margin-right: 1rem;
+  border-right: 2px solid #06506D;
+  color: #06506D;
+  font-weight: 700;
 }
 
 .content-links span:hover{
   cursor: pointer;
+}
+
+.content-links a{
+  text-decoration: none;
+  color: #06506D;
+}
+@media all and (min-width: 1800px) {
+  #logo-container {
+    padding-bottom: 13%;
+  }
+  #logo-container svg{
+    margin-top: 3%;
+    margin-left: 11%;
+    width: 15%;
+  }
+  #home nav button {
+    height: 270px;
+    width: 270px;
+  }
+  #desc-container {
+    margin-top: 11%;
+  }
+}
+
+/* split screen */
+@media all and (max-width: 960px ) {
+  #logo-container {
+    padding-bottom: 38%;
+  }
+  #logo-container svg {
+    width: 30%;
+    margin-left: 2.5%;
+  }
+  #home nav button {
+    height: 120px;
+    width: 120px;
+    font-size: 1rem;
+  }
+  #desc-container {
+    margin: 21% 0 0 0;
+  }
+  #desc-container p {
+    font-size: 1rem;
+    width: 95%;
+    margin: 0 auto;
+  }
+  #desc-container.active p {
+    margin-top: 3%;
+  }
+  #desc-container p strong {
+    font-size: 1.1rem;
+  }
+  .content-links {
+    font-size: 1.1rem;
+    margin-left: 2.5%;
+  }
+}
+
+/* mobile */
+@media all and (max-width: 500px) {
+  #logo-container {
+    padding-bottom: 42%;
+  }
+  #logo-container svg{
+    width: 43%;
+    margin-top: 5%;
+  }
+  #home nav {
+    height: 15px;
+  }
+  #home nav button {
+    height: 80px;
+    width: 80px;
+    font-size: 0.8rem;
+  }
+  #home nav button.active {
+    border: 2px solid white;
+  }
+}
+
+@media all and (max-width: 330px) {
+  #home nav button {
+    height: 67px;
+    width: 67px;
+    font-size: 0.65rem;
+  }
+  #desc-container {
+    margin: 20% 0 0 0 ;
+  }
+  #desc-container p strong {
+    font-size: 1rem;
+  }
+  #desc-container p {
+    font-size: 0.9rem;
+  }
 }

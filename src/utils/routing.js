@@ -2,58 +2,51 @@ import { LoadMain } from "./loadMain";
 
 let routes = {
     category: ['gap', 'reliability', 'frequency', 'accessibility'],
-    pages: ['tool', 'documentation']
+    pages: ['tool']
 }
 
-const UpdateView = ()=>{
-    /*
-        GetURL()
-        @purpose: Gets the URL from browser and parses it appropriately
-        @return: object that will be parsed by switch/case to display appropriate content
-    */
-    const GetURL = () =>{
-            let regex = /^\#(?<category>\w*)\/(?<page>\w*)/, // correct hash pattern...
-                hash = window.location.hash, // hash...
-                match = hash.match(regex) ? regex.exec(hash) : /^#(?<page>\w*)/.exec(hash) // exception for `#home` URL
-        
-        // if there was any match, continue
-        if (match){
-            // tool/documentation pages
-            if (match.groups.category){
-                if (routes.category.indexOf(match.groups.category) != -1 && routes.category != 'home'){
-                    if (routes.pages.indexOf(match.groups.page) != -1){
-                        return match.groups
-                    }
-                }
-            }
-            // home or error
-            else{
-                let page = match.groups.page == 'home' ? {page: 'home'} : {page: 'error'}
-                return page
-            }            
-        }
-        // else there is an error
-        else{
+// sanitize hash fragments by whitelisting alphanumeric characters and '/'
+const sanitizeHash = hash => hash.replace(/[^\w\/]/gi, '')
+
+/*
+    GetURL()
+    @purpose: Gets the URL from browser and parses it appropriately
+    @return: object that will be parsed by switch/case to display appropriate content
+*/
+const GetURL = () =>{
+    let hash = window.location.hash
+    
+    // if hash exists, parse it and determine if/which page should be generated
+    if (hash){
+        hash = sanitizeHash(hash)
+        const hashArray = hash.split('/')
+
+        // short out if we don't meet the correct length
+        const length = hashArray.length
+        if(length > 2) return { page: 'error' }
+
+        let [ category, page ] = [...hashArray]
+
+        const catIndex = routes.category.indexOf(category)
+        const pageIndex = routes.pages.indexOf(page)
+
+        // check for a valid page/category combo, error if it fails
+        if (catIndex > -1 && pageIndex > -1){
+            return { category, page }
+        } else {
             return {page: 'error'}
         }
-    }
-    // is it the home page?
-    let hash = window.location.href == window.location.origin+window.location.pathname ? {page: 'home'} : GetURL()
 
-    // LoadMain function already takes care of the tool/documentation check, so this could be restructured
-    switch(hash.page){
-        case 'home':
-            LoadMain()
-            break;
-        case 'tool':
-            LoadMain(hash.category, hash.page)
-            break;
-        case 'documentation':
-            LoadMain(hash.category, hash.page)
-            break;
-        default:
-            console.log('404')
+    // without hash, send the user home if the request is for '/', otherwise error 
+    }else {
+        return window.location.pathname === '/' || '/webmaps/rtsp/' ? {page: 'home'} : {page: 'error'}
     }
+}
+
+// parse the URL to get the requested path
+const UpdateView = ()=>{
+    let path = GetURL()
+    LoadMain(path.category, path.page)
 }
 
 /*
@@ -61,7 +54,7 @@ const UpdateView = ()=>{
     @purpose: Update URL so it can be parsed whenever a navigation element is clicked
     @params:
         - category: analysis category
-        - type: page type (tool or documentation)
+        - type: page type
 */
 
 const SetNewURL = (category, type) =>{
@@ -71,8 +64,7 @@ const SetNewURL = (category, type) =>{
 }
 
 // listeners
-
-window.onhashchange = e => UpdateView() // browser navigation
-window.onload = e => UpdateView()// refresh/page load
+window.onhashchange = () => UpdateView() // browser navigation
+window.onload = () => UpdateView()// refresh/page load
 
 export {SetNewURL}

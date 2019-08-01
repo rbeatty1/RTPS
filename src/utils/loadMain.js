@@ -3,10 +3,9 @@ import { Accessibility } from '../modules/pages/accessibility/accessibility.js';
 import { Home } from '../modules/pages/home/home.js';
 import { Frequency } from '../modules/pages/frequency/frequency.js';
 import { Reliability } from '../modules/pages/reliability/reliability.js';
-import { headerRender, Header } from '../modules/header/header.js'
+import { Header } from '../modules/header/header.js'
 import { Footer } from '../modules/footer/footer.js'
-
-
+import { SetNewURL } from './routing.js';
 
 const ChangeLogo = section =>{
   const colors = {
@@ -19,7 +18,7 @@ const ChangeLogo = section =>{
   // does the logo exist?
   if (!document.querySelector('.logo-fill')) {
     // wait for it to load
-    document.querySelector('object').onload = e =>{ 
+    document.querySelector('svg').onload = e =>{ 
       let fillElements = document.querySelectorAll('.logo-fill')
       if (colors[section]) for (let elem of fillElements) elem.setAttribute('fill', colors[section])
       else for (let elem of fillElements) elem.setAttribute('fill', '#6d6e71')
@@ -34,45 +33,40 @@ const ChangeLogo = section =>{
 }
 
 
-
 const LoadMain = (target, type) =>{
   let main = document.querySelector('main')
   main.innerHTML = ''
   target = target != undefined ? target.toLowerCase() : undefined
-  if (!document.querySelector('header')) new Header();
-  // check for tool/documentation page
-  // NOTE: this is set up in case the documentation page is content that can be plugged into a pre-built HTML template. If it's just a PDF, then this check can be ignored
-  if (type == 'tool'){
-      switch(target){
-      case 'gap':
-        new Map();
-        ChangeLogo(target)
-        break;
-      case 'accessibility':
-        new Accessibility();
-        ChangeLogo(target)
-        break;
-      case 'frequency':
-        new Frequency();
-        ChangeLogo(target)
-        break;
-      case 'reliability':
-        new Reliability();
-        ChangeLogo(target)
-        break;
-      default: 
-        new Home();
-        ChangeLogo(target)
-        break;
-    }
+  if (!document.querySelector('header')) new Header();  
+
+  // determine which page to build
+  switch(target){
+    case 'gap':
+      new Map();
+      ChangeLogo(target)
+      break;
+    case 'accessibility':
+      new Accessibility();
+      ChangeLogo(target)
+      break;
+    case 'frequency':
+      new Frequency();
+      ChangeLogo(target)
+      break;
+    case 'reliability':
+      new Reliability();
+      ChangeLogo(target)
+      break;
+    // @TODO: fix SetNewURL to update invalid routes to '/' or remove it b/c invalid routes will be handled by our main page anyways
+    case 'error':
+      alert('invalid request for ' + location.href + '. Rerouting to home')
+      SetNewURL(false)
+      break;
+    default:
+      new Home();
+      ChangeLogo(target)
   }
-  else if (type == 'documentation'){
-    main.insertAdjacentHTML('afterbegin', `<h1>This will be the ${target} documentation page</h1>`)
-  }
-  else{
-    new Home()
-    ChangeLogo(target)
-  }
+
   let link = document.querySelector(`[data-tool="${target}"]`),
     descriptor = document.getElementById('page-title')
   

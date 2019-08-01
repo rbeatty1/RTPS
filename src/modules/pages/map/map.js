@@ -6,10 +6,16 @@ import { ResultsSummary } from './sidebar/resultsSummary';
 import { LoadLayers, addRailLayers } from '../../../utils/loadMapLayers.js'
 import { CreateDvrpcNavControl } from '../../../utils/defaultExtentControl';
 
+// adjust zoom level on mobile
+let mobileZoom;
+const windowWidth = window.innerWidth
+if(windowWidth <= 420) mobileZoom = 7.3
+
 const extent = {
   center: [-75.234, 40.061],
-  zoom: 8.4
+  zoom: mobileZoom || 8.4
 }
+
 /* BuildMap() -- rbeatty
     @desc: Build the map that the page lands on
     @params:
@@ -66,9 +72,7 @@ const LoadRegionalSummary = map =>{
         let header = event.target,
             tabName = header.getAttribute('data-type'),
             otherLayers = ['zones-analysis', 'zones-clickFill', 'boundaries-click']
-        
-        console.log(tabName)
-        
+                
         if(tabName != 'summary') {
             otherLayers.map(layer=>{
                 if (map.getLayer(layer)) map.setLayoutProperty(layer, 'visibility', 'visible')
@@ -102,7 +106,7 @@ const LoadRegionalSummary = map =>{
         check: {},
         layer: {}
     }
-    fetch('https://a.michaelruane.com/api/rtps/gap?summary')
+    fetch('https://alpha.dvrpc.org/api/rtps/gap?summary')
     .then(cargo=> { if (cargo.ok) return cargo.json()})
     .then(data=>{
         let layerDef = {
@@ -145,15 +149,18 @@ const LoadRegionalSummary = map =>{
         *!~ layerDef: Layer definition object that contains information specified in mapbox gl documentation that will be passed to map.addLayer() to symbolize analysis
 */
 const ProcessData = (data, helper) => {
-    // iterate through json returned by API call
     Object.keys(data).forEach(item => {
         if (!helper.check[item]) {
+            const val = data[item]
+
             // create fill expression item for zones that don't already have one
-            helper.fillExpression.push(parseInt(item), helper.colorScheme[data[item]])
+            helper.fillExpression.push(parseInt(item), helper.colorScheme[val])
             helper.check[item] = item
         }
     })
+
     helper.fillExpression.push("rgba(0,0,0,0)") // default color (nothing)
+
     let layerDef = {
         "id": `zones-analysis`,
         "type": "fill",
@@ -164,6 +171,7 @@ const ProcessData = (data, helper) => {
             "fill-opacity": 0.75
         }
     }
+
     return layerDef
 }
 
@@ -175,7 +183,6 @@ const ProcessData = (data, helper) => {
         *!~ helpers: object that contains layer definition
 */
 const PerformQuery = async input => {
-    // move helper to ProcessData() function?
     let helpers = {
         colorScheme: {
             1: "rgba(250,228,205, .4)",
@@ -197,16 +204,19 @@ const PerformQuery = async input => {
         analysisLayers: {}
     }
     input.direction == 'To' ? input.direction = 'To Zone' : input.direction = 'From Zone'
-    let fetchData = input.type === 'zone' && input.direction ?
-        await fetch(`https://a.michaelruane.com/api/rtps/gap?zones=[${input.selection}]&direction=${input.direction}`) :
-        await fetch(`https://a.michaelruane.com/api/rtps/gap?muni=${input.selection}&direction=${input.direction}`)
+    let fetchData = input.type === 'zone' ?
+        await fetch(`https://alpha.dvrpc.org/api/rtps/gap?zones=[${input.selection}]&direction=${input.direction}`) :
+        await fetch(`https://alpha.dvrpc.org/api/rtps/gap?muni=${input.selection}&direction=${input.direction}`)
 
     if (fetchData.ok) {
-        let rawData = await fetchData.json()
+        let rawData = await fetchData.json()    
+        const cargo = rawData.cargo
+        const demandScore = rawData.demandScore ? rawData.demandScore[0].toLocaleString() : null
+
         if (rawData.status == 'success'){
-            let processed = ProcessData(rawData.cargo, helpers) // process data
-            helpers.analysisLayers = processed // return
-            new ResultsSummary(input, rawData.cargo)
+            helpers.analysisLayers= ProcessData(cargo, helpers) // process data
+
+            new ResultsSummary(input, rawData.cargo, demandScore)
         }
         else{
             alert(`Error! ${rawData.message}`)
@@ -429,7 +439,7 @@ const LoadBusLayer = map =>{
       url: "https://tiles.dvrpc.org/data/dvrpc-tim-transit.json"
     });
     
-    fetch("https://a.michaelruane.com/api/rtps/frequency?bus")
+    fetch("https://alpha.dvrpc.org/api/rtps/frequency?bus")
     .then(
         response =>
         response.ok ? response.json() : console.error("error, will robinson")

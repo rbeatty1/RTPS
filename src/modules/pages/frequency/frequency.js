@@ -3,6 +3,8 @@ import { LoadLayers, addRailLayers } from "../../../utils/loadMapLayers";
 import {FormatNumber} from "../../../utils/formatNumber"
 import { styles } from "../map/map_styles/frequency";
 import { CreateDvrpcNavControl } from "../../../utils/defaultExtentControl";
+import { Footer } from '../../footer/footer.js'
+import { div } from "gl-matrix/src/gl-matrix/vec2";
 
 const contentRef = {
   about: {
@@ -12,12 +14,7 @@ const contentRef = {
     content: {
       map: false,
       table: false,
-      text:  `
-      <p><strong>Where is there potential latent demand for higher frequency transit service?</strong></p>
-      <p>What happens if we double transit service frequency for all lines? How does doubled service frequency scenario compare to the existing scenario?</p>
-      <p>The answers below help us understand where potential latent demand for higher frequency transit exists. Want to know how you neighborhood or favorite
-      routes might respond? Scroll down to begin exploring!</p>
-      `
+      text:  `<p>DVRPC's regional travel demand model was used to conduct a transit frequency experiment. The results of the experiment, outlined below, compare a modeled scenario with existing frequency to one with doubled frequency for all services and routes. In reality, the frequency that it is possible to provide depends on “soft factors” like operating funding and staffing levels, as well as “hard factors” like fleet size and infrastructure carrying capacity. As a result, it would not be possible to double frequencies for all services in all places, and the investments necessary to do so for individual routes would vary. Nevertheless these results  serve as a screening tool to identify which areas and routes might respond the most to higher frequencies as candidates for further study.</p>`
     }
   },
   overview: {
@@ -48,18 +45,13 @@ const contentRef = {
         ]
       },
       table: false,
-      text: `
-      <p>This map depicts the existing weekday bus transit frequency by the average number of trips per hour. 
-      Darker colors represent bus routes that have more frequent service.
-      </p>
-      `
-        
+      text: `<p>This map depicts the existing weekday bus transit frequency by the average number of trips per hour. Darker colors represent bus routes that have more frequent service.</p>`
     }
   },
   transitChange: {
     active: false,
     title: "Changes in Transit Ridership",
-    scenario: "Doubled Frequency",
+    scenario: "Higher Frequency Scenario",
     content: {
       map: {
         source: "taz",
@@ -94,17 +86,17 @@ const contentRef = {
         },
         datasets: {
           NJ: {
-            Burlington: [2571, 3932, 1361, 52.94],
-            Camden: [20642, 25346, 4704, 22.79],
-            Gloucester: [2091, 3476, 1385, 66.25],
-            Mercer: [22289, 27509, 5220, 23.42]
+            Burlington: [2571, 3932, 1361, 53],
+            Camden: [20642, 25346, 4704, 23],
+            Gloucester: [2091, 3476, 1385, 66],
+            Mercer: [22289, 27509, 5220, 23]
           },
           PA: {
-            Bucks: [5307, 8287, 2980, 56.15],
-            Chester: [4402, 6998, 2596, 58.98],
-            Delaware: [34871, 42335, 7465, 21.41],
-            Montgomery: [29478, 39023, 9545, 32.38],
-            Philadelphia: [561976, 596792, 34816, 6.2]
+            Bucks: [5307, 8287, 2980, 56],
+            Chester: [4402, 6998, 2596, 59],
+            Delaware: [34871, 42335, 7465, 21],
+            Montgomery: [29478, 39023, 9545, 32],
+            Philadelphia: [561976, 596792, 34816, 6]
           }
         },
         summaries: {
@@ -118,17 +110,13 @@ const contentRef = {
           }
         }
       },
-      text:`
-      <p>This change in zonal transit ridership map shows traffic analysis zones (<abbr title="Traffic Analysis Zones">TAZ</abbr>)
-      symbolized using the change in public transit ridership in that zone under the doubled frequency scenario. The darker the color,
-      the greater the increase in transit ridership when all frequencies are doubled.
-      </p>`
+      text:`<p>This map shows the expected change in transit ridership by traffic analysis zones (<abbr title="Traffic Analysis Zones">TAZ</abbr>) if the frequencies of all transit services and routes were doubled. The darker the color, the greater the expected increase in transit ridership when all frequencies are doubled.</p>`
     }
   },
   autoChange: {
     active: false,
     title: "Reductions in Car Trips",
-    scenario: "Doubled Frequency",
+    scenario: "Higher Frequency Scenario",
     content: {
       map: {
         source: "taz",
@@ -185,19 +173,13 @@ const contentRef = {
           }
         }
       },
-      text:`
-      <p>
-      This map shows <abbr title="Traffic Analysis Zone">TAZ</abbr>s symbolized using the change in car trips entering
-      and leaving the zone in 24 hours. The darker the color, the greater the reduction in car trips when public
-      transit frequencies are doubled.
-      </p>
-      `
+      text:`<p>This map shows the expected change in car trips entering or leaving <abbr title="Traffic Analysis Zone">TAZ</abbr>s in 24 hours when service frequency is doubled based on DVRPC's regional travel demand model. The darker the color, the greater the expected reduction in car trips when transit frequencies are doubled.</p>`
     }
   },
   railLineChange: {
     active: false,
     title: "Changes in Rail Ridership",
-    scenario: "Doubled Frequency",
+    scenario: "Higher Frequency Scenario",
     content: {
       map: {
         source: "transit",
@@ -223,13 +205,13 @@ const contentRef = {
         },
         {
           units: "Estimated Passengers per Day",
-          name: "Absolute Ridership Change",
+          name: "Percentage Ridership Change",
           scheme: [
             ["< 0%", "#aaa"],
-            ["0%–30% ", "#aaa"],
-            ["31%–50%", "#aaa"],
-            ["51%–80%", "#aaa"],
-            ["81%–100%", "#aaa"],
+            ["< 30% ", "#aaa"],
+            ["< 50%", "#aaa"],
+            ["< 80%", "#aaa"],
+            ["< 100%", "#aaa"],
             ["100% <", '#aaa']
           ],
           style: [
@@ -245,19 +227,13 @@ const contentRef = {
 
       },
       table: false,
-      text:`
-      <p>This map shows passenger rail lines symbolized by the estimated change in ridership if frequencies of all transit routes are doubled.
-      Line color represents the absolute change in ridership, while the line weight represents the percent change. For example, a dark, thin
-      line would imply a line where a large absolute increase in ridership is expected, but the percent change is relatively small
-      due to the high existing ridership on the line.
-      </p>
-      `
+      text:`<p>This map shows the expected change in rail ridership when service frequency is doubled. Line color represents the absolute change in ridership, and the line thickness represents the percentage change. For example, a dark, thin line would imply a line where a large absolute increase in ridership is expected, but the percentage change is relatively small because of the high existing ridership on the line.</p>`
     }
   },
   bus: {
     active: false,
     title: "Changes in Bus Ridership",
-    scenario: "Doubled Frequency",
+    scenario: "Higher Frequency Scenario",
     content: {
       map: {
         source: "transit",
@@ -265,47 +241,43 @@ const contentRef = {
         legend: [{
           name: "Absolute Ridership Change",
           units: "Estimated Passengers per Day",
+          // @TODO HERE: could we also change the labels? rather than a range just do <
           scheme: [
             ["< 1,400", "#FEFABA"],
-            ["1,400–1,600", "#F6D374"],
-            ["1,601–1,800", "#E89234"],
-            ["1,801–2,200", "#7F2C2A"],
-            ["> 2,200", "#25111A"]
+            ["< 1,600", "#F6D374"],
+            ["< 1,800", "#f2bb05"],
+            ["< 2,200", "#E89234"],
+            ["> 2,200", "#e4572e"]
           ],
           style: [
             `color: #25111A; border: none; border-bottom: .5rem solid #FEFABA`,
             `color: #25111A; border: none; border-bottom: .5rem solid #F6D374`,
+            `color: #25111A; border: none; border-bottom: .5rem solid #f2bb05`,
             `color: #25111A; border: none; border-bottom: .5rem solid #E89234`,
-            `color: #25111A; border: none; border-bottom: .5rem solid #7F2C2A`,
-            `color: #25111A; border: none; border-bottom: .5rem solid #25111A`,
+            `color: #25111A; border: none; border-bottom: .5rem solid #e4572e`,
           ]
         },{
             name: "Percent Change in Ridership",
             scheme: [
               ["< 85%", "#9CBBC0"],
-              ["85%–100%", "#538795"],
-              ["101%–130%", "#08506C"],
-              ["> 130%", "#0F2F40"]
+              ["< 100%", "#538795"],
+              ["< 130%", "#08506C"],
+              ["> 130%", "#252323"]
             ],
             style: [
               `color: #0F2F40; border: none; border-bottom: .5rem solid #9CBBC0`,
               `color: #0F2F40; border: none; border-bottom: .5rem solid #538795`,
               `color: #0F2F40; border: none; border-bottom: .5rem solid #08506C`,
-              `color: #0F2F40; border: none; border-bottom: .5rem solid #0F2F40`,
+              `color: #0F2F40; border: none; border-bottom: .5rem solid #252323`,
             ]
           }
         ]
       },
       table: false,
       text:`
-      <p>This map shows the bus routes with the greatest expected increase in daily ridership when service frequency is doubled. Bus ridership
-      refers to the number of passengers using that bus route on an average weekday. The yellow routes are the top 25 in estimated <strong>absolute</strong>
-      ridership gain. The darker the yellow, the greater the absolute increase in ridership.</p>
-      <p>The green lines show the 25 bus routes with the largest percent increase in daily ridership when service frequency is doubled. The darker the green,
-      the greater the percent increase in forecast ridership.</p>
-      <p>It is important to keep in mind that percent change is sometimes deceiving when base ridership is low, making a small increase appear as a substantial 
-      change. Only those bus routes with an estimated base scenario ridership of at least 100 are included. Many of the green routes are in suburban ares where
-      base frequencies tend to be lower, while many of the yellow routes are in urban areas where frequency and ridership are already high.</p>
+        <p>This map shows the bus routes with the greatest expected increase in daily ridership when service frequency is doubled. Bus ridership refers to the number of passengers using that bus route on an average weekday. The orange routes are the top 25 in estimated <strong>absolute</strong> ridership gain. The darker the orange, the greater the absolute increase in ridership.</p>
+        <p>The blue lines show the 25 bus routes with the largest <strong>percentage increase</strong> in daily ridership when service frequency is doubled. The darker the blue, the greater the <strong>percentage increase</strong> in expected ridership.</p>
+        <p>It is important to keep in mind that percentage change is sometimes deceiving when base ridership is low, making a small increase look like a substantial change. Only those bus routes with an estimated base scenario ridership of at least 100 are included. Many of the blue routes are in suburban areas where base frequencies tend to be lower, while many of the orange routes are in urban areas where frequency and ridership are already high. There are no bus routes in the top 25 for both absolute and percent change in ridership.</p>
       `}
   },
   mapData: {
@@ -524,7 +496,7 @@ const CreateTable = (section, data) => {
       dataRow.appendChild(dataCell);
     });
     // the VMT data isn't really anywhere except for an excel sheet so this is easier than trying to compute the summaries for each state
-    if (section.id == 'autoChange'){
+    if (section.id === 'autoChange'){
       let dataCell = document.createElement('td')
       dataCell.innerText = state == 'NJ' ? '-0.22%' : '-0.35%'
       dataRow.appendChild(dataCell)
@@ -540,7 +512,13 @@ const CreateTable = (section, data) => {
         else{
           if (index < 2 ) temp[index] = temp[index] + parseFloat(data)
           else if (index == 2)temp[2] = temp[1] - temp[0]
-          else temp[index] = ((temp[2]/temp[0])*100).toFixed(2)
+          else {
+            if(section.id === 'transitChange'){
+              temp[index] = Math.round(((temp[2]/temp[0])*100))
+            }else{
+              temp[index] = ((temp[2]/temp[0])*100).toFixed(2)
+            }
+          }
         } 
       })
     }
@@ -555,7 +533,7 @@ const CreateTable = (section, data) => {
       cell.innerText = FormatNumber(data)
       row.appendChild(cell)
     })
-    if (section.id == 'autoChange'){
+    if (section.id === 'autoChange'){
       let cell = document.createElement('td')
       cell.innerText = '-0.30%'
       row.appendChild(cell)
@@ -591,15 +569,29 @@ const CreateTable = (section, data) => {
     summaries[state].temp.map(col => {
       summaries[state].final.push(col.reduce((num, value) => num + value, 0));
     });
-    summaries[state].final.push(
-      ((summaries[state].final[2] / summaries[state].final[0]) * 100).toFixed(2)
-    );
+    if(section.id === 'transitChange'){
+      summaries[state].final.push(
+        Math.round(((summaries[state].final[2] / summaries[state].final[0]) * 100))
+      );
+    }else{
+      summaries[state].final.push(
+        ((summaries[state].final[2] / summaries[state].final[0]) * 100).toFixed(2)
+      );
+    }
     table.appendChild(CreateSummaryContent(state, summaries[state].final));
   }
 
   let dvrpcSummary = CreateRegionSummary(summaries)
   table.appendChild(dvrpcSummary)
-  return table;
+
+  // add the table wrapper to handle overflow
+  const tableWrapper = document.createElement('div')
+
+  tableWrapper.classList.add('frequency__storySection-table-wrapper')
+
+  tableWrapper.appendChild(table)
+
+  return tableWrapper;
 };
 
 /*
@@ -619,11 +611,10 @@ const BuildLegend = section => {
         title = document.createElement("h3"),
         breakContainer = document.createElement("div");
 
-      
       // house keeping
       title.innerText = data.name;
       title.style.color = data.scheme[data.scheme.length-1][1] 
-      if (section.id == 'railLineChange'){
+      if (section.id === 'railLineChange'){
         if (index != 0){
           title.style.color = '#08506d'
           breakContainer.style.alignItems = 'center'
@@ -692,7 +683,7 @@ const BuildContent = (content, key, component) => {
         ResymbolizeFeatureLayer(component.map, contentRef[element.id]);
         link.classList.add("active");
         element.classList.add("active");
-        if (element.id == 'transitChange' || element.id == 'autoChange') {
+        if (element.id === 'transitChange' || element.id === 'autoChange') {
           let transit = component.map.getLayer('rail-lines')
           transit.visibility == 'none' ? component.map.setLayoutProperty('rail-labels', 'visibility', 'visible') : null
           transit.visibility == 'none' ? component.map.setLayoutProperty('rail-lines', 'visibility', 'visible') : null
@@ -703,7 +694,7 @@ const BuildContent = (content, key, component) => {
         HideFeatureLayer(component.map, contentRef[element.id]);
         link.classList.remove("active");
         element.classList.remove("active");
-        if (element.id == 'transitChange' || element.id == 'autoChange') {
+        if (element.id === 'transitChange' || element.id === 'autoChange') {
           let transit = component.map.getLayer('rail-lines')
           transit.visibility == 'visible' ? component.map.setLayoutProperty('rail-labels', 'visibility', 'none') : null
           transit.visibility == 'visible' ? component.map.setLayoutProperty('rail-lines', 'visibility', 'none') : null
@@ -747,6 +738,7 @@ const BuildContent = (content, key, component) => {
       `;
       break;
   }
+
   section.id = key;
   // create table if needed
   if (content.table) {
@@ -869,7 +861,7 @@ const PaginationListener = (map, link) => {
         Math.floor(data[route].AbsChange)
       )} <span class="frequency__popup-unit">Passengers / Day</span></div>
       <div class="frequency__popup-meat"><span class="frequency__popup-emphasis">Percent Change</span> ${
-        data[route].Percent
+        Math.round(data[route].Percent)
       }<span class="frequency__popup-unit">%</span></div>
   `;
     }
@@ -885,8 +877,8 @@ const PaginationListener = (map, link) => {
             Math.floor(data[route].absolute)
           )} <span class="frequency__popup-unit">Passengers / Day</span></div>
           <div class='frequency__popup-meat'><span class="frequency__popup-emphasis">Percent Change</span> ${
-            data[route].percent
-          }<span class="frequency__popup-unit">%</span></div>
+            Math.round(data[route].percent)
+          } <span class="frequency__popup-unit">%</span></div>
       `;
     }
   });
@@ -944,7 +936,7 @@ const LoadExisting = map => {
     }
     return popupContainer.outerHTML;
   };
-  fetch("https://a.michaelruane.com/api/rtps/frequency?transit")
+  fetch("https://alpha.dvrpc.org/api/rtps/frequency?transit")
     .then(
       response =>
         response.ok ? response.json() : console.error("error will robinson")
@@ -1095,7 +1087,7 @@ const LoadTaz = map => {
         response.ok ? response.json() : console.error("error will robinson")
     )
     .then(taz => {
-      fetch("https://a.michaelruane.com/api/rtps/frequency?zone")
+      fetch("https://alpha.dvrpc.org/api/rtps/frequency?zone")
         .then(
           response =>
             response.ok ? response.json() : console.error("error will robinson")
@@ -1248,7 +1240,7 @@ const LoadBus = map => {
               Math.floor(route.AbsChange)
             )} <span class="frequency__popup-unit">Passengers / Day</span></div>
             <div class="frequency__popup-meat"><span class="frequency__popup-emphasis">Percent Change</span> ${
-              route.Percent
+              Math.round(route.Percent)
             }<span class="frequency__popup-unit">%</span></div>
         `;
       }
@@ -1297,7 +1289,7 @@ const LoadBus = map => {
         }
     });
   };
-  fetch("https://a.michaelruane.com/api/rtps/frequency?bus")
+  fetch("https://alpha.dvrpc.org/api/rtps/frequency?bus")
     .then(
       response =>
         response.ok ? response.json() : console.error("error, will robinson")
@@ -1472,14 +1464,14 @@ const LoadRail = map => {
             Math.floor(feat.absolute)
           )} <span class="frequency__popup-unit">Passengers / Day</span></div>
           <div class='frequency__popup-meat'><span class="frequency__popup-emphasis">Percent Change</span> ${
-            feat.percent
+            Math.round(feat.percent)
           }<span class="frequency__popup-unit">%</span></div>
         </div>
       `;
     }
     return popupContainer.outerHTML;
   };
-  fetch("https://a.michaelruane.com/api/rtps/frequency?rail")
+  fetch("https://alpha.dvrpc.org/api/rtps/frequency?rail")
     .then(
       response =>
         response.ok ? response.json() : console.error("error will robinson")
@@ -1558,10 +1550,16 @@ const LoadRail = map => {
     @return: mapbox gl map component
 */
 const BuildMap = container => {
+    // adjust zoom level on mobile
+  let mobileZoom;
+  const windowWidth = window.innerWidth
+  if(windowWidth <= 420) mobileZoom = 7.3
+
+
   // base extent
   const extent = {
     center: [-75.247, 40.066],
-    zoom: 8.4
+    zoom: mobileZoom || 8.4
   };
   mapboxgl.accessToken =
     "pk.eyJ1IjoiYmVhdHR5cmUxIiwiYSI6ImNqOGFpY3o0cTAzcXoycXE4ZTg3d3g5ZGUifQ.VHOvVoTgZ5cRko0NanhtwA";
@@ -1614,11 +1612,18 @@ export class Frequency {
       </div>
     </div>
     `;
+    
+    let contentStory = document.querySelector(".frequency__content-story")
+
     this.scroll = new ScrollMagic.Controller({
-      container: document.querySelector(".frequency__content-story"),
+      container: contentStory,
       loglevel: 4
     });
+    
     BuildNav(this, contentRef);
     this.map = BuildMap(document.querySelector(".frequency__content-map"));
+
+    const footer = new Footer().footer
+    contentStory.appendChild(footer)
   }
 }

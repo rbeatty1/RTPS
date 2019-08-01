@@ -78,14 +78,21 @@ def munQuery(query):
                 oppo = "ToZone"
     con = psql.connect("dbname='{}' user='{}' host='{}' password='{}'".format(c.DB_NAME, c.DB_USER, c.DB_HOST, c.DB_PASS))
     cur = con.cursor()
-    query = sql.SQL(c.mq.format(direction, oppo, mcd))
+    query = sql.SQL(c.mpmqScore.format(direction, oppo, mcd))
+
     try:
         cur.execute(query)
         rows = cur.fetchall()
+
+        demandScore = rows.pop(0)
         cargo = {}
+
         for row in rows:
-            cargo[str(row[1])] = row[0]
+            cargo[str(row[0])] = row[1]
+
         payload['cargo'] = cargo
+        payload['demandScore'] = demandScore
+
         if not len(payload['cargo']) == 0:
             payload['status'] = 'success'
             return JsonResponse(payload, safe=False)
@@ -94,9 +101,8 @@ def munQuery(query):
             payload['message'] = 'Query returned no results'
             return JsonResponse(payload, safe=False)
     except Exception as e:
-        print(e)
         payload['status'] = 'failed'
-        payload['message'] = 'Invalid query parameters'
+        payload['message'] = 'Invalid query parameters: ' + e
         return JsonResponse(payload, safe=False)
 
 def regionalSummary():

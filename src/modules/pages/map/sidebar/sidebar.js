@@ -2,6 +2,7 @@ import '../../../../css/pages/map/sidebar.css'
 import { QueryContainer } from './queryInput/queryInput.js'
 import { HeaderElements } from '../../../header/HeaderElements.js'
 import {Legend} from './legend.js'
+import { Footer } from '../../../footer/footer';
 
 
 /*
@@ -53,14 +54,22 @@ const BuildMenus = appContent =>{
       
         data.box.onchange = e =>{
             let name = e.target.name
+
+            // get a handle on both instances of the checkboxes in order to maintain state across views
+            let otherBox = document.querySelectorAll(`input[name=${name}]`)
+
             if (e.target.checked){
               if (name == 'rail-lines'){
-                  console.log(appContent.map.getLayer(name))
                   appContent.map.setLayoutProperty(name, 'visibility', 'visible')
                   appContent.map.setLayoutProperty('rail-labels', 'visibility', 'visible')
               }
               else{
                   appContent.map.setLayoutProperty('bus-lines', 'visibility', 'visible')
+              }
+
+              // this is to maintain state across pages - the layers persist and this is to have checkbox state persist too
+              for(var i = 0; i < otherBox.length; i++) {
+                  otherBox[i].checked = true
               }
             }
             else{
@@ -71,6 +80,11 @@ const BuildMenus = appContent =>{
               else{
                   appContent.map.setLayoutProperty('bus-lines', 'visibility', 'none')
               }
+
+              // this is to maintain state across pages - the layers persist and this is to have checkbox state persist too
+              for(var i = 0; i < otherBox.length; i++) {
+                otherBox[i].checked = false
+            }
             }
         }
       
@@ -99,17 +113,17 @@ const BuildMenus = appContent =>{
         and the <strong>density score</strong>. The result was then weighted by the <strong>demand score</strong>
         ensuring that the <abbr title="Origin-Destination">OD</abbr> pairs identified as a transit gap that also
         have a high demand for travel are considered a higher priority.`,
-        direct: `<strong>Directness Score:</strong> For each Origin-Destination (<abbr title="Origin-Destination">OD</abbr>) pair, of <abbr title="Traffic Analysis Zone">TAZ</abbr>
+        direct: `<strong>Directness Score:</strong> For each Origin-Destination (<abbr title="Origin-Destination">OD</abbr>) pair of <abbr title="Traffic Analysis Zone">TAZ</abbr>
           in the region, the directness score was determined by the presence of a transit connection, how it compared
           to driving in terms of time and distrance, the number of transfers required for the trip, and the scheduled wait
           time for those transfers. A high score means the <abbr title="Origin-Destination">OD</abbr> pair was not served 
           or not well connected by existing transit service.`,
         density: `<strong>Density Score:</strong> Density is a measure of transit supportiveness using <abbr title="Delaware Valley Regional Planning Commission">DVRPC</abbr>'s
-        2015 TransitScore which is based on the density of population, employment, and zero car households. The transit score for the origin
+        2015 <a href="/Reports/07005.pdf">Transit Score</a> which is based on the density of population, employment, and zero car households. The transit score for the origin
         was added to the transit score for the destination to get the density score. The higher the density score, the more transit
         supportive the <abbr title="Origin/Destination">OD</abbr> pair.`,
         demand: `<strong>Demand Score:</strong> Demand is based on the total demand for travel between each <abbr title="Origin/Destination">OD</abbr> pair based on
-        <abbr title="Delaware Valley Regional Planning Commission">DVRPC</abbr>'s regional travel model.`
+        <abbr title="Delaware Valley Regional Planning Commission">DVRPC</abbr>'s regional travel model. This includes transit and non-transit trips.`
         
       },
       // declare local variables
@@ -146,18 +160,27 @@ const BuildMenus = appContent =>{
     // do local analysis tab stuff
     if (title != 'summary') {
       for (let section in content){
-        if (section == 'inputs'){
-          let queryContainer = new QueryContainer()
-          queryContainer.list = HeaderElements[1].content;
-          let queryList = [];
-          for (var k in queryContainer.list) queryList.push(queryContainer.list[k]);
+
+        switch(section) {
+          case ('inputs'):
+            let queryContainer = new QueryContainer()
+            queryContainer.list = HeaderElements[1].content;
+            let queryList = [];
+            for (var k in queryContainer.list) queryList.push(queryContainer.list[k]);
+            break
+          case ('analysisSummary'):
+            const summary = document.createElement('p')
+            summary.id = 'gap__analysis-summary'
+            
+            summary.innerHTML = content.analysisSummary
+            jawn.appendChild(summary)
+            break
+          default:
+            let results = document.createElement('section')
+            results.id = 'gap__results-section'
+            jawn.appendChild(results)
         }
-        else{
-          let results = document.createElement('section')
-          results.id = 'gap__results-section'
-          results.innerHTML = content.results
-          jawn.appendChild(results)
-        }
+
       }
     }
     // do regional analysis tab stuff
@@ -196,14 +219,17 @@ const BuildMenus = appContent =>{
     header.addEventListener('click', e=>{
       let sections = document.querySelectorAll('.map__sidebar-menuContent'),
       headers = document.querySelectorAll('.map__sidebar-menuHeader')
+
       for (let header of headers) header == e.target ? header.classList.add('active') : header.classList.remove('active');
       for (let section of sections) section.id == `${e.target.innerText.split(' ')[1].toLowerCase()}_dropdownContent` ? section.classList.add('active') : section.classList.remove('active')
     })
     
   }
+  const footer = new Footer().footer
+  sidebarContent.appendChild(footer)
+
   container.appendChild(sidebar)
   container.appendChild(sidebarContent)
-
 }
 
 
@@ -212,15 +238,16 @@ class Sidebar{
     this.state = {
       container: document.querySelector('#main'),
       elements: {
-        summary: "This regional summary map shows <abbr title='Traffic Analysis Zone'>TAZ</abbr>s symbolized using the average network gap score. The darker the color, the higher the score, indicating a higher priority transit gap. A transit gap is defined as an in-demand connection between transit supportive places where transit is either not available or not competitive.",
+        summary: "This regional summary map shows <abbr title='Traffic Analysis Zone'>TAZ</abbr>s symbolized using the average network gap score. The darker the color, the higher the score, indicating a higher priority transit gap. A transit gap is defined as an in-demand connection between transit supportive places where transit is either not available or not competitive with driving.",
         analysis: {
+          analysisSummary: `This dynamic map allows users to identify and prioritize transit gaps to and from specific areas of interest. Select a municipality or Transportation Analysis Zone <abbr title="Transportation Analysis Zone">(TAZ)</abbr> to see where transit connections can be improved or added.`,
           inputs: {
             geography: '',
             selection: '',
             direction: ''
           },
-          results: `Please perform an analysis query to populate this area with results.`,
-        },
+          results: ''
+        }
       },
       open: undefined,
       map : props.map
@@ -230,7 +257,7 @@ class Sidebar{
 
   render(){
     BuildMenus(this.state)
-    // // query inputs
+    // query inputs
     if (!document.querySelector('.sidebar__input-container')){
         let queryContainer = new QueryContainer();
         queryContainer.list = HeaderElements[1].content;
@@ -244,7 +271,6 @@ class Sidebar{
     
     new Legend(legend)
     summaryContainer.appendChild(legend)
-
   }
 }
 

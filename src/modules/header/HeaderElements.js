@@ -9,7 +9,7 @@
 const GetGeomNames= x =>{
     let mcds = []
     // hit muni api
-    fetch('https://a.michaelruane.com/api/rtps/gap?list')
+    fetch('https://alpha.dvrpc.org/api/rtps/gap?list')
     .then(response=>{
         if (response.status ==200) return response.json()
     })
@@ -74,7 +74,7 @@ const HeaderElements = [
                 color: '#e89234'
             },
             frequency : {
-                title: 'Doubled Frequency Scenario',
+                title: 'Higher Frequency Scenario',
                 shorthand: 'frequency',
                 color: '#d8c72e'
             },

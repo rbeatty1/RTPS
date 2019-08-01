@@ -24,7 +24,7 @@ const LoadStations = map =>{
   .then(agoStations=>{
     
     // hit RTPS API to load stations table from DB
-    fetch('https://a.michaelruane.com/api/rtps/access?stations')
+    fetch('https://alpha.dvrpc.org/api/rtps/access?stations')
     
     // parse json if fetch is successful
     .then(dbReturn=>{ if (dbReturn.status == 200) { return dbReturn.json() } })
@@ -99,7 +99,7 @@ const LoadTAZ = map =>{
   .then(agoZones=>{
     
     // hit RTPS API endpoint for TAZ data
-    fetch('https://a.michaelruane.com/api/rtps/access?zones')
+    fetch('https://alpha.dvrpc.org/api/rtps/access?zones')
    
     // parse DB return if successful
     .then(dbReturn=>{if (dbReturn.status == 200) { return dbReturn.json() } })
@@ -216,11 +216,17 @@ const StationPopUp = (marker, map) =>{
 
   // coordinates to anchor popup
   let coords = new mapboxgl.LngLat(marker.long, marker.lat)
+  let stationName = marker.props.STATION
+  let length = stationName.length
+  const minusStation = length - 7
+
+  // check if the db has a redundant 'Station' string and remove it if so. This is not a good solution, but it's a solution
+  let station = stationName.substring(minusStation, length) != 'Station' ? stationName : stationName.slice(0, minusStation)
   
   // set dynamic popup properties
   popup
     .setLngLat(coords)
-    .setHTML(`${marker.props.STATION} Station`)
+    .setHTML(`${station} Station`)
     .addTo(map)
   return popup
 }
@@ -238,13 +244,20 @@ const StationPopUp = (marker, map) =>{
     map: Mapbox GL Element
 
 */
-const BuildMap = (container, props) =>{
+// putting mobileZoom in the global scope of this file so that buildScene can have access to device information without having to recalculate it. This should be a class property, but the functions aren't class methods so what's the point.
+let mobileZoom;
+
+const BuildMap = container =>{
+  // adjust zoom level on mobile
+  const windowWidth = window.innerWidth
+  if(windowWidth <= 420) mobileZoom = 7.3
 
   // base extent 
   const extent = {
     center: [-75.247, 40.066],
-    zoom: 8.4
+    zoom: mobileZoom || 8.4
   }
+
   mapboxgl.accessToken = 'pk.eyJ1IjoiYmVhdHR5cmUxIiwiYSI6ImNqOGFpY3o0cTAzcXoycXE4ZTg3d3g5ZGUifQ.VHOvVoTgZ5cRko0NanhtwA';
 
   // base map properties
@@ -253,7 +266,7 @@ const BuildMap = (container, props) =>{
     style: 'mapbox://styles/beattyre1/cjky7crbr17og2rldo6g7w5al',
     center: extent.center,
     zoom: extent.zoom,
-    minZoom: 8
+    minZoom: mobileZoom ? null : 8
   })
 
   // needs function scope so it can be altered & destroyed
@@ -336,7 +349,6 @@ const BuildMap = (container, props) =>{
     - content: page data to use in rendering
 */
 const BuildPage = content =>{
-
   /*
     ResymbolizeLayers()
     @description:
@@ -380,17 +392,20 @@ const BuildPage = content =>{
   */
   const BuildScene = element =>{
 
+    // use the calculated check for mobile to adjust the scrollMagic offset parameters
+    const offset = mobileZoom ? -80 : 50
+
     // define ScrollMagic Scene
     new ScrollMagic.Scene({
       // element to trigger functions on
       triggerElement: element,
       // set scrolling duration
       duration: element.getBoundingClientRect().height + 100,
-      offset: 50
+      offset
     })
       .on('enter', e=>{
         // set active classes to section and corresponding dot navigation element
-        let link = document.querySelector(`a[href='#${element.id}'`),
+        let link = document.querySelector(`#${element.id}-link`),
           data = content.props.sections[element.id].content.map
         
         link.classList.add('active')
@@ -402,7 +417,7 @@ const BuildPage = content =>{
 
       // reset to default state
       .on('leave', e=>{ 
-        let link = document.querySelector(`a[href='#${element.id}'`)
+        let link = document.querySelector(`#${element.id}-link`)
         link.classList.remove('active')
         element.classList.remove('active') 
       })
@@ -411,9 +426,31 @@ const BuildPage = content =>{
       .addTo(content.scroll)
   }
 
-  const ChangeCaseStudyContent = data =>{
-    let container = document.getElementById('caseStudy'),
-      subtitle = container.querySelector('h3'),
+  // go back to the default view for the collingswood jawn
+  const caseStudyDefault = (container, defaultState) => {
+    const legend = document.querySelector('#caseStudy-legend')
+
+    const subtitle = container.querySelector('h3')
+    const text = container.querySelector('p')
+
+    subtitle.innerText = ''
+    text.innerText = defaultState
+    legend.innerText = ''
+
+    // reset map state to default
+    ResymbolizeLayers(null)
+  }
+
+  const ChangeCaseStudyContent = (data, defaultState) =>{
+    const container = document.getElementById('caseStudy')
+
+    // clicking on an active jawn goes back to the default case
+    if(defaultState) {
+      caseStudyDefault(container, defaultState)
+      return
+    }
+
+    let subtitle = container.querySelector('h3'),
       text = container.querySelector('p')
       
     subtitle.innerText = data.title
@@ -433,33 +470,59 @@ const BuildPage = content =>{
   // add to page
   document.querySelector('.accessibility-text').appendChild(sectionBody)
 
-
   // build map
   content.map = BuildMap(document.querySelector(".accessibility-map"), content.props)
-
-  // build section for each
-
+  
   // i will be used to populate the dot nav
   let i = 1
-
+  
   // create content for each section in component data
   for (let section in props.sections){
     // local content ref
     let data = props.sections[section]
 
     if (data.content.text){
-      let content = data.content
+      let sectionContent = data.content
+
       // HTML jawns
       let container = document.createElement('section'),
       link = document.createElement('a'),
       linkContent = document.createElement('div'),
-      tooltip = document.createElement('span')
+      tooltip = document.createElement('span'),
+      nav = document.getElementById('accessibility-nav')
   
       /* Create Dot Navigation Element*/
       
       // link
-      link.href = `#${content.text.id}`
-      link.rel = 'noopener'
+      link.id = `${sectionContent.text.id}-link`
+      link.onclick = () => {
+
+        // toggle active class + remove any existing active classes
+        const allLinks = nav.children
+        const navLength = allLinks.length
+
+        for(var i = 0; i < navLength; i++) {
+          const linkDiv = allLinks[i].children[0]
+          allLinks[i] === link ? linkDiv.classList.add('active') : linkDiv.classList.remove('active')
+        }
+
+        // scroll magic is configured weird for this component and the scrollTo method used in frequency doesn't work so we're going old school here
+        // id of the section
+        const sectionId = sectionContent.text.id
+        const section = document.getElementById(sectionId)
+        const textContainer = document.querySelector('.accessibility-text')
+
+        // depending on mobile or desktop, get the offset + a buffer to scroll to
+        let offsetAdjustment = mobileZoom ? 365 : 10
+        const offsetTop = section.offsetTop - offsetAdjustment
+
+        // do the scroll
+        textContainer.scrollTo({
+          top: offsetTop,
+          left: 0,
+          behavior: 'smooth'
+        })
+      }
       
       // section #
       linkContent.innerText = i
@@ -472,11 +535,11 @@ const BuildPage = content =>{
       // send 'em
       linkContent.appendChild(tooltip)
       link.appendChild(linkContent)
-      document.getElementById('accessibility-nav').appendChild(link)
+      nav.appendChild(link)
   
       // housekeeping for section container
       container.classList.add('accessibility-section')
-      container.id = content.text.id
+      container.id = sectionContent.text.id
 
       if (container.id != 'intro'){
         // title element
@@ -515,13 +578,13 @@ const BuildPage = content =>{
           
     
       // set text
-      container.insertAdjacentHTML('beforeend', content.text.description)
+      container.insertAdjacentHTML('beforeend', sectionContent.text.description)
 
   
       // send the whole thing
       sectionBody.appendChild(container)
       
-      new Legend(content)
+      new Legend(sectionContent)
   
       // Build ScrollMagic Scene
       BuildScene(container)
@@ -538,8 +601,9 @@ const BuildPage = content =>{
         tabNav = document.createElement('nav'),
         legend = document.createElement('div')
 
+
       // create dot nav
-      link.href = `#${content.content.id}`
+      link.id = 'caseStudy-link'
       link.rel = 'noopener'
 
       // section #
@@ -585,21 +649,26 @@ const BuildPage = content =>{
 
             tab.addEventListener('click', e =>{
               let links = document.querySelectorAll('#caseStudy a')
+              let backToDefault = false
               for (let link of links){
-                if (link == e.target) e.target.classList.add('active')
+                if (link == e.target) {
+                  if (link.classList.contains('active')) {
+                    backToDefault = true
+                    link.classList.remove('active')
+                  }else{
+                    e.target.classList.add('active')
+                  }
+                }
                 else link.classList.remove('active')
               }
-              ChangeCaseStudyContent(data) 
+              backToDefault ? ChangeCaseStudyContent(false, props.sections.caseStudy.content[0]) : ChangeCaseStudyContent(data, false) 
             })
 
             tabNav.appendChild(tab)
 
         }
       }
-
-
     }
-    
     i++
   }
 }
@@ -749,9 +818,7 @@ export class Accessibility{
           content: {
             text: {
               id: 'AccFut',
-              description: `<p>This map considers which stations are programmed for wheelchair accessibility and mobility assistance improvements or have improvements in progress. 
-              It includes stations that are currently accessible and those that are programmed for improvement. Again, the darker the color, the more essential service destinations 
-              are reachable via rail from that zone.</p>`
+              description: `<p>This map considers which stations are programmed for wheelchair accessibility and mobility assistance improvements or have improvements in progress. Again, the darker the color, the more essential service destinations are reachable via rail from that zone.</p>`
             },
             map: {
               paint: [
@@ -837,7 +904,7 @@ export class Accessibility{
             },
             2: {
               title: 'Destinations Reachable by Wheelchair Users',
-              text: 'The lack of color surrounding the Collingswood station shows that wheelchair users would not be able to reach any destinations via rail from that station. This is because the station is currently not wheelchair accessible',
+              text: 'The lack of color surrounding the Collingswood station shows that wheelchair users would not be able to reach any destinations via rail from that station. This is because the station is currently not wheelchair accessible.',
               map: {
                 paint: [
                   'interpolate', ['linear'], ['get', 'AccCur'],
@@ -970,5 +1037,8 @@ export class Accessibility{
     // populate the page with content
     BuildPage(this)
 
+    // // add the footer after everything else gets added
+    const footer = new Footer().footer
+    sidebar.appendChild(footer)
   }
 }
