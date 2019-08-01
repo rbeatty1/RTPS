@@ -26,7 +26,7 @@ let layerRef = {
       info: "2017 daily average ridership for <abbr class='reliability__abbr' title='Southeastern Pennsylvania Transportation Authority'>SEPTA</abbr> bus routes was available at the stop level."
     },
     njt: {
-      title: "NJ Transit Ridership (2016)",
+      title: "NJ TRANSIT Ridership (2016)",
       info: "2016-2017 daily average ridership for <abbr class='reliability__abbr' title='New Jersey'>NJ</abbr> Transit bus routes was provided at the stop level."
     }
   },
@@ -247,7 +247,7 @@ const BuildSidebar = (map, data) =>{
         page: 'detail'
       },
       'reliability-njt':  {
-        title: 'New Jersey Transit Ridership',
+        title: 'NJ TRANSIT Ridership',
         unit: 'Average Daily Ridership',
         page: 'detail'
       }

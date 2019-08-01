@@ -209,10 +209,10 @@
   justify-content: center;
 }
 .reliability__filter-label{
-  width: 41%;
+  width: 48%;
 }
 .reliability__filter-input{
-  width: 35%;
+  width: 25%;
 }
 .reliability__filter-btn{
   color: white;
