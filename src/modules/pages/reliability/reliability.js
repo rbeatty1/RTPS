@@ -31,7 +31,7 @@ let layerRef = {
     }
   },
   outputs:{
-    score: "The input layers were combined to calculate the overall measure of reliability. The <span class='reliability__sidebar-emphasis'>Reliability Score</span> layer shows the results of combining <abbr class='reliability__abbr' title='Travel Time Index'>TTI</abbr>, <abbr class='reliability__abbr' title='On Time Performance'>OTP</abbr>, and scheduled speed. A high reliability score is indicative of segments that may benefit from targeted improvements to improve transit operations.",
+    score: "The input layers were combined to calculate the overall measure of reliability. The <span class='reliability__sidebar-emphasis'>Reliability Score</span> layer shows the results of combining <abbr class='reliability__abbr' title='Travel Time Index'>TTI</abbr>, <abbr class='reliability__abbr' title='On Time Performance'>OTP</abbr>, and scheduled speed. A high reliability score is indicative of segments that may benefit from targeted improvements to transit operations.",
     weight: "The results were then weighted by ridership (<span class='reliability__sidebar-emphasis'>Ridership Weighted Reliability Score</span>) to highlight segments that impact high ridership surface transit service an allow for further prioritization of improvements."
   },
   sources: {
