@@ -1,4 +1,4 @@
-# Regional Transit Priority Setting Toolbox
+# Regional Transit Screening Platform Toolbox
 
 *This tool is in the development phase*
 
@@ -6,7 +6,7 @@ A DVRPC web tool to identify different types of transit gaps to assist in making
 
 ## **Project Overview**
 
-The primary goal of DVRPC’s Regional Transit Priority Setting Study was to develop regionally-consistent, data driven tools that the Commission and its planning partners can use to evaluate service, operational, and new capacity transit investments. Before starting the 2050 Long Range Plan (LRP), DVRPC wanted a fresh look at transit throughout the region. The tools aim to separate the worthwhile transit projects on the existing list from those that are less beneficial, and also generate new transit improvement ideas. 
+The primary goal of DVRPC's Regional Transit Screening Platform Study was to develop regionally-consistent, data driven tools that the Commission and its planning partners can use to evaluate service, operational, and new capacity transit investments. Before starting the 2050 Long Range Plan (LRP), DVRPC wanted a fresh look at transit throughout the region. The tools aim to separate the worthwhile transit projects on the existing list from those that are less beneficial, and also generate new transit improvement ideas. 
 
 This study consists of four primary sections:
 
@@ -19,7 +19,7 @@ This study consists of four primary sections:
 
 `cd <project-directory>`
 
-`git clone https://github.com/rbeatty1/RTPS.git`
+`git clone https://github.com/dvrpc/RTPS.git`
 
 `npm install`
 
