@@ -460,6 +460,36 @@ const BuildPage = content =>{
     ResymbolizeLayers(data.map)
   }
 
+  // handle sidelink story map interaction (abstracted to a helper function because links 1-6 and case study (7) are defined in different places)
+  const clickSideLink = (nav, sectionContent, link, caseStudy) => {
+
+    // toggle active class + remove any existing active classes
+    const allLinks = nav.children
+    const navLength = allLinks.length
+
+    for(var i = 0; i < navLength; i++) {
+      const linkDiv = allLinks[i].children[0]
+      allLinks[i] === link ? linkDiv.classList.add('active') : linkDiv.classList.remove('active')
+    }
+
+    // scroll magic is configured weird for this component and the scrollTo method used in frequency doesn't work so we're going old school here
+    // id of the section (handle the case study interaction which is built differently)
+    const sectionId = caseStudy ? sectionContent : sectionContent.text.id
+    const section = document.getElementById(sectionId)
+    const textContainer = document.querySelector('.accessibility-text')
+
+    // depending on mobile or desktop, get the offset + a buffer to scroll to
+    let offsetAdjustment = mobileZoom ? 365 : 10
+    const offsetTop = section.offsetTop - offsetAdjustment
+
+    // do the scroll
+    textContainer.scrollTo({
+      top: offsetTop,
+      left: 0,
+      behavior: 'smooth'
+    })
+  }
+
   // accessibility content data
   let props = content.props,
     // content HTML container
@@ -475,6 +505,9 @@ const BuildPage = content =>{
   
   // i will be used to populate the dot nav
   let i = 1
+
+  // nav was limited to the scope of (if(data.content.text) so link 7 couldnt access it. Move it here so that it can)
+  let nav = document.getElementById('accessibility-nav')
   
   // create content for each section in component data
   for (let section in props.sections){
@@ -488,41 +521,15 @@ const BuildPage = content =>{
       let container = document.createElement('section'),
       link = document.createElement('a'),
       linkContent = document.createElement('div'),
-      tooltip = document.createElement('span'),
-      nav = document.getElementById('accessibility-nav')
+      tooltip = document.createElement('span')
   
       /* Create Dot Navigation Element*/
       
       // link
       link.id = `${sectionContent.text.id}-link`
-      link.onclick = () => {
 
-        // toggle active class + remove any existing active classes
-        const allLinks = nav.children
-        const navLength = allLinks.length
-
-        for(var i = 0; i < navLength; i++) {
-          const linkDiv = allLinks[i].children[0]
-          allLinks[i] === link ? linkDiv.classList.add('active') : linkDiv.classList.remove('active')
-        }
-
-        // scroll magic is configured weird for this component and the scrollTo method used in frequency doesn't work so we're going old school here
-        // id of the section
-        const sectionId = sectionContent.text.id
-        const section = document.getElementById(sectionId)
-        const textContainer = document.querySelector('.accessibility-text')
-
-        // depending on mobile or desktop, get the offset + a buffer to scroll to
-        let offsetAdjustment = mobileZoom ? 365 : 10
-        const offsetTop = section.offsetTop - offsetAdjustment
-
-        // do the scroll
-        textContainer.scrollTo({
-          top: offsetTop,
-          left: 0,
-          behavior: 'smooth'
-        })
-      }
+      // trigger scroll actions with side nav links
+      link.onclick = () => clickSideLink(nav, sectionContent, link)
       
       // section #
       linkContent.innerText = i
@@ -599,12 +606,16 @@ const BuildPage = content =>{
         linkContent = document.createElement('div'),
         tooltip = document.createElement('span'),
         tabNav = document.createElement('nav'),
-        legend = document.createElement('div')
-
+        legend = document.createElement('div'),
+        // grab the id for clickSideLink to get a handle of the parent container
+        sectionContent = content.content.id
 
       // create dot nav
       link.id = 'caseStudy-link'
       link.rel = 'noopener'
+
+      // trigger scroll actions with side nav links
+      link.onclick = () => clickSideLink(nav, sectionContent, link, true)
 
       // section #
       linkContent.classList.add('accessibility__nav-link')
@@ -628,14 +639,12 @@ const BuildPage = content =>{
       title.innerText = content.title
       text.innerText = content.content[0]
 
-
       container.appendChild(title)
       container.appendChild(tabNav)
       container.appendChild(subtitle)
       container.appendChild(text)
       container.appendChild(legend)
       sectionBody.appendChild(container)
-
 
       BuildScene(container)
 
