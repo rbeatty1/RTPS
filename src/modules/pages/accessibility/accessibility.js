@@ -427,28 +427,30 @@ const BuildPage = content =>{
   }
 
   // go back to the default view for the collingswood jawn
-  const caseStudyDefault = (container, defaultState) => {
-    const legend = document.querySelector('#caseStudy-legend')
+  //(removing this b/c toggling by click is no longer the behavior) - 'default state' is the new #1
+  // const caseStudyDefault = (container, defaultState) => {
+  //   const legend = document.querySelector('#caseStudy-legend')
 
-    const subtitle = container.querySelector('h3')
-    const text = container.querySelector('p')
+  //   const subtitle = container.querySelector('h3')
+  //   const text = container.querySelector('p')
 
-    subtitle.innerText = ''
-    text.innerText = defaultState
-    legend.innerText = ''
+  //   subtitle.innerText = ''
+  //   text.innerText = defaultState
+  //   legend.innerText = ''
 
-    // reset map state to default
-    ResymbolizeLayers(null)
-  }
+  //   // reset map state to default
+  //   ResymbolizeLayers(null)
+  // }
 
-  const ChangeCaseStudyContent = (data, defaultState) =>{
+  const ChangeCaseStudyContent = (data, legend) =>{
+    console.log('data at change case study content ', data)
     const container = document.getElementById('caseStudy')
 
     // clicking on an active jawn goes back to the default case
-    if(defaultState) {
-      caseStudyDefault(container, defaultState)
-      return
-    }
+    // if(defaultState) {
+    //   caseStudyDefault(container, defaultState)
+    //   return
+    // }
 
     let subtitle = container.querySelector('h3'),
       text = container.querySelector('p')
@@ -456,8 +458,17 @@ const BuildPage = content =>{
     subtitle.innerText = data.title
     text.innerText = data.text
 
-    new Legend(data)
-    ResymbolizeLayers(data.map)
+    // only create legend & resymbolize layers if on tab > 1 (aka is object w/data not just a string)
+    if(data.text) {
+      new Legend(data)
+      ResymbolizeLayers(data.map)
+    
+    // remove legend & subtitle if going to the first tab
+    }else {
+      legend.innerText = ''
+      subtitle.innerText = ''
+    }
+
   }
 
   // handle sidelink story map interaction (abstracted to a helper function because links 1-6 and case study (7) are defined in different places)
@@ -648,7 +659,6 @@ const BuildPage = content =>{
 
       BuildScene(container)
 
-
       for (let section in content.content){
         if (section != 0 && section != 'id'){
           let data = content.content[section],
@@ -658,20 +668,15 @@ const BuildPage = content =>{
 
             tab.addEventListener('click', e =>{
               let links = document.querySelectorAll('#caseStudy a')
-              let backToDefault = false
+              
+              //let backToDefault = false
 
               for (let link of links){
-                if (link == e.target) {
-                  if (link.classList.contains('active')) {
-                    backToDefault = true
-                    link.classList.remove('active')
-                  }else{
-                    e.target.classList.add('active')
-                  }
-                }
+                if(link === e.target) link.classList.add('active')
                 else link.classList.remove('active')
               }
-              backToDefault ? ChangeCaseStudyContent(false, props.sections.caseStudy.content[1]) : ChangeCaseStudyContent(data, false) 
+              //backToDefault ? ChangeCaseStudyContent(false, props.sections.caseStudy.content[1]) : ChangeCaseStudyContent(data, false) 
+              ChangeCaseStudyContent(data, legend) 
             })
 
             tabNav.appendChild(tab)
