@@ -45,7 +45,7 @@ const Landing = (props, appContainer) =>{
       const docPDF = documentationLookup[sectionTitle]
       
       docLink.innerText = 'Learn More'
-      docLink.href = `/webmaps/rtps/pdf/${docPDF}`
+      docLink.href = `/webmaps/rtsp/pdf/${docPDF}`
       docLink.target = '_blank'
 
       // explore (analysis page)
