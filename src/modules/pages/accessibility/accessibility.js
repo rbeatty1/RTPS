@@ -393,7 +393,7 @@ const BuildPage = content =>{
   const BuildScene = element =>{
 
     // use the calculated check for mobile to adjust the scrollMagic offset parameters
-    const offset = mobileZoom ? -80 : 50
+    const offset = mobileZoom ? -80 : 110
 
     // define ScrollMagic Scene
     new ScrollMagic.Scene({
@@ -403,12 +403,13 @@ const BuildPage = content =>{
       duration: element.getBoundingClientRect().height + 100,
       offset
     })
-      .on('enter', e=>{
+      .on("enter", e=>{
+        console.log('calling on enter')
         // set active classes to section and corresponding dot navigation element
-        let link = document.querySelector(`#${element.id}-link`),
+        let link = document.querySelector(`#${element.id}-link`).children[0],
           data = content.props.sections[element.id].content.map
         
-        link.children[0].classList.add('active')
+        link.classList.add('active')
         element.classList.add('active')
 
         // resymbolize layers
@@ -416,9 +417,10 @@ const BuildPage = content =>{
       })
 
       // reset to default state
-      .on('leave', e=>{ 
-        let link = document.querySelector(`#${element.id}-link`)
-        link.children[0].classList.remove('active')
+      .on("leave", e=>{ 
+        console.log('calling on leave')
+        let link = document.querySelector(`#${element.id}-link`).children[0]
+        link.classList.remove('active')
         element.classList.remove('active') 
       })
 
@@ -474,7 +476,7 @@ const BuildPage = content =>{
     const textContainer = document.querySelector('.accessibility-text')
 
     // depending on mobile or desktop, get the offset + a buffer to scroll to
-    let offsetAdjustment = mobileZoom ? 365 : 10
+    let offsetAdjustment = mobileZoom ? 365 : 110
     const offsetTop = section.offsetTop - offsetAdjustment
 
     // do the scroll
@@ -487,13 +489,8 @@ const BuildPage = content =>{
 
   // accessibility content data
   let props = content.props,
-    // content HTML container
-    sectionBody = document.createElement('div')
 
-  sectionBody.classList.add('accessibility__text-body')
-
-  // add to page
-  document.querySelector('.accessibility-text').appendChild(sectionBody)
+  sectionBody = document.querySelector('.accessibility-text')
 
   // build map
   content.map = BuildMap(document.querySelector(".accessibility-map"), content.props)
