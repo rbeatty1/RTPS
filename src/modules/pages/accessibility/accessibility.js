@@ -459,6 +459,9 @@ const BuildPage = content =>{
 
   // handle sidelink story map interaction (abstracted to a helper function because links 1-6 and case study (7) are defined in different places)
   const clickSideLink = (nav, sectionContent, link, caseStudy) => {
+    console.log('nav ', nav)
+    console.log('content ', sectionContent)
+    console.log('link ', link)
 
     // toggle active class + remove any existing active classes
     const allLinks = nav.children
@@ -1037,3 +1040,4 @@ export class Accessibility{
     sidebar.appendChild(footer)
   }
 }
+
