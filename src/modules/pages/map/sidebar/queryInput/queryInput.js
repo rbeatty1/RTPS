@@ -145,7 +145,6 @@ class QueryContainer {
           if (node.type == "attributes" && node.attributeName == "data-type" && node.target.getAttribute("data-direction") != undefined) {
 
             geography.type = node.target.getAttribute("data-type");
-            console.log('geography is ', geography)
 
             let direction = document.querySelector('#direction'),
               muni = document.querySelector('#muni')

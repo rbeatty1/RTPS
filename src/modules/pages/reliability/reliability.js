@@ -26,7 +26,7 @@ let layerRef = {
       info: "2017 daily average ridership for SEPTA bus routes was available at the stop level. General Transit Feed Specification <abbr class='reliability__abbr' title='General Transit Feed Specification'>(GTFS)</abbr> was used to convert stop-level ridership to segment-level passenger loads."
     },
     njt: {
-      title: "NJ TRANSIT Ridership (2016)",
+      title: "NJ TRANSIT Bus Ridership (2016)",
       info: "2016-2017 daily average ridership for <abbr class='reliability__abbr' title='New Jersey'>NJ</abbr> Transit bus routes was provided at the stop level."
     }
   },
@@ -250,7 +250,7 @@ const BuildSidebar = (map, data) =>{
         page: 'detail'
       },
       'reliability-njt':  {
-        title: 'NJ TRANSIT Ridership',
+        title: 'NJ TRANSIT Bus Ridership',
         unit: 'Average Daily Ridership',
         page: 'detail'
       }
