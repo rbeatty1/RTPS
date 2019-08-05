@@ -408,7 +408,7 @@ const BuildPage = content =>{
         let link = document.querySelector(`#${element.id}-link`),
           data = content.props.sections[element.id].content.map
         
-        link.classList.add('active')
+        link.children[0].classList.add('active')
         element.classList.add('active')
 
         // resymbolize layers
@@ -418,7 +418,7 @@ const BuildPage = content =>{
       // reset to default state
       .on('leave', e=>{ 
         let link = document.querySelector(`#${element.id}-link`)
-        link.classList.remove('active')
+        link.children[0].classList.remove('active')
         element.classList.remove('active') 
       })
 
