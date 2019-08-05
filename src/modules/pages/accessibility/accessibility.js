@@ -659,6 +659,7 @@ const BuildPage = content =>{
             tab.addEventListener('click', e =>{
               let links = document.querySelectorAll('#caseStudy a')
               let backToDefault = false
+
               for (let link of links){
                 if (link == e.target) {
                   if (link.classList.contains('active')) {
@@ -670,11 +671,10 @@ const BuildPage = content =>{
                 }
                 else link.classList.remove('active')
               }
-              backToDefault ? ChangeCaseStudyContent(false, props.sections.caseStudy.content[0]) : ChangeCaseStudyContent(data, false) 
+              backToDefault ? ChangeCaseStudyContent(false, props.sections.caseStudy.content[1]) : ChangeCaseStudyContent(data, false) 
             })
 
             tabNav.appendChild(tab)
-
         }
       }
     }
@@ -887,8 +887,8 @@ export class Accessibility{
           title: 'Case Study: Collingswood',
           content: {
             id: 'caseStudy',
-            0: 'At the time of this analysis, an elevator was under construction at the Collingswood station, scheduled to open in Spring 2019. This case study shows how to interpret the maps using Collingswood Station on the PATCO line as an example. Click the numbers above to cycle through the maps of the area.',
-            1: {
+            1: 'At the time of this analysis, an elevator was under construction at the Collingswood station, scheduled to open in Spring 2019. This case study shows how to interpret the maps using Collingswood Station on the PATCO line as an example. Click the numbers above to cycle through the maps of the area.',
+            2: {
               title: 'Destinations Reachable by Non-Wheelchair Users',
               text: 'The dark purple surrounding the Collingswood Station shows that non-wheelchair users can reach a large number of destinations',
               map: {
@@ -911,7 +911,7 @@ export class Accessibility{
                 }  
               }
             },
-            2: {
+            3: {
               title: 'Destinations Reachable by Wheelchair Users',
               text: 'The lack of color surrounding the Collingswood station shows that wheelchair users would not be able to reach any destinations via rail from that station. This is because the station is currently not wheelchair accessible.',
               map: {
@@ -934,7 +934,7 @@ export class Accessibility{
                 }
               }
             },
-            3: {
+            4: {
               title: 'Current Destination Disparity for Wheelchair Users Compared to Non-Wheelchair Users',
               text: 'The dark orange surrounding the Collingswood station highlights the difference between maps 1 and 2, showing that wheelchair users are able to reach far fewer destinations than non-wheelchair users from this station.',
               map: {
@@ -957,7 +957,7 @@ export class Accessibility{
                 }
               } 
             },
-            4: {
+            5: {
               title: 'Destinations Reachable in the Future by Wheelchair Users',
               text: 'Wheelchair accessibility improvements are currently under construction at the Collingswood station. Therefore, this map accounting for programmed improvements shows darker purple surrounding the station. Wheelchair users are now able to reach many destinations via rail from Collingswood.',
               map: {
@@ -980,7 +980,7 @@ export class Accessibility{
                 }
               }
             },
-            5: {
+            6: {
               title: 'Remaining Future Destination Disparity for Wheelchair Users in Comparison with Non-Wheelchair Users (Programmed Improvements Included)',
               text: 'The light orange surrounding the Collingswood station shows the difference between map 1 and map 4. With the wheelchair accessibility improvement at the station, wheelchair users are now able to reach a similar amount of destinations as non-wheelchair users. Remaining differences would be due to wheelchair inaccessible stations on the destination end.',
               map: { 
