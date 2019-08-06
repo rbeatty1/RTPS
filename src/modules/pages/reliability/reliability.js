@@ -253,7 +253,25 @@ const BuildSidebar = (map, data) =>{
         title: 'NJ TRANSIT Bus Ridership',
         unit: 'Average Daily Ridership',
         page: 'detail'
-      }
+      },
+      // @TODO #29: reliability score stays on by default b/c it carries over from regional.
+      // the filter doesn't apply to them yet either
+      // these layers also don't get removed when adjusting radio button yet
+      'reliability-score': {
+        title: 'Reliability Score',
+        unit: false,
+        page: 'regional',
+      },
+      'reliability-weighted': {
+        title: 'Reliability Score Weighted by Ridership',
+        unit: false,
+        page: 'regional',
+      },
+      'reliability-tti': {
+        title: 'Travel Time Index',
+        unit: false,
+        page: 'regional',
+      },
     }
   }
   // function to build sidebar tabs
@@ -655,7 +673,7 @@ const BuildSidebar = (map, data) =>{
 
     container.id = 'content-regional'
     
-    descriptiveText.textContent = 'The goal of the surface transit reliability analysis was to identify corridors where surface transit service is particularly slow or delayed as places where road or transit improvements could increase reliability. These regional layers show aggregate measures for all surface transit routes that use a particular road segment.'
+    descriptiveText.textContent = 'The goal of the surface transit reliability analysis was to identify corridors where surface transit service is particularly slow or delayed as places where road or transit improvements could increase reliability. These regional layers show aggregate measures for all surface transit routes that use a particular road segment. These routes can also be filtered by route on the Route Detail tab.'
     layerControl.innerText = 'Show Layer List'
     
     container.appendChild(descriptiveText)
