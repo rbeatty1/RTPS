@@ -273,7 +273,7 @@ const BuildMap = container =>{
   let popup;
 
   // actions to run on map initiation
-  map.on('load', _ => {
+  map.on('load', () => {
 
       // make sure it fills HTML element
       map.resize();
@@ -393,7 +393,7 @@ const BuildPage = content =>{
   const BuildScene = element =>{
 
     // use the calculated check for mobile to adjust the scrollMagic offset parameters
-    const offset = mobileZoom ? -80 : 110
+    let offset = mobileZoom ? -80 : 100
 
     // define ScrollMagic Scene
     new ScrollMagic.Scene({
@@ -403,8 +403,7 @@ const BuildPage = content =>{
       duration: element.getBoundingClientRect().height + 100,
       offset
     })
-      .on("enter", e=>{
-        console.log('calling on enter')
+      .on("enter", () =>{
         // set active classes to section and corresponding dot navigation element
         let link = document.querySelector(`#${element.id}-link`).children[0],
           data = content.props.sections[element.id].content.map
@@ -417,8 +416,7 @@ const BuildPage = content =>{
       })
 
       // reset to default state
-      .on("leave", e=>{ 
-        console.log('calling on leave')
+      .on("leave", () =>{ 
         let link = document.querySelector(`#${element.id}-link`).children[0]
         link.classList.remove('active')
         element.classList.remove('active') 
@@ -459,9 +457,6 @@ const BuildPage = content =>{
 
   // handle sidelink story map interaction (abstracted to a helper function because links 1-6 and case study (7) are defined in different places)
   const clickSideLink = (nav, sectionContent, link, caseStudy) => {
-    console.log('nav ', nav)
-    console.log('content ', sectionContent)
-    console.log('link ', link)
 
     // toggle active class + remove any existing active classes
     const allLinks = nav.children
@@ -479,7 +474,7 @@ const BuildPage = content =>{
     const textContainer = document.querySelector('.accessibility-text')
 
     // depending on mobile or desktop, get the offset + a buffer to scroll to
-    let offsetAdjustment = mobileZoom ? 365 : 110
+    let offsetAdjustment = mobileZoom ? 365 : 100
     const offsetTop = section.offsetTop - offsetAdjustment
 
     // do the scroll
@@ -676,7 +671,6 @@ export class Accessibility{
 
     // the important stuff -- reference for all content
     this.props = {
-      container: document.querySelector('main'),
       sections: {
         intro:{
           title: 'Overview',
@@ -1024,11 +1018,13 @@ export class Accessibility{
     page.appendChild(nav)
     page.appendChild(map)
     page.appendChild(sidebar)
-    this.props.container.appendChild(page)
+    main.appendChild(page)
+
+    let contentStory = document.querySelector('.accessibility-text')
 
     // initiate the scroll
     this.scroll = new ScrollMagic.Controller({
-      container: this.props.container,
+      container: contentStory,
       loglevel: 4
     })
 
