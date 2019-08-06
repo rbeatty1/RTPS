@@ -125,6 +125,9 @@
   width: 100%;
   font-size: 1em;
 }
+.reliability__sidebar-sectionContent-button:hover{
+  cursor: pointer;
+}
 .reliability__sidebar-sectionContent section p{
   color: #08506d;
   padding: 3%;
