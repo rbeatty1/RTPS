@@ -230,9 +230,6 @@ const BuildSidebar = (map, data) =>{
         description: 'TTI is the ratio of peak hour travel time to free flow travel time.'
       },
     },
-    filter: {
-
-    },
     input: {
       'reliability-speed':  {
         title: 'Average Scheduled Speed',
@@ -254,24 +251,22 @@ const BuildSidebar = (map, data) =>{
         unit: 'Average Daily Ridership',
         page: 'detail'
       },
-      // @TODO #29: reliability score stays on by default b/c it carries over from regional.
-      // the filter doesn't apply to them yet either
-      // these layers also don't get removed when adjusting radio button yet
-      'reliability-score': {
+      'reliability-scoreDetail': {
         title: 'Reliability Score',
-        unit: false,
-        page: 'regional',
+        unit: 'Reliability Score',
+        page: 'detail',
       },
-      'reliability-weighted': {
+      'reliability-weightedDetail': {
         title: 'Reliability Score Weighted by Ridership',
-        unit: false,
-        page: 'regional',
+        unit: 'Reliability Score Weighted by Ridership',
+        page: 'detail',
       },
-      'reliability-tti': {
-        title: 'Travel Time Index',
-        unit: false,
-        page: 'regional',
-      },
+      // @TODO: add this + the layer once lines/linenames are added to TTI VT
+      // 'reliability-ttiDetail': {
+      //   title: 'Travel Time Index',
+      //   // unit: 'Travel Time Index',
+      //   page: 'detail',
+      // }
     }
   }
   // function to build sidebar tabs
@@ -456,7 +451,6 @@ const BuildSidebar = (map, data) =>{
 
     // build layer check radio
     for (let layer in layers){
-      
       let option = document.createElement('div'),
         radio = document.createElement('input'),
         label = document.createElement('label'),
@@ -469,7 +463,9 @@ const BuildSidebar = (map, data) =>{
       optionBlurb.classList.add('reliability__layer-option-blurb')
       
       radio.setAttribute('type', 'radio')
-      radio.id = layer.split('-')[1]
+      
+      const radioID = layer.split('-')[1]
+      radio.id = radioID
 
       // default score to checked
       if(radio.id === 'score') radio.checked = true
@@ -481,8 +477,6 @@ const BuildSidebar = (map, data) =>{
       label.setAttribute('for', layer.split('-')[1])
       label.innerHTML = layers[layer].title
       optionBlurb.textContent = layers[layer].description
-
-      //
 
       option.appendChild(radio)
       option.appendChild(label)
@@ -516,19 +510,27 @@ const BuildSidebar = (map, data) =>{
       // otherwise apply the new filter
     }else{
       for (let layer in layers){
-        // only filter "route detail" routes
-        if (layer == 'speed' || layer == 'otp' || layer == 'njt' || layer == 'septa'){
-          let filterExp = ['any']
-  
-          // build important stuff of filter expression
-          filter.forEach(route => {
-            let statement = ['==', 'linename', route]
-            filterExp.push(statement)
-          })
-  
-          // set filter
-          map.setFilter(`reliability-${layer}`, filterExp)
+        
+        // skip the regional layers
+        if(layer === 'score' || layer === 'weighted' || layer === 'tti') continue
+
+        let filterExp = ['any']
+        let filterField;
+
+        if(layer === 'scoreDetail' || layer === 'weightedDetail'){
+          filterField = 'lines'
+        }else {
+          filterField = 'linename'
         }
+
+        // build important stuff of filter expression
+        filter.forEach(route => {
+          let statement = ['==', filterField, route]
+          filterExp.push(statement)
+        })
+        
+        // set filter
+        map.setFilter(`reliability-${layer}`, filterExp)
       }
     }
   }

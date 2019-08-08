@@ -52,6 +52,32 @@ const styles = {
         },
         placement: "admin-2-boundaries"
       },
+      scoreDetail: {
+        type: 'line',
+        source: 'score',
+        paint: {
+          'line-width': [
+            'interpolate',
+            ['linear'],
+            ['zoom'],
+            8, 1.5,
+            12, 3
+          ],
+          'line-color': [
+            'step',
+            ['get', 'score'],
+            '#fcfdbf',
+            4, '#fc8761',
+            8, '#b63679',
+            12, '#50127b',
+            16, '#000004',
+          ]
+        },
+        layout: {
+          visibility: 'none'
+        },
+        placement: "admin-2-boundaries"
+      },
       weighted: {
         type: 'line',
         source: 'weighted',
@@ -61,6 +87,32 @@ const styles = {
             ['linear'],
             ['zoom'],
             8, .2,
+            12, 3
+          ],
+          'line-color': [
+            'step',
+            ['get', 'weighted'],
+            '#fcfdbf',
+            4, '#fc8761',
+            8, '#b63679',
+            12, '#50127b',
+            16, '#000004',
+          ]
+        },
+        layout: {
+          visibility: 'none'
+        },
+        placement: "admin-2-boundaries"
+      },
+      weightedDetail: {
+        type: 'line',
+        source: 'weighted',
+        paint: {
+          'line-width': [
+            'interpolate',
+            ['linear'],
+            ['zoom'],
+            8, 1.5,
             12, 3
           ],
           'line-color': [
