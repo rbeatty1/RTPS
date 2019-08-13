@@ -260,13 +260,7 @@ const BuildSidebar = (map, data) =>{
         title: 'Reliability Score Weighted by Ridership',
         unit: 'Reliability Score Weighted by Ridership',
         page: 'detail',
-      },
-      // @TODO: add this + the layer once lines/linenames are added to TTI VT
-      // 'reliability-ttiDetail': {
-      //   title: 'Travel Time Index',
-      //   // unit: 'Travel Time Index',
-      //   page: 'detail',
-      // }
+      }
     }
   }
   // function to build sidebar tabs
@@ -702,7 +696,7 @@ const BuildSidebar = (map, data) =>{
 
     container.id = 'content-input'
 
-    descriptiveText.textContent = 'The layers on this tab are best viewed at the route level. Use the filter to select a surface transit route to examine in detail. When multiple routes are displayed, colors will reflect whichever route is on top.'
+    descriptiveText.textContent = 'The first four layers on this tab are best viewed at the route level. Use the filter to select a surface transit route to examine in detail. When multiple routes are displayed, colors will reflect whichever route is on top.'
 
     container.appendChild(descriptiveText)
 
