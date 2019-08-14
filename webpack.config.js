@@ -53,12 +53,12 @@ module.exports = {
         port: 9000
     },
     plugins: [
+        "transform-async-to-generator",
         new HtmlWebpackPlugin({
             title: 'Custom Template',
             template: 'index.html',
             hash: true
         }),
-        extractPlugin,
-        "transform-async-to-generator"
+        extractPlugin
     ]
 };
