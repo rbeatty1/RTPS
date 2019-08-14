@@ -29,8 +29,6 @@
   text-decoration: none;
 }
 
-/* #e0ffff */
-
 .accessibility__nav-link{
   position: relative;
   display: inline-block;
@@ -115,7 +113,7 @@
   margin-bottom: 0.5rem;
 }
 .accessibility-section>p{
-  color: #e0ffff;
+  color: #fcfcfc;
   font-size: .95rem;
   width: 90%;
   margin: 2% auto;
