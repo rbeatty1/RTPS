@@ -12,11 +12,11 @@
 
 #logo-container{  
   background: #fff;
-  padding-bottom: 15%;
+  padding-bottom: 11%;
 }
 
 #logo-container svg{
-  margin: 4% 0 0 10%;
+  margin: 5% 0 0 10%;
   width: 20%;
   height: auto;
 }
@@ -147,12 +147,13 @@
     font-size: 1rem;
   }
   #desc-container {
-    margin: 21% 0 0 0;
+    margin: 16% 0 0 0;
   }
   #desc-container p {
     font-size: 1rem;
-    width: 95%;
+    width: 85%;
     margin: 0 auto;
+    text-align: center;
   }
   #desc-container.active p {
     margin-top: 3%;
@@ -162,18 +163,22 @@
   }
   .content-links {
     font-size: 1.1rem;
-    margin-left: 2.5%;
+    display: block;
+    width: 70%;
+    margin: 0 auto;
   }
 }
 
 /* mobile */
 @media all and (max-width: 500px) {
   #logo-container {
-    padding-bottom: 42%;
+    padding-bottom: 27%;
   }
   #logo-container svg{
-    width: 43%;
-    margin-top: 5%;
+    width: 50%;
+    display: block;
+    margin: 0 auto;
+    padding-top: 20%;
   }
   #home nav {
     height: 15px;
@@ -194,11 +199,14 @@
     width: 67px;
     font-size: 0.65rem;
   }
+  .content-links{
+    font-size: 0.9rem;
+  }
   #desc-container {
     margin: 20% 0 0 0 ;
   }
   #desc-container p strong {
-    font-size: 1rem;
+    font-size: 0.8rem;
   }
   #desc-container p {
     font-size: 0.9rem;
