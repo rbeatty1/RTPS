@@ -18,7 +18,8 @@ module.exports = {
                 test: /\.js$/,
                 loader: 'babel-loader',
                 query: {
-                    presets: ['es2015']
+                    presets: ['@babel/preset-es2015'],
+                    plugins: ["@babel/plugin-transform-async-to-generator"]
                 }
             },
             {
@@ -53,7 +54,6 @@ module.exports = {
         port: 9000
     },
     plugins: [
-        "transform-async-to-generator",
         new HtmlWebpackPlugin({
             title: 'Custom Template',
             template: 'index.html',
