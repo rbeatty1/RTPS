@@ -25,10 +25,12 @@ const Landing = (props, appContainer) =>{
       @purpose: Changes home page text based on active link. Pulls content from parent function (SectionChange)
     */
     const ChangeText = () =>{
+
       // grab appropriate data
       let content = props[section],
-        textContainer = document.getElementById('desc-container'),
-        linksContainer = document.createElement('div')
+        textContainer = document.getElementById('desc-container')
+
+      const linksContainer = document.createElement('div')
 
       // clear description text
       while(textContainer.firstChild){ textContainer.removeChild(textContainer.firstChild) }
@@ -55,9 +57,8 @@ const Landing = (props, appContainer) =>{
 
       linksContainer.appendChild(appLink)
       linksContainer.appendChild(docLink)
-
-      
       textContainer.appendChild(linksContainer)
+
       // add appropriate description text (see this.props[section].description)
       textContainer.insertAdjacentHTML('beforeend', content.description)
       const home = document.getElementById('home')
@@ -71,15 +72,12 @@ const Landing = (props, appContainer) =>{
       for (let button of buttons){
         button == target ? button.classList.add('active') : button.classList.remove('active')
       }
-
-
     }
 
     // change appropriate elements from logo svg to correct tool primary color (function in src/utils/LoadMain.js) 
     ChangeLogo(section)
     ChangeText()
     ActivateButton()
-
   }
 
   let i = 0
@@ -141,8 +139,6 @@ const Landing = (props, appContainer) =>{
           `
           )
       }
-      
-      
       appContainer.appendChild(section)
     }
 

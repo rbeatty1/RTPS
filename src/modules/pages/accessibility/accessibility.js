@@ -2,7 +2,7 @@ import '../../../css/pages/accessibility/accessibility.css'
 import { styles } from '../map/map_styles/accessibility.js'
 import { Legend } from './legend';
 import { CreateDvrpcNavControl } from '../../../utils/defaultExtentControl';
-import { headerRender } from "../../header/header";
+import { Header } from "../../header/header.js";
 import { HeaderElements } from "../../header/HeaderElements";
 import { Footer } from "../../footer/footer";
 
@@ -996,7 +996,8 @@ export class Accessibility{
   }
 
   render(){
-    if (!document.querySelector('header')) headerRender(HeaderElements)
+    // @TODO what the fuck man
+    if (!document.querySelector('header')) Header(HeaderElements)
     let main = document.querySelector('main')
     main.id = 'accessibility'
     if (!document.querySelector('footer')) new Footer();

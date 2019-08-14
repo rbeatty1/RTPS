@@ -5,9 +5,10 @@ const path = require('path'),
 let extractPlugin = new ExtractTextPlugin({
     filename: './bundle.styles.css'
 })
+
 module.exports = {
     context: path.resolve(__dirname, 'src'),
-    entry: `./app.js`,
+    entry: ['whatwg-fetch', `./app.js`],
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: 'js/[name].bundle.js'
@@ -16,10 +17,9 @@ module.exports = {
         rules: [
             {
                 test: /\.js$/,
-                loader: 'babel-loader',
-                query: {
-                    presets: ['@babel/preset-es2015'],
-                    plugins: ["@babel/plugin-transform-async-to-generator"]
+                exclude: /node_modules/,
+                use: {
+                    loader: 'babel-loader'
                 }
             },
             {
@@ -59,6 +59,6 @@ module.exports = {
             template: 'index.html',
             hash: true
         }),
-        extractPlugin
+        extractPlugin,
     ]
 };
