@@ -58,6 +58,7 @@ module.exports = {
             template: 'index.html',
             hash: true
         }),
-        extractPlugin
+        extractPlugin,
+        "transform-async-to-generator"
     ]
 };
