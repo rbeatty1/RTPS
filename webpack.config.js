@@ -39,7 +39,6 @@ module.exports = {
                         limit: 1000
                     }
                 }]
-                
             },
             {
                 test: /\.css/,

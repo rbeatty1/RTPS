@@ -1,4 +1,5 @@
 import '../../css/header/header.css'
+import headerLogoSrc from '../../img/header-logo.png'
 import {NavControl} from './navControls/navControls';
 import { SetNewURL } from '../../utils/routing';
 import { HeaderElements } from './HeaderElements';
@@ -19,7 +20,7 @@ function headerRender(elements){
     headerLogo.id = 'header__dvrpc-logo'
     headerPipe.id = 'header__pipe'
 
-    headerLogo.src = "../../img/header-logo.png"
+    headerLogo.src = headerLogoSrc
     headerLogo.alt = "DVRPC logo"
     logoContainer.alt = 'Regional Transit Screening Platform Logo'
 
