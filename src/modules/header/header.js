@@ -6,20 +6,36 @@ import { HeaderElements } from './HeaderElements';
 function headerRender(elements){
     const appBody = document.querySelector('#app');
     const header = document.createElement('header')
-    header.className = 'header__container';
-    appBody.appendChild(header);
-
-    // logo
-    let logoContainer = document.createElement('div')
+    const logoContainer = document.createElement('div')
+    const headerLogoLink = document.createElement('a')
+    const headerLogo = document.createElement('img')
+    // separator
+    const headerPipe = document.createElement('span')
     
+    
+    header.className = 'header__container';
     logoContainer.className = 'header__project-logo';
-    logoContainer.insertAdjacentHTML('afterbegin', require('../../img/rtsp-project.svg'))
+    
+    headerLogo.id = 'header__dvrpc-logo'
+    headerPipe.id = 'header__pipe'
+
+    headerLogo.src = "../../img/header-logo.png"
+    headerLogo.alt = "DVRPC logo"
     logoContainer.alt = 'Regional Transit Screening Platform Logo'
 
-    logoContainer.firstChild.onclick = e => {
+    headerLogoLink.href = 'https://www.dvrpc.org/'
+    
+    appBody.appendChild(header);
+    headerLogoLink.appendChild(headerLogo)
+    logoContainer.appendChild(headerLogoLink)
+    logoContainer.appendChild(headerPipe)
+    logoContainer.insertAdjacentHTML('beforeend', require('../../img/rtsp-project.svg'))
+
+    logoContainer.lastChild.onclick = e => {
         history.pushState({page: 'home', type: 'home'}, document.title, window.location.origin + window.location.pathname)
         SetNewURL()
     }
+
     header.appendChild(logoContainer);
     
     // nav controls

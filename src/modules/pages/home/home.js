@@ -101,8 +101,8 @@ const Landing = (props, appContainer) =>{
             // not anymore!
             activeLink.classList.remove('active')
 
-            let descriptionContainer = document.getElementById('desc-container'),
-              logoFills = document.querySelectorAll('.logo-fill')
+            const descriptionContainer = document.getElementById('desc-container')
+            const logoFills = document.querySelectorAll('.logo-fill')
             
             // remove all children from description container
               while (descriptionContainer.firstChild) descriptionContainer.removeChild(descriptionContainer.firstChild)

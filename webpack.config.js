@@ -8,7 +8,9 @@ let extractPlugin = new ExtractTextPlugin({
 
 module.exports = {
     context: path.resolve(__dirname, 'src'),
-    entry: ['whatwg-fetch', `./app.js`],
+    // @TODO this is garbage. fetch and core-js add literally 500kb of bloat just to accommodate IE 11 and it still needs 'Symbols'. Garbage. Pure garbage
+        // find a better solution
+    entry: ['whatwg-fetch', 'core-js/features/promise', `./app.js`],
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: 'js/[name].bundle.js'
