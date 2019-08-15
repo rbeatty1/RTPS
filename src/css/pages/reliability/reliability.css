@@ -347,3 +347,12 @@ input[type=checkbox]:checked>label{
 
   }
 }
+
+@media all and (max-width: 320px) {
+  #reliability__page {
+    font-size: 12px;
+  }
+  #content-regional, #content-input, .reliability__layer-option {
+    font-size: 1em !important;
+  }
+}

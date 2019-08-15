@@ -264,3 +264,9 @@
     width: 25%;
   }
 }
+
+@media all and (max-width: 320px ) {
+  .accessibility-section > p {
+    font-size: 12px;
+  }
+}

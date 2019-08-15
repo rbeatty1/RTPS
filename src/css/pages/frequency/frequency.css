@@ -414,3 +414,9 @@
     width: 25%;
   }
 }
+
+@media all and (max-width: 320px) {
+  .frequency__story-section p{
+    font-size: 14px;
+  }
+}
