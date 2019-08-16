@@ -103,7 +103,7 @@
 
 .accessibility-section h1{
   text-align: center;
-  color: #0A3B4D;
+  color: #fff;
   font-size: 1.75rem;
   margin: 2% 0 3% 0;
   padding: 0 5%;
@@ -222,7 +222,7 @@
 #caseStudy h3{
   text-align: center;
   font-size: 1.15rem;
-  color: #3b3e42;
+  color: #fcfcfc;
   width: 80%;
   margin: 1% auto;
 }

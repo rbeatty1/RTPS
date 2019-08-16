@@ -10,23 +10,23 @@ const createFooter = () => {
     const footerLogo = document.createElement('img')
     const address = document.createElement('address')
     const dvrpcContact = document.createElement('span')
-    const titleXI = document.createElement('a')
+    const titleVI = document.createElement('a')
 
     addressContactWrapper.classList.add('footer-content-wrapper')
     footerLogoLink.id = 'footer-logo-link'
     footerLogo.id = 'footer-logo'
     dvrpcContact.id = 'footer-phone'
-    titleXI.id = 'footer-titleXI'
+    titleVI.id = 'footer-titleVI'
 
     footerLogoLink.href="https://www.dvrpc.org/"
-    titleXI.href="/GetInvolved/TitleVI/"
+    titleVI.href="/GetInvolved/TitleVI/"
     footerLogoLink.target = "blank"
     footerLogo.src = logo
     footerLogo.alt = 'dvrpc logo'
 
     address.textContent = '190 N Independence Mall W, 8th Floor Philadelphia, PA 19106'
     dvrpcContact.textContent = '  |  215.592.1800'
-    titleXI.textContent = 'Title XI and Environmental Justice'
+    titleVI.textContent = 'Title VI and Environmental Justice'
 
     address.appendChild(dvrpcContact)
 
@@ -62,7 +62,7 @@ const createFooter = () => {
 
     mainFragment.appendChild(addressFragment)
     mainFragment.appendChild(contactFragment)
-    mainFragment.appendChild(titleXI)
+    mainFragment.appendChild(titleVI)
     mainFragment.appendChild(versionFragment)
 
     return mainFragment
