@@ -250,17 +250,18 @@ const BuildSidebar = (map, data) =>{
         title: 'NJ TRANSIT Bus Ridership',
         unit: 'Average Daily Ridership',
         page: 'detail'
-      },
-      'reliability-scoreDetail': {
-        title: 'Reliability Score',
-        unit: 'Reliability Score',
-        page: 'detail',
-      },
-      'reliability-weightedDetail': {
-        title: 'Reliability Score Weighted by Ridership',
-        unit: 'Reliability Score Weighted by Ridership',
-        page: 'detail',
       }
+      // issue #70 - hiding these for now until we can either smooth out the filtered lines or drop it altogether
+      // 'reliability-scoreDetail': {
+      //   title: 'Reliability Score',
+      //   unit: 'Reliability Score',
+      //   page: 'detail',
+      // },
+      // 'reliability-weightedDetail': {
+      //   title: 'Reliability Score Weighted by Ridership',
+      //   unit: 'Reliability Score Weighted by Ridership',
+      //   page: 'detail',
+      // }
     }
   }
   // function to build sidebar tabs
