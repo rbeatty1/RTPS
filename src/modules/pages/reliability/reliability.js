@@ -224,7 +224,7 @@ const BuildSidebar = (map, data) =>{
         description: 'Results weighted by ridership to highlight unreliable segments that impact the most passengers.'
       },
       'reliability-tti': {
-        title: 'Travel Time Index',
+        title: 'Travel Time Index (TTI)',
         unit: false,
         page: 'regional',
         description: 'TTI is the ratio of peak hour travel time to free flow travel time.'
