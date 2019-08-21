@@ -21,7 +21,7 @@ const BuildMenus = appContent =>{
     learnMoreLink.classList.add('map__sidebar-learn-more')
     learnMoreLink.href=`/webmaps/rtsp/pdf/${docPDF}`
     learnMoreLink.target = '_blank'
-    learnMoreLink.textContent = 'Learn More.'
+    learnMoreLink.textContent = 'Learn More'
     return learnMoreLink
   }
 

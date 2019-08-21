@@ -40,7 +40,7 @@ let layerRef = {
   sources: {
     main: {
       title: 'Reliability Data',
-      info: `<a href="https://drive.google.com/drive/folders/1aXwLVweE9xqqZgYIgT6ZC3XREJRwgfHB?usp=sharing" target="blank"> View and download reliability data</a>.<a class="reliability-learn-more" href="/webmaps/rtsp/pdf/${docPDF}" target="_blank">Learn More.</a>`
+      info: `<a href="https://drive.google.com/drive/folders/1aXwLVweE9xqqZgYIgT6ZC3XREJRwgfHB?usp=sharing" target="blank"> View and download reliability data</a>.<a class="reliability-learn-more" href="/webmaps/rtsp/pdf/${docPDF}" target="_blank">Learn More</a>`
     }
   }
 }

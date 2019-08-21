@@ -683,7 +683,7 @@ export class Accessibility{
               <p>This analysis identifies essential services (jobs, grocery stores, medical offices, etc) that can be reached via transit where wheelchair users and
               persons with mobility impairments are most impacted by wheelchair inaccessible rail stations. These maps can be used to help prioritize rail station improvements.</p>
               <p>This analysis considers programmed accessibility improvements such as adding an elevator. The lists of programmed improvements was obtained from transit agencies
-              in 2018.</p><a class="accessibility-learn-more" href="/webmaps/rtsp/pdf/${docPDF}" target="_blank">Learn More.</a>`
+              in 2018.</p><a class="accessibility-learn-more" href="/webmaps/rtsp/pdf/${docPDF}" target="_blank">Learn More</a>`
             },
             map:{
               paint: [
