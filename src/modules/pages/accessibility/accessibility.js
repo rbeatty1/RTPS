@@ -316,7 +316,7 @@ const BuildMap = container =>{
         color = 'rgba(232,146,52,.85)'
         break;
       case 1: 
-        color = 'rgba(139,178,63,.85)'  
+        color = 'rgba(139,178,63,.85)'
         break;
       case 2:
         color = 'rgba(8,80,109,.85)'  
@@ -688,11 +688,7 @@ export class Accessibility{
             map:{
               paint: [
                 'interpolate', ['linear'], ['get', 'AccAll'],
-                1, 'rgba(0,0,0,0.01)',
-                2, '#a6bddb',
-                5, '#3690c0',
-                7, '#045a8d',
-                10, '#023858'
+                1, 'rgba(0,0,0,0.01)'
               ],
               stationPaint: ['match', ['get', 'accessibility'], 0, '#e89234', 1, '#8bb23f', 2, '#08506d', '#ccc'],
               legend:{
