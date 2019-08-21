@@ -694,7 +694,6 @@ export class Accessibility{
               legend:{
                 stations: [[0, '#e89234'], [1, '#8bb23f'], [2, '#08506d']]
               }
-
             }
           }
         },
