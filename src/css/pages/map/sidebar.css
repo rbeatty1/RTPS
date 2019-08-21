@@ -204,6 +204,10 @@
   font-weight: 700;
   color: #e89234;
 }
+.map__sidebar-learn-more{
+  margin-left: 10%;
+  color: #f7f7f7;
+}
 
 @media all and (max-width: 800px) {
   .gap {

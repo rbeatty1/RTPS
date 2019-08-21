@@ -3,7 +3,7 @@ import { QueryContainer } from './queryInput/queryInput.js'
 import { HeaderElements } from '../../../header/HeaderElements.js'
 import {Legend} from './legend.js'
 import { Footer } from '../../../footer/footer';
-
+import documentationLookup from '../../home/documentationLookup.js'
 
 /*
   BuildMenus(appContent)
@@ -12,6 +12,19 @@ import { Footer } from '../../../footer/footer';
     appContent: content reference object for page
 */
 const BuildMenus = appContent =>{
+
+  // add the learn more link to the bottom of the regional and local tabs
+  const buildLearnMore = name => {
+    const docPDF = documentationLookup[name]
+    const learnMoreLink = document.createElement('a')
+    
+    learnMoreLink.classList.add('map__sidebar-learn-more')
+    learnMoreLink.href=`/webmaps/rtsp/pdf/${docPDF}`
+    learnMoreLink.target = '_blank'
+    learnMoreLink.textContent = 'Learn More.'
+    return learnMoreLink
+  }
+
   /*
     MenuContent(menu, container, content)
     @purpose: build specific tab content
@@ -149,7 +162,6 @@ const BuildMenus = appContent =>{
         section.appendChild(content)
         container.appendChild(section)
       }
-  
     }
   
     let jawn = document.createElement('div'),
@@ -180,7 +192,6 @@ const BuildMenus = appContent =>{
             results.id = 'gap__results-section'
             jawn.appendChild(results)
         }
-
       }
     }
     // do regional analysis tab stuff
@@ -195,7 +206,6 @@ const BuildMenus = appContent =>{
     TransitToggle(jawn)
     container.appendChild(jawn)
   }
-
 
   let container = document.querySelector('.gap').appendChild(document.createElement('aside'))
   container.classList.add('map__sidebar')
@@ -225,9 +235,12 @@ const BuildMenus = appContent =>{
     })
     
   }
-  const footer = new Footer().footer
-  sidebarContent.appendChild(footer)
 
+  const learnMore = buildLearnMore('Transit Network Gap Analyzer')
+  const footer = new Footer().footer
+
+  sidebarContent.appendChild(learnMore)
+  sidebarContent.appendChild(footer)
   container.appendChild(sidebar)
   container.appendChild(sidebarContent)
 }

@@ -5,7 +5,9 @@ import { CreateDvrpcNavControl } from '../../../utils/defaultExtentControl';
 import { Header } from "../../header/header.js";
 import { HeaderElements } from "../../header/HeaderElements";
 import { Footer } from "../../footer/footer";
+import documentationLookup from '../home/documentationLookup.js'
 
+const docPDF = documentationLookup['Wheelchair Accessibility']
 
 /*
   LoadStations(map)
@@ -681,7 +683,7 @@ export class Accessibility{
               <p>This analysis identifies essential services (jobs, grocery stores, medical offices, etc) that can be reached via transit where wheelchair users and
               persons with mobility impairments are most impacted by wheelchair inaccessible rail stations. These maps can be used to help prioritize rail station improvements.</p>
               <p>This analysis considers programmed accessibility improvements such as adding an elevator. The lists of programmed improvements was obtained from transit agencies
-              in 2018.</p>`
+              in 2018.</p><a class="accessibility-learn-more" href="/webmaps/rtsp/pdf/${docPDF}" target="_blank">Learn More.</a>`
             },
             map:{
               paint: [
@@ -996,7 +998,6 @@ export class Accessibility{
   }
 
   render(){
-    // @TODO what the fuck man
     if (!document.querySelector('header')) Header(HeaderElements)
     let main = document.querySelector('main')
     main.id = 'accessibility'

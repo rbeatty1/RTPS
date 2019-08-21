@@ -4,6 +4,11 @@
   order: 2;
 }
 
+.reliability-learn-more{
+  display: block;
+  margin-top: 5px;
+}
+
 #reliability__page{
   height: 100%;
   width: 100%;
@@ -16,9 +21,6 @@
 #reliability__sidebar{
   width: 30%;
   height: 100%;
-  /* darker backgrounds so that white text can be used accessibly:
-    A96623
-  */
   background: #A96623;
   overflow-y: auto;
 }

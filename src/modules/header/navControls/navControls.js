@@ -23,7 +23,6 @@ const createTooltip = name => {
         item: entry from HeaderElements object that defines the link
     @return:
         link: link with appropriate attributes for nav link section. Includes listener event to load correct page on click
-            @TODO: Should probably implement formal routing procedure for navigation between pages, not just executing a function that builds the appropriate page
 
 */
 const _createNavLink = item =>{

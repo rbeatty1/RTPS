@@ -3,8 +3,10 @@ import { LoadLayers, addRailLayers } from "../../../utils/loadMapLayers";
 import {FormatNumber} from "../../../utils/formatNumber"
 import { styles } from "../map/map_styles/frequency";
 import { CreateDvrpcNavControl } from "../../../utils/defaultExtentControl";
-import { Footer } from '../../footer/footer.js'
-import { div } from "gl-matrix/src/gl-matrix/vec2";
+import { Footer } from '../../footer/footer.js';
+import documentationLookup from '../home/documentationLookup.js'
+
+const docPDF = documentationLookup['Higher Frequency Scenario']
 
 const contentRef = {
   about: {
@@ -14,7 +16,7 @@ const contentRef = {
     content: {
       map: false,
       table: false,
-      text:  `<p>DVRPC's regional travel demand model was used to conduct a transit frequency experiment. The results of the experiment, outlined below, compare a modeled scenario with existing frequency to one with doubled frequency for all services and routes. In reality, the frequency that it is possible to provide depends on “soft factors” like operating funding and staffing levels, as well as “hard factors” like fleet size and infrastructure carrying capacity. As a result, it would not be possible to double frequencies for all services in all places, and the investments necessary to do so for individual routes would vary. Nevertheless these results  serve as a screening tool to identify which areas and routes might respond the most to higher frequencies as candidates for further study.</p>`
+      text:  `<p>DVRPC's regional travel demand model was used to conduct a transit frequency experiment. The results of the experiment, outlined below, compare a modeled scenario with existing frequency to one with doubled frequency for all services and routes. In reality, the frequency that it is possible to provide depends on “soft factors” like operating funding and staffing levels, as well as “hard factors” like fleet size and infrastructure carrying capacity. As a result, it would not be possible to double frequencies for all services in all places, and the investments necessary to do so for individual routes would vary. Nevertheless these results  serve as a screening tool to identify which areas and routes might respond the most to higher frequencies as candidates for further study.</p><a class="frequency-learn-more" href="/webmaps/rtsp/pdf/${docPDF}" target="_blank">Learn More.</a>`
     }
   },
   overview: {
@@ -241,7 +243,6 @@ const contentRef = {
         legend: [{
           name: "Absolute Ridership Change",
           units: "Estimated Passengers per Day",
-          // @TODO HERE: could we also change the labels? rather than a range just do <
           scheme: [
             ["< 1,400", "#FEFABA"],
             ["< 1,600", "#F6D374"],

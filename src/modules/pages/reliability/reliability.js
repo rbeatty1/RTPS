@@ -5,6 +5,9 @@ import { FormatNumber } from '../../../utils/formatNumber';
 import { CreateDvrpcNavControl } from '../../../utils/defaultExtentControl';
 import { Footer } from "../../footer/footer";
 import { makeFilter, populateDatalist } from './makeFilter.js';
+import documentationLookup from '../home/documentationLookup.js'
+
+const docPDF = documentationLookup['Wheelchair Accessibility']
 
 let layerRef = {
   purpose: "The goal of the surface transit reliability analysis was to identify corridors where surface transit service is particularly slow or delayed as places where road or transit improvements could increase reliability.",
@@ -37,7 +40,7 @@ let layerRef = {
   sources: {
     main: {
       title: 'Reliability Data',
-      info: '<a href="https://drive.google.com/drive/folders/1aXwLVweE9xqqZgYIgT6ZC3XREJRwgfHB?usp=sharing" target="blank"> View and download reliability data</a>.'
+      info: `<a href="https://drive.google.com/drive/folders/1aXwLVweE9xqqZgYIgT6ZC3XREJRwgfHB?usp=sharing" target="blank"> View and download reliability data</a>.<a class="reliability-learn-more" href="/webmaps/rtsp/pdf/${docPDF}" target="_blank">Learn More.</a>`
     }
   }
 }
