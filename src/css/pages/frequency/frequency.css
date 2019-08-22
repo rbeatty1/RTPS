@@ -109,16 +109,13 @@
     flex-flow: row;
     justify-content: center;
     align-items: center;
-    background: whitesmoke
+    background: #fcfcfc
   }
 
 
   .frequency__content-story{
     width: 30%;
     overflow-y: scroll;
-    /* 
-      e9e4ab
-     */
     background: #e9e4ab;
   }
   .frequency__content-map{
@@ -145,13 +142,7 @@
   min-height: 33vh;
   margin: 33% auto;
   justify-content: center;
-  /* updating for theme
-    old color: e9e4ab
-    other yellow: eedc14
-    better yellow: fff25d
-
-  */
-  background: #fff25d
+  background: #fffbd0;
 }
 
 .frequency__story-section p{
@@ -213,7 +204,7 @@
     margin: 0 auto;
     text-align: center;
     flex-flow: column;
-    background: whitesmoke;
+    background: #fcfcfc;
     border-radius: 5px;
     padding: 3%;
     overflow-x: auto;
@@ -284,7 +275,7 @@
     font-size: .8rem;
     border-radius: 5px;
     padding: 2%;
-    background: whitesmoke;
+    background: #fcfcfc;
     text-align: center;
     color: #08506d;
   }
