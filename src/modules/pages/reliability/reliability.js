@@ -7,7 +7,7 @@ import { Footer } from "../../footer/footer";
 import { makeFilter, populateDatalist } from './makeFilter.js';
 import documentationLookup from '../home/documentationLookup.js'
 
-const docPDF = documentationLookup['Wheelchair Accessibility']
+const docPDF = documentationLookup['Surface Transit Reliability']
 
 let layerRef = {
   purpose: "The goal of the surface transit reliability analysis was to identify corridors where surface transit service is particularly slow or delayed as places where road or transit improvements could increase reliability.",
