@@ -17,6 +17,7 @@ const docPDF = documentationLookup['Wheelchair Accessibility']
     - map: Mapbox GL element to add layer to
 */
 const LoadStations = map =>{
+  // shell of the geoJSON we will build on the fly
   let mapStations = {
     crs: {
       properties: {name: 'EPSG:4326'},
@@ -25,26 +26,14 @@ const LoadStations = map =>{
     features: [],
     type: 'FeatureCollection'
   }
-
-  /* Feature format
-    geometry: {
-      type: 'Point',
-      coordinates: [lat, lng]
-    },
-    properties: {
-      dvrpc_id: int
-    },
-    type: 'Feature'
-  */
   
   // hit AGO endpoint and load geometries
-  // @NOTE: this returns a JSON instead of a geoJSON because for REASONS invoking `.json()` on the geoJSON response drops all properties...
+  // @NOTE: this returns a JSON instead of a geoJSON because invoking `.json()` on the geoJSON response drops all properties... because reasons.
   fetch('https://services1.arcgis.com/LWtWv6q6BJyKidj8/arcgis/rest/services/DVRPC_Passenger_Rail_Stations/FeatureServer/0/query?where=1%3D1&outfields=dvrpc_id,station&outSR=4326&f=json')
   
   // parse json return if fetch is successful
   .then(ago=>{ if (ago.status == 200){ return ago.json() } })
   .then(agoStations=>{
-    console.log('ago stations ', agoStations)
     
     // hit RTPS API to load stations table from DB
     fetch('https://alpha.dvrpc.org/api/rtps/access?stations')
@@ -63,6 +52,8 @@ const LoadStations = map =>{
         // @NOTE: creating a geoJSON on the fly here b/c of the aforementioned behavior when parsing a geoJSON return.
         // ideally we figure out why that's dropping proprties and can go back to just adding fields to the existing response and using it.
         if(dbStations[dvrpc_id]) {
+          const score = dbStations[dvrpc_id].accessible
+
           mapStations.features.push({
             "geometry": {
               "type": 'Point',
@@ -70,15 +61,13 @@ const LoadStations = map =>{
             },
             "properties": {
               "dvrpc_id": dvrpc_id,
-              "station": station
+              "STATION": station,
+              "accessibility": score
             },
             "type": "Feature"
           })
         }
-
       })
-
-      console.log('new geoJSON ', mapStations)
       
       // add source to map
       map.addSource('stations', { type: 'geojson', data: mapStations })
