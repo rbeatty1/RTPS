@@ -17,13 +17,34 @@ const docPDF = documentationLookup['Wheelchair Accessibility']
     - map: Mapbox GL element to add layer to
 */
 const LoadStations = map =>{
+  let mapStations = {
+    crs: {
+      properties: {name: 'EPSG:4326'},
+      type: 'name'
+    },
+    features: [],
+    type: 'FeatureCollection'
+  }
+
+  /* Feature format
+    geometry: {
+      type: 'Point',
+      coordinates: [lat, lng]
+    },
+    properties: {
+      dvrpc_id: int
+    },
+    type: 'Feature'
+  */
   
   // hit AGO endpoint and load geometries
-  fetch('https://opendata.arcgis.com/datasets/68b970bf65bc411c8a7f8f7b0bb7908d_0.geojson')
+  // @NOTE: this returns a JSON instead of a geoJSON because for REASONS invoking `.json()` on the geoJSON response drops all properties...
+  fetch('https://services1.arcgis.com/LWtWv6q6BJyKidj8/arcgis/rest/services/DVRPC_Passenger_Rail_Stations/FeatureServer/0/query?where=1%3D1&outfields=dvrpc_id,station&outSR=4326&f=json')
   
   // parse json return if fetch is successful
   .then(ago=>{ if (ago.status == 200){ return ago.json() } })
   .then(agoStations=>{
+    console.log('ago stations ', agoStations)
     
     // hit RTPS API to load stations table from DB
     fetch('https://alpha.dvrpc.org/api/rtps/access?stations')
@@ -32,24 +53,35 @@ const LoadStations = map =>{
     .then(dbReturn=>{ if (dbReturn.status == 200) { return dbReturn.json() } })
     .then(dbStations=>{
       
-      // define fields to keep from AGO endpoint
-        // TODO: change endpoint, more robust query to only grab necessary fields
-      let keep = ['DVRPC_ID', 'STATION', 'accessibility']
-      
       // append DB data to geometry
       agoStations.features.forEach(feature=>{
-        if (dbStations[feature.properties.DVRPC_ID]){
-          feature.properties.accessibility = dbStations[feature.properties.DVRPC_ID].accessible
+        const props = feature.attributes
+        const dvrpc_id = props.dvrpc_id
+        const station = props.station
+        const geom = [feature.geometry.x, feature.geometry.y]
+
+        // @NOTE: creating a geoJSON on the fly here b/c of the aforementioned behavior when parsing a geoJSON return.
+        // ideally we figure out why that's dropping proprties and can go back to just adding fields to the existing response and using it.
+        if(dbStations[dvrpc_id]) {
+          mapStations.features.push({
+            "geometry": {
+              "type": 'Point',
+              "coordinates": geom
+            },
+            "properties": {
+              "dvrpc_id": dvrpc_id,
+              "station": station
+            },
+            "type": "Feature"
+          })
         }
-        
-        // delete unneeded fields
-        for (let prop in feature.properties){
-          keep.indexOf(prop) == -1 ? delete feature.properties[`${prop}`] : null
-        }
+
       })
+
+      console.log('new geoJSON ', mapStations)
       
       // add source to map
-      map.addSource('stations', { type: 'geojson', data: agoStations })
+      map.addSource('stations', { type: 'geojson', data: mapStations })
 
       // base definition for station layer
       let layerDef = {
