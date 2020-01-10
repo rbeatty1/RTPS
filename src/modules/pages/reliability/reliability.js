@@ -5,6 +5,9 @@ import { FormatNumber } from '../../../utils/formatNumber';
 import { CreateDvrpcNavControl } from '../../../utils/defaultExtentControl';
 import { Footer } from "../../footer/footer";
 import { makeFilter, populateDatalist } from './makeFilter.js';
+import documentationLookup from '../home/documentationLookup.js'
+
+const docPDF = documentationLookup['Surface Transit Reliability']
 
 let layerRef = {
   purpose: "The goal of the surface transit reliability analysis was to identify corridors where surface transit service is particularly slow or delayed as places where road or transit improvements could increase reliability.",
@@ -26,7 +29,7 @@ let layerRef = {
       info: "2017 daily average ridership for SEPTA bus routes was available at the stop level. General Transit Feed Specification <abbr class='reliability__abbr' title='General Transit Feed Specification'>(GTFS)</abbr> was used to convert stop-level ridership to segment-level passenger loads."
     },
     njt: {
-      title: "NJ TRANSIT Ridership (2016)",
+      title: "NJ TRANSIT Bus Ridership (2016)",
       info: "2016-2017 daily average ridership for <abbr class='reliability__abbr' title='New Jersey'>NJ</abbr> Transit bus routes was provided at the stop level."
     }
   },
@@ -37,7 +40,7 @@ let layerRef = {
   sources: {
     main: {
       title: 'Reliability Data',
-      info: '<a href="https://drive.google.com/drive/folders/1aXwLVweE9xqqZgYIgT6ZC3XREJRwgfHB?usp=sharing" target="blank"> View and download reliability data</a>.'
+      info: `<a href="https://drive.google.com/drive/folders/1aXwLVweE9xqqZgYIgT6ZC3XREJRwgfHB?usp=sharing" target="blank"> View and download reliability data</a>.<a class="reliability-learn-more" href="/webmaps/rtsp/pdf/${docPDF}" target="_blank">Learn More</a>`
     }
   }
 }
@@ -224,14 +227,11 @@ const BuildSidebar = (map, data) =>{
         description: 'Results weighted by ridership to highlight unreliable segments that impact the most passengers.'
       },
       'reliability-tti': {
-        title: 'Travel Time Index',
+        title: 'Travel Time Index (TTI)',
         unit: false,
         page: 'regional',
         description: 'TTI is the ratio of peak hour travel time to free flow travel time.'
       },
-    },
-    filter: {
-
     },
     input: {
       'reliability-speed':  {
@@ -250,10 +250,21 @@ const BuildSidebar = (map, data) =>{
         page: 'detail'
       },
       'reliability-njt':  {
-        title: 'NJ TRANSIT Ridership',
+        title: 'NJ TRANSIT Bus Ridership',
         unit: 'Average Daily Ridership',
         page: 'detail'
       }
+      // issue #70 - hiding these for now until we can either smooth out the filtered lines or drop it altogether
+      // 'reliability-scoreDetail': {
+      //   title: 'Reliability Score',
+      //   unit: 'Reliability Score',
+      //   page: 'detail',
+      // },
+      // 'reliability-weightedDetail': {
+      //   title: 'Reliability Score Weighted by Ridership',
+      //   unit: 'Reliability Score Weighted by Ridership',
+      //   page: 'detail',
+      // }
     }
   }
   // function to build sidebar tabs
@@ -438,7 +449,6 @@ const BuildSidebar = (map, data) =>{
 
     // build layer check radio
     for (let layer in layers){
-      
       let option = document.createElement('div'),
         radio = document.createElement('input'),
         label = document.createElement('label'),
@@ -451,7 +461,9 @@ const BuildSidebar = (map, data) =>{
       optionBlurb.classList.add('reliability__layer-option-blurb')
       
       radio.setAttribute('type', 'radio')
-      radio.id = layer.split('-')[1]
+      
+      const radioID = layer.split('-')[1]
+      radio.id = radioID
 
       // default score to checked
       if(radio.id === 'score') radio.checked = true
@@ -463,8 +475,6 @@ const BuildSidebar = (map, data) =>{
       label.setAttribute('for', layer.split('-')[1])
       label.innerHTML = layers[layer].title
       optionBlurb.textContent = layers[layer].description
-
-      //
 
       option.appendChild(radio)
       option.appendChild(label)
@@ -498,19 +508,27 @@ const BuildSidebar = (map, data) =>{
       // otherwise apply the new filter
     }else{
       for (let layer in layers){
-        // only filter "route detail" routes
-        if (layer == 'speed' || layer == 'otp' || layer == 'njt' || layer == 'septa'){
-          let filterExp = ['any']
-  
-          // build important stuff of filter expression
-          filter.forEach(route => {
-            let statement = ['==', 'linename', route]
-            filterExp.push(statement)
-          })
-  
-          // set filter
-          map.setFilter(`reliability-${layer}`, filterExp)
+        
+        // skip the regional layers
+        if(layer === 'score' || layer === 'weighted' || layer === 'tti') continue
+
+        let filterExp = ['any']
+        let filterField;
+
+        if(layer === 'scoreDetail' || layer === 'weightedDetail'){
+          filterField = 'lines'
+        }else {
+          filterField = 'linename'
         }
+
+        // build important stuff of filter expression
+        filter.forEach(route => {
+          let statement = ['==', filterField, route]
+          filterExp.push(statement)
+        })
+        
+        // set filter
+        map.setFilter(`reliability-${layer}`, filterExp)
       }
     }
   }
@@ -655,7 +673,7 @@ const BuildSidebar = (map, data) =>{
 
     container.id = 'content-regional'
     
-    descriptiveText.textContent = 'The goal of the surface transit reliability analysis was to identify corridors where surface transit service is particularly slow or delayed as places where road or transit improvements could increase reliability. These regional layers show aggregate measures for all surface transit routes that use a particular road segment.'
+    descriptiveText.textContent = 'The goal of the surface transit reliability analysis was to identify corridors where surface transit service is particularly slow or delayed as places where road or transit improvements could increase reliability. These regional layers show aggregate measures for all surface transit routes that use a particular road segment. These routes can also be filtered by route on the Route Detail tab.'
     layerControl.innerText = 'Show Layer List'
     
     container.appendChild(descriptiveText)
@@ -682,7 +700,7 @@ const BuildSidebar = (map, data) =>{
 
     container.id = 'content-input'
 
-    descriptiveText.textContent = 'The layers on this tab are best viewed at the route level. Use the filter to select a surface transit route to examine in detail. When multiple routes are displayed, colors will reflect whichever route is on top.'
+    descriptiveText.textContent = 'The first four layers on this tab are best viewed at the route level. Use the filter to select a surface transit route to examine in detail. When multiple routes are displayed, colors will reflect whichever route is on top.'
 
     container.appendChild(descriptiveText)
 

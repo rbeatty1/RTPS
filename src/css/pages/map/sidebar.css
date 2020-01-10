@@ -5,7 +5,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 7.5%;
+  height: 9%;
   width: 100%;
   padding: 0;
   margin-bottom: 5%;
@@ -203,6 +203,10 @@
 .map__sidebar-legendEmphasis{
   font-weight: 700;
   color: #e89234;
+}
+.map__sidebar-learn-more{
+  margin-left: 10%;
+  color: #f7f7f7;
 }
 
 @media all and (max-width: 800px) {

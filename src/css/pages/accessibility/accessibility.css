@@ -4,6 +4,12 @@
   order: 2;
 }
 
+.accessibility-learn-more{
+  margin: 5px auto;
+  width: 90%;
+  color: #f7f7f7;
+}
+
 .accessibility-page{
   height:90%;
   width: 100%;
@@ -28,8 +34,6 @@
 #accessibility-nav a{
   text-decoration: none;
 }
-
-/* #e0ffff */
 
 .accessibility__nav-link{
   position: relative;
@@ -79,12 +83,12 @@
 }
 
 #accessibility-nav div:hover{
-  color: #06bf9c;
+  color: #277768;
   background: #ddd;
   box-shadow: 2px 2px 4px rgba(153,153,153,.5);
 }
 #accessibility-nav div.active{
-  background: #06bf9c;
+  background: #277768;
   color: #fff
 }
 #accessibility-nav div.active:hover{
@@ -95,18 +99,17 @@
   display: flex;
   flex-flow: column;
   padding: 2% 0;
-  background-color: #06bf9c;
+  background-color: #277768;
   border-radius: 5px;
   opacity: .1;
-  min-height: 33vh;
-  margin: 33% auto;
+  margin: 21% auto;
   justify-content: center;
   box-shadow: 2px 2px 3px rgba(0,0,0,.1)
 }
 
 .accessibility-section h1{
   text-align: center;
-  color: #0A3B4D;
+  color: #fff;
   font-size: 1.75rem;
   margin: 2% 0 3% 0;
   padding: 0 5%;
@@ -116,11 +119,7 @@
   margin-bottom: 0.5rem;
 }
 .accessibility-section>p{
-  /* color options:
-    grey blue: 2e343b
-    other grey blue: e0ffff
-  */
-  color: #e0ffff;
+  color: #fcfcfc;
   font-size: .95rem;
   width: 90%;
   margin: 2% auto;
@@ -143,7 +142,7 @@
 
 .accessibility__titleDivider h2{
   font-weight: 700;
-  color: #e4f1fe;
+  color: #fcfcfc;
   font-size: 1.25rem;
   margin: 0 0 5% 0;
   padding: 0 5%;
@@ -151,7 +150,7 @@
 
 .accessibility-section h3{
   text-align: center;
-  color: #e4f1fe;
+  color: #fcfcfc;
   font-size: 1rem;
   margin: 0 auto 2%;
   width: 80%;
@@ -169,7 +168,6 @@
   opacity: 1;
 }
 
-
 .accessibility-text{
   width: 30%;
   height: 100%;
@@ -177,9 +175,6 @@
   flex-flow: column;
   overflow-y: auto;
   background: #d8eee6
-}
-.accessibility-text > * {
-  direction: ltr;
 }
 .accessibility-text> h3{
   text-align: center;
@@ -201,8 +196,8 @@
   margin: 0;
 }
 
-#caseStudy{
-  margin-bottom: 66%;
+#caseStudy {
+  padding: 10% 0;
 }
 
 #caseStudy nav{
@@ -233,7 +228,7 @@
 #caseStudy h3{
   text-align: center;
   font-size: 1.15rem;
-  color: #e4f1fe;
+  color: #fcfcfc;
   width: 80%;
   margin: 1% auto;
 }
@@ -273,5 +268,11 @@
   }
   .accessibility__titleDivider hr {
     width: 25%;
+  }
+}
+
+@media all and (max-width: 320px ) {
+  .accessibility-section > p {
+    font-size: 12px;
   }
 }

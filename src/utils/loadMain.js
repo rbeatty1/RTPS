@@ -57,7 +57,6 @@ const LoadMain = (target, type) =>{
       new Reliability();
       ChangeLogo(target)
       break;
-    // @TODO: fix SetNewURL to update invalid routes to '/' or remove it b/c invalid routes will be handled by our main page anyways
     case 'error':
       alert('invalid request for ' + location.href + '. Rerouting to home')
       SetNewURL(false)

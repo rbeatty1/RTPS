@@ -9,25 +9,30 @@ const createFooter = () => {
     const footerLogoLink = document.createElement('a')
     const footerLogo = document.createElement('img')
     const address = document.createElement('address')
-    const dvrpcContact = document.createElement('p')
+    const dvrpcContact = document.createElement('span')
+    const titleVI = document.createElement('a')
 
     addressContactWrapper.classList.add('footer-content-wrapper')
     footerLogoLink.id = 'footer-logo-link'
     footerLogo.id = 'footer-logo'
-    address.id = 'footer-address'
+    dvrpcContact.id = 'footer-phone'
+    titleVI.id = 'footer-titleVI'
 
     footerLogoLink.href="https://www.dvrpc.org/"
+    titleVI.href="/GetInvolved/TitleVI/"
     footerLogoLink.target = "blank"
     footerLogo.src = logo
     footerLogo.alt = 'dvrpc logo'
 
-    address.textContent = '190 N. Independence Mall W, \r\n 8th Floor \r\n Philadelphia, PA 19106'
-    dvrpcContact.innerHTML = '<strong>Phone</strong>: (215) - 592 - 1800'
+    address.textContent = '190 N Independence Mall W, 8th Floor Philadelphia, PA 19106'
+    dvrpcContact.textContent = '  |  215.592.1800'
+    titleVI.textContent = 'Title VI and Environmental Justice'
+
+    address.appendChild(dvrpcContact)
 
     footerLogoLink.appendChild(footerLogo)
 
     addressContactWrapper.appendChild(address)
-    addressContactWrapper.appendChild(dvrpcContact)
     
     addressFragment.appendChild(footerLogoLink)
     addressFragment.appendChild(addressContactWrapper)
@@ -35,16 +40,11 @@ const createFooter = () => {
     // fragment for Sarah's contact info
     const contactFragment = document.createDocumentFragment()
     const contactWrapper = document.createElement('div')
-    const contactName = document.createElement('p')
     const contactInfo = document.createElement('p')
 
     contactWrapper.classList.add('footer-content-wrapper')
-    contactName.id = 'footer-contact-name'
+    contactInfo.innerHTML = 'Sarah Moran Senior Transportation Planner<br />215.238.2875  |  <a href="mailto:smoran@dvrpc.org">smoran@dvrpc.org</a>'
 
-    contactName.textContent = 'Sarah Moran\r\nSenior Transportation Planner'
-    contactInfo.innerHTML = '<strong>Phone</strong>: (215) - 238 - 2875 <br /> <strong>Email</strong>: <a href="mailto:smoran@dvrpc.org">smoran@dvrpc.org</a>'
-
-    contactWrapper.appendChild(contactName)
     contactWrapper.appendChild(contactInfo)
     contactFragment.appendChild(contactWrapper)
 
@@ -62,6 +62,7 @@ const createFooter = () => {
 
     mainFragment.appendChild(addressFragment)
     mainFragment.appendChild(contactFragment)
+    mainFragment.appendChild(titleVI)
     mainFragment.appendChild(versionFragment)
 
     return mainFragment

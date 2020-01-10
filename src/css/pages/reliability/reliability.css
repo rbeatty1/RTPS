@@ -4,6 +4,11 @@
   order: 2;
 }
 
+.reliability-learn-more{
+  display: block;
+  margin-top: 5px;
+}
+
 #reliability__page{
   height: 100%;
   width: 100%;
@@ -16,15 +21,12 @@
 #reliability__sidebar{
   width: 30%;
   height: 100%;
-  /* darker backgrounds so that white text can be used accessibly:
-    A96623
-  */
   background: #A96623;
   overflow-y: auto;
 }
 .reliability__sidebar-tabs{
   width: 100%;
-  height: 7.5%;
+  height: 9%;
   display: flex;
   justify-content: space-evenly;
   padding: 0;
@@ -124,6 +126,9 @@
   border-radius: 5px;
   width: 100%;
   font-size: 1em;
+}
+.reliability__sidebar-sectionContent-button:hover{
+  cursor: pointer;
 }
 .reliability__sidebar-sectionContent section p{
   color: #08506d;
@@ -342,5 +347,14 @@ input[type=checkbox]:checked>label{
     padding: 4% 0;
     margin: 0;
 
+  }
+}
+
+@media all and (max-width: 320px) {
+  #reliability__page {
+    font-size: 12px;
+  }
+  #content-regional, #content-input, .reliability__layer-option {
+    font-size: 1em !important;
   }
 }

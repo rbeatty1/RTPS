@@ -2,10 +2,12 @@ import '../../../css/pages/accessibility/accessibility.css'
 import { styles } from '../map/map_styles/accessibility.js'
 import { Legend } from './legend';
 import { CreateDvrpcNavControl } from '../../../utils/defaultExtentControl';
-import { headerRender } from "../../header/header";
+import { Header } from "../../header/header.js";
 import { HeaderElements } from "../../header/HeaderElements";
 import { Footer } from "../../footer/footer";
+import documentationLookup from '../home/documentationLookup.js'
 
+const docPDF = documentationLookup['Wheelchair Accessibility']
 
 /*
   LoadStations(map)
@@ -15,9 +17,19 @@ import { Footer } from "../../footer/footer";
     - map: Mapbox GL element to add layer to
 */
 const LoadStations = map =>{
+  // shell of the geoJSON we will build on the fly
+  let mapStations = {
+    crs: {
+      properties: {name: 'EPSG:4326'},
+      type: 'name'
+    },
+    features: [],
+    type: 'FeatureCollection'
+  }
   
   // hit AGO endpoint and load geometries
-  fetch('https://opendata.arcgis.com/datasets/68b970bf65bc411c8a7f8f7b0bb7908d_0.geojson')
+  // @NOTE: this returns a JSON instead of a geoJSON because invoking `.json()` on the geoJSON response drops all properties... because reasons.
+  fetch('https://services1.arcgis.com/LWtWv6q6BJyKidj8/arcgis/rest/services/DVRPC_Passenger_Rail_Stations/FeatureServer/0/query?where=1%3D1&outfields=dvrpc_id,station&outSR=4326&f=json')
   
   // parse json return if fetch is successful
   .then(ago=>{ if (ago.status == 200){ return ago.json() } })
@@ -30,24 +42,35 @@ const LoadStations = map =>{
     .then(dbReturn=>{ if (dbReturn.status == 200) { return dbReturn.json() } })
     .then(dbStations=>{
       
-      // define fields to keep from AGO endpoint
-        // TODO: change endpoint, more robust query to only grab necessary fields
-      let keep = ['DVRPC_ID', 'STATION', 'accessibility']
-      
       // append DB data to geometry
       agoStations.features.forEach(feature=>{
-        if (dbStations[feature.properties.DVRPC_ID]){
-          feature.properties.accessibility = dbStations[feature.properties.DVRPC_ID].accessible
-        }
-        
-        // delete unneeded fields
-        for (let prop in feature.properties){
-          keep.indexOf(prop) == -1 ? delete feature.properties[`${prop}`] : null
+        const props = feature.attributes
+        const dvrpc_id = props.dvrpc_id
+        const station = props.station
+        const geom = [feature.geometry.x, feature.geometry.y]
+
+        // @NOTE: creating a geoJSON on the fly here b/c of the aforementioned behavior when parsing a geoJSON return.
+        // ideally we figure out why that's dropping proprties and can go back to just adding fields to the existing response and using it.
+        if(dbStations[dvrpc_id]) {
+          const score = dbStations[dvrpc_id].accessible
+
+          mapStations.features.push({
+            "geometry": {
+              "type": 'Point',
+              "coordinates": geom
+            },
+            "properties": {
+              "dvrpc_id": dvrpc_id,
+              "STATION": station,
+              "accessibility": score
+            },
+            "type": "Feature"
+          })
         }
       })
       
       // add source to map
-      map.addSource('stations', { type: 'geojson', data: agoStations })
+      map.addSource('stations', { type: 'geojson', data: mapStations })
 
       // base definition for station layer
       let layerDef = {
@@ -273,7 +296,7 @@ const BuildMap = container =>{
   let popup;
 
   // actions to run on map initiation
-  map.on('load', _ => {
+  map.on('load', () => {
 
       // make sure it fills HTML element
       map.resize();
@@ -314,7 +337,7 @@ const BuildMap = container =>{
         color = 'rgba(232,146,52,.85)'
         break;
       case 1: 
-        color = 'rgba(139,178,63,.85)'  
+        color = 'rgba(139,178,63,.85)'
         break;
       case 2:
         color = 'rgba(8,80,109,.85)'  
@@ -393,7 +416,7 @@ const BuildPage = content =>{
   const BuildScene = element =>{
 
     // use the calculated check for mobile to adjust the scrollMagic offset parameters
-    const offset = mobileZoom ? -80 : 50
+    let offset = mobileZoom ? -80 : 100
 
     // define ScrollMagic Scene
     new ScrollMagic.Scene({
@@ -403,9 +426,9 @@ const BuildPage = content =>{
       duration: element.getBoundingClientRect().height + 100,
       offset
     })
-      .on('enter', e=>{
+      .on("enter", () =>{
         // set active classes to section and corresponding dot navigation element
-        let link = document.querySelector(`#${element.id}-link`),
+        let link = document.querySelector(`#${element.id}-link`).children[0],
           data = content.props.sections[element.id].content.map
         
         link.classList.add('active')
@@ -416,8 +439,8 @@ const BuildPage = content =>{
       })
 
       // reset to default state
-      .on('leave', e=>{ 
-        let link = document.querySelector(`#${element.id}-link`)
+      .on("leave", () =>{ 
+        let link = document.querySelector(`#${element.id}-link`).children[0]
         link.classList.remove('active')
         element.classList.remove('active') 
       })
@@ -426,55 +449,78 @@ const BuildPage = content =>{
       .addTo(content.scroll)
   }
 
-  // go back to the default view for the collingswood jawn
-  const caseStudyDefault = (container, defaultState) => {
-    const legend = document.querySelector('#caseStudy-legend')
+  const setCaseStudyDefault = (text, p) => {
+    p.innerText = text
 
-    const subtitle = container.querySelector('h3')
-    const text = container.querySelector('p')
-
-    subtitle.innerText = ''
-    text.innerText = defaultState
-    legend.innerText = ''
-
-    // reset map state to default
-    ResymbolizeLayers(null)
+    // query selector for multiple instances of the same jawn will return the first instance
+    const defaultTab = document.querySelector('#caseStudy a')
+    defaultTab.classList.add('active')
   }
 
-  const ChangeCaseStudyContent = (data, defaultState) =>{
+  const ChangeCaseStudyContent = (data, legend) =>{
     const container = document.getElementById('caseStudy')
-
-    // clicking on an active jawn goes back to the default case
-    if(defaultState) {
-      caseStudyDefault(container, defaultState)
-      return
-    }
 
     let subtitle = container.querySelector('h3'),
       text = container.querySelector('p')
       
-    subtitle.innerText = data.title
-    text.innerText = data.text
+      // only create legend & resymbolize layers if on tab > 1 (aka is object w/data not just a string)
+    if(data.text) {
+        subtitle.innerText = data.title
+        text.innerText = data.text
+        new Legend(data)
+        ResymbolizeLayers(data.map)
+    
+    // remove legend & subtitle if going to the first tab
+    }else {
+      legend.innerText = ''
+      subtitle.innerText = ''
+      text.innerText = data
+    }
+  }
 
-    new Legend(data)
-    ResymbolizeLayers(data.map)
+  // handle sidelink story map interaction (abstracted to a helper function because links 1-6 and case study (7) are defined in different places)
+  const clickSideLink = (nav, sectionContent, link, caseStudy) => {
+
+    // toggle active class + remove any existing active classes
+    const allLinks = nav.children
+    const navLength = allLinks.length
+
+    for(var i = 0; i < navLength; i++) {
+      const linkDiv = allLinks[i].children[0]
+      allLinks[i] === link ? linkDiv.classList.add('active') : linkDiv.classList.remove('active')
+    }
+
+    // scroll magic is configured weird for this component and the scrollTo method used in frequency doesn't work so we're going old school here
+    // id of the section (handle the case study interaction which is built differently)
+    const sectionId = caseStudy ? sectionContent : sectionContent.text.id
+    const section = document.getElementById(sectionId)
+    const textContainer = document.querySelector('.accessibility-text')
+
+    // depending on mobile or desktop, get the offset + a buffer to scroll to
+    let offsetAdjustment = mobileZoom ? 365 : 100
+    const offsetTop = section.offsetTop - offsetAdjustment
+
+    // do the scroll
+    textContainer.scrollTo({
+      top: offsetTop,
+      left: 0,
+      behavior: 'smooth'
+    })
   }
 
   // accessibility content data
   let props = content.props,
-    // content HTML container
-    sectionBody = document.createElement('div')
 
-  sectionBody.classList.add('accessibility__text-body')
-
-  // add to page
-  document.querySelector('.accessibility-text').appendChild(sectionBody)
+  sectionBody = document.querySelector('.accessibility-text')
 
   // build map
   content.map = BuildMap(document.querySelector(".accessibility-map"), content.props)
   
   // i will be used to populate the dot nav
   let i = 1
+
+  // nav was limited to the scope of (if(data.content.text) so link 7 couldnt access it. Move it here so that it can)
+  let nav = document.getElementById('accessibility-nav')
   
   // create content for each section in component data
   for (let section in props.sections){
@@ -488,41 +534,15 @@ const BuildPage = content =>{
       let container = document.createElement('section'),
       link = document.createElement('a'),
       linkContent = document.createElement('div'),
-      tooltip = document.createElement('span'),
-      nav = document.getElementById('accessibility-nav')
+      tooltip = document.createElement('span')
   
       /* Create Dot Navigation Element*/
       
       // link
       link.id = `${sectionContent.text.id}-link`
-      link.onclick = () => {
 
-        // toggle active class + remove any existing active classes
-        const allLinks = nav.children
-        const navLength = allLinks.length
-
-        for(var i = 0; i < navLength; i++) {
-          const linkDiv = allLinks[i].children[0]
-          allLinks[i] === link ? linkDiv.classList.add('active') : linkDiv.classList.remove('active')
-        }
-
-        // scroll magic is configured weird for this component and the scrollTo method used in frequency doesn't work so we're going old school here
-        // id of the section
-        const sectionId = sectionContent.text.id
-        const section = document.getElementById(sectionId)
-        const textContainer = document.querySelector('.accessibility-text')
-
-        // depending on mobile or desktop, get the offset + a buffer to scroll to
-        let offsetAdjustment = mobileZoom ? 365 : 10
-        const offsetTop = section.offsetTop - offsetAdjustment
-
-        // do the scroll
-        textContainer.scrollTo({
-          top: offsetTop,
-          left: 0,
-          behavior: 'smooth'
-        })
-      }
+      // trigger scroll actions with side nav links
+      link.onclick = () => clickSideLink(nav, sectionContent, link)
       
       // section #
       linkContent.innerText = i
@@ -599,12 +619,16 @@ const BuildPage = content =>{
         linkContent = document.createElement('div'),
         tooltip = document.createElement('span'),
         tabNav = document.createElement('nav'),
-        legend = document.createElement('div')
-
+        legend = document.createElement('div'),
+        // grab the id for clickSideLink to get a handle of the parent container
+        sectionContent = content.content.id
 
       // create dot nav
       link.id = 'caseStudy-link'
       link.rel = 'noopener'
+
+      // trigger scroll actions with side nav links
+      link.onclick = () => clickSideLink(nav, sectionContent, link, true)
 
       // section #
       linkContent.classList.add('accessibility__nav-link')
@@ -628,7 +652,6 @@ const BuildPage = content =>{
       title.innerText = content.title
       text.innerText = content.content[0]
 
-
       container.appendChild(title)
       container.appendChild(tabNav)
       container.appendChild(subtitle)
@@ -636,9 +659,7 @@ const BuildPage = content =>{
       container.appendChild(legend)
       sectionBody.appendChild(container)
 
-
       BuildScene(container)
-
 
       for (let section in content.content){
         if (section != 0 && section != 'id'){
@@ -649,25 +670,20 @@ const BuildPage = content =>{
 
             tab.addEventListener('click', e =>{
               let links = document.querySelectorAll('#caseStudy a')
-              let backToDefault = false
+              
               for (let link of links){
-                if (link == e.target) {
-                  if (link.classList.contains('active')) {
-                    backToDefault = true
-                    link.classList.remove('active')
-                  }else{
-                    e.target.classList.add('active')
-                  }
-                }
+                if(link === e.target) link.classList.add('active')
                 else link.classList.remove('active')
               }
-              backToDefault ? ChangeCaseStudyContent(false, props.sections.caseStudy.content[0]) : ChangeCaseStudyContent(data, false) 
+              ChangeCaseStudyContent(data, legend)
             })
 
             tabNav.appendChild(tab)
-
         }
       }
+
+      // set default after tabs are created
+      setCaseStudyDefault(content.content[1], text)
     }
     i++
   }
@@ -678,7 +694,6 @@ export class Accessibility{
 
     // the important stuff -- reference for all content
     this.props = {
-      container: document.querySelector('main'),
       sections: {
         intro:{
           title: 'Overview',
@@ -689,22 +704,17 @@ export class Accessibility{
               <p>This analysis identifies essential services (jobs, grocery stores, medical offices, etc) that can be reached via transit where wheelchair users and
               persons with mobility impairments are most impacted by wheelchair inaccessible rail stations. These maps can be used to help prioritize rail station improvements.</p>
               <p>This analysis considers programmed accessibility improvements such as adding an elevator. The lists of programmed improvements was obtained from transit agencies
-              in 2018.</p>`
+              in 2018.</p><a class="accessibility-learn-more" href="/webmaps/rtsp/pdf/${docPDF}" target="_blank">Learn More</a>`
             },
             map:{
               paint: [
                 'interpolate', ['linear'], ['get', 'AccAll'],
-                1, 'rgba(0,0,0,0.01)',
-                2, '#a6bddb',
-                5, '#3690c0',
-                7, '#045a8d',
-                10, '#023858'
+                1, 'rgba(0,0,0,0.01)'
               ],
               stationPaint: ['match', ['get', 'accessibility'], 0, '#e89234', 1, '#8bb23f', 2, '#08506d', '#ccc'],
               legend:{
                 stations: [[0, '#e89234'], [1, '#8bb23f'], [2, '#08506d']]
               }
-
             }
           }
         },
@@ -878,8 +888,8 @@ export class Accessibility{
           title: 'Case Study: Collingswood',
           content: {
             id: 'caseStudy',
-            0: 'At the time of this analysis, an elevator was under construction at the Collingswood station, scheduled to open in Spring 2019. This case study shows how to interpret the maps using Collingswood Station on the PATCO line as an example. Click the numbers above to cycle through the maps of the area.',
-            1: {
+            1: 'At the time of this analysis, an elevator was under construction at the Collingswood station, scheduled to open in Spring 2019. This case study shows how to interpret the maps using Collingswood Station on the PATCO line as an example. Click the numbers above to cycle through the maps of the area.',
+            2: {
               title: 'Destinations Reachable by Non-Wheelchair Users',
               text: 'The dark purple surrounding the Collingswood Station shows that non-wheelchair users can reach a large number of destinations',
               map: {
@@ -902,7 +912,7 @@ export class Accessibility{
                 }  
               }
             },
-            2: {
+            3: {
               title: 'Destinations Reachable by Wheelchair Users',
               text: 'The lack of color surrounding the Collingswood station shows that wheelchair users would not be able to reach any destinations via rail from that station. This is because the station is currently not wheelchair accessible.',
               map: {
@@ -925,7 +935,7 @@ export class Accessibility{
                 }
               }
             },
-            3: {
+            4: {
               title: 'Current Destination Disparity for Wheelchair Users Compared to Non-Wheelchair Users',
               text: 'The dark orange surrounding the Collingswood station highlights the difference between maps 1 and 2, showing that wheelchair users are able to reach far fewer destinations than non-wheelchair users from this station.',
               map: {
@@ -948,7 +958,7 @@ export class Accessibility{
                 }
               } 
             },
-            4: {
+            5: {
               title: 'Destinations Reachable in the Future by Wheelchair Users',
               text: 'Wheelchair accessibility improvements are currently under construction at the Collingswood station. Therefore, this map accounting for programmed improvements shows darker purple surrounding the station. Wheelchair users are now able to reach many destinations via rail from Collingswood.',
               map: {
@@ -971,7 +981,7 @@ export class Accessibility{
                 }
               }
             },
-            5: {
+            6: {
               title: 'Remaining Future Destination Disparity for Wheelchair Users in Comparison with Non-Wheelchair Users (Programmed Improvements Included)',
               text: 'The light orange surrounding the Collingswood station shows the difference between map 1 and map 4. With the wheelchair accessibility improvement at the station, wheelchair users are now able to reach a similar amount of destinations as non-wheelchair users. Remaining differences would be due to wheelchair inaccessible stations on the destination end.',
               map: { 
@@ -1004,7 +1014,7 @@ export class Accessibility{
   }
 
   render(){
-    if (!document.querySelector('header')) headerRender(HeaderElements)
+    if (!document.querySelector('header')) Header(HeaderElements)
     let main = document.querySelector('main')
     main.id = 'accessibility'
     if (!document.querySelector('footer')) new Footer();
@@ -1026,11 +1036,13 @@ export class Accessibility{
     page.appendChild(nav)
     page.appendChild(map)
     page.appendChild(sidebar)
-    this.props.container.appendChild(page)
+    main.appendChild(page)
+
+    let contentStory = document.querySelector('.accessibility-text')
 
     // initiate the scroll
     this.scroll = new ScrollMagic.Controller({
-      container: this.props.container,
+      container: contentStory,
       loglevel: 4
     })
 
@@ -1042,3 +1054,4 @@ export class Accessibility{
     sidebar.appendChild(footer)
   }
 }
+

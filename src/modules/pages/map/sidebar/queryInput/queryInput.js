@@ -145,6 +145,7 @@ class QueryContainer {
           if (node.type == "attributes" && node.attributeName == "data-type" && node.target.getAttribute("data-direction") != undefined) {
 
             geography.type = node.target.getAttribute("data-type");
+
             let direction = document.querySelector('#direction'),
               muni = document.querySelector('#muni')
 
@@ -160,7 +161,7 @@ class QueryContainer {
             }
 
             // if geography.type = muni, make sure muni dropdown is displayed
-            else if (geography.type == "municipality") {
+            else if (geography.type == "municipality or neighborhood") {
               muni.style.display = "inline-block";
               direction.style.display == "inline-block" ? (direction.style.display = "") : null;
               // clear any previous selections
@@ -180,7 +181,7 @@ class QueryContainer {
             geography.selection = node.target.getAttribute("data-selection");
 
             // make sure direction dropdown displays after making a muni selection
-            if (geography.type == "municipality") {
+            if (geography.type == "municipality or neighborhood") {
               let direction = document.querySelector('#direction')
               direction.style.display =
                 "inline-block";
@@ -207,7 +208,7 @@ class QueryContainer {
                     : btn.classList.add("active");
                 }
               }
-            } else if (geography.type == 'municipality' && geography.direction) {
+            } else if (geography.type == 'municipality or neighborhood' && geography.direction) {
               let buttons = document.querySelectorAll(".input__query-button");
               for (let btn of buttons) {
                 btn.classList.contains("active")

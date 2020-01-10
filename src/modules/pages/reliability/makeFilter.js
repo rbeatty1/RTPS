@@ -59,8 +59,8 @@ const makeFilter = element => {
     njInput.setAttribute('list', 'nj-routes')
 
     // add text
-    septaLabel.textContent = 'SEPTA routes: '
-    njLabel.textContent = 'NJ TRANSIT routes: '
+    septaLabel.textContent = 'SEPTA Routes: '
+    njLabel.textContent = 'NJ TRANSIT Routes: '
     addSeptaFilter.textContent = 'add'
     addNjFilter.textContent = 'add'
 

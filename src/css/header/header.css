@@ -11,8 +11,9 @@
 
 .header__project-logo{
     order: 0;
+    display: flex;
+    align-items: center;
     margin-left: 10px;
-    max-width: 20%;
     height: 80%;
 }
 
@@ -23,7 +24,14 @@
     width: auto;
     height: 90%;
 }
-
+#header__dvrpc-logo{
+    width: 70px;
+}
+#header__pipe{
+    border: 0.5px solid #12506d;
+    height: 80%;
+    margin: 0 10px;
+}
 #header__nav-container {
     width: 30%;
     display: flex;
@@ -58,6 +66,15 @@
         height: 15px !important;
     }
     #page-title {
-        font-size: 0.8rem;
+        font-size: 0.7rem;
+    }
+    #header__dvrpc-logo{
+        width: 45px;
+    }
+    .header__project-logo svg{
+        width: 55%;
+    }
+    #header__pipe{
+        margin: 0 5px;
     }
 }

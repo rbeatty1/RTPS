@@ -5,9 +5,12 @@ const path = require('path'),
 let extractPlugin = new ExtractTextPlugin({
     filename: './bundle.styles.css'
 })
+
 module.exports = {
     context: path.resolve(__dirname, 'src'),
-    entry: `./app.js`,
+    // @TODO this is garbage. fetch and core-js add literally 500kb of bloat just to accommodate IE 11 and it still needs 'Symbols'. Garbage. Pure garbage
+        // find a better solution
+    entry: ['whatwg-fetch', 'core-js/features/promise', `./app.js`],
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: 'js/[name].bundle.js'
@@ -16,9 +19,9 @@ module.exports = {
         rules: [
             {
                 test: /\.js$/,
-                loader: 'babel-loader',
-                query: {
-                    presets: ['es2015']
+                exclude: /node_modules/,
+                use: {
+                    loader: 'babel-loader'
                 }
             },
             {
@@ -36,7 +39,6 @@ module.exports = {
                         limit: 1000
                     }
                 }]
-                
             },
             {
                 test: /\.css/,
@@ -58,6 +60,6 @@ module.exports = {
             template: 'index.html',
             hash: true
         }),
-        extractPlugin
+        extractPlugin,
     ]
 };
