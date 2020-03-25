@@ -672,8 +672,8 @@ const BuildSidebar = (map, data) =>{
     descriptiveText.classList.add('reliability__descriptive-text')
 
     container.id = 'content-regional'
-    
-    descriptiveText.textContent = 'The goal of the surface transit reliability analysis was to identify corridors where surface transit service is particularly slow or delayed as places where road or transit improvements could increase reliability. These regional layers show aggregate measures for all surface transit routes that use a particular road segment. These routes can also be filtered by route on the Route Detail tab.'
+    //@HERE
+    descriptiveText.innerHTML = '<p>The goal of the surface transit reliability analysis was to identify corridors where surface transit service is particularly slow or delayed as places where road or transit improvements could increase reliability. These regional layers show aggregate measures for all surface transit routes that use a particular road segment. These routes can also be filtered by route on the Route Detail tab.</p><p>Updated input datasets will be added as they become available. Reliability Score layers will be recalculated on a regular basis, but the results may not always include the latest input layers as presented. Updated layers will include a "last updated date".</p>'
     layerControl.innerText = 'Show Layer List'
     
     container.appendChild(descriptiveText)
