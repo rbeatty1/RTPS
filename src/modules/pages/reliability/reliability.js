@@ -30,7 +30,7 @@ let layerRef = {
     },
     njt: {
       title: "NJ TRANSIT Bus Ridership (2016)",
-      info: "2016-2017 daily average ridership for <abbr class='reliability__abbr' title='New Jersey'>NJ</abbr> Transit bus routes was provided at the stop level."
+      info: "2016-2017 daily average ridership for <abbr class='reliability__abbr' title='New Jersey'>NJ</abbr> Transit bus routes was provided at the route level."
     }
   },
   outputs:{
