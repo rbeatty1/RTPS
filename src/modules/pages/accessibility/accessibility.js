@@ -28,8 +28,7 @@ const LoadStations = map =>{
   }
   
   // hit AGO endpoint and load geometries
-  // @NOTE: this returns a JSON instead of a geoJSON because invoking `.json()` on the geoJSON response drops all properties... because reasons.
-  fetch('https://services1.arcgis.com/LWtWv6q6BJyKidj8/arcgis/rest/services/DVRPC_Passenger_Rail_Stations/FeatureServer/0/query?where=1%3D1&outfields=dvrpc_id,station&outSR=4326&f=json')
+  fetch('https://arcgis.dvrpc.org/portal/rest/services/Transportation/PassengerRailStations/FeatureServer/0/query?where=1%3D1&outfields=dvrpc_id,station&outSR=4326&f=json')
   
   // parse json return if fetch is successful
   .then(ago=>{ if (ago.status == 200){ return ago.json() } })
@@ -115,7 +114,7 @@ const LoadStations = map =>{
 const LoadTAZ = map =>{
 
   // hit AGO endpoint for TAZ geometries
-  fetch('https://services1.arcgis.com/LWtWv6q6BJyKidj8/arcgis/rest/services/TAZ/FeatureServer/0/query?where=1%3D1&outFields=TAZN&geometryPrecision=4&outSR=4326&returnExceededLimitFeatures=true&f=pgeojson')
+  fetch('https://arcgis.dvrpc.org/portal/rest/services/Demographics/TAZ_2010/FeatureServer/0/query?where=1%3D1&outFields=TAZN&geometryPrecision=4&outSR=4326&returnExceededLimitFeatures=true&f=geojson')
   
   // parse AGO return if successful
   .then(ago=>{ if (ago.status ==200){return ago.json() } })

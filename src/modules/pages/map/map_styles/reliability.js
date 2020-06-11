@@ -52,33 +52,40 @@ const styles = {
         },
         placement: "admin-2-boundaries"
       },
-      // issue #70 - hiding these for now until we can either smooth out the filtered lines or drop it altogether
-      // scoreDetail: {
-      //   type: 'line',
-      //   source: 'score',
-      //   paint: {
-      //     'line-width': [
-      //       'interpolate',
-      //       ['linear'],
-      //       ['zoom'],
-      //       8, 1.5,
-      //       12, 3
-      //     ],
-      //     'line-color': [
-      //       'step',
-      //       ['get', 'score'],
-      //       '#fcfdbf',
-      //       4, '#fc8761',
-      //       8, '#b63679',
-      //       12, '#50127b',
-      //       16, '#000004',
-      //     ]
-      //   },
-      //   layout: {
-      //     visibility: 'none'
-      //   },
-      //   placement: "admin-2-boundaries"
-      // },
+      loads: {
+        type: 'line',
+        // @UPDATE - replace source and paint when the its added to the tile set
+        // @UPDATE - right now this is just a clone of the septa: layer
+        type: 'line',
+        source: 'septa',
+        paint: {
+          'line-color': [
+            'step',
+            ['get', 'loads'],
+            '#ffffcc',
+            455, '#c2e699',
+            1048, '#78c679',
+            1800, '#31a354',
+            2904, "#006837"
+          ],
+          'line-width': [
+            'interpolate',
+            ['linear'],
+            ['zoom'],
+            0, .05,
+            8, .5,
+            12, 3
+          ],
+        },
+        layout: {
+          visibility: 'none'
+        },
+        placement: "admin-2-boundaries",
+        layout: {
+          visibility: 'none'
+        },
+        placement: "admin-2-boundaries"
+      },
       weighted: {
         type: 'line',
         source: 'weighted',
@@ -105,33 +112,6 @@ const styles = {
         },
         placement: "admin-2-boundaries"
       },
-      // issue #70 - hiding these for now until we can either smooth out the filtered lines or drop it altogether
-      // weightedDetail: {
-      //   type: 'line',
-      //   source: 'weighted',
-      //   paint: {
-      //     'line-width': [
-      //       'interpolate',
-      //       ['linear'],
-      //       ['zoom'],
-      //       8, 1.5,
-      //       12, 3
-      //     ],
-      //     'line-color': [
-      //       'step',
-      //       ['get', 'weighted'],
-      //       '#fcfdbf',
-      //       4, '#fc8761',
-      //       8, '#b63679',
-      //       12, '#50127b',
-      //       16, '#000004',
-      //     ]
-      //   },
-      //   layout: {
-      //     visibility: 'none'
-      //   },
-      //   placement: "admin-2-boundaries"
-      // },
       otp: {
         type: 'line',
         source: 'otp',

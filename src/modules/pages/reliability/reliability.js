@@ -232,6 +232,13 @@ const BuildSidebar = (map, data) =>{
         page: 'regional',
         description: 'TTI is the ratio of peak hour travel time to free flow travel time.'
       },
+      // @UPDATE - layer name here
+      'reliability-loads': {
+        title: 'SEPTA Surface Transit Loads (segment level)',
+        unit: false,
+        page: 'regional',
+        description: 'Sum of passenger loads for all routes along each road segment'
+      }
     },
     input: {
       'reliability-speed':  {
@@ -245,7 +252,7 @@ const BuildSidebar = (map, data) =>{
         page: 'detail'
       },
       'reliability-septa':  {
-        title: 'SEPTA Surface Transit Loads',
+        title: 'SEPTA Surface Transit Loads (route level)',
         unit: 'Average Daily Ridership',
         page: 'detail'
       },
@@ -494,7 +501,6 @@ const BuildSidebar = (map, data) =>{
 
   // function to update map filter through all layers
   const SetMapFilters = filter =>{
-
     // grab map layers
     let layers = styles.reliability.layers
 
