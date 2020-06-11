@@ -27,7 +27,6 @@ const passengerRail = {
   rail: {
     sourceDef: {
       type: 'geojson',
-      // output line_name:
       data: 'https://arcgis.dvrpc.org/portal/rest/services/Transportation/PassengerRail/FeatureServer/0/query?where=1%3D1&outfields=type&outSR=4326&f=geojson'
     },
     layers: {
