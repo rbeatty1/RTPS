@@ -232,7 +232,6 @@ const BuildSidebar = (map, data) =>{
         page: 'regional',
         description: 'TTI is the ratio of peak hour travel time to free flow travel time.'
       },
-      // @UPDATE - layer name here
       'reliability-loads': {
         title: 'SEPTA Surface Transit Loads (segment level)',
         unit: false,

@@ -23,7 +23,7 @@ const styles = {
   reliability: {
     sourceDef: {
       type: 'vector',
-      url: 'https://tiles.dvrpc.org/data/rtps-reliability.json'
+      url: 'https://tiles.dvrpc.org/data/rtps-reliability-v2.json'
     },
     layers:{
       score: {
@@ -52,16 +52,13 @@ const styles = {
         },
         placement: "admin-2-boundaries"
       },
-      loads: {
+      loads: { // regional view septa
         type: 'line',
-        // @UPDATE - replace source and paint when the its added to the tile set
-        // @UPDATE - right now this is just a clone of the septa: layer
-        type: 'line',
-        source: 'septa',
+        source: 'septasegload',
         paint: {
           'line-color': [
             'step',
-            ['get', 'loads'],
+            ['get', 'segload'],
             '#ffffcc',
             455, '#c2e699',
             1048, '#78c679',
@@ -99,7 +96,7 @@ const styles = {
           ],
           'line-color': [
             'step',
-            ['get', 'weighted'],
+            ['get', 'riderrelis'],
             '#fcfdbf',
             4, '#fc8761',
             8, '#b63679',
@@ -163,9 +160,9 @@ const styles = {
           visibility: 'none'
         }
       },
-      septa: {
+      septa: { // detail view septa jawn
         type: 'line',
-        source: 'septa',
+        source: 'septalineload',
         paint: {
           'line-color': [
             'step',
