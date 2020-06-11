@@ -126,15 +126,14 @@ const LoadTAZ = map =>{
     // parse DB return if successful
     .then(dbReturn=>{if (dbReturn.status == 200) { return dbReturn.json() } })
     .then(dbZones=>{
-      
       // join DB data to geometries
       agoZones.features.map(feature=>{
-        if (dbZones[feature.properties.TAZN]){
-          feature.properties.AccAll = dbZones[feature.properties.TAZN].all_rail
-          feature.properties.AccCur = dbZones[feature.properties.TAZN].current
-          feature.properties.AccFut = dbZones[feature.properties.TAZN].future
-          feature.properties.DisCur = dbZones[feature.properties.TAZN].discur
-          feature.properties.DisFut = dbZones[feature.properties.TAZN].disfut
+        if (dbZones[feature.properties.tazn]){
+          feature.properties.AccAll = dbZones[feature.properties.tazn].all_rail
+          feature.properties.AccCur = dbZones[feature.properties.tazn].current
+          feature.properties.AccFut = dbZones[feature.properties.tazn].future
+          feature.properties.DisCur = dbZones[feature.properties.tazn].discur
+          feature.properties.DisFut = dbZones[feature.properties.tazn].disfut
         }
         else{
           feature.properties.AccAll = 0
