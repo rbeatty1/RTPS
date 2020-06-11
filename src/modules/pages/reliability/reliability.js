@@ -93,7 +93,6 @@ const BuildMap = pageContent =>{
         props: properties that will drive content creation of clicked layer
     */
     const BuildPopUpContent = (layer, props) =>{
-
       // set variables
       let colorRef = styles.reliability.layers[layer].paint['line-color'],
         field = colorRef[1][1],
@@ -110,25 +109,29 @@ const BuildMap = pageContent =>{
 
       // grammar (reliability score layers have multiple routes, other layers do not)
       let route;
-      if(props.lines && layer === 'score' || layer === 'weighted') {
-        const lines = props.lines.split(',').join(', ')
-        route = `Routes ${lines}`
-      }else{
-        route = `Route ${props.linename}`
-      }
-      title.innerText = route
-      
+      let lines;
+
       switch(layer){
         case 'score':
+          lines = props.lines.split(',').join(', ')
+          route = `Route(s): ${lines}` 
           property.innerText = 'Reliabilty Score'
           break;
         case 'weighted':
+          lines = props.lines.split(',').join(', ')
+          route = `Route(s): ${lines}` 
           property.innerText = 'Ridership Weighted Reliability Score';
           break;
-        default:
+        case 'septa':
+          route = `Route: ${props.linename}`
           property.innerText = layerRef.inputs[layer].title
           break;
+        default:
+          route = "Road Segment"
+          property.innerText = layerRef.inputs[layer].title
       }
+      
+      title.innerText = route
       dataContent.innerText = data
 
       container.appendChild(title)
@@ -232,7 +235,7 @@ const BuildSidebar = (map, data) =>{
         page: 'regional',
         description: 'TTI is the ratio of peak hour travel time to free flow travel time.'
       },
-      'reliability-loads': {
+      'reliability-septa': {
         title: 'SEPTA Surface Transit Loads (segment level)',
         unit: false,
         page: 'regional',
