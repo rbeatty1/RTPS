@@ -380,7 +380,7 @@ const BuildPage = content =>{
     let map = content.map
 
     // if there is map actions tied to this element, do them
-    if (data) {
+    if (data) {      
       map.setPaintProperty('zones-analysis', 'fill-color', data.paint)
       map.setPaintProperty('station-access', 'circle-color', data.stationPaint)
     }
@@ -395,7 +395,8 @@ const BuildPage = content =>{
         center: [-75.064, 39.914],
         zoom: 13
       },
-        map = content.map
+      
+      map = content.map
         
       map.flyTo({
         center: extent.center,
