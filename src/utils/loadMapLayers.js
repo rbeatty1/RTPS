@@ -27,7 +27,8 @@ const passengerRail = {
   rail: {
     sourceDef: {
       type: 'geojson',
-      data: 'https://arcgis.dvrpc.org/portal/rest/services/Transportation/PassengerRail/FeatureServer/0/query?where=1%3D1&outfields=line_name&outSR=4326&f=geojson'
+      // output line_name:
+      data: 'https://arcgis.dvrpc.org/portal/rest/services/Transportation/PassengerRail/FeatureServer/0/query?where=1%3D1&outfields=type&outSR=4326&f=geojson'
     },
     layers: {
       lines: {
@@ -35,7 +36,7 @@ const passengerRail = {
         paint: {
           "line-color": [
             'match',
-            ['get', 'TYPE'],
+            ['get', 'type'],
             'AMTRAK', '#004d6e',
             'NJ Transit', "#f18541",
             'NJ Transit Light Rail', '#ffc424',
