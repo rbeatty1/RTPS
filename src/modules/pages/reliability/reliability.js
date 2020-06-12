@@ -447,6 +447,7 @@ const BuildSidebar = (map, data) =>{
       layers[`reliability-${layer}`].unit ? title.insertAdjacentHTML('afterend', `<h4>${layers[`reliability-${layer}`].unit}</h4>`) : null
 
       legendSection.appendChild(items)
+      console.log('legend sections ', legendSection)
       element.appendChild(legendSection)
     }
 
@@ -472,6 +473,7 @@ const BuildSidebar = (map, data) =>{
       radio.setAttribute('type', 'radio')
       
       const radioID = layer.split('-')[1]
+      console.log('radioID ', radioID)
       radio.id = radioID
 
       // default score to checked
