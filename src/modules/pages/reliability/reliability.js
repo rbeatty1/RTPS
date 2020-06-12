@@ -28,6 +28,9 @@ let layerRef = {
       title: "SEPTA Surface Transit Loads (2017)",
       info: "2017 daily average ridership for SEPTA bus routes was available at the stop level. General Transit Feed Specification <abbr class='reliability__abbr' title='General Transit Feed Specification'>(GTFS)</abbr> was used to convert stop-level ridership to segment-level passenger loads."
     },
+    loads: {
+      title: "SEPTA Surface Transit Loads (2017)",
+    },
     njt: {
       title: "NJ TRANSIT Bus Ridership (2016)",
       info: "2016-2017 daily average ridership for <abbr class='reliability__abbr' title='New Jersey'>NJ</abbr> Transit bus routes was provided at the route level."
@@ -122,12 +125,16 @@ const BuildMap = pageContent =>{
           route = `Route(s): ${lines}` 
           property.innerText = 'Ridership Weighted Reliability Score';
           break;
-        case 'septa':
-          route = `Route: ${props.linename}`
-          property.innerText = layerRef.inputs[layer].title
-          break;
-        default:
+        case 'tti':
           route = "Road Segment"
+          property.innerText = layerRef.inputs[layer].title
+          break
+        case 'loads':
+          route = "Road Segment"
+          property.innerText = layerRef.inputs[layer].title
+          break
+        default:
+          route = `Route: ${props.linename}`
           property.innerText = layerRef.inputs[layer].title
       }
       
@@ -235,7 +242,7 @@ const BuildSidebar = (map, data) =>{
         page: 'regional',
         description: 'TTI is the ratio of peak hour travel time to free flow travel time.'
       },
-      'reliability-septa': {
+      'reliability-loads': {
         title: 'SEPTA Surface Transit Loads (segment level)',
         unit: false,
         page: 'regional',
@@ -447,7 +454,6 @@ const BuildSidebar = (map, data) =>{
       layers[`reliability-${layer}`].unit ? title.insertAdjacentHTML('afterend', `<h4>${layers[`reliability-${layer}`].unit}</h4>`) : null
 
       legendSection.appendChild(items)
-      console.log('legend sections ', legendSection)
       element.appendChild(legendSection)
     }
 
@@ -473,7 +479,6 @@ const BuildSidebar = (map, data) =>{
       radio.setAttribute('type', 'radio')
       
       const radioID = layer.split('-')[1]
-      console.log('radioID ', radioID)
       radio.id = radioID
 
       // default score to checked
@@ -489,7 +494,9 @@ const BuildSidebar = (map, data) =>{
 
       option.appendChild(radio)
       option.appendChild(label)
+
       BuildLegendSection(legendSection, radio.id)
+
       layerSection.appendChild(option)
       layerSection.appendChild(optionBlurb)
     }
@@ -657,6 +664,9 @@ const BuildSidebar = (map, data) =>{
       }
       else{
         for (let input in layerRef[section]){
+          // skip duplicate septa loads layers
+          if(input === 'loads') continue
+
           let inputSection = document.createElement('p'),
             title = layerRef[section][input].title,
             info = layerRef[section][input].info
