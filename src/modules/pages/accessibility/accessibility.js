@@ -731,6 +731,7 @@ export class Accessibility{
             },
             map:{
               paint: [
+                // @TODO: update these color stops to new range
                 'interpolate', ['linear'], ['get', 'AccAll'],
                 1, 'rgba(0,0,0,0.01)',
                 2, '#cbc9e2',
@@ -766,6 +767,7 @@ export class Accessibility{
             },
             map: {
               paint: [
+                // @TODO: update these color stops to new range
                 'interpolate', ['linear'], ['get', 'AccCur'],
                 1, 'rgba(0,0,0,0.01)',
                 2, '#cbc9e2',
@@ -831,6 +833,7 @@ export class Accessibility{
             },
             map: {
               paint: [
+                // @TODO: update these color stops to new range
                 'interpolate', ['linear'], ['get', 'AccFut'],
                 1, 'rgba(0,0,0,0.01)',
                 2, '#cbc9e2',
@@ -893,6 +896,7 @@ export class Accessibility{
               text: 'The dark purple surrounding the Collingswood Station shows that non-wheelchair users can reach a large number of destinations',
               map: {
                 paint: [
+                  // @TODO: update these color stops to new range
                   'interpolate', ['linear'], ['get', 'AccAll'],
                   1, 'rgba(0,0,0,0.01)',
                   2, '#cbc9e2',
@@ -915,6 +919,7 @@ export class Accessibility{
               title: 'Destinations Reachable by Wheelchair Users',
               text: 'The lack of color surrounding the Collingswood station shows that wheelchair users would not be able to reach any destinations via rail from that station. This is because the station is currently not wheelchair accessible.',
               map: {
+                // @TODO: update these color stops to new range
                 paint: [
                   'interpolate', ['linear'], ['get', 'AccCur'],
                   1, 'rgba(0,0,0,0.01)',
@@ -962,6 +967,7 @@ export class Accessibility{
               text: 'Wheelchair accessibility improvements are currently under construction at the Collingswood station. Therefore, this map accounting for programmed improvements shows darker purple surrounding the station. Wheelchair users are now able to reach many destinations via rail from Collingswood.',
               map: {
                 paint: [
+                  // @TODO: update these color stops to new range
                   'interpolate', ['linear'], ['get', 'AccFut'],
                   1, 'rgba(0,0,0,0.01)',
                   2, '#cbc9e2',
