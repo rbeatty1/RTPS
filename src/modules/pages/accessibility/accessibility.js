@@ -730,25 +730,17 @@ export class Accessibility{
             },
             map:{
               paint: [
-                // @TODO: update these color stops to new range
                 'interpolate', ['linear'], ['get', 'AccAll'],
                 0, 'rgba(0,0,0,0.01)',
-                489812, '#c8f760',
-                628015, '#8ff041',
-                719922, '#756bb1',
-                845534, '#3dd13b',
-                920790, '#3db868',
-                997919, '#2fa190',
-                1079942, '#1e84a6',
-                1183269, '#215896',
-                1267460, '#1c3487',
-                1267461, '#0d1178'
-
-                // 1, 'rgba(0,0,0,0.01)',
-                // 2, '#cbc9e2',
-                // 5, '#9e9ac8',
-                // 7, '#756bb1',
-                // 10, '#54278f'
+                489812, '#fcfbfd',
+                628015, '#efedf5',
+                719922, '#dadaeb',
+                845534, '#bcbddc',
+                920790, '#9e9ac8',
+                997919, '#807dba',
+                1079942, '#6a51a3',
+                1183269, '#54278f',
+                1267460, '#3f007d'
               ],
               stationPaint: ['match', ['get', 'accessibility'], 0, '#e89234', 1, '#8bb23f', 2, '#08506d', '#ccc'],
               legend:{
@@ -778,19 +770,17 @@ export class Accessibility{
             },
             map: {
               paint: [
-                // @TODO: update these color stops to new range
                 'interpolate', ['linear'], ['get', 'AccCur'],
                 0, 'rgba(0,0,0,0.01)',
-                281624, '#c8f760',
-                518125, '#8ff041',
-                614202, '#756bb1',
-                700243, '#3dd13b',
-                752535, '#3db868',
-                809584, '#2fa190',
-                868812, '#1e84a6',
-                932945, '#215896',
-                965229, '#1c3487',
-                965230, '#0d1178'
+                281624, '#fcfbfd',
+                518125, '#efedf5',
+                614202, '#dadaeb',
+                700243, '#bcbddc',
+                752535, '#9e9ac8',
+                809584, '#807dba',
+                868812, '#6a51a3',
+                932945, '#54278f',
+                965229, '#3f007d'
               ],
               stationPaint: ['match', ['get', 'accessibility'], 0, '#ccc', 1, '#8bb23f', 2, '#666', '#666'],
               legend:{
@@ -850,24 +840,17 @@ export class Accessibility{
             },
             map: {
               paint: [
-                // @TODO: update these color stops to new range
                 'interpolate', ['linear'], ['get', 'AccFut'],
                 0, 'rgba(0,0,0,0.01)',
-                349165, '#c8f760',
-                552312, '#8ff041',
-                648914, '#756bb1',
-                741195, '#3dd13b',
-                811028, '#3db868',
-                876238, '#2fa190',
-                970350, '#1e84a6',
-                1036637, '#215896',
-                1081883, '#1c3487',
-                1081884, '#0d1178'
-                // 1, 'rgba(0,0,0,0.01)',
-                // 2, '#cbc9e2',
-                // 5, '#9e9ac8',
-                // 7, '#756bb1',
-                // 10, '#54278f'
+                349165, '#fcfbfd',
+                552312, '#efedf5',
+                648914, '#dadaeb',
+                741195, '#bcbddc',
+                811028, '#9e9ac8',
+                876238, '#807dba',
+                970350, '#6a51a3',
+                1036637, '#54278f',
+                1081883, '#3f007d'
               ],
               stationPaint: ['match', ['get', 'accessibility'], 1, '#8bb23f', 2, '#08506d', 0, '#ccc', '#666'],
               legend:{
@@ -924,19 +907,17 @@ export class Accessibility{
               text: 'The dark purple surrounding the Collingswood Station shows that non-wheelchair users can reach a large number of destinations',
               map: {
                 paint: [
-                  // @TODO: update these color stops to new range
                   'interpolate', ['linear'], ['get', 'AccAll'],
                   0, 'rgba(0,0,0,0.01)',
-                  489812, '#c8f760',
-                  628015, '#8ff041',
-                  719922, '#756bb1',
-                  845534, '#3dd13b',
-                  920790, '#3db868',
-                  997919, '#2fa190',
-                  1079942, '#1e84a6',
-                  1183269, '#215896',
-                  1267460, '#1c3487',
-                  1267461, '#0d1178'
+                  489812, '#fcfbfd',
+                  628015, '#efedf5',
+                  719922, '#dadaeb',
+                  845534, '#bcbddc',
+                  920790, '#9e9ac8',
+                  997919, '#807dba',
+                  1079942, '#6a51a3',
+                  1183269, '#54278f',
+                  1267460, '#3f007d'
                 ],
                 stationPaint: ['match', ['get', 'accessibility'], 0, '#e89234', 1, '#8bb23f', 2, '#08506d', '#ccc'],
                 legend:{
@@ -953,20 +934,18 @@ export class Accessibility{
               title: 'Destinations Reachable by Wheelchair Users',
               text: 'The lack of color surrounding the Collingswood station shows that wheelchair users would not be able to reach any destinations via rail from that station. This is because the station is currently not wheelchair accessible.',
               map: {
-                // @TODO: update these color stops to new range
                 paint: [
                   'interpolate', ['linear'], ['get', 'AccCur'],
                   0, 'rgba(0,0,0,0.01)',
-                  281624, '#c8f760',
-                  518125, '#8ff041',
-                  614202, '#756bb1',
-                  700243, '#3dd13b',
-                  752535, '#3db868',
-                  809584, '#2fa190',
-                  868812, '#1e84a6',
-                  932945, '#215896',
-                  965229, '#1c3487',
-                  965230, '#0d1178'
+                  281624, '#fcfbfd',
+                  518125, '#efedf5',
+                  614202, '#dadaeb',
+                  700243, '#bcbddc',
+                  752535, '#9e9ac8',
+                  809584, '#807dba',
+                  868812, '#6a51a3',
+                  932945, '#54278f',
+                  965229, '#3f007d'
                 ],
                 stationPaint: ['match', ['get', 'accessibility'], 0, '#ccc', 1, '#8bb23f', 2, '#666', '#666'],
                 legend:{
@@ -1007,19 +986,17 @@ export class Accessibility{
               text: 'Wheelchair accessibility improvements are currently under construction at the Collingswood station. Therefore, this map accounting for programmed improvements shows darker purple surrounding the station. Wheelchair users are now able to reach many destinations via rail from Collingswood.',
               map: {
                 paint: [
-                  // @TODO: update these color stops to new range
                   'interpolate', ['linear'], ['get', 'AccFut'],
                   0, 'rgba(0,0,0,0.01)',
-                  349165, '#c8f760',
-                  552312, '#8ff041',
-                  648914, '#756bb1',
-                  741195, '#3dd13b',
-                  811028, '#3db868',
-                  876238, '#2fa190',
-                  970350, '#1e84a6',
-                  1036637, '#215896',
-                  1081883, '#1c3487',
-                  1081884, '#0d1178'
+                  349165, '#fcfbfd',
+                  552312, '#efedf5',
+                  648914, '#dadaeb',
+                  741195, '#bcbddc',
+                  811028, '#9e9ac8',
+                  876238, '#807dba',
+                  970350, '#6a51a3',
+                  1036637, '#54278f',
+                  1081883, '#3f007d'
                 ],
                 stationPaint: ['match', ['get', 'accessibility'], 1, '#8bb23f', 2, '#08506d', 0, '#ccc', '#666'],
                 legend:{
