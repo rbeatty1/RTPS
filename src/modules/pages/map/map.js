@@ -238,6 +238,11 @@ const ClearQuery = map => {
     map.setPaintProperty('zones-clickFill', "fill-color", "#d8c72e")
     map.setFilter('zones-base', undefined)
 
+    // reset muni selection
+    map.setFilter('boundaries-muni', undefined)
+    map.setFilter('boundaries-click', ['==', 'geoid', ''])
+    map.setPaintProperty('boundaries-click', 'fill-color', '#d8c72e')
+
     // remove analysis layer
     if (map.getLayer('zones-analysis')) {
         map.removeLayer('zones-analysis')
@@ -391,12 +396,6 @@ const AddListeners = map => {
     // clear query
     document.querySelector('#clear').addEventListener('click', () => {
         geography.type == 'zone' ? geography.selection = new Array() : undefined
-        if (geography.type == 'municipality') {
-            map.setFilter('boundaries-muni', undefined)
-            map.setFilter('boundaries-click', null)
-            map.setPaintProperty('boundaries-click', 'fill-color', '#d8c72e')
-            geography.selection = undefined
-        }
         ClearQuery(map)
     })
 
