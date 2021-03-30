@@ -28,9 +28,12 @@ let layerRef = {
       title: "SEPTA Surface Transit Loads (2017)",
       info: "2017 daily average ridership for SEPTA bus routes was available at the stop level. General Transit Feed Specification <abbr class='reliability__abbr' title='General Transit Feed Specification'>(GTFS)</abbr> was used to convert stop-level ridership to segment-level passenger loads."
     },
+    loads: {
+      title: "SEPTA Surface Transit Loads (2017)",
+    },
     njt: {
       title: "NJ TRANSIT Bus Ridership (2016)",
-      info: "2016-2017 daily average ridership for <abbr class='reliability__abbr' title='New Jersey'>NJ</abbr> Transit bus routes was provided at the stop level."
+      info: "2016-2017 daily average ridership for <abbr class='reliability__abbr' title='New Jersey'>NJ</abbr> Transit bus routes was provided at the route level."
     }
   },
   outputs:{
@@ -93,7 +96,6 @@ const BuildMap = pageContent =>{
         props: properties that will drive content creation of clicked layer
     */
     const BuildPopUpContent = (layer, props) =>{
-
       // set variables
       let colorRef = styles.reliability.layers[layer].paint['line-color'],
         field = colorRef[1][1],
@@ -110,25 +112,33 @@ const BuildMap = pageContent =>{
 
       // grammar (reliability score layers have multiple routes, other layers do not)
       let route;
-      if(props.lines && layer === 'score' || layer === 'weighted') {
-        const lines = props.lines.split(',').join(', ')
-        route = `Routes ${lines}`
-      }else{
-        route = `Route ${props.linename}`
-      }
-      title.innerText = route
-      
+      let lines;
+
       switch(layer){
         case 'score':
+          lines = props.lines.split(',').join(', ')
+          route = `Route(s): ${lines}` 
           property.innerText = 'Reliabilty Score'
           break;
         case 'weighted':
+          lines = props.lines.split(',').join(', ')
+          route = `Route(s): ${lines}` 
           property.innerText = 'Ridership Weighted Reliability Score';
           break;
-        default:
+        case 'tti':
+          route = "Road Segment"
           property.innerText = layerRef.inputs[layer].title
-          break;
+          break
+        case 'loads':
+          route = "Road Segment"
+          property.innerText = layerRef.inputs[layer].title
+          break
+        default:
+          route = `Route: ${props.linename}`
+          property.innerText = layerRef.inputs[layer].title
       }
+      
+      title.innerText = route
       dataContent.innerText = data
 
       container.appendChild(title)
@@ -232,6 +242,12 @@ const BuildSidebar = (map, data) =>{
         page: 'regional',
         description: 'TTI is the ratio of peak hour travel time to free flow travel time.'
       },
+      'reliability-loads': {
+        title: 'SEPTA Surface Transit Loads (segment level)',
+        unit: false,
+        page: 'regional',
+        description: 'Sum of passenger loads for all routes along each road segment'
+      }
     },
     input: {
       'reliability-speed':  {
@@ -245,7 +261,7 @@ const BuildSidebar = (map, data) =>{
         page: 'detail'
       },
       'reliability-septa':  {
-        title: 'SEPTA Surface Transit Loads',
+        title: 'SEPTA Surface Transit Loads (route level)',
         unit: 'Average Daily Ridership',
         page: 'detail'
       },
@@ -478,7 +494,9 @@ const BuildSidebar = (map, data) =>{
 
       option.appendChild(radio)
       option.appendChild(label)
+
       BuildLegendSection(legendSection, radio.id)
+
       layerSection.appendChild(option)
       layerSection.appendChild(optionBlurb)
     }
@@ -494,7 +512,6 @@ const BuildSidebar = (map, data) =>{
 
   // function to update map filter through all layers
   const SetMapFilters = filter =>{
-
     // grab map layers
     let layers = styles.reliability.layers
 
@@ -647,6 +664,9 @@ const BuildSidebar = (map, data) =>{
       }
       else{
         for (let input in layerRef[section]){
+          // skip duplicate septa loads layers
+          if(input === 'loads') continue
+
           let inputSection = document.createElement('p'),
             title = layerRef[section][input].title,
             info = layerRef[section][input].info
@@ -672,8 +692,8 @@ const BuildSidebar = (map, data) =>{
     descriptiveText.classList.add('reliability__descriptive-text')
 
     container.id = 'content-regional'
-    
-    descriptiveText.textContent = 'The goal of the surface transit reliability analysis was to identify corridors where surface transit service is particularly slow or delayed as places where road or transit improvements could increase reliability. These regional layers show aggregate measures for all surface transit routes that use a particular road segment. These routes can also be filtered by route on the Route Detail tab.'
+    //@HERE
+    descriptiveText.innerHTML = '<p>The goal of the surface transit reliability analysis was to identify corridors where surface transit service is particularly slow or delayed as places where road or transit improvements could increase reliability. These regional layers show aggregate measures for all surface transit routes that use a particular road segment. These routes can also be filtered by route on the Route Detail tab.</p><p>Updated input datasets will be added as they become available. Reliability Score layers will be recalculated on a regular basis, but the results may not always include the latest input layers as presented. Updated layers will include a "last updated date".</p>'
     layerControl.innerText = 'Show Layer List'
     
     container.appendChild(descriptiveText)

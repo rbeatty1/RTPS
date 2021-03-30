@@ -238,6 +238,11 @@ const ClearQuery = map => {
     map.setPaintProperty('zones-clickFill', "fill-color", "#d8c72e")
     map.setFilter('zones-base', undefined)
 
+    // reset muni selection
+    map.setFilter('boundaries-muni', undefined)
+    map.setFilter('boundaries-click', ['==', 'geoid', ''])
+    map.setPaintProperty('boundaries-click', 'fill-color', '#d8c72e')
+
     // remove analysis layer
     if (map.getLayer('zones-analysis')) {
         map.removeLayer('zones-analysis')
@@ -294,8 +299,9 @@ const AddListeners = map => {
           }
     });
 
+    // @UPDATE - add geoid back to endpoint
     const GeneratePopup = (popup, e) =>{
-      let muni = document.querySelector(`.input__input-option[value="${e.features[0].properties.GEOID}"]`).innerText
+      let muni = document.querySelector(`.input__input-option[value="${e.features[0].properties.geoid}"]`).innerText
       popup.setLngLat(e.lngLat)
       .setHTML(muni)
       .addTo(map)
@@ -319,6 +325,7 @@ const AddListeners = map => {
             var filtered = zoneSelection(e, geography)
             filtered.length != 0 ? map.setFilter('zones-clickFill', ['match', ['get', 'no'], filtered, true, false]) : map.setFilter('zones-clickFill', ['==', 'no', '']);
             let buttons = document.querySelectorAll('.input__query-button')
+            
             for (let btn of buttons){
                 btn.classList.contains('active') ? null : btn.classList.add('active')
             }
@@ -330,23 +337,25 @@ const AddListeners = map => {
     // hover => green fill
     map.on('mousemove', "muniReference-base", (e) => {
         let feature = e.features[0]
+
         map.getCanvas().style.cursor = 'pointer'
-        map.setFilter("boundaries-hover", ["==", "GEOID", feature.properties.GEOID])
+        map.setFilter("boundaries-hover", ["==", "geoid", feature.properties.geoid])
         GeneratePopup(popup, e)
     })
     // leave hover => no fill
     map.on('mouseleave', "muniReference-base", (e) => {
         map.getCanvas().style.cursor = ''
-        map.setFilter("boundaries-hover", ["==", "GEOID", ""])
+        map.setFilter("boundaries-hover", ["==", "geoid", ""])
         popup.remove()
     })
     // click => yellow fill
     map.on('click', "muniReference-base", (e) => {
-        let geoid = e.features[0].properties.GEOID
+        let geoid = e.features[0].properties.geoid
         document.querySelector('#muni').value = geoid
         geography.selection = geoid
-        muni ? map.setFilter('boundaries-click', ['==', 'GEOID', geoid]) : null
+        muni ? map.setFilter('boundaries-click', ['==', 'geoid', geoid]) : null
         let buttons = document.querySelectorAll('.input__query-button')
+
         if (geography.direction){
             for (let btn of buttons){
                 btn.classList.contains('active') ? null : btn.classList.add('active')
@@ -354,8 +363,6 @@ const AddListeners = map => {
         }
         document.querySelector('.sidebar__input-dropdowns').setAttribute('data-selection', geoid)
     })
-
-
 
     // perform query
     document.querySelector('#execute').addEventListener('click', e => {
@@ -367,6 +374,7 @@ const AddListeners = map => {
         }
         let spinner = document.querySelector(".map__spinner")
         spinner.style.display = 'block';
+
         PerformQuery(geography).then(x => {
             map.addLayer(x, "zones-base")
             spinner.style.display = 'none'
@@ -380,7 +388,7 @@ const AddListeners = map => {
             else{
                 map.setLayoutProperty('boundaries-hover', 'visibility', 'none')
                 map.setPaintProperty("boundaries-click", "fill-color", "red")
-                map.setFilter('boundaries-muni', ['==', 'GEOID', geography.selection])
+                map.setFilter('boundaries-muni', ['==', 'geoid', geography.selection])
             }
         })
     })
@@ -388,18 +396,12 @@ const AddListeners = map => {
     // clear query
     document.querySelector('#clear').addEventListener('click', () => {
         geography.type == 'zone' ? geography.selection = new Array() : undefined
-        if (geography.type == 'municipality') {
-            map.setFilter('boundaries-muni', undefined)
-            map.setFilter('boundaries-click', ['==', 'name', ''])
-            map.setPaintProperty('boundaries-click', 'fill-color', '#d8c72e')
-            geography.selection = undefined
-        }
         ClearQuery(map)
     })
 
     document.querySelector('#muni').addEventListener('change', e => {
         let geoid = e.target.value
-        map.getLayer('boundaries-click') ? map.setFilter('boundaries-click', ['==', 'GEOID', geoid]) : null
+        map.getLayer('boundaries-click') ? map.setFilter('boundaries-click', ['==', 'geoid', geoid]) : null
     })
 
     document.querySelector('#geography').addEventListener('change', e=>{

@@ -16,9 +16,9 @@
 }
 
 #logo-container svg{
-  margin: 5% 0 0 10%;
-  width: 20%;
-  height: auto;
+  margin: 4% 0 0 12%;
+  width: auto;
+  height: 20vh;
 }
 
 #logo-container svg:hover, #home nav button:hover{
@@ -42,7 +42,7 @@
 #desc-container p {
   width: 70%;
   color: #06506d;
-  font-size: 1.75rem;
+  font-size: 1.7rem;
 }
 
 #desc-container.active p {
@@ -50,10 +50,6 @@
   margin-top: 2%;
   margin-bottom: 0;
   text-shadow: 2px 2px 4px #1a1a1a;
-}
-
-#desc-container p strong{
-  font-size: 2rem;
 }
 
 #home nav{

@@ -28,8 +28,7 @@ const LoadStations = map =>{
   }
   
   // hit AGO endpoint and load geometries
-  // @NOTE: this returns a JSON instead of a geoJSON because invoking `.json()` on the geoJSON response drops all properties... because reasons.
-  fetch('https://services1.arcgis.com/LWtWv6q6BJyKidj8/arcgis/rest/services/DVRPC_Passenger_Rail_Stations/FeatureServer/0/query?where=1%3D1&outfields=dvrpc_id,station&outSR=4326&f=json')
+  fetch('https://arcgis.dvrpc.org/portal/rest/services/Transportation/PassengerRailStations/FeatureServer/0/query?where=1%3D1&outfields=dvrpc_id,station&outSR=4326&f=json')
   
   // parse json return if fetch is successful
   .then(ago=>{ if (ago.status == 200){ return ago.json() } })
@@ -115,7 +114,7 @@ const LoadStations = map =>{
 const LoadTAZ = map =>{
 
   // hit AGO endpoint for TAZ geometries
-  fetch('https://services1.arcgis.com/LWtWv6q6BJyKidj8/arcgis/rest/services/TAZ/FeatureServer/0/query?where=1%3D1&outFields=TAZN&geometryPrecision=4&outSR=4326&returnExceededLimitFeatures=true&f=pgeojson')
+  fetch('https://arcgis.dvrpc.org/portal/rest/services/Demographics/TAZ_2010/FeatureServer/0/query?where=1%3D1&outFields=TAZN&geometryPrecision=4&outSR=4326&returnExceededLimitFeatures=true&f=geojson')
   
   // parse AGO return if successful
   .then(ago=>{ if (ago.status ==200){return ago.json() } })
@@ -127,15 +126,14 @@ const LoadTAZ = map =>{
     // parse DB return if successful
     .then(dbReturn=>{if (dbReturn.status == 200) { return dbReturn.json() } })
     .then(dbZones=>{
-      
       // join DB data to geometries
       agoZones.features.map(feature=>{
-        if (dbZones[feature.properties.TAZN]){
-          feature.properties.AccAll = dbZones[feature.properties.TAZN].all_rail
-          feature.properties.AccCur = dbZones[feature.properties.TAZN].current
-          feature.properties.AccFut = dbZones[feature.properties.TAZN].future
-          feature.properties.DisCur = dbZones[feature.properties.TAZN].discur
-          feature.properties.DisFut = dbZones[feature.properties.TAZN].disfut
+        if (dbZones[feature.properties.tazn]){
+          feature.properties.AccAll = dbZones[feature.properties.tazn].all_rail
+          feature.properties.AccCur = dbZones[feature.properties.tazn].current
+          feature.properties.AccFut = dbZones[feature.properties.tazn].future
+          feature.properties.DisCur = dbZones[feature.properties.tazn].discur
+          feature.properties.DisFut = dbZones[feature.properties.tazn].disfut
         }
         else{
           feature.properties.AccAll = 0
@@ -317,7 +315,6 @@ const BuildMap = container =>{
       })
 
       // add navigation control
-        //@TODO: add home button from DVRPC's reusable components library
       CreateDvrpcNavControl(extent, map)
   })
 
@@ -382,7 +379,7 @@ const BuildPage = content =>{
     let map = content.map
 
     // if there is map actions tied to this element, do them
-    if (data) {
+    if (data) {      
       map.setPaintProperty('zones-analysis', 'fill-color', data.paint)
       map.setPaintProperty('station-access', 'circle-color', data.stationPaint)
     }
@@ -397,7 +394,8 @@ const BuildPage = content =>{
         center: [-75.064, 39.914],
         zoom: 13
       },
-        map = content.map
+      
+      map = content.map
         
       map.flyTo({
         center: extent.center,
@@ -733,11 +731,16 @@ export class Accessibility{
             map:{
               paint: [
                 'interpolate', ['linear'], ['get', 'AccAll'],
-                1, 'rgba(0,0,0,0.01)',
-                2, '#cbc9e2',
-                5, '#9e9ac8',
-                7, '#756bb1',
-                10, '#54278f'
+                0, 'rgba(0,0,0,0.01)',
+                489812, '#fcfbfd',
+                628015, '#efedf5',
+                719922, '#dadaeb',
+                845534, '#bcbddc',
+                920790, '#9e9ac8',
+                997919, '#807dba',
+                1079942, '#6a51a3',
+                1183269, '#54278f',
+                1267460, '#3f007d'
               ],
               stationPaint: ['match', ['get', 'accessibility'], 0, '#e89234', 1, '#8bb23f', 2, '#08506d', '#ccc'],
               legend:{
@@ -768,11 +771,16 @@ export class Accessibility{
             map: {
               paint: [
                 'interpolate', ['linear'], ['get', 'AccCur'],
-                1, 'rgba(0,0,0,0.01)',
-                2, '#cbc9e2',
-                5, '#9e9ac8',
-                7, '#756bb1',
-                10, '#54278f'
+                0, 'rgba(0,0,0,0.01)',
+                281624, '#fcfbfd',
+                518125, '#efedf5',
+                614202, '#dadaeb',
+                700243, '#bcbddc',
+                752535, '#9e9ac8',
+                809584, '#807dba',
+                868812, '#6a51a3',
+                932945, '#54278f',
+                965229, '#3f007d'
               ],
               stationPaint: ['match', ['get', 'accessibility'], 0, '#ccc', 1, '#8bb23f', 2, '#666', '#666'],
               legend:{
@@ -833,11 +841,16 @@ export class Accessibility{
             map: {
               paint: [
                 'interpolate', ['linear'], ['get', 'AccFut'],
-                1, 'rgba(0,0,0,0.01)',
-                2, '#cbc9e2',
-                5, '#9e9ac8',
-                7, '#756bb1',
-                10, '#54278f'
+                0, 'rgba(0,0,0,0.01)',
+                349165, '#fcfbfd',
+                552312, '#efedf5',
+                648914, '#dadaeb',
+                741195, '#bcbddc',
+                811028, '#9e9ac8',
+                876238, '#807dba',
+                970350, '#6a51a3',
+                1036637, '#54278f',
+                1081883, '#3f007d'
               ],
               stationPaint: ['match', ['get', 'accessibility'], 1, '#8bb23f', 2, '#08506d', 0, '#ccc', '#666'],
               legend:{
@@ -895,11 +908,16 @@ export class Accessibility{
               map: {
                 paint: [
                   'interpolate', ['linear'], ['get', 'AccAll'],
-                  1, 'rgba(0,0,0,0.01)',
-                  2, '#cbc9e2',
-                  5, '#9e9ac8',
-                  7, '#756bb1',
-                  10, '#54278f'
+                  0, 'rgba(0,0,0,0.01)',
+                  489812, '#fcfbfd',
+                  628015, '#efedf5',
+                  719922, '#dadaeb',
+                  845534, '#bcbddc',
+                  920790, '#9e9ac8',
+                  997919, '#807dba',
+                  1079942, '#6a51a3',
+                  1183269, '#54278f',
+                  1267460, '#3f007d'
                 ],
                 stationPaint: ['match', ['get', 'accessibility'], 0, '#e89234', 1, '#8bb23f', 2, '#08506d', '#ccc'],
                 legend:{
@@ -918,11 +936,16 @@ export class Accessibility{
               map: {
                 paint: [
                   'interpolate', ['linear'], ['get', 'AccCur'],
-                  1, 'rgba(0,0,0,0.01)',
-                  2, '#cbc9e2',
-                  5, '#9e9ac8',
-                  7, '#756bb1',
-                  10, '#54278f'
+                  0, 'rgba(0,0,0,0.01)',
+                  281624, '#fcfbfd',
+                  518125, '#efedf5',
+                  614202, '#dadaeb',
+                  700243, '#bcbddc',
+                  752535, '#9e9ac8',
+                  809584, '#807dba',
+                  868812, '#6a51a3',
+                  932945, '#54278f',
+                  965229, '#3f007d'
                 ],
                 stationPaint: ['match', ['get', 'accessibility'], 0, '#ccc', 1, '#8bb23f', 2, '#666', '#666'],
                 legend:{
@@ -964,11 +987,16 @@ export class Accessibility{
               map: {
                 paint: [
                   'interpolate', ['linear'], ['get', 'AccFut'],
-                  1, 'rgba(0,0,0,0.01)',
-                  2, '#cbc9e2',
-                  5, '#9e9ac8',
-                  7, '#756bb1',
-                  10, '#54278f'
+                  0, 'rgba(0,0,0,0.01)',
+                  349165, '#fcfbfd',
+                  552312, '#efedf5',
+                  648914, '#dadaeb',
+                  741195, '#bcbddc',
+                  811028, '#9e9ac8',
+                  876238, '#807dba',
+                  970350, '#6a51a3',
+                  1036637, '#54278f',
+                  1081883, '#3f007d'
                 ],
                 stationPaint: ['match', ['get', 'accessibility'], 1, '#8bb23f', 2, '#08506d', 0, '#ccc', '#666'],
                 legend:{

@@ -1,4 +1,5 @@
 const LoadLayers = (map, styles) =>{
+
   for (let source in styles){
     map.addSource(source, styles[source].sourceDef)
     for (let layer in styles[source].layers){
@@ -26,7 +27,7 @@ const passengerRail = {
   rail: {
     sourceDef: {
       type: 'geojson',
-      data: 'https://services1.arcgis.com/LWtWv6q6BJyKidj8/arcgis/rest/services/DVRPC_Passenger_Rail/FeatureServer/0/query?where=1%3D1&outfields=line_name&outSR=4326&f=geojson'
+      data: 'https://arcgis.dvrpc.org/portal/rest/services/Transportation/PassengerRail/FeatureServer/0/query?where=1%3D1&outfields=type&outSR=4326&f=geojson'
     },
     layers: {
       lines: {
@@ -34,7 +35,7 @@ const passengerRail = {
         paint: {
           "line-color": [
             'match',
-            ['get', 'TYPE'],
+            ['get', 'type'],
             'AMTRAK', '#004d6e',
             'NJ Transit', "#f18541",
             'NJ Transit Light Rail', '#ffc424',
@@ -59,7 +60,7 @@ const passengerRail = {
         type: 'symbol',
         source: 'transitLines',
         layout: {
-          "text-field": "{LINE_NAME}",
+          "text-field": "{line_name}",
           "text-font": [
             "Montserrat SemiBold",
               "Open Sans Semibold"

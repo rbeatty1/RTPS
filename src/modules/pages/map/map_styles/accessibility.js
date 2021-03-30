@@ -139,7 +139,7 @@ const styles = {
   transit: {
     sourceDef: {
       type: 'geojson',
-      data: 'https://services1.arcgis.com/LWtWv6q6BJyKidj8/arcgis/rest/services/DVRPC_Passenger_Rail/FeatureServer/0/query?where=1%3D1&outfields=line_name&outSR=4326&f=geojson'
+      data: 'https://arcgis.dvrpc.org/portal/rest/services/Transportation/PassengerRail/FeatureServer/0/query?where=1%3D1&outfields=line_name&outSR=4326&f=geojson'
     },
     layers: {
       railLines: {

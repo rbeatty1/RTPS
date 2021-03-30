@@ -23,7 +23,7 @@ const styles = {
   reliability: {
     sourceDef: {
       type: 'vector',
-      url: 'https://tiles.dvrpc.org/data/rtps-reliability.json'
+      url: 'https://tiles.dvrpc.org/data/rtps-reliability-v2.json'
     },
     layers:{
       score: {
@@ -52,33 +52,37 @@ const styles = {
         },
         placement: "admin-2-boundaries"
       },
-      // issue #70 - hiding these for now until we can either smooth out the filtered lines or drop it altogether
-      // scoreDetail: {
-      //   type: 'line',
-      //   source: 'score',
-      //   paint: {
-      //     'line-width': [
-      //       'interpolate',
-      //       ['linear'],
-      //       ['zoom'],
-      //       8, 1.5,
-      //       12, 3
-      //     ],
-      //     'line-color': [
-      //       'step',
-      //       ['get', 'score'],
-      //       '#fcfdbf',
-      //       4, '#fc8761',
-      //       8, '#b63679',
-      //       12, '#50127b',
-      //       16, '#000004',
-      //     ]
-      //   },
-      //   layout: {
-      //     visibility: 'none'
-      //   },
-      //   placement: "admin-2-boundaries"
-      // },
+      loads: { // regional view septa
+        type: 'line',
+        source: 'septasegload',
+        paint: {
+          'line-color': [
+            'step',
+            ['get', 'segload'],
+            '#ffffcc',
+            350, '#c2e699',
+            850, '#78c679',
+            1500, '#31a354',
+            3000, "#006837"
+          ],
+          'line-width': [
+            'interpolate',
+            ['linear'],
+            ['zoom'],
+            0, .05,
+            8, .5,
+            12, 3
+          ],
+        },
+        layout: {
+          visibility: 'none'
+        },
+        placement: "admin-2-boundaries",
+        layout: {
+          visibility: 'none'
+        },
+        placement: "admin-2-boundaries"
+      },
       weighted: {
         type: 'line',
         source: 'weighted',
@@ -92,7 +96,7 @@ const styles = {
           ],
           'line-color': [
             'step',
-            ['get', 'weighted'],
+            ['get', 'riderrelis'],
             '#fcfdbf',
             4, '#fc8761',
             8, '#b63679',
@@ -105,33 +109,6 @@ const styles = {
         },
         placement: "admin-2-boundaries"
       },
-      // issue #70 - hiding these for now until we can either smooth out the filtered lines or drop it altogether
-      // weightedDetail: {
-      //   type: 'line',
-      //   source: 'weighted',
-      //   paint: {
-      //     'line-width': [
-      //       'interpolate',
-      //       ['linear'],
-      //       ['zoom'],
-      //       8, 1.5,
-      //       12, 3
-      //     ],
-      //     'line-color': [
-      //       'step',
-      //       ['get', 'weighted'],
-      //       '#fcfdbf',
-      //       4, '#fc8761',
-      //       8, '#b63679',
-      //       12, '#50127b',
-      //       16, '#000004',
-      //     ]
-      //   },
-      //   layout: {
-      //     visibility: 'none'
-      //   },
-      //   placement: "admin-2-boundaries"
-      // },
       otp: {
         type: 'line',
         source: 'otp',
@@ -183,18 +160,18 @@ const styles = {
           visibility: 'none'
         }
       },
-      septa: {
+      septa: { // detail view septa jawn
         type: 'line',
-        source: 'septa',
+        source: 'septalineload',
         paint: {
           'line-color': [
             'step',
             ['get', 'loads'],
             '#ffffcc',
-            455, '#c2e699',
-            1048, '#78c679',
-            1800, '#31a354',
-            2904, "#006837"
+            100, '#c2e699',
+            300, '#78c679',
+            600, '#31a354',
+            900, "#006837"
           ],
           'line-width': [
             'interpolate',
