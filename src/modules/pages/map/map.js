@@ -294,21 +294,19 @@ const AddListeners = map => {
           }
     });
 
-    // @no longer compatible with endpoint
-    // const GeneratePopup = (popup, e) =>{
-    //     console.log('bruh ', e.features[0])
-    //   let muni = document.querySelector(`.input__input-option[value="${e.features[0].properties.GEOID}"]`).innerText
-    //   popup.setLngLat(e.lngLat)
-    //   .setHTML(muni)
-    //   .addTo(map)
-    // }
+    // @UPDATE - add geoid back to endpoint
+    const GeneratePopup = (popup, e) =>{
+        console.log('bruh ', e.features[0])
+      let muni = document.querySelector(`.input__input-option[value="${e.features[0].properties.GEOID}"]`).innerText
+      popup.setLngLat(e.lngLat)
+      .setHTML(muni)
+      .addTo(map)
+    }
 
 // ZONE LISTENERS
     // hover => green fill
     map.on('mousemove', "zoneReference-base", (e) => {
         map.getCanvas().style.cursor = 'pointer'
-        // @ BRUH
-        console.log(e)
         map.setFilter("zones-hoverFill", ["==", "no", e.features[0].properties.no])
     })
     // leave hover => no fill
@@ -334,20 +332,22 @@ const AddListeners = map => {
     // hover => green fill
     // @NOTE updated endpoint removed props, disabling hover feature for now
     map.on('mousemove', "muniReference-base", (e) => {
-        // let feature = e.features[0]
+        let feature = e.features[0]
+        console.log('hover feature ', feature)
         map.getCanvas().style.cursor = 'pointer'
-        // map.setFilter("boundaries-hover", ["==", "GEOID", feature.properties.GEOID])
-        //GeneratePopup(popup, e)
+        map.setFilter("boundaries-hover", ["==", "geoid", feature.properties.geoid])
+        GeneratePopup(popup, e)
     })
     // leave hover => no fill
     map.on('mouseleave', "muniReference-base", (e) => {
         map.getCanvas().style.cursor = ''
-        // map.setFilter("boundaries-hover", ["==", "GEOID", ""])
-        // popup.remove()
+        map.setFilter("boundaries-hover", ["==", "geoid", ""])
+        popup.remove()
     })
     // click => yellow fill
     // @NOTE updated endpoint removed props, disabling click feature for now
     map.on('click', "muniReference-base", (e) => {
+        console.log('muni click event ', e.features[0])
         // let geoid = e.features[0].properties.GEOID
         // document.querySelector('#muni').value = geoid
         // geography.selection = geoid

@@ -86,7 +86,7 @@ const layers = {
   },
   muniReference:{
     sourceDef: {
-      data: 'https://arcgis.dvrpc.org/portal/rest/services/Boundaries/MunicipalBoundaries/FeatureServer/0/query?where=1=1&outsr=4326&f=geojson',
+      data: 'https://arcgis.dvrpc.org/portal/rest/services/Boundaries/MunicipalBoundaries/FeatureServer/0/query?where=1=1&outFields=geoid&outsr=4326&f=geojson',
       type: 'geojson',
     },
     layers:{
