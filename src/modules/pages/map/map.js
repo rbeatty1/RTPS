@@ -337,7 +337,7 @@ const AddListeners = map => {
     // hover => green fill
     map.on('mousemove', "muniReference-base", (e) => {
         let feature = e.features[0]
-        console.log('feature ', feature)
+
         map.getCanvas().style.cursor = 'pointer'
         map.setFilter("boundaries-hover", ["==", "geoid", feature.properties.geoid])
         GeneratePopup(popup, e)
